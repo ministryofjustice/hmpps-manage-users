@@ -1,0 +1,34 @@
+FROM node:12.16.1-buster-slim
+LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
+
+ARG BUILD_NUMBER
+ARG GIT_REF
+
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get autoremove -y && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN addgroup --gid 2000 --system appgroup && \
+    adduser --uid 2000 --system appuser --gid 2000
+
+ENV TZ=Europe/London
+RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
+
+# Create app directory
+RUN mkdir -p /app
+WORKDIR /app
+ADD . .
+
+RUN npm ci --no-audit && \
+    npm run build && \
+    export BUILD_NUMBER=${BUILD_NUMBER} && \
+    export GIT_REF=${GIT_REF} && \
+    npm run record-build-info
+
+ENV PORT=3000
+
+EXPOSE 3000
+RUN chown -R appuser:appgroup /app
+USER 2000
+CMD [ "npm", "start" ]

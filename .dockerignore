@@ -1,0 +1,15 @@
+node_modules
+npm-debug.log
+.env*
+README.md
+*.iml
+.idea/
+.gitignore
+.git
+.circleci
+kudu-deploy.sh
+promote-to-env.sh
+tests
+scss-report.txt
+eslint-report.html
+test-report.html

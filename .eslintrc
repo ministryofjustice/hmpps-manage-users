@@ -1,0 +1,27 @@
+{
+  "extends": ["airbnb", "prettier", "prettier/react"],
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "experimentalObjectRestSpread": true,
+      "impliedStrict": true,
+      "classes": true
+    }
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+    "jest": true
+  },
+  "rules": {
+    "no-unused-vars": [1, { "argsIgnorePattern": "res|next|^err" }],
+    "prettier/prettier": ["error"],
+    "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "no-underscore-dangle": ["error", { "allow": ["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] }],
+    "import/no-named-as-default": 0, // disable as we use connected components
+    "jsx-a11y/label-has-associated-control": [2, { "assert": "either" }],
+    "jsx-a11y/label-has-for": 0, // disable as has been deprecated and replaced by label-has-associated-control
+  },
+  "plugins": ["prettier"]
+}

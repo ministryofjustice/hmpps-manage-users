@@ -1,0 +1,2 @@
+rootProject.name = 'manage-hmpps-auth-accounts'
+include 'manage-accounts-specs'

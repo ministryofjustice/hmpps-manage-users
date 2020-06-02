@@ -1,0 +1,262 @@
+version: 2.1
+commands:
+  setup:
+    description: 'Install tools and configure kubectl'
+    steps:
+      - aws-cli/install
+      - kubernetes/install
+      - helm/install-helm-client:
+          version: v3.0.2
+      - run:
+          name: Setup kubectl
+          command: |
+            echo -n "${KUBE_ENV_CACERT}" | base64 -d > /tmp/cluster_ca.crt
+            kubectl config set-cluster "${KUBE_ENV_NAME}" \
+              --certificate-authority="/tmp/cluster_ca.crt" \
+              --server="https://api.${KUBE_ENV_NAME}"
+            kubectl config set-credentials circleci \
+              --token="${KUBE_ENV_TOKEN}"
+            kubectl config set-context circleci \
+              --cluster="${KUBE_ENV_NAME}" \
+              --user="circleci" \
+              --namespace="${KUBE_ENV_NAMESPACE}"
+            # confirm setup is ok
+            kubectl config use-context circleci
+  deploy_to_env:
+    parameters:
+      env:
+        type: string
+      slack_notification:
+        type: boolean
+        default: false
+    steps:
+      - setup
+      - checkout:
+          path: ~/git
+      - attach_workspace:
+          at: ~/app
+      - deploy:
+          name: Deploy to << parameters.env >>
+          command: |
+            APP=manage-hmpps-auth-accounts
+            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
+            echo "export APP_VERSION=$APP_VERSION;export APP=$APP" >> $BASH_ENV
+            sed -i "s/appVersion: \".*\"/appVersion: \"${APP_VERSION}\"/g" ~/git/helm_deploy/${APP}/Chart.yaml
+            aws secretsmanager get-secret-value --secret-id ${KUBE_ENV_NAMESPACE} | jq -r .SecretString | \
+            helm upgrade ${APP} ~/git/helm_deploy/${APP}/. \
+              --install --wait --reset-values --timeout 5m --history-max 10 \
+              --namespace=${KUBE_ENV_NAMESPACE} \
+              --values ~/git/helm_deploy/values-<< parameters.env >>.yaml \
+              --values - \
+              --set image.tag="${APP_VERSION}"
+      - when:
+          condition: <<parameters.slack_notification>>
+          steps:
+            - slack/notify:
+                message: "*${APP}* version:*${APP_VERSION}* deployed to << parameters.env >>"
+                include_project_field: false
+                include_job_number_field: false
+executors:
+  deployer:
+    docker:
+      - image: circleci/python:3
+    working_directory: ~/app
+  builder:
+    docker:
+      - image: circleci/node:12.16.1-buster-browsers
+    working_directory: ~/app
+
+orbs:
+  aws-cli: circleci/aws-cli@0.1.18
+  kubernetes: circleci/kubernetes@0.10.1
+  helm: circleci/helm@0.2.3
+  gradle: circleci/gradle@2.0.0
+  slack: circleci/slack@3.4.2
+
+jobs:
+  build:
+    executor: builder
+    steps:
+      - checkout
+      - restore_cache:
+          key: node_modules-{{ checksum "package-lock.json" }}-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci --no-audit
+      - save_cache:
+          key: node_modules-{{ checksum "package-lock.json" }}-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: Run eslint
+          command: npm run lint
+      - run:
+          name: Run Tests
+          command: |
+            set -e
+            npm test -- --maxWorkers=2
+      - run: NODE_ENV=production npm run build
+      - run: |
+          DATE=$(date '+%Y-%m-%d')
+          export BUILD_NUMBER=${DATE}.${CIRCLE_BUILD_NUM}
+          export GIT_REF=${CIRCLE_SHA1}
+          export GIT_DATE=${DATE}
+          npm run record-build-info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
+            - build
+            - build-info.json
+
+  integration_tests:
+    working_directory: ~/app
+    docker:
+      - image: circleci/node:12.16.1-buster-browsers
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Run the node app.
+          command: npm run start-feature
+          background: true
+      #      - run:
+      #          name: Wait for node app to start
+      #          command: sleep 5
+      - restore_cache:
+          key: gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+      - restore_cache:
+          key: gradle-cache-{{ checksum "manage-accounts-specs/build.gradle" }}
+      - run:
+          name: Run Integration Tests
+          command: ./gradlew build
+      - save_cache:
+          key: gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
+          paths:
+            - /home/circleci/.gradle/wrapper
+      - save_cache:
+          key: gradle-cache-{{ checksum "manage-accounts-specs/build.gradle" }}
+          paths:
+            - /home/circleci/.gradle/caches
+      - store_artifacts:
+          path: manage-accounts-specs/build/reports
+          destination: integration/spock
+      - store_artifacts:
+          path: manage-accounts-specs/build/geb-reports
+          destination: integration/geb
+      - store_test_results:
+          path: manage-accounts-specs/build/test-results
+
+  build_docker:
+    executor: deployer
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/app
+      - setup_remote_docker:
+          docker_layer_caching: true
+      - run:
+          name: Build container and publish to docker hub
+          command: |
+            APP_VERSION=$(egrep buildNumber build-info.json  | awk -F"\"" '{print $4}')
+
+            docker build --rm=false . \
+              --build-arg BUILD_NUMBER=$APP_VERSION \
+              --build-arg GIT_REF=$CIRCLE_SHA1 \
+              --tag "quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION" \
+              --label "maintainer=dps-hmpps@digital.justice.gov.uk" \
+              --label "app.version=$APP_VERSION" \
+              --label "build.version=$APP_VERSION" \
+              --label "build.number=$CIRCLE_BUILD_NUM" \
+              --label "build.url=$CIRCLE_BUILD_URL" \
+              --label "build.gitref=$CIRCLE_SHA1"
+
+            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
+              #publish to docker hub as the tag
+              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+              docker tag quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION quay.io/hmpps/manage-hmpps-auth-accounts:latest
+              docker push quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION
+              docker push quay.io/hmpps/manage-hmpps-auth-accounts:latest
+            fi
+
+  deploy_dev:
+    executor: deployer
+    steps:
+      - deploy_to_env:
+          env: 'dev'
+  deploy_preprod:
+    executor: deployer
+    steps:
+      - deploy_to_env:
+          env: 'preprod'
+  deploy_prod:
+    executor: deployer
+    steps:
+      - deploy_to_env:
+          env: 'prod'
+          slack_notification: true
+
+  security_audit:
+    executor: builder
+    steps:
+      - checkout
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm'
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-npm
+          command: 'npm ci --no-audit'
+      - run:
+          name: run-security-audit
+          command: 'npm run security_audit'
+
+workflows:
+  version: 2
+  build-test-and-deploy:
+    jobs:
+      - build:
+          filters:
+            tags:
+              ignore: /.*/
+      - integration_tests:
+          requires:
+            - build
+      - build_docker:
+          requires:
+            - integration_tests
+          filters:
+            branches:
+              only: master
+      - deploy_dev:
+          requires:
+            - build_docker
+      - request-preprod-approval:
+          type: approval
+          requires:
+            - deploy_dev
+      - deploy_preprod:
+          context: manage-hmpps-auth-accounts-preprod
+          requires:
+            - request-preprod-approval
+      - request-prod-approval:
+          type: approval
+          requires:
+            - deploy_preprod
+      - deploy_prod:
+          context: manage-hmpps-auth-accounts-prod
+          requires:
+            - request-prod-approval
+
+  scheduled:
+    triggers:
+      - schedule:
+          cron: '0 7 * * 1-5'
+          filters:
+            branches:
+              only:
+                - master
+    jobs:
+      - security_audit

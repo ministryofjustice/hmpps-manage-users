@@ -1,0 +1,25 @@
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 2
+
+image:
+  repository: docker.io/quay.io/hmpps/manage-hmpps-auth-accounts
+  tag: latest
+  pullPolicy: IfNotPresent
+  port: 3000
+
+ingress:
+  enabled: true
+  host: manage-hmpps-auth-accounts-dev.prison.service.justice.gov.uk
+  cert_secret: manage-hmpps-auth-accounts-cert
+  path: /
+
+env:
+  API_ENDPOINT_URL: https://gateway.t3.nomis-api.hmpps.dsd.io/elite2api/
+  OAUTH_ENDPOINT_URL: https://gateway.t3.nomis-api.hmpps.dsd.io/auth/
+  NN_ENDPOINT_URL: https://digital-dev.prison.service.justice.gov.uk/
+  HMPPS_COOKIE_NAME: hmpps-session-dev
+  NODE_ENV: production
+  WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
+
