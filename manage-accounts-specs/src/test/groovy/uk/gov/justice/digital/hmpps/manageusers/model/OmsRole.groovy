@@ -1,5 +1,3 @@
-
-
 package uk.gov.justice.digital.hmpps.manageusers.model
 
 import groovy.transform.TupleConstructor
