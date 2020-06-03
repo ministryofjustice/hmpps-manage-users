@@ -36,10 +36,6 @@ input.full-width{
     width: 100%;
 }
 
-select[id^='keyworker-select']{
-    width:80%;
-}
-
 /*  Define the background color for all the ODD background rows  */
 table tr:nth-child(even){
     background: #f6f6f6;

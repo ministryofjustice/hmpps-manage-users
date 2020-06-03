@@ -28,7 +28,6 @@ import {
   setLoaded,
   setMenuOpen,
   setMessage,
-  setSettings,
   setTermsVisibility,
   setUserDetails,
   switchAgency,
@@ -316,7 +315,6 @@ const mapDispatchToProps = dispatch => ({
   resetErrorDispatch: () => dispatch(resetError()),
   setMessageDispatch: message => dispatch(setMessage(message)),
   boundSetMenuOpen: flag => dispatch(setMenuOpen(flag)),
-  keyworkerSettingsDispatch: settings => dispatch(setSettings(settings)),
   dispatchLoaded: value => dispatch(setLoaded(value)),
 })
 

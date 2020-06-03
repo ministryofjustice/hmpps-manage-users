@@ -38,7 +38,7 @@ class HealthSpecification extends Specification {
         response.uptime > 0.0
         response.name == "manage-hmpps-auth-accounts"
         !response.version.isEmpty()
-        response.api == [auth:'UP', elite2:'UP', keyworker:'UP']
+        response.api == [auth:'UP', elite2:'UP']
     }
 
     def "Health page reports API down"() {

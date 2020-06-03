@@ -16,17 +16,12 @@ const props = {
     lastName: 'User',
     lockedFlag: false,
     maintainAccess: false,
-    migration: false,
     staffId: 1,
     username: 'TestUser',
-    writeAccess: true,
   },
   config: {
-    keyworkerDashboardStatsEnabled: false,
-    keyworkerProfileStatsEnabled: 'false',
     mailTo: 'email@test.com',
     notmEndpointUrl: '//notm.url',
-    prisonStaffHubUrl: '//psh.url',
   },
   message: '',
 }
@@ -50,25 +45,25 @@ describe('<AdminUtilitiesContainer />', () => {
     it('should render a Link to Maintain auth users if user has maintain auth user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const keyworkerSettingsLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
 
-      expect(keyworkerSettingsLink.prop('children')).toEqual('Manage auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Manage auth users')
     })
 
     it('should render a Link to Maintain auth users if user has group manager role', () => {
       props.user.groupManager = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const keyworkerSettingsLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
 
-      expect(keyworkerSettingsLink.prop('children')).toEqual('Manage auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Manage auth users')
     })
 
     it('should render a Link to create auth users if user has maintain auth user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const keyworkerSettingsLink = wrapper.find('Link').find({ to: '/create-auth-user' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/create-auth-user' })
 
-      expect(keyworkerSettingsLink.prop('children')).toEqual('Create auth user')
+      expect(maintainUsersLink.prop('children')).toEqual('Create auth user')
     })
   })
 

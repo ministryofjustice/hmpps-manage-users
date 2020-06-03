@@ -89,7 +89,7 @@ The `manage-accounts-specs` directory contains a set of integration tests for th
 The tests are written in the Groovy programming language using a test framework called Spock. 
 
 The tests drive the UI using 'Geb', a Groovy wrapper for Selenium Webdriver and use WireMock to 
-stub the application's dependencies on the elite2 and keyworker-api RESTful APIs.
+stub the application's dependencies on the elite2 and oauth RESTful APIs.
 
 # Running the feature tests
 

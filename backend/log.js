@@ -1,7 +1,7 @@
 const Logger = require('bunyan')
 
 module.exports = new Logger({
-  name: 'keyworkerUI',
+  name: 'manage-hmpps-auth-accounts',
   streams: [
     {
       stream: process.stdout,

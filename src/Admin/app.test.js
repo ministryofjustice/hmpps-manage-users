@@ -39,7 +39,6 @@ const props = {
   page: 0,
   shouldShowTerms: false,
   resetErrorDispatch: jest.fn(),
-  keyworkerSettingsDispatch: jest.fn(),
   message: '',
   allowAuto: false,
   migrated: false,
