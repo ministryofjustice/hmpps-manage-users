@@ -60,7 +60,7 @@ app.use(
   })
 )
 
-const health = healthFactory(config.apis.oauth2.url, config.apis.elite2.url, config.apis.keyworker.url)
+const health = healthFactory(config.apis.oauth2.url, config.apis.elite2.url)
 
 app.get('/health', (req, res, next) => {
   health((err, result) => {
@@ -79,8 +79,6 @@ app.get('/ping', (req, res) => res.send('pong'))
 
 if (config.app.production) {
   app.use(ensureHttps)
-} else {
-  config.setTestDefaults()
 }
 
 // Don't cache dynamic resources

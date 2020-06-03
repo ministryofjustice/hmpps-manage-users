@@ -35,7 +35,7 @@ describe('<AdminUtilitiesContainer />', () => {
   it('render with a message if there are no admin rights', () => {
     const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
 
-    expect(wrapper.find('p').text()).toEqual('There are no admin or utility functions associated with your account.')
+    expect(wrapper.find('p').text()).toEqual('There are no admin functions associated with your account.')
   })
 
   describe('render links', () => {
@@ -45,15 +45,6 @@ describe('<AdminUtilitiesContainer />', () => {
       const manageRolesLink = wrapper.find('Link').find({ to: '/maintain-roles' })
 
       expect(manageRolesLink.prop('children')).toEqual('Manage NOMIS user roles')
-    })
-
-    it('should render a Link to Manage key worker settings if user has migration and maintain access roles', () => {
-      props.user.maintainAccess = true
-      props.user.migration = true
-      const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const keyworkerSettingsLink = wrapper.find('Link').find({ to: '/manage-key-worker-settings' })
-
-      expect(keyworkerSettingsLink.prop('children')).toEqual('Manage key worker settings')
     })
 
     it('should render a Link to Maintain auth users if user has maintain auth user roles', () => {

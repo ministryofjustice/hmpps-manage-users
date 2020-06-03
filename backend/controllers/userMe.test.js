@@ -33,14 +33,10 @@ describe('userMe controller', () => {
     const defaultUserMe = {
       ...staff1,
       activeCaseLoadId: 'LEI',
-      prisonMigrated: true,
       maintainAccess: false,
       maintainAccessAdmin: false,
-      migration: false,
-      writeAccess: false,
       maintainAuthUsers: false,
       groupManager: false,
-      keyWorkerMonitor: false,
     }
 
     it('should default to no access if user has no roles', async () => {
@@ -48,34 +44,6 @@ describe('userMe controller', () => {
 
       expect(res.json.mock.calls[0][0]).toEqual({
         ...defaultUserMe,
-      })
-    })
-    it('should have writeAccess when the user has the key worker admin role', async () => {
-      oauthApi.currentRoles.mockImplementation(() => [{ roleCode: 'OMIC_ADMIN' }])
-      await userMeService(req, res)
-
-      expect(res.json.mock.calls[0][0]).toEqual({
-        ...defaultUserMe,
-        writeAccess: true,
-      })
-    })
-    it('should not have writeAccess when the prison has not been migrated regardless of roles', async () => {
-      oauthApi.currentRoles.mockImplementation(() => [{ roleCode: 'OMIC_ADMIN' }])
-      await userMeService(req, res)
-
-      expect(res.json.mock.calls[0][0]).toEqual({
-        ...defaultUserMe,
-        writeAccess: false,
-        prisonMigrated: false,
-      })
-    })
-    it('should have migration when the user has the keyworker migration role', async () => {
-      oauthApi.currentRoles.mockImplementation(() => [{ roleCode: 'KW_MIGRATION' }])
-      await userMeService(req, res)
-
-      expect(res.json.mock.calls[0][0]).toEqual({
-        ...defaultUserMe,
-        migration: true,
       })
     })
     it('should have maintainAccess when the user has the maintain access roles role', async () => {
@@ -126,9 +94,6 @@ describe('userMe controller', () => {
         ...defaultUserMe,
         maintainAccess: true,
         maintainAccessAdmin: true,
-        keyWorkerMonitor: true,
-        migration: true,
-        writeAccess: true,
         maintainAuthUsers: true,
       })
     })

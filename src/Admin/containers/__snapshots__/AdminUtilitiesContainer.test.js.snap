@@ -48,22 +48,6 @@ Array [
         >
           <a
             className="link"
-            href="/manage-key-worker-settings"
-            id="keyworker_settings_link"
-            onClick={[Function]}
-            title="Key worker settings"
-          >
-            Manage key worker settings
-          </a>
-          <div>
-            Allow auto-allocation. Edit key worker capacity and session frequency.
-          </div>
-        </div>
-        <div
-          className="sc-VigVT dUvdCr"
-        >
-          <a
-            className="link"
             href="/maintain-roles"
             id="maintain_roles_link"
             onClick={[Function]}

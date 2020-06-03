@@ -31,11 +31,7 @@ const addAppInfo = result => {
 }
 
 module.exports = function healthcheckFactory(authUrl, elite2Url, keyworkerUrl) {
-  const checks = [
-    service('auth', `${authUrl}ping`),
-    service('elite2', `${elite2Url}ping`),
-    service('keyworker', `${keyworkerUrl}ping`),
-  ]
+  const checks = [service('auth', `${authUrl}ping`), service('elite2', `${elite2Url}ping`)]
 
   return callback =>
     Promise.all(checks.map(fn => fn())).then(checkResults => {

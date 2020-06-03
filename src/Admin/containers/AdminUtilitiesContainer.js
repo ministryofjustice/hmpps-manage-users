@@ -31,12 +31,7 @@ export class AdminUtilitiesContainer extends Component {
           )}
           {hasMaintainNomisRolesAccess && (
             <AdminUtility>
-              <Link
-                id="maintain_roles_link"
-                title="Manage NOMIS user roles"
-                className="link"
-                to="/maintain-roles"
-              >
+              <Link id="maintain_roles_link" title="Manage NOMIS user roles" className="link" to="/maintain-roles">
                 Manage NOMIS user roles
               </Link>
               <div>Add and remove NOMIS user roles.</div>
@@ -44,12 +39,7 @@ export class AdminUtilitiesContainer extends Component {
           )}
           {hasMaintainAuthUsers && (
             <AdminUtility>
-              <Link
-                id="maintain_auth_users_link"
-                title="Manage auth users"
-                className="link"
-                to="/maintain-auth-users"
-              >
+              <Link id="maintain_auth_users_link" title="Manage auth users" className="link" to="/maintain-auth-users">
                 Manage auth users
               </Link>
               <div>Maintain users that do not exist in NOMIS, only in auth.</div>
@@ -57,12 +47,7 @@ export class AdminUtilitiesContainer extends Component {
           )}
           {hasMaintainAuthUsers && (
             <AdminUtility>
-              <Link
-                id="create_auth_user_link"
-                title="Create auth user"
-                className="link"
-                to="/create-auth-user"
-              >
+              <Link id="create_auth_user_link" title="Create auth user" className="link" to="/create-auth-user">
                 Create auth user
               </Link>
               <div>Create user in auth (not in NOMIS).</div>

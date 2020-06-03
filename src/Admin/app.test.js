@@ -20,7 +20,7 @@ const user = {
   maintainAccess: false,
   maintainAccessAdmin: false,
   staffId: 1,
-  username: 'TestUser'
+  username: 'TestUser',
 }
 
 const props = {

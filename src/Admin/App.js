@@ -148,17 +148,7 @@ class App extends React.Component {
   )
 
   render() {
-    const {
-      boundSetMenuOpen,
-      config,
-      shouldShowTerms,
-      error,
-      allowAuto,
-      user,
-      message,
-      migrated,
-      dispatchLoaded,
-    } = this.props
+    const { boundSetMenuOpen, config, shouldShowTerms, error, user, message, dispatchLoaded } = this.props
 
     const hasAdminUtilities =
       user && (user.maintainAccess || user.maintainAccessAdmin || user.maintainAuthUsers || user.groupManager)
@@ -169,9 +159,7 @@ class App extends React.Component {
       <div className="inner-content" onClick={() => boundSetMenuOpen(false)}>
         <div className="pure-g">
           <Switch>
-            {!hasAdminUtilities && (
-              <Route exact path="/" render={() => <Redirect to="/unauthorised" />} />
-            )}
+            {!hasAdminUtilities && <Route exact path="/" render={() => <Redirect to="/unauthorised" />} />}
             <Route exact path="/unauthorised" render={() => <UnauthPage dispatchLoaded={dispatchLoaded} />} />
 
             <Route
@@ -231,27 +219,11 @@ class App extends React.Component {
               )}
             />
             <Route exact path="/maintain-auth-users" render={() => <AuthUserSearchContainer />} />
-            <Route
-              exact
-              path="/maintain-auth-users/search-results"
-              render={() => <AuthUserSearchResultsContainer />}
-            />
+            <Route exact path="/maintain-auth-users/search-results" render={() => <AuthUserSearchResultsContainer />} />
             <Route exact path="/maintain-auth-users/:username" render={() => <AuthUserContainer />} />
-            <Route
-              exact
-              path="/maintain-auth-users/:username/add-role"
-              render={() => <AuthUserAddRoleContainer />}
-            />
-            <Route
-              exact
-              path="/maintain-auth-users/:username/add-group"
-              render={() => <AuthUserAddGroupContainer />}
-            />
-            <Route
-              exact
-              path="/maintain-auth-users/:username/amend"
-              render={() => <AuthUserAmendContainer />}
-            />
+            <Route exact path="/maintain-auth-users/:username/add-role" render={() => <AuthUserAddRoleContainer />} />
+            <Route exact path="/maintain-auth-users/:username/add-group" render={() => <AuthUserAddGroupContainer />} />
+            <Route exact path="/maintain-auth-users/:username/amend" render={() => <AuthUserAmendContainer />} />
             <Route exact path="/create-auth-user" render={() => <AuthUserCreateContainer />} />
           </Switch>
         </div>

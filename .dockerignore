@@ -7,8 +7,6 @@ README.md
 .gitignore
 .git
 .circleci
-kudu-deploy.sh
-promote-to-env.sh
 tests
 scss-report.txt
 eslint-report.html

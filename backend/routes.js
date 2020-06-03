@@ -1,5 +1,4 @@
 const express = require('express')
-const config = require('./config')
 
 const withErrorHandler = require('./middleware/asyncHandler')
 const { userLocationsFactory } = require('./controllers/userLocations')
@@ -14,8 +13,6 @@ const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
 const userCaseLoadsFactory = require('./controllers/usercaseloads').userCaseloadsFactory
 const setActiveCaseLoadFactory = require('./controllers/setactivecaseload').activeCaseloadFactory
-
-const controllerFactory = require('./controllers/controller').factory
 
 const configureRoutes = ({ oauthApi, elite2Api }) => {
   const router = express.Router()

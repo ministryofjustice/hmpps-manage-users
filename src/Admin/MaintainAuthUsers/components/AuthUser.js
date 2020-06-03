@@ -83,11 +83,7 @@ const AuthUser = props => {
               <Table.CellHeader>Email</Table.CellHeader>
               <Table.Cell>{contextUser.email}</Table.Cell>
               <Table.Cell>
-                <Link
-                  data-qa="amend-link"
-                  as={RouterLink}
-                  to={`/maintain-auth-users/${contextUser.username}/amend`}
-                >
+                <Link data-qa="amend-link" as={RouterLink} to={`/maintain-auth-users/${contextUser.username}/amend`}>
                   Change
                 </Link>
               </Table.Cell>
