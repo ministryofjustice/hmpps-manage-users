@@ -132,7 +132,7 @@ A choice of web browsers can be configured, though Chrome or Chrome headless are
 
   - Ensure that your chrome and chromedriver versions match, and are set in the build.gradle file.
 
-  - Open a Spock Specification (`uk.gov.justice.digital.hmpps.keyworker.specs.LoginSpecification` for example). 
+  - Open a Spock Specification (`uk.gov.justice.digital.hmpps.manageusers.specs.LoginSpecification` for example). 
 
   - The IDE gutter should now display the green 'run' icons for both the class and each of its test methods.
 
