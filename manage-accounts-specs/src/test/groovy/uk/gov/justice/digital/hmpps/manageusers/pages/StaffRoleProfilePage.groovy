@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.manageusers.pages;
 
 import geb.Page
 
-public class StaffRoleProfilePage extends Page {
+class StaffRoleProfilePage extends Page {
 
 
     static url = "/"

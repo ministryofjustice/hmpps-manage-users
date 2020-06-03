@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.manageusers.pages;
 
 import geb.Page
 
-public class AddRolePage extends Page {
+class AddRolePage extends Page {
 
 
     static url = "/roles/add-role"

@@ -48,7 +48,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 6
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 7
+        roleSelect.find('option').size() == 2
     }
 
     def "should allow an ADMIN user search and display results"() {
@@ -71,7 +71,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 3
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 9
+        roleSelect.find('option').size() == 4
 
         and: "i select a user to edit"
         elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
@@ -103,7 +103,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 3
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 9
+        roleSelect.find('option').size() == 4
 
         and: "i select a user to edit"
         elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
@@ -150,7 +150,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         waitFor { nextPage.text() == "Next\n3 of 3" }
         previousPage.text() == "Previous\n1 of 3"
         rows[0].find("td",1).text() == 'user1'
-
+        MaintainRolesSpecification
         and: "i click on the next page link"
         elite2api.stubUserLocalAdministratorSearch(2)
         nextPage.click()

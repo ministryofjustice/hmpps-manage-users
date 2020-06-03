@@ -91,6 +91,10 @@ class Elite2Api extends WireMockRule {
                                 {
                                     "roleCode": "MAINTAIN_ACCESS_ROLES",
                                     "roleName": "Maintain Roles"
+                                },
+                                {
+                                    "roleCode": "USER_ADMIN",
+                                    "roleName": "User Admin"
                                 }
                             ]''')))
                                 }
@@ -107,6 +111,11 @@ class Elite2Api extends WireMockRule {
                                     "roleCode": "MAINTAIN_ACCESS_ROLES",
                                     "roleName": "Maintain Roles",
                                     "roleFunction": "GENERAL"
+                                },
+                                {
+                                    "roleCode": "USER_ADMIN",
+                                    "roleName": "User Admin",
+                                    "roleFunction": "ADMIN"
                                 },
                                 {
                                     "roleCode": "ANOTHER_ADMIN_ROLE",
@@ -241,6 +250,15 @@ class Elite2Api extends WireMockRule {
                     .withStatus(200)
                     .withHeader('Content-Type', 'text/plain')
                     .withBody("pong")))
+    }
+
+    void stubDelayedError(url, status) {
+        this.stubFor(
+                get(url)
+                        .willReturn(
+                                aResponse()
+                                        .withStatus(status)
+                                        .withFixedDelay(3000)))
     }
 
     void stubErrorWithMessage(url, status, message) {
