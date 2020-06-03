@@ -48,7 +48,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 6
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 2
+        roleSelect.find('option').size() == 3
     }
 
     def "should allow an ADMIN user search and display results"() {
@@ -71,7 +71,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 3
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 4
+        roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
         elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
@@ -103,7 +103,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         at UserSearchResultsPage
         rows.size() == 3
         searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 4
+        roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
         elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)

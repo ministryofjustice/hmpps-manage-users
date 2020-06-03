@@ -41,17 +41,4 @@ class LoginSpecification extends BrowserReportingSpec {
         then: 'The Login page is displayed'
         at LoginPage
     }
-
-
-    def "Log out"() {
-        given: "I have logged in"
-        fixture.loginAs ITAG_USER
-
-        when: "I log out"
-        oauthApi.stubLogout()
-        header.logout()
-
-        then: "I am returned to the Login page."
-        at LoginPage
-    }
 }
