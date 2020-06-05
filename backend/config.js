@@ -5,7 +5,7 @@ const app = {
   mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
   tokenRefreshThresholdSeconds: process.env.TOKEN_REFRESH_THRESHOLD_SECONDS || 60,
   applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
-  url: process.env.OMIC_UI_URL || `http://localhost:${process.env.PORT || 3001}/`,
+  url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}/`,
 }
 
 const analytics = {

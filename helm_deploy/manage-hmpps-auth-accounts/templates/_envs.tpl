@@ -61,6 +61,9 @@ env:
   - name: NN_ENDPOINT_URL
     value: {{ .Values.env.NN_ENDPOINT_URL | quote }}
 
+  - name: MANAGE_HMPPS_USERS_URL
+    value: "https://{{ .Values.ingress.host }}/"
+
   - name: HMPPS_COOKIE_NAME
     value: {{ .Values.env.HMPPS_COOKIE_NAME | quote }}
 
