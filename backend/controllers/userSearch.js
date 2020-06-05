@@ -1,5 +1,3 @@
-const log = require('../log')
-
 const search = (eliteApi, res, agencyId, nameFilter, roleFilter) =>
   eliteApi.userSearch(res.locals, {
     nameFilter,
@@ -15,7 +13,6 @@ const adminSearch = (eliteApi, res, agencyId, nameFilter, roleFilter) =>
 const userSearchFactory = eliteApi => {
   const userSearch = async (req, res) => {
     const { agencyId, nameFilter, roleFilter, hasAdminRole } = req.query
-    log.debug(`Performing user search.  Admin role=${hasAdminRole}`)
     const response =
       hasAdminRole === 'true'
         ? await adminSearch(eliteApi, res, agencyId, nameFilter, roleFilter)

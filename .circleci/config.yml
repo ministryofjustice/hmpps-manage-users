@@ -172,13 +172,10 @@ jobs:
               --label "build.url=$CIRCLE_BUILD_URL" \
               --label "build.gitref=$CIRCLE_SHA1"
 
-            if [[ "${CIRCLE_BRANCH}" == "master" ]]; then
-              #publish to docker hub as the tag
-              docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-              docker tag quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION quay.io/hmpps/manage-hmpps-auth-accounts:latest
-              docker push quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION
-              docker push quay.io/hmpps/manage-hmpps-auth-accounts:latest
-            fi
+            docker login quay.io -u $QUAYIO_USERNAME -p $QUAYIO_PASSWORD
+            docker tag quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION quay.io/hmpps/manage-hmpps-auth-accounts:latest
+            docker push quay.io/hmpps/manage-hmpps-auth-accounts:$APP_VERSION
+            docker push quay.io/hmpps/manage-hmpps-auth-accounts:latest
 
   deploy_dev:
     executor: deployer
