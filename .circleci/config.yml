@@ -112,6 +112,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          slack_notification: true
           context: manage-hmpps-auth-accounts-prod
           requires:
             - request-prod-approval
