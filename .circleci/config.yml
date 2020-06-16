@@ -3,15 +3,11 @@ version: 2.1
 orbs:
   hmpps: ministryofjustice/hmpps@1.0.0
 
-executors:
-  builder:
-    docker:
-      - image: circleci/node:12-buster-browsers
-    working_directory: ~/app
-
 jobs:
   build:
-    executor: builder
+    executor:
+      name: hmpps/node
+      tag: 12-buster-browsers
     steps:
       - checkout
       - restore_cache:
@@ -94,14 +90,11 @@ workflows:
             - build
       - hmpps/build_docker:
           name: build_docker
-          image_name: "quay.io/hmpps/manage-hmpps-auth-accounts"
           filters:
             branches:
               only:
                 - master
       - hmpps/deploy_env:
-          chart_name: manage-hmpps-auth-accounts
-          release_name: manage-hmpps-auth-accounts
           name: deploy_dev
           env: "dev"
           filters:
@@ -116,8 +109,6 @@ workflows:
           requires:
             - deploy_dev
       - hmpps/deploy_env:
-          chart_name: manage-hmpps-auth-accounts
-          release_name: manage-hmpps-auth-accounts
           name: deploy_preprod
           env: "preprod"
           context: manage-hmpps-auth-accounts-preprod
@@ -128,8 +119,6 @@ workflows:
           requires:
             - deploy_preprod
       - hmpps/deploy_env:
-          chart_name: manage-hmpps-auth-accounts
-          release_name: manage-hmpps-auth-accounts
           name: deploy_prod
           env: "prod"
           context: manage-hmpps-auth-accounts-prod
