@@ -23,6 +23,8 @@ env:
   HMPPS_COOKIE_NAME: hmpps-session-prod
   NODE_ENV: production
   WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
+  TOKENVERIFICATION_API_URL: "https://token-verification-api.prison.service.justice.gov.uk"
+  TOKENVERIFICATION_API_ENABLED: false
 
 whitelist:
   office: "217.33.148.210/32"

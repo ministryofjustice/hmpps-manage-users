@@ -31,6 +31,11 @@ const apis = {
     url: process.env.API_ENDPOINT_URL || 'http://localhost:8080/',
     timeoutSeconds: process.env.API_ENDPOINT_TIMEOUT_SECONDS || 30,
   },
+  tokenverification: {
+    url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
+    timeoutSeconds: process.env.TOKENVERIFICATION_API_URL || 5,
+    enabled: process.env.TOKENVERIFICATION_API_ENABLED === 'true',
+  },
 }
 
 const redis = {
