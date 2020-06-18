@@ -60,7 +60,7 @@ app.use(
   })
 )
 
-const health = healthFactory(config.apis.oauth2.url, config.apis.elite2.url)
+const health = healthFactory(config.apis.oauth2.url, config.apis.elite2.url, config.apis.tokenverification.url)
 
 app.get('/health', (req, res, next) => {
   health((err, result) => {
@@ -87,6 +87,7 @@ app.use(helmet.noCache())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+app.use('/bundle.js', express.static(path.join(__dirname, '../build/bundle.js')))
 app.use(express.static(path.join(__dirname, '../build/static')))
 
 app.get('/terms', async (req, res) => {
@@ -137,8 +138,6 @@ if (config.app.production === false) {
   app.use(middleware(compiler, { writeToDisk: true }))
   app.use(hrm(compiler, {}))
 }
-
-app.use(express.static(path.join(__dirname, '../build')))
 
 // Extract pagination header information from requests and set on the 'context'
 app.use('/api', requestForwarding.extractRequestPaginationMiddleware)
