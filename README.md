@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts/tree/master.svg?style=svg)](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts)
 [![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/manage-hmpps-auth-accounts/badge.svg)](https://snyk.io/test/github/ministryofjustice/manage-hmpps-auth-accounts)
 
 # Manage HMPPS Auth Accounts
