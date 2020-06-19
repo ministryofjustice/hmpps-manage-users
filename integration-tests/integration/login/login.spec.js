@@ -31,7 +31,7 @@ context('Login functionality', () => {
     cy.get('h1').should('contain.text', 'Sign in')
   })
 
-  it.skip('Logout takes user to login page', () => {
+  it('Logout takes user to login page', () => {
     cy.task('stubLogin', {})
     cy.login()
     MenuPage.verifyOnPage()
@@ -55,7 +55,7 @@ context('Login functionality', () => {
   })
 
   it('Log in as ordinary user receives unauthorised', () => {
-    cy.task('stubLogin', { username: 'joe', caseloadId: '23', roles: [{}] })
+    cy.task('stubLogin', { username: 'joe', roles: [{}] })
     cy.login()
     UnauthorisedPage.verifyOnPage()
   })

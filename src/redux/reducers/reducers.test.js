@@ -29,7 +29,6 @@ const maintainRolesInitialState = {
   pageSize: 10,
   totalRecords: 0,
   contextUser: {
-    activeCaseLoadId: '',
     agencyDescription: '',
     expiredFlag: false,
     firstName: '',
@@ -54,8 +53,6 @@ describe('app (global) reducer', () => {
         notmEndpointUrl: '',
       },
       user: {
-        activeCaseLoadId: '',
-        caseLoadOptions: [],
         expiredFlag: false,
         firstName: '',
         lastName: '',
@@ -99,20 +96,6 @@ describe('app (global) reducer', () => {
       error: null,
       message: null,
       user: { field: 'value' },
-      loaded: false,
-    })
-  })
-
-  it('should handle SWITCH_AGENCY', () => {
-    expect(
-      app(appInitialState, {
-        type: types.SWITCH_AGENCY,
-        activeCaseLoadId: 'BXI',
-      })
-    ).toEqual({
-      error: null,
-      message: null,
-      user: { activeCaseLoadId: 'BXI' },
       loaded: false,
     })
   })

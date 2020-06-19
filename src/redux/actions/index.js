@@ -26,8 +26,6 @@ export const setConfig = config => ({ type: SET_CONFIG, config })
 
 export const setUserDetails = user => ({ type: SET_USER_DETAILS, user })
 
-export const switchAgency = agencyId => ({ type: SWITCH_AGENCY, activeCaseLoadId: agencyId })
-
 export const setTermsVisibility = shouldShowTerms => ({ type: SET_TERMS_VISIBILITY, shouldShowTerms })
 
 export const setError = error => ({ type: SET_ERROR, error })

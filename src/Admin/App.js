@@ -30,7 +30,6 @@ import {
   setMessage,
   setTermsVisibility,
   setUserDetails,
-  switchAgency,
 } from '../redux/actions'
 import { configType, errorType, userType } from '../types'
 
@@ -55,7 +54,7 @@ class App extends React.Component {
     )
 
     try {
-      await this.loadUserAndCaseload()
+      await this.loadUser()
       const config = await axios.get('/api/config')
       links.notmEndpointUrl = config.data.notmEndpointUrl
 
@@ -69,28 +68,10 @@ class App extends React.Component {
     }
   }
 
-  loadUserAndCaseload = async () => {
+  loadUser = async () => {
     const { userDetailsDispatch } = this.props
     const user = await axios.get('/api/me')
-    const caseloads = await axios.get('/api/usercaseloads')
-    userDetailsDispatch({ ...user.data, caseLoadOptions: caseloads.data })
-  }
-
-  switchCaseLoad = async newCaseload => {
-    const { switchAgencyDispatch } = this.props
-
-    try {
-      await axios.put('/api/setactivecaseload', { caseLoadId: newCaseload })
-      await this.loadUserAndCaseload()
-      switchAgencyDispatch(newCaseload)
-    } catch (error) {
-      this.handleError(error)
-    }
-  }
-
-  showTermsAndConditions = () => {
-    const { setTermsVisibilityDispatch } = this.props
-    setTermsVisibilityDispatch(true)
+    userDetailsDispatch({ ...user.data })
   }
 
   hideTermsAndConditions = () => {
@@ -106,11 +87,6 @@ class App extends React.Component {
   resetError = () => {
     const { resetErrorDispatch } = this.props
     resetErrorDispatch()
-  }
-
-  displayError = error => {
-    const { setErrorDispatch } = this.props
-    setErrorDispatch((error.response && error.response.data) || `Something went wrong: ${error}`)
   }
 
   handleError = error => {
@@ -147,7 +123,7 @@ class App extends React.Component {
   )
 
   render() {
-    const { boundSetMenuOpen, config, shouldShowTerms, error, user, message, dispatchLoaded } = this.props
+    const { menuOpen, boundSetMenuOpen, config, shouldShowTerms, error, user, message, dispatchLoaded } = this.props
 
     const hasAdminUtilities =
       user && (user.maintainAccess || user.maintainAccessAdmin || user.maintainAuthUsers || user.groupManager)
@@ -155,7 +131,14 @@ class App extends React.Component {
     let innerContent
     const routes = (
       // eslint-disable-next-line
-      <div className="inner-content" onClick={() => boundSetMenuOpen(false)}>
+      <div
+        className="inner-content"
+        onClick={() => {
+          if (menuOpen) {
+            boundSetMenuOpen(false)
+          }
+        }}
+      >
         <div className="pure-g">
           <Switch>
             {!hasAdminUtilities && <Route exact path="/" render={() => <Redirect to="/unauthorised" />} />}
@@ -253,18 +236,12 @@ class App extends React.Component {
 
               return (
                 <Header
+                  homeLink={links.getHomeLink()}
                   logoText="HMPPS"
                   title="Digital Prison Services"
-                  homeLink={links.getHomeLink()}
-                  switchCaseLoad={newCaseload => {
-                    this.switchCaseLoad(newCaseload)
-                    props.history.push('/')
-                  }}
-                  history={props.history}
-                  resetError={this.resetError}
+                  user={user}
+                  menuOpen={menuOpen}
                   setMenuOpen={boundSetMenuOpen}
-                  caseChangeRedirect={false}
-                  {...this.props}
                 />
               )
             }}
@@ -285,14 +262,12 @@ App.propTypes = {
   shouldShowTerms: PropTypes.bool.isRequired,
   configDispatch: PropTypes.func.isRequired,
   userDetailsDispatch: PropTypes.func.isRequired,
-  switchAgencyDispatch: PropTypes.func.isRequired,
   setTermsVisibilityDispatch: PropTypes.func.isRequired,
   setErrorDispatch: PropTypes.func.isRequired,
   resetErrorDispatch: PropTypes.func.isRequired,
   setMessageDispatch: PropTypes.func.isRequired,
+  menuOpen: PropTypes.bool.isRequired,
   boundSetMenuOpen: PropTypes.func.isRequired,
-  allowAuto: PropTypes.bool.isRequired,
-  migrated: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
   dispatchLoaded: PropTypes.func.isRequired,
 }
@@ -309,7 +284,6 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   configDispatch: config => dispatch(setConfig(config)),
   userDetailsDispatch: user => dispatch(setUserDetails(user)),
-  switchAgencyDispatch: agencyId => dispatch(switchAgency(agencyId)),
   setTermsVisibilityDispatch: shouldShowTerms => dispatch(setTermsVisibility(shouldShowTerms)),
   setErrorDispatch: error => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),

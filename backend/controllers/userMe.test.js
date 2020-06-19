@@ -1,38 +1,31 @@
 const { userMeFactory } = require('./userMe')
 
-const caseloads = [{ caseLoadId: 'LEI', currentlyActive: true }]
 const staff1 = {
   staffId: 1,
   username: 'staff1',
 }
 
 describe('userMe controller', () => {
-  const elite2Api = {
-    userCaseLoads: () => {},
-  }
   const oauthApi = {
     currentUser: () => {},
     currentRoles: () => {},
   }
-  const { userMeService } = userMeFactory(oauthApi, elite2Api)
+  const { userMeService } = userMeFactory(oauthApi)
   const req = {}
   const res = { locals: {} }
 
   beforeEach(() => {
-    elite2Api.userCaseLoads = jest.fn()
     oauthApi.currentUser = jest.fn()
     oauthApi.currentRoles = jest.fn()
 
     oauthApi.currentUser.mockImplementation(() => staff1)
     oauthApi.currentRoles.mockImplementation(() => [])
-    elite2Api.userCaseLoads.mockImplementation(() => caseloads)
     res.json = jest.fn()
   })
 
   describe('access checks', () => {
     const defaultUserMe = {
       ...staff1,
-      activeCaseLoadId: 'LEI',
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,

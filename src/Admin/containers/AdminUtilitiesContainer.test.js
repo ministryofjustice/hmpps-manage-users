@@ -9,8 +9,6 @@ const props = {
   setLoadedDispatch: jest.fn(),
   user: {
     maintainAccessAdmin: false,
-    activeCaseLoadId: '',
-    caseLoadOptions: [],
     expiredFlag: false,
     firstName: 'Test',
     lastName: 'User',

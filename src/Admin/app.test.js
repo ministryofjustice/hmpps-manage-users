@@ -11,8 +11,6 @@ const config = {
 }
 
 const user = {
-  activeCaseLoadId: 'TEST',
-  caseLoadOptions: [],
   expiredFlag: false,
   firstName: 'Test',
   lastName: 'User',
@@ -30,9 +28,9 @@ const props = {
   history: mockHistory,
   setErrorDispatch: jest.fn(),
   userDetailsDispatch: jest.fn(),
-  switchAgencyDispatch: jest.fn(),
   configDispatch: jest.fn(),
   setMessageDispatch: jest.fn(),
+  menuOpen: false,
   boundSetMenuOpen: jest.fn(),
   setTermsVisibilityDispatch: jest.fn(),
   error: '',
@@ -86,9 +84,22 @@ describe('App component', () => {
     expect(component.instance().displayAlertAndLogout).not.toBeCalled()
   })
 
+  it('should not do anything if the menu is not open when the content is clicked', () => {
+    const setMenuOpen = jest.fn()
+    props.boundSetMenuOpen = setMenuOpen
+    props.menuOpen = false
+
+    const component = shallow(<App {...props} />)
+
+    component.find('.inner-content').simulate('click')
+
+    expect(setMenuOpen).not.toHaveBeenCalledWith(false)
+  })
+
   it('should close the menu when the content is clicked', () => {
     const setMenuOpen = jest.fn()
     props.boundSetMenuOpen = setMenuOpen
+    props.menuOpen = true
 
     const component = shallow(<App {...props} />)
 

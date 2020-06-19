@@ -1,11 +1,7 @@
-const userMeFactory = (oauthApi, elite2Api) => {
+const userMeFactory = oauthApi => {
   const userMeService = async (req, res) => {
     const context = res.locals
     const user = await oauthApi.currentUser(context)
-    const caseloads = await elite2Api.userCaseLoads(context)
-    const activeCaseLoad = caseloads.find(cl => cl.currentlyActive)
-    const activeCaseLoadId = activeCaseLoad ? activeCaseLoad.caseLoadId : null
-
     const roles = await oauthApi.currentRoles(context)
 
     const hasMaintainAccessRolesRole = roles.some(role => role.roleCode === 'MAINTAIN_ACCESS_ROLES')
@@ -15,7 +11,6 @@ const userMeFactory = (oauthApi, elite2Api) => {
 
     const response = {
       ...user,
-      activeCaseLoadId,
       maintainAccess: hasMaintainAccessRolesRole,
       maintainAccessAdmin: hasMaintainAccessRolesAdminRole,
       maintainAuthUsers: hasMaintainAuthUsersRole,

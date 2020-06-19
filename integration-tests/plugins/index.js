@@ -12,13 +12,8 @@ module.exports = on => {
       return tokenverification.stubVerifyToken(true)
     },
     getLoginUrl: auth.getLoginUrl,
-    stubLogin: ({ username = 'ITAG_USER', caseload = 'MDI', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
-      Promise.all([
-        auth.stubLogin(username, caseload, roles),
-        elite2api.stubUserMe(),
-        elite2api.stubUserCaseloads(),
-        tokenverification.stubVerifyToken(true),
-      ]),
+    stubLogin: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
+      Promise.all([auth.stubLogin(username, roles), elite2api.stubUserMe(), tokenverification.stubVerifyToken(true)]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
   })
