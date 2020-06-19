@@ -18,7 +18,6 @@ import {
   SET_USER_SEARCH_ROLE_FILTER_LIST,
   SET_USER_SEARCH_ROLE_LIST,
   SET_VALIDATION_ERROR,
-  SWITCH_AGENCY,
 } from './actionTypes'
 
 describe('actions', () => {
