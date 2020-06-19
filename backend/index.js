@@ -9,9 +9,6 @@ const bodyParser = require('body-parser')
 const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
 const helmet = require('helmet')
-const webpack = require('webpack')
-const middleware = require('webpack-dev-middleware')
-const hrm = require('webpack-hot-middleware')
 const flash = require('connect-flash')
 
 const ensureHttps = require('./middleware/ensureHttps')
@@ -31,6 +28,7 @@ const { oauthApiFactory } = require('./api/oauthApi')
 const configureRoutes = require('./routes')
 
 const setupWebSession = require('./setupWebSession')
+const setupWebpackForDev = require('./setupWebpackForDev')
 
 const log = require('./log')
 const config = require('./config')
@@ -132,12 +130,7 @@ sessionManagementRoutes.configureRoutes({
   homeLink: config.app.notmEndpointUrl,
 })
 
-const compiler = webpack(require('../webpack.config.js'))
-
-if (config.app.production === false) {
-  app.use(middleware(compiler, { writeToDisk: true }))
-  app.use(hrm(compiler, {}))
-}
+app.use(setupWebpackForDev())
 
 // Extract pagination header information from requests and set on the 'context'
 app.use('/api', requestForwarding.extractRequestPaginationMiddleware)
