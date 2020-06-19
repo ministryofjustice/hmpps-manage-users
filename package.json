@@ -159,7 +159,7 @@
     "linters": {
       "*.{js,json,css}": [
         "prettier --write",
-        "eslint --fix --max-warnings 2",
+        "eslint --fix --max-warnings 0",
         "git add"
       ]
     },
