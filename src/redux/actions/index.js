@@ -19,14 +19,11 @@ import {
   SET_USER_SEARCH_ROLE_FILTER_LIST,
   SET_USER_SEARCH_ROLE_LIST,
   SET_VALIDATION_ERROR,
-  SWITCH_AGENCY,
 } from './actionTypes'
 
 export const setConfig = config => ({ type: SET_CONFIG, config })
 
 export const setUserDetails = user => ({ type: SET_USER_DETAILS, user })
-
-export const switchAgency = agencyId => ({ type: SWITCH_AGENCY, activeCaseLoadId: agencyId })
 
 export const setTermsVisibility = shouldShowTerms => ({ type: SET_TERMS_VISIBILITY, shouldShowTerms })
 

@@ -90,9 +90,8 @@ const token = () =>
     },
   })
 
-const stubUser = (username, caseload) => {
+const stubUser = username => {
   const user = username || 'ITAG_USER'
-  const activeCaseLoadId = caseload || 'MDI'
   return stubFor({
     request: {
       method: 'GET',
@@ -110,7 +109,6 @@ const stubUser = (username, caseload) => {
         active: true,
         name: `${user} name`,
         authSource: 'nomis',
-        activeCaseLoadId,
       },
     },
   })
@@ -131,7 +129,6 @@ const stubUserMe = (username = 'ITAG_USER') =>
         firstName: 'JAMES',
         lastName: 'STUART',
         username,
-        activeCaseLoadId: 'MDI',
       },
     },
   })
@@ -186,16 +183,8 @@ const stubUnverifiedEmail = username =>
 
 module.exports = {
   getLoginUrl,
-  stubLogin: (username, caseloadId, roles) =>
-    Promise.all([
-      favicon(),
-      redirect(),
-      logout(),
-      token(),
-      stubUserMe(),
-      stubUserMeRoles(roles),
-      stubUser(username, caseloadId),
-    ]),
+  stubLogin: (username, roles) =>
+    Promise.all([favicon(), redirect(), logout(), token(), stubUserMe(), stubUserMeRoles(roles), stubUser(username)]),
   stubUserDetailsRetrieval: username => Promise.all([stubUser(username), stubEmail(username)]),
   stubUnverifiedUserDetailsRetrieval: username => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
   stubUserMe,
