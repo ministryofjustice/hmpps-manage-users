@@ -42,7 +42,7 @@ context('Login functionality', () => {
       .should('contain', 'Sign in')
   })
 
-  it.skip('Token verification failure clears user session', () => {
+  it('Token verification failure clears user session', () => {
     cy.task('stubLogin', {})
     cy.login()
     MenuPage.verifyOnPage()
