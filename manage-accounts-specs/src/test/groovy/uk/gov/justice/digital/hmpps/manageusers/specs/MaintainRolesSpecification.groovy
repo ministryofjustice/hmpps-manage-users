@@ -5,6 +5,7 @@ import org.junit.Rule
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
 
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
 import uk.gov.justice.digital.hmpps.manageusers.model.Caseload
 import uk.gov.justice.digital.hmpps.manageusers.model.TestFixture
 import uk.gov.justice.digital.hmpps.manageusers.model.UserAccount
@@ -20,8 +21,11 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
     @Rule
     Elite2Api elite2api = new Elite2Api()
 
+    @Rule
+    TokenVerificationApi tokenVerificationApi = new TokenVerificationApi()
 
-    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi)
+
+    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi, tokenVerificationApi)
 
     def "should allow an unsupported prison's default settings to be displayed"() {
         finish

@@ -4,6 +4,7 @@ import com.github.tomakehurst.wiremock.junit.WireMockRule
 
 import static com.github.tomakehurst.wiremock.client.WireMock.aResponse
 import static com.github.tomakehurst.wiremock.client.WireMock.get
+import static com.github.tomakehurst.wiremock.client.WireMock.post
 
 class TokenVerificationApi extends WireMockRule {
 
@@ -21,4 +22,14 @@ class TokenVerificationApi extends WireMockRule {
                     .withBody('{"status": "UP"}')))
   }
 
+  void stubVerifyToken() {
+    this.stubFor(
+        post('/token/verify')
+            .willReturn(
+                aResponse()
+                    .withStatus(200)
+                    .withHeader('Content-Type', 'application/json;charset=UTF-8')
+                    .withBody('{"active" : "true"}')
+            ))
+  }
 }
