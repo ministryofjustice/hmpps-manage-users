@@ -64,6 +64,9 @@ env:
   - name: TOKENVERIFICATION_API_URL
     value: {{ .Values.env.TOKENVERIFICATION_API_URL | quote }}
 
+  - name: TOKENVERIFICATION_API_ENABLED
+    value: {{ .Values.env.TOKENVERIFICATION_API_ENABLED | quote }}
+
   - name: MANAGE_HMPPS_USERS_URL
     value: "https://{{ .Values.ingress.host }}/"
 
