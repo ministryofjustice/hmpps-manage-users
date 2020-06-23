@@ -1,4 +1,4 @@
-const validateSearch = user => {
+const validateSearch = (user) => {
   if (!user || !user.trim()) {
     return [{ targetName: 'user', text: 'Enter a username or email address' }]
   }
@@ -8,11 +8,11 @@ const validateSearch = user => {
   return []
 }
 
-const validateAddRole = role => (!role ? [{ targetName: 'role', text: 'Select a role' }] : [])
+const validateAddRole = (role) => (!role ? [{ targetName: 'role', text: 'Select a role' }] : [])
 
-const validateAddGroup = group => (!group ? [{ targetName: 'group', text: 'Select a group' }] : [])
+const validateAddGroup = (group) => (!group ? [{ targetName: 'group', text: 'Select a group' }] : [])
 
-const validateEmailFormat = email => {
+const validateEmailFormat = (email) => {
   const errors = []
   if (!email.match(/.*@.*\..*/)) {
     errors.push({

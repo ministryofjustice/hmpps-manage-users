@@ -20,11 +20,11 @@ export const ButtonContainer = styled('div')`
 
 const AuthUserAddGroup = ({ groupFilterList, handleGroupAddChange, groupList, handleAdd, handleCancel, error }) => {
   const groupListWithoutCurrentGroups = groupFilterList.filter(
-    filteredGroup => !groupList.some(currentGroup => currentGroup.groupCode === filteredGroup.groupCode)
+    (filteredGroup) => !groupList.some((currentGroup) => currentGroup.groupCode === filteredGroup.groupCode)
   )
 
   const groupListOptions = groupListWithoutCurrentGroups
-    ? groupListWithoutCurrentGroups.map(group => (
+    ? groupListWithoutCurrentGroups.map((group) => (
         <option key={`group_option_${group.groupCode}`} data-qa={`${group.groupCode}_option`} value={group.groupCode}>
           {group.groupName}
         </option>

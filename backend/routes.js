@@ -1,7 +1,6 @@
 const express = require('express')
 
 const withErrorHandler = require('./middleware/asyncHandler')
-const { userLocationsFactory } = require('./controllers/userLocations')
 const { userMeFactory } = require('./controllers/userMe')
 const { getRolesFactory } = require('./controllers/getRoles')
 const { getUserFactory } = require('./controllers/getUser')
@@ -11,17 +10,12 @@ const { contextUserRolesFactory } = require('./controllers/contextUserRoles')
 const { userSearchFactory } = require('./controllers/userSearch')
 const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
-const userCaseLoadsFactory = require('./controllers/usercaseloads').userCaseloadsFactory
-const setActiveCaseLoadFactory = require('./controllers/setactivecaseload').activeCaseloadFactory
 
 const configureRoutes = ({ oauthApi, elite2Api }) => {
   const router = express.Router()
 
   router.use('/api/config', withErrorHandler(getConfiguration))
   router.use('/api/me', withErrorHandler(userMeFactory(oauthApi, elite2Api).userMeService))
-  router.use('/api/usercaseloads', withErrorHandler(userCaseLoadsFactory(elite2Api).userCaseloads))
-  router.use('/api/setactivecaseload', withErrorHandler(setActiveCaseLoadFactory(elite2Api).setActiveCaseload))
-  router.use('/api/userLocations', withErrorHandler(userLocationsFactory(elite2Api).userLocations))
   router.use('/api/userSearch', withErrorHandler(userSearchFactory(elite2Api).userSearch))
   const authUserMaintenance = authUserMaintenanceFactory(oauthApi)
   router.use('/api/auth-user-get', withErrorHandler(authUserMaintenance.getUser))

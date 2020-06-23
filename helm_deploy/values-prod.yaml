@@ -4,7 +4,7 @@
 replicaCount: 4
 
 image:
-  repository: docker.io/quay.io/hmpps/manage-hmpps-auth-accounts
+  repository: quay.io/hmpps/manage-hmpps-auth-accounts
   tag: latest
   pullPolicy: IfNotPresent
   port: 3000
@@ -18,12 +18,14 @@ ingress:
   path: /
 
 env:
-  API_ENDPOINT_URL: https://gateway.prod.nomis-api.service.hmpps.dsd.io/elite2api/
-  OAUTH_ENDPOINT_URL: https://gateway.prod.nomis-api.service.hmpps.dsd.io/auth/
+  API_ENDPOINT_URL: https://gateway.prod.nomis-api.service.hmpps.dsd.io/elite2api
+  OAUTH_ENDPOINT_URL: https://gateway.prod.nomis-api.service.hmpps.dsd.io/auth
   NN_ENDPOINT_URL: https://digital.prison.service.justice.gov.uk/
   HMPPS_COOKIE_NAME: hmpps-session-prod
   NODE_ENV: production
   WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
+  TOKENVERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
+  TOKENVERIFICATION_API_ENABLED: true
 
 whitelist:
   office: "217.33.148.210/32"

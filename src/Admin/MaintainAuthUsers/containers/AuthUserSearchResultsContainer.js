@@ -32,7 +32,7 @@ class AuthUserSearchResultsContainer extends Component {
     }
   }
 
-  handleEdit = event => {
+  handleEdit = (event) => {
     const { userList, history } = this.props
     const chosenUser = userList[event.target.value]
 
@@ -113,19 +113,19 @@ AuthUserSearchResultsContainer.propTypes = {
   handleAxiosErrorDispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   config: state.app.config,
   userList: state.maintainAuthUsers.userList,
   loaded: state.app.loaded,
 })
 
-const mapDispatchToProps = dispatch => ({
-  userListDispatch: list => dispatch(setMaintainAuthUsersList(list)),
+const mapDispatchToProps = (dispatch) => ({
+  userListDispatch: (list) => dispatch(setMaintainAuthUsersList(list)),
   resetErrorDispatch: () => dispatch(resetError()),
-  setErrorDispatch: error => dispatch(setError(error)),
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
-  handleAxiosErrorDispatch: error => dispatch(handleAxiosError(error)),
+  setErrorDispatch: (error) => dispatch(setError(error)),
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
+  handleAxiosErrorDispatch: (error) => dispatch(handleAxiosError(error)),
 })
 
 export default withRouter(searchComponent(connect(mapStateToProps, mapDispatchToProps)(AuthUserSearchResultsContainer)))

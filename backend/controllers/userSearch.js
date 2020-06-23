@@ -10,7 +10,7 @@ const adminSearch = (eliteApi, res, agencyId, nameFilter, roleFilter) =>
     roleFilter: roleFilter || '',
   })
 
-const userSearchFactory = eliteApi => {
+const userSearchFactory = (eliteApi) => {
   const userSearch = async (req, res) => {
     const { agencyId, nameFilter, roleFilter, hasAdminRole } = req.query
     const response =

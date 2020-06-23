@@ -5,6 +5,7 @@ import org.junit.Rule
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
 
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
 import uk.gov.justice.digital.hmpps.manageusers.model.TestFixture
 import uk.gov.justice.digital.hmpps.manageusers.pages.*
 import wiremock.org.apache.commons.lang3.RandomStringUtils
@@ -20,7 +21,10 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
     @Rule
     Elite2Api elite2api = new Elite2Api()
 
-    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi)
+    @Rule
+    TokenVerificationApi tokenVerificationApi = new TokenVerificationApi()
+
+    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi, tokenVerificationApi)
 
     def "should allow a user search and display results"() {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']

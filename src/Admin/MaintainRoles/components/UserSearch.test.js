@@ -3,16 +3,10 @@ import { shallow } from 'enzyme'
 import { UserSearch } from './UserSearch'
 import mockHistory from '../../../test/mockHistory'
 
-const user = {
-  activeCaseLoadId: 'LEI',
-  caseLoadOptions: [{ caseLoadId: 'LEI', description: 'LEEDS (HMP)', type: 'INST', caseloadFunction: 'GENERAL' }],
-}
-
 describe('User search component', () => {
   it('should render the initial view of User search', async () => {
     const component = shallow(
       <UserSearch
-        user={user}
         nameFilter=""
         roleFilter=""
         roleFilterList={[
@@ -40,7 +34,6 @@ describe('User search component', () => {
     const handleRoleSelectMock = jest.fn()
     const component = shallow(
       <UserSearch
-        user={user}
         nameFilter=""
         roleFilter=""
         agencyId="LEI"

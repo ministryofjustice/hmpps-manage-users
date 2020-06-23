@@ -1,4 +1,4 @@
-const getUserFactory = elite2Api => {
+const getUserFactory = (elite2Api) => {
   const getUser = async (req, res) => {
     const { username } = req.query
     const data = await elite2Api.getUser(res.locals, username)
@@ -7,7 +7,7 @@ const getUserFactory = elite2Api => {
     if (data.activeCaseLoadId) {
       const agencyArray = await elite2Api.getAgencyDetails(res.locals, data.activeCaseLoadId)
       let description = ''
-      agencyArray.forEach(element => {
+      agencyArray.forEach((element) => {
         description += `${element.description}, `
       })
       if (description !== '') {

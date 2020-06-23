@@ -3,10 +3,6 @@ import { shallow } from 'enzyme'
 import { UserSearchResults } from './UserSearchResults'
 import mockHistory from '../../../test/mockHistory'
 
-const user = {
-  activeCaseLoadId: 'LEI',
-  caseLoadOptions: [{ caseLoadId: 'LEI', description: 'LEEDS (HMP)', type: 'INST', caseloadFunction: 'GENERAL' }],
-}
 const NAME_COLUMN = 0
 const USERNAME_COLUMN = 1
 
@@ -25,7 +21,6 @@ describe('User search Results component', () => {
   it('should render the initial view of User search', async () => {
     const component = shallow(
       <UserSearchResults
-        user={user}
         nameFilter=""
         roleFilter=""
         roleFilterList={[
@@ -65,22 +60,8 @@ describe('User search Results component', () => {
     )
     const searchComponent = component.find('UserSearch').shallow()
     expect(searchComponent.find('#search-button').text()).toEqual('Search')
-    expect(
-      component
-        .find('tr')
-        .at(1)
-        .find('td')
-        .at(NAME_COLUMN)
-        .text()
-    ).toEqual('Hunston, Martha')
-    expect(
-      component
-        .find('tr')
-        .at(1)
-        .find('td')
-        .at(USERNAME_COLUMN)
-        .text()
-    ).toEqual('HQA63K')
+    expect(component.find('tr').at(1).find('td').at(NAME_COLUMN).text()).toEqual('Hunston, Martha')
+    expect(component.find('tr').at(1).find('td').at(USERNAME_COLUMN).text()).toEqual('HQA63K')
   })
 
   it('should handle updates', async () => {
@@ -90,7 +71,6 @@ describe('User search Results component', () => {
     const handleRoleSelectMock = jest.fn()
     const component = shallow(
       <UserSearchResults
-        user={user}
         nameFilter=""
         roleFilter=""
         userList={[

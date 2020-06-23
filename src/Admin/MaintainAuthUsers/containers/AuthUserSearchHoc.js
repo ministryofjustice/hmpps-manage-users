@@ -2,14 +2,14 @@ import React, { Component } from 'react'
 import qs from 'query-string'
 import ReactRouterPropTypes from 'react-router-prop-types'
 
-const searchComponent = WrappedComponent => {
+const searchComponent = (WrappedComponent) => {
   class AuthUserSearchHoc extends Component {
-    handleChange = event => {
+    handleChange = (event) => {
       const { name, value } = event.target
       this.setState({ [name]: value })
     }
 
-    handleSearch = event => {
+    handleSearch = (event) => {
       const { history } = this.props
       const userQuery = qs.stringify(this.state)
 

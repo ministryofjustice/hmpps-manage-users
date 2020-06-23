@@ -71,6 +71,7 @@ class OauthApi extends WireMockRule {
         this.stubFor(
                 get(urlPathEqualTo("/auth/api/user/me/roles"))
                         .willReturn(aResponse()
+                        .withHeader('Content-Type', 'application/json')
                         .withBody(json)
                         .withStatus(200)))
     }
@@ -303,7 +304,7 @@ class OauthApi extends WireMockRule {
 
     void stubHealth() {
         this.stubFor(
-                get('/auth/ping')
+                get('/auth/health/ping')
                         .willReturn(
                                 aResponse()
                                         .withStatus(200)
