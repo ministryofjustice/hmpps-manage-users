@@ -8,7 +8,7 @@ const AuthUserBreadcrumb = ({ contextUser, match }) => {
   return match.params.username
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   contextUser: state.maintainAuthUsers.contextUser,
 })
 

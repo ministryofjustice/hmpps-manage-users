@@ -7,7 +7,7 @@ import { properCaseName } from '../../../stringUtils'
 import PreviousNextNavigation from '../../../PreviousNextNavigation'
 import { roleFilterListType, userListType } from '../../../types'
 
-const UserSearchResults = props => {
+const UserSearchResults = (props) => {
   const { pageSize, pageNumber, totalRecords, userList, handlePageAction, handleEdit, history } = props
   const pagination = { perPage: pageSize, pageNumber }
   const results = userList.map((a, index) => {
@@ -24,7 +24,7 @@ const UserSearchResults = props => {
             className="button greyButtonNoMinWidth"
             id={`edit-button-${a.username}`}
             value={index}
-            onClick={event => {
+            onClick={(event) => {
               handleEdit(event, history)
             }}
           >
@@ -66,7 +66,7 @@ const UserSearchResults = props => {
         <PreviousNextNavigation
           pagination={pagination}
           totalRecords={totalRecords}
-          pageAction={id => {
+          pageAction={(id) => {
             handlePageAction(id)
           }}
         />

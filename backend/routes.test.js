@@ -56,13 +56,9 @@ describe('Routes', () => {
     'contextUserRoles',
   ]
 
-  getRoutes.map(route =>
+  getRoutes.map((route) =>
     it(`GET /api/${route} should go through error handler`, () =>
-      request(app)
-        .get(`/api/${route}`)
-        .set('Accept', 'application/json')
-        .expect(500)
-        .expect('"Test error"'))
+      request(app).get(`/api/${route}`).set('Accept', 'application/json').expect(500).expect('"Test error"'))
   )
 
   const queryRoutes = [
@@ -83,8 +79,5 @@ describe('Routes', () => {
   )
 
   it('POST api/manualoverride should go through error handler', () =>
-    request(app)
-      .post('/api/manualoverride')
-      .set('Accept', 'application/json')
-      .expect(500))
+    request(app).post('/api/manualoverride').set('Accept', 'application/json').expect(500))
 })

@@ -14,7 +14,7 @@ const UserSearch = ({
   handleSearch,
 }) => {
   const roleListOptions = roleFilterList
-    ? roleFilterList.map(role => (
+    ? roleFilterList.map((role) => (
         <option key={`role_option_${role.roleCode}`} value={role.roleCode}>
           {role.roleName}
         </option>

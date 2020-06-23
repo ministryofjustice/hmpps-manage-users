@@ -29,7 +29,7 @@ describe('oathApi tests', () => {
 
     beforeAll(() => {
       // Some hackery to catch the configuration used by axios to make the authentication / refresh request.
-      oauthApi.oauthAxios.interceptors.request.use(config => {
+      oauthApi.oauthAxios.interceptors.request.use((config) => {
         requestConfig = config
         return config
       })
@@ -46,18 +46,18 @@ describe('oathApi tests', () => {
 
     describe('should save tokens', () => {
       it('should save access token', () =>
-        refreshResponse.then(response => {
+        refreshResponse.then((response) => {
           expect(response.access_token).toEqual('newAccessToken')
         }))
 
       it('should save refresh token', () =>
-        refreshResponse.then(response => {
+        refreshResponse.then((response) => {
           expect(response.refresh_token).toEqual('newRefreshToken')
         }))
     })
 
     it('should have set correct request configuration', () =>
-      refreshResponse.then(response => {
+      refreshResponse.then((response) => {
         expect(requestConfig.method).toEqual('post')
         expect(requestConfig.baseURL).toEqual(url)
         expect(requestConfig.url).toEqual('http://localhost/oauth/token')
@@ -82,7 +82,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(roles)
     })
     it('should call auth roles endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/authuser/joe/roles')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/joe/roles')
     })
   })
 
@@ -101,7 +101,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(groups)
     })
     it('should call auth groups endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/authuser/joe/groups')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/joe/groups')
     })
   })
 
@@ -120,7 +120,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(userDetails)
     })
     it('should call auth user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/authuser/joe')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/joe')
     })
   })
 
@@ -139,7 +139,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(userDetails)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/user/me')
+      expect(client.get).toBeCalledWith(context, '/api/user/me')
     })
   })
 
@@ -158,7 +158,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/user/me/roles')
+      expect(client.get).toBeCalledWith(context, '/api/user/me/roles')
     })
   })
   describe('userSearch', () => {
@@ -176,7 +176,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(userDetails)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, "api/authuser?email=joe'fred%40bananas%25.com")
+      expect(client.get).toBeCalledWith(context, "/api/authuser?email=joe'fred%40bananas%25.com")
     })
   })
 
@@ -195,7 +195,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, 'api/authuser/bob/roles/maintain', undefined)
+      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/roles/maintain', undefined)
     })
   })
 
@@ -214,7 +214,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.del).toBeCalledWith(context, 'api/authuser/bob/roles/maintain')
+      expect(client.del).toBeCalledWith(context, '/api/authuser/bob/roles/maintain')
     })
   })
 
@@ -233,7 +233,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, 'api/authuser/bob/groups/maintain', undefined)
+      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/groups/maintain', undefined)
     })
   })
 
@@ -252,7 +252,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.del).toBeCalledWith(context, 'api/authuser/bob/groups/maintain')
+      expect(client.del).toBeCalledWith(context, '/api/authuser/bob/groups/maintain')
     })
   })
 
@@ -271,7 +271,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/authuser/bob/assignable-roles')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/bob/assignable-roles')
     })
   })
 
@@ -290,7 +290,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(groups)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, 'api/authuser/me/assignable-groups')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/me/assignable-groups')
     })
   })
 
@@ -305,7 +305,7 @@ describe('oathApi tests', () => {
     })
 
     it('should call auth user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, 'api/authuser/joe', user)
+      expect(client.put).toBeCalledWith(context, '/api/authuser/joe', user)
     })
   })
 
@@ -324,7 +324,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, 'api/authuser/bob/enable', undefined)
+      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/enable', undefined)
     })
   })
 
@@ -343,7 +343,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, 'api/authuser/bob/disable', undefined)
+      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/disable', undefined)
     })
   })
 })

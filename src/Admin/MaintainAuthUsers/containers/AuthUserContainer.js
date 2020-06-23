@@ -29,42 +29,42 @@ class AuthUserContainer extends Component {
     loadAuthUserRolesAndGroupsDispatch(match.params.username)
   }
 
-  handleRoleRemove = async event => {
+  handleRoleRemove = async (event) => {
     const { removeAuthRoleDispatch } = this.props
 
     event.preventDefault()
     removeAuthRoleDispatch(event.target.value)
   }
 
-  handleGroupRemove = async event => {
+  handleGroupRemove = async (event) => {
     const { removeAuthGroupDispatch } = this.props
 
     event.preventDefault()
     removeAuthGroupDispatch(event.target.value)
   }
 
-  handleEnable = async event => {
+  handleEnable = async (event) => {
     const { enableDispatch } = this.props
 
     event.preventDefault()
     enableDispatch(event.target.value)
   }
 
-  handleDisable = async event => {
+  handleDisable = async (event) => {
     const { disableDispatch } = this.props
 
     event.preventDefault()
     disableDispatch(event.target.value)
   }
 
-  handleRoleAdd = event => {
+  handleRoleAdd = (event) => {
     const { contextUser, history } = this.props
 
     event.preventDefault()
     history.push(`/maintain-auth-users/${contextUser.username}/add-role`)
   }
 
-  handleGroupAdd = event => {
+  handleGroupAdd = (event) => {
     const { contextUser, history } = this.props
 
     event.preventDefault()
@@ -123,7 +123,7 @@ AuthUserContainer.defaultProps = {
   groupList: [],
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.app.user,
   error: state.app.error,
   contextUser: state.maintainAuthUsers.contextUser,
@@ -133,10 +133,10 @@ const mapStateToProps = state => ({
   message: state.app.message,
 })
 
-const mapDispatchToProps = dispatch => ({
-  loadAuthUserRolesAndGroupsDispatch: username => dispatch(loadAuthUserRolesAndGroups(username)),
-  removeAuthRoleDispatch: role => dispatch(removeAuthRole(role)),
-  removeAuthGroupDispatch: group => dispatch(removeAuthGroup(group)),
+const mapDispatchToProps = (dispatch) => ({
+  loadAuthUserRolesAndGroupsDispatch: (username) => dispatch(loadAuthUserRolesAndGroups(username)),
+  removeAuthRoleDispatch: (role) => dispatch(removeAuthRole(role)),
+  removeAuthGroupDispatch: (group) => dispatch(removeAuthGroup(group)),
   enableDispatch: () => dispatch(enableUser()),
   disableDispatch: () => dispatch(disableUser()),
   clearMessage: () => dispatch(clearMessage()),

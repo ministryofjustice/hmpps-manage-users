@@ -9,7 +9,7 @@ import { lookupMeta } from '../../../govuk-helpers'
 import { authGroupListType, errorType } from '../../../types'
 
 const AuthUserCreate = ({ handleChange, handleCreate, groupList, error }) => {
-  const groupListOptions = groupList.map(group => (
+  const groupListOptions = groupList.map((group) => (
     <option key={`group_option_${group.groupCode}`} data-qa={`${group.groupCode}_option`} value={group.groupCode}>
       {group.groupName}
     </option>

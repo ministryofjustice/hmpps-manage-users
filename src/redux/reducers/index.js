@@ -7,8 +7,6 @@ const appInitialState = {
     notmEndpointUrl: '',
   },
   user: {
-    activeCaseLoadId: '',
-    caseLoadOptions: [],
     expiredFlag: false,
     firstName: '',
     lastName: '',
@@ -38,7 +36,6 @@ const maintainRolesInitialState = {
   pageSize: 10,
   totalRecords: 0,
   contextUser: {
-    activeCaseLoadId: '',
     agencyDescription: '',
     expiredFlag: false,
     firstName: '',
@@ -69,9 +66,6 @@ export function app(state = appInitialState, action) {
       return updateObject(state, {
         user: action.user,
       })
-    case ActionTypes.SWITCH_AGENCY:
-      return { ...state, user: { ...state.user, activeCaseLoadId: action.activeCaseLoadId } }
-
     case ActionTypes.SET_TERMS_VISIBILITY:
       return { ...state, shouldShowTerms: action.shouldShowTerms }
 

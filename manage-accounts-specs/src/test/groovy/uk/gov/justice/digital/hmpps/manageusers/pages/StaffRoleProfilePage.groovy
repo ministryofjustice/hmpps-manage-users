@@ -21,6 +21,7 @@ class StaffRoleProfilePage extends Page {
         caseload(required: false) { $('div #caseloadDiv')}
         removeButtonOMIC_ADMIN (required: false) { $('#remove-button-OMIC_ADMIN')}
         rows (required: false) { $('table tbody tr') }
+        errorSummary(required: false) { $('.error-summary') }
     }
 
 }

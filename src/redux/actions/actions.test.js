@@ -18,7 +18,6 @@ import {
   SET_USER_SEARCH_ROLE_FILTER_LIST,
   SET_USER_SEARCH_ROLE_LIST,
   SET_VALIDATION_ERROR,
-  SWITCH_AGENCY,
 } from './actionTypes'
 
 describe('actions', () => {
@@ -39,15 +38,6 @@ describe('actions', () => {
       user,
     }
     expect(actions.setUserDetails(user)).toEqual(expectedAction)
-  })
-
-  it('should create an action to switch current Agency', () => {
-    const activeCaseLoadId = 'LEI'
-    const expectedAction = {
-      type: SWITCH_AGENCY,
-      activeCaseLoadId,
-    }
-    expect(actions.switchAgency(activeCaseLoadId)).toEqual(expectedAction)
   })
 
   it('should create an action to toggle ts and cs', () => {
