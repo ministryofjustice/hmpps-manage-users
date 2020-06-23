@@ -85,6 +85,9 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         then: "i am presented with the Staff profile page"
         at StaffRoleProfilePage
+
+        and: 'And no errors are displayed'
+        !errorSummary.displayed
     }
 
     def "handles empty caseload on Staff role profile"() {
@@ -118,6 +121,9 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         then: "i am presented with the Staff profile page without a caseload description"
         at StaffRoleProfilePage
         !caseload.isDisplayed()
+
+        and: 'And no errors are displayed'
+        !errorSummary.displayed
     }
 
 
@@ -217,6 +223,9 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         then: "The new role list is displayed"
         at StaffRoleProfilePage
+
+        and: 'And no errors are displayed'
+        !errorSummary.displayed
     }
 
     def "should allow adding a new role"() {
@@ -254,5 +263,8 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         then: "I am returned to the StaffRoleProfile page with an updated role list"
         at StaffRoleProfilePage
+
+        and: 'And no errors are displayed'
+        !errorSummary.displayed
     }
 }
