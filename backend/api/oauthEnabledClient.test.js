@@ -211,7 +211,7 @@ describe('Test clients built by oauthEnabledClient', () => {
         await pipe
         expect(res.write).toHaveBeenCalled()
       })
-      it('Should retry many time if configure with more retires if request fails', async () => {
+      it('Should retry many time if configure with more retries if request fails', async () => {
         const pipe = new Promise((resolve) => {
           mock
             .get('/api/users/me')
