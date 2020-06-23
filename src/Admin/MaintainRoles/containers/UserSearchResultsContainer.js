@@ -48,14 +48,14 @@ class UserSearchContainer extends Component {
     }
   }
 
-  handleRoleFilterChange = event => {
+  handleRoleFilterChange = (event) => {
     const { pageNumberDispatch, roleFilterDispatch } = this.props
 
     pageNumberDispatch(0)
     roleFilterDispatch(event.target.value)
   }
 
-  handleNameFilterChange = event => {
+  handleNameFilterChange = (event) => {
     const { pageNumberDispatch, nameFilterDispatch } = this.props
 
     pageNumberDispatch(0)
@@ -70,7 +70,7 @@ class UserSearchContainer extends Component {
     setLoadedDispatch(true)
   }
 
-  handlePageAction = async pageNumber => {
+  handlePageAction = async (pageNumber) => {
     await this.performSearch(pageNumber)
   }
 
@@ -155,7 +155,7 @@ UserSearchContainer.propTypes = {
   userList: userListType.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   user: state.app.user,
   config: state.app.config,
@@ -170,16 +170,16 @@ const mapStateToProps = state => ({
   loaded: state.app.loaded,
 })
 
-const mapDispatchToProps = dispatch => ({
-  nameFilterDispatch: text => dispatch(setMaintainRolesNameFilter(text)),
-  roleFilterDispatch: text => dispatch(setMaintainRolesRoleFilter(text)),
-  roleFilterListDispatch: list => dispatch(setMaintainRolesRoleFilterList(list)),
-  userListDispatch: list => dispatch(setMaintainRolesUserList(list)),
-  pageNumberDispatch: no => dispatch(setMaintainRolesUserPageNumber(no)),
-  totalRecordsDispatch: no => dispatch(setMaintainRolesUserTotalRecords(no)),
-  setErrorDispatch: error => dispatch(setError(error)),
+const mapDispatchToProps = (dispatch) => ({
+  nameFilterDispatch: (text) => dispatch(setMaintainRolesNameFilter(text)),
+  roleFilterDispatch: (text) => dispatch(setMaintainRolesRoleFilter(text)),
+  roleFilterListDispatch: (list) => dispatch(setMaintainRolesRoleFilterList(list)),
+  userListDispatch: (list) => dispatch(setMaintainRolesUserList(list)),
+  pageNumberDispatch: (no) => dispatch(setMaintainRolesUserPageNumber(no)),
+  totalRecordsDispatch: (no) => dispatch(setMaintainRolesUserTotalRecords(no)),
+  setErrorDispatch: (error) => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserSearchContainer)

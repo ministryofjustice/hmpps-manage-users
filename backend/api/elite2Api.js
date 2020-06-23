@@ -1,10 +1,10 @@
 const config = require('../config')
 const contextProperties = require('../contextProperties')
 
-const encodeQueryString = input => encodeURIComponent(input)
+const encodeQueryString = (input) => encodeURIComponent(input)
 
-const elite2ApiFactory = client => {
-  const processResponse = context => response => {
+const elite2ApiFactory = (client) => {
+  const processResponse = (context) => (response) => {
     contextProperties.setResponsePagination(context, response.headers)
     return response.body
   }
@@ -23,8 +23,8 @@ const elite2ApiFactory = client => {
     )
   const userSearchAdmin = (context, { nameFilter, roleFilter }) =>
     get(context, `/api/users?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`)
-  const getRoles = context => get(context, '/api/access-roles')
-  const getRolesAdmin = context => get(context, '/api/access-roles?includeAdmin=true')
+  const getRoles = (context) => get(context, '/api/access-roles')
+  const getRolesAdmin = (context) => get(context, '/api/access-roles?includeAdmin=true')
   const contextUserRoles = (context, username, hasAdminRole) =>
     get(
       context,

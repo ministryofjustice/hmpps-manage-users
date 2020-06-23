@@ -4,7 +4,7 @@ const tokenverification = require('../mockApis/tokenverification')
 
 const { resetStubs } = require('../mockApis/wiremock')
 
-module.exports = on => {
+module.exports = (on) => {
   on('task', {
     reset: resetStubs,
     resetAndStubTokenVerification: async () => {

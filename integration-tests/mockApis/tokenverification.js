@@ -1,7 +1,7 @@
 const { stubFor } = require('./wiremock')
 
 module.exports = {
-  stubVerifyToken: active =>
+  stubVerifyToken: (active) =>
     stubFor({
       request: {
         method: 'POST',

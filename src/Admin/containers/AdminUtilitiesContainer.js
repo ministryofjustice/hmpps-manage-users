@@ -65,13 +65,13 @@ AdminUtilitiesContainer.propTypes = {
   setLoadedDispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   user: state.app.user,
   config: state.app.config,
 })
 
-const mapDispatchToProps = dispatch => ({
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
+const mapDispatchToProps = (dispatch) => ({
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AdminUtilitiesContainer)

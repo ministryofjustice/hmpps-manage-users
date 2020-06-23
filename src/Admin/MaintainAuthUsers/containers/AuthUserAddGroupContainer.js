@@ -31,24 +31,24 @@ class AuthUserAddGroupContainer extends Component {
 
     try {
       const { data } = await axios.get('/api/auth-groups')
-      this.setState(state => ({ ...state, groups: data }))
+      this.setState((state) => ({ ...state, groups: data }))
     } catch (error) {
       handleAxiosErrorDispatch(error)
     }
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target
-    this.setState(state => ({ ...state, [name]: value }))
+    this.setState((state) => ({ ...state, [name]: value }))
   }
 
-  handleAdd = async event => {
+  handleAdd = async (event) => {
     const { contextUser, handleAxiosErrorDispatch, setErrorDispatch, history } = this.props
     const { groups, group } = this.state
 
     event.preventDefault()
 
-    const selectedGroup = groups.find(r => r.groupCode === group)
+    const selectedGroup = groups.find((r) => r.groupCode === group)
 
     const errors = validateAddGroup(selectedGroup)
     if (errors.length) {
@@ -69,7 +69,7 @@ class AuthUserAddGroupContainer extends Component {
     }
   }
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     const { history } = this.props
     e.preventDefault()
     history.goBack()
@@ -121,19 +121,19 @@ AuthUserAddGroupContainer.defaultProps = {
   groupList: [],
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   contextUser: state.maintainAuthUsers.contextUser,
   groupList: state.maintainAuthUsers.groupList,
   loaded: state.app.loaded,
 })
 
-const mapDispatchToProps = dispatch => ({
-  setErrorDispatch: error => dispatch(setError(error)),
+const mapDispatchToProps = (dispatch) => ({
+  setErrorDispatch: (error) => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),
-  handleAxiosErrorDispatch: error => dispatch(handleAxiosError(error)),
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
-  loadAuthUserRolesAndGroupsDispatch: username => dispatch(loadAuthUserRolesAndGroups(username)),
+  handleAxiosErrorDispatch: (error) => dispatch(handleAxiosError(error)),
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
+  loadAuthUserRolesAndGroupsDispatch: (username) => dispatch(loadAuthUserRolesAndGroups(username)),
 })
 
 export { AuthUserAddGroupContainer }

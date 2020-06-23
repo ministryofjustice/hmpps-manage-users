@@ -10,7 +10,7 @@ import { BLACK, GREY_3 } from 'govuk-colours'
 import moment from 'moment'
 import { authGroupListType, authRoleListType, contextAuthUserType, userType } from '../../../types'
 
-const AuthUser = props => {
+const AuthUser = (props) => {
   const {
     user: { maintainAuthUsers },
     roleList,
@@ -24,7 +24,7 @@ const AuthUser = props => {
     handleDisable,
   } = props
 
-  const roleResults = roleList.map(a => (
+  const roleResults = roleList.map((a) => (
     <Table.Row key={a.roleCode}>
       <Table.Cell>{a.roleName}</Table.Cell>
       <Table.Cell alignRight>
@@ -42,7 +42,7 @@ const AuthUser = props => {
     </Table.Row>
   ))
 
-  const groupResults = groupList.map(a => (
+  const groupResults = groupList.map((a) => (
     <Table.Row key={a.groupCode}>
       <Table.Cell>{a.groupName}</Table.Cell>
       <Table.Cell alignRight>

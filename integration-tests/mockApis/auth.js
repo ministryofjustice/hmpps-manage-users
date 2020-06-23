@@ -18,7 +18,7 @@ const getLoginUrl = () =>
   getMatchingRequests({
     method: 'GET',
     urlPath: '/auth/oauth/authorize',
-  }).then(data => {
+  }).then((data) => {
     const { requests } = data.body
     const stateValue = requests[0].queryParams.state.values[0]
     return `/login/callback?code=codexxxx&state=${stateValue}`
@@ -90,7 +90,7 @@ const token = () =>
     },
   })
 
-const stubUser = username => {
+const stubUser = (username) => {
   const user = username || 'ITAG_USER'
   return stubFor({
     request: {
@@ -133,7 +133,7 @@ const stubUserMe = (username = 'ITAG_USER') =>
     },
   })
 
-const stubUserMeRoles = roles =>
+const stubUserMeRoles = (roles) =>
   stubFor({
     request: {
       method: 'GET',
@@ -148,7 +148,7 @@ const stubUserMeRoles = roles =>
     },
   })
 
-const stubEmail = username =>
+const stubEmail = (username) =>
   stubFor({
     request: {
       method: 'GET',
@@ -166,7 +166,7 @@ const stubEmail = username =>
     },
   })
 
-const stubUnverifiedEmail = username =>
+const stubUnverifiedEmail = (username) =>
   stubFor({
     request: {
       method: 'GET',
@@ -185,8 +185,8 @@ module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
     Promise.all([favicon(), redirect(), logout(), token(), stubUserMe(), stubUserMeRoles(roles), stubUser(username)]),
-  stubUserDetailsRetrieval: username => Promise.all([stubUser(username), stubEmail(username)]),
-  stubUnverifiedUserDetailsRetrieval: username => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
+  stubUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubEmail(username)]),
+  stubUnverifiedUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
   stubUserMe,
   stubUserMeRoles,
   stubEmail,

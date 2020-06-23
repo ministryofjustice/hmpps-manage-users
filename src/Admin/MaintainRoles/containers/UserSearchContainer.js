@@ -44,17 +44,17 @@ class UserSearchContainer extends Component {
     }
   }
 
-  handleRoleFilterChange = event => {
+  handleRoleFilterChange = (event) => {
     const { roleFilterDispatch } = this.props
 
     roleFilterDispatch(event.target.value)
   }
 
-  handleSearch = history => {
+  handleSearch = (history) => {
     history.push('/maintain-roles/search-results')
   }
 
-  handleNameFilterChange = event => {
+  handleNameFilterChange = (event) => {
     const { nameFilterDispatch } = this.props
 
     nameFilterDispatch(event.target.value)
@@ -89,7 +89,7 @@ UserSearchContainer.propTypes = {
   handleError: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   user: state.app.user,
   nameFilter: state.maintainRoles.nameFilter,
@@ -98,13 +98,13 @@ const mapStateToProps = state => ({
   roleFilterList: state.maintainRoles.roleFilterList,
 })
 
-const mapDispatchToProps = dispatch => ({
-  nameFilterDispatch: text => dispatch(setMaintainRolesNameFilter(text)),
-  roleFilterDispatch: text => dispatch(setMaintainRolesRoleFilter(text)),
-  roleFilterListDispatch: list => dispatch(setMaintainRolesRoleFilterList(list)),
-  pageNumberDispatch: list => dispatch(setMaintainRolesUserPageNumber(list)),
+const mapDispatchToProps = (dispatch) => ({
+  nameFilterDispatch: (text) => dispatch(setMaintainRolesNameFilter(text)),
+  roleFilterDispatch: (text) => dispatch(setMaintainRolesRoleFilter(text)),
+  roleFilterListDispatch: (list) => dispatch(setMaintainRolesRoleFilterList(list)),
+  pageNumberDispatch: (list) => dispatch(setMaintainRolesUserPageNumber(list)),
   resetErrorDispatch: () => dispatch(resetError()),
-  dispatchLoaded: value => dispatch(setLoaded(value)),
+  dispatchLoaded: (value) => dispatch(setLoaded(value)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UserSearchContainer)

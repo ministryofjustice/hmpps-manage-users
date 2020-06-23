@@ -50,7 +50,7 @@ class AddRoleContainer extends Component {
     }
   }
 
-  handleRoleAddChange = event => {
+  handleRoleAddChange = (event) => {
     const { setRoleAddDispatch } = this.props
 
     setRoleAddDispatch(event.target.value)
@@ -146,7 +146,7 @@ AddRoleContainer.propTypes = {
   match: routeMatchType.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   user: state.app.user,
   agencyId: state.app.user.activeCaseLoadId,
@@ -158,15 +158,15 @@ const mapStateToProps = state => ({
   loaded: state.app.loaded,
 })
 
-const mapDispatchToProps = dispatch => ({
-  setErrorDispatch: error => dispatch(setError(error)),
+const mapDispatchToProps = (dispatch) => ({
+  setErrorDispatch: (error) => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),
-  setRoleAddDispatch: filter => dispatch(setMaintainRolesRoleAdd(filter)),
-  roleFilterListDispatch: list => dispatch(setMaintainRolesRoleFilterList(list)),
-  contextUserDispatch: user => dispatch(setMaintainRolesUserContextUser(user)),
+  setRoleAddDispatch: (filter) => dispatch(setMaintainRolesRoleAdd(filter)),
+  roleFilterListDispatch: (list) => dispatch(setMaintainRolesRoleFilterList(list)),
+  contextUserDispatch: (user) => dispatch(setMaintainRolesUserContextUser(user)),
   setValidationErrorDispatch: (fieldName, message) => dispatch(setValidationError(fieldName, message)),
   resetValidationErrorsDispatch: () => dispatch(resetValidationErrors()),
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
 })
 
 export { AddRoleContainer }

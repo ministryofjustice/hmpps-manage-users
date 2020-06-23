@@ -48,7 +48,7 @@ class StaffRoleProfileContainer extends Component {
     }
   }
 
-  handleRemove = async event => {
+  handleRemove = async (event) => {
     const { contextUser, agencyId, handleError } = this.props
 
     try {
@@ -117,7 +117,7 @@ StaffRoleProfileContainer.propTypes = {
   setRoleFilterDispatch: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   user: state.app.user,
   agencyId: state.app.user.activeCaseLoadId,
@@ -127,13 +127,13 @@ const mapStateToProps = state => ({
   message: state.app.message,
 })
 
-const mapDispatchToProps = dispatch => ({
-  setErrorDispatch: error => dispatch(setError(error)),
+const mapDispatchToProps = (dispatch) => ({
+  setErrorDispatch: (error) => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),
-  setRoleListDispatch: list => dispatch(setMaintainRolesRoleList(list)),
-  setRoleFilterDispatch: list => dispatch(setMaintainRolesRoleFilter(list)),
-  contextUserDispatch: user => dispatch(setMaintainRolesUserContextUser(user)),
-  setLoadedDispatch: status => dispatch(setLoaded(status)),
+  setRoleListDispatch: (list) => dispatch(setMaintainRolesRoleList(list)),
+  setRoleFilterDispatch: (list) => dispatch(setMaintainRolesRoleFilter(list)),
+  contextUserDispatch: (user) => dispatch(setMaintainRolesUserContextUser(user)),
+  setLoadedDispatch: (status) => dispatch(setLoaded(status)),
 })
 
 export { StaffRoleProfileContainer }

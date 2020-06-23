@@ -16,11 +16,11 @@ const AddRole = ({
   handleAdd,
 }) => {
   const roleListWithoutCurrentRoles = roleFilterList.filter(
-    filteredRole => !roleList.some(currentRole => currentRole.roleCode === filteredRole.roleCode)
+    (filteredRole) => !roleList.some((currentRole) => currentRole.roleCode === filteredRole.roleCode)
   )
 
   const roleListOptions = roleListWithoutCurrentRoles
-    ? roleListWithoutCurrentRoles.map(role => (
+    ? roleListWithoutCurrentRoles.map((role) => (
         <option key={`role_option_${role.roleCode}`} id={`${role.roleCode}_option`} value={role.roleCode}>
           {role.roleName}
         </option>
@@ -69,7 +69,7 @@ const AddRole = ({
               type="button"
               className="button margin-left margin-top-large"
               id="add-button"
-              onClick={event => {
+              onClick={(event) => {
                 handleAdd(event, history)
               }}
             >
@@ -80,7 +80,7 @@ const AddRole = ({
             type="button"
             className="button greyButtonNoMinWidth margin-left-15 margin-top-large"
             id="cancel-button"
-            onClick={event => {
+            onClick={(event) => {
               handleCancel(event, history)
             }}
           >

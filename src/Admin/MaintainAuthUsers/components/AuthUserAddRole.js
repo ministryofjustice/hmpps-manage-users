@@ -20,11 +20,11 @@ export const ButtonContainer = styled('div')`
 
 const AuthUserAddRole = ({ roleFilterList, handleRoleAddChange, roleList, handleAdd, handleCancel, error }) => {
   const roleListWithoutCurrentRoles = roleFilterList.filter(
-    filteredRole => !roleList.some(currentRole => currentRole.roleCode === filteredRole.roleCode)
+    (filteredRole) => !roleList.some((currentRole) => currentRole.roleCode === filteredRole.roleCode)
   )
 
   const roleListOptions = roleListWithoutCurrentRoles
-    ? roleListWithoutCurrentRoles.map(role => (
+    ? roleListWithoutCurrentRoles.map((role) => (
         <option key={`role_option_${role.roleCode}`} data-qa={`${role.roleCode}_option`} value={role.roleCode}>
           {role.roleName}
         </option>
