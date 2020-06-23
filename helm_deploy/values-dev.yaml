@@ -11,6 +11,7 @@ image:
 
 ingress:
   enabled: true
+  modsecurity_audit_enabled: true
   host: manage-hmpps-auth-accounts-dev.prison.service.justice.gov.uk
   cert_secret: manage-hmpps-auth-accounts-cert
   path: /
