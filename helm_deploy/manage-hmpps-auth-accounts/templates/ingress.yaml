@@ -15,7 +15,7 @@ metadata:
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
-      SecRuleEngine Off
+      SecRuleEngine On
       {{ if .Values.ingress.modsecurity_audit_enabled -}}
       SecAuditEngine RelevantOnly
       SecAuditLog /var/log/nginx/error.log
