@@ -90,7 +90,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 419, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 419, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.getUser.mockImplementation(() => {
@@ -110,7 +110,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.getUser.mockImplementation(() => {
@@ -135,7 +135,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 419, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 419, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.getUser.mockImplementation(() => {
@@ -155,7 +155,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.getUser.mockImplementation(() => {
@@ -193,7 +193,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.userRoles.mockImplementation(() => {
@@ -238,7 +238,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.userGroups.mockImplementation(() => {
@@ -283,7 +283,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.addUserRole.mockImplementation(() => {
@@ -328,7 +328,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.removeUserRole.mockImplementation(() => {
@@ -373,7 +373,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.addUserGroup.mockImplementation(() => {
@@ -418,7 +418,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.removeUserGroup.mockImplementation(() => {
@@ -450,7 +450,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.assignableRoles.mockImplementation(() => {
@@ -482,7 +482,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('known issue', () => {
-      const response = { status: 404, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
         oauthApi.assignableGroups.mockImplementation(() => {
@@ -502,7 +502,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     describe('unknown issue but client error', () => {
-      const response = { status: 403, data: { error: 'Not Found' } }
+      const response = { status: 403, body: { error: 'Not Found' } }
 
       beforeEach(async () => {
         oauthApi.assignableGroups.mockImplementation(() => {
@@ -534,7 +534,7 @@ describe('Auth user maintenance controller', () => {
     describe('known issue', () => {
       const response = {
         status: 419,
-        data: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
       }
 
       beforeEach(async () => {
@@ -555,7 +555,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.createUser.mockImplementation(() => {
@@ -570,7 +570,7 @@ describe('Auth user maintenance controller', () => {
     it('should map known error conditions', async () => {
       const response = {
         status: 400,
-        data: { error: 'email.domain', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'email.domain', field: 'email', error_description: 'Some problem occurred' },
       }
 
       oauthApi.createUser.mockImplementation(() => {
@@ -605,7 +605,7 @@ describe('Auth user maintenance controller', () => {
     describe('known issue', () => {
       const response = {
         status: 419,
-        data: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
       }
 
       beforeEach(async () => {
@@ -626,7 +626,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.enableUser.mockImplementation(() => {
@@ -653,7 +653,7 @@ describe('Auth user maintenance controller', () => {
     describe('known issue', () => {
       const response = {
         status: 419,
-        data: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
       }
 
       beforeEach(async () => {
@@ -674,7 +674,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.disableUser.mockImplementation(() => {
@@ -702,7 +702,7 @@ describe('Auth user maintenance controller', () => {
     describe('known issue', () => {
       const response = {
         status: 419,
-        data: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'Not Found', field: 'email', error_description: 'Some problem occurred' },
       }
 
       beforeEach(async () => {
@@ -723,7 +723,7 @@ describe('Auth user maintenance controller', () => {
     })
 
     it('should throw error through if unknown issue occurs', async () => {
-      const response = { status: 500, data: { error: 'Not Found', error_description: 'Some problem occurred' } }
+      const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
       oauthApi.amendUser.mockImplementation(() => {
@@ -738,7 +738,7 @@ describe('Auth user maintenance controller', () => {
     it('should map known error conditions', async () => {
       const response = {
         status: 400,
-        data: { error: 'email.domain', field: 'email', error_description: 'Some problem occurred' },
+        body: { error: 'email.domain', field: 'email', error_description: 'Some problem occurred' },
       }
 
       oauthApi.amendUser.mockImplementation(() => {
