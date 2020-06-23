@@ -13,7 +13,7 @@ class StaffRoleProfile extends Component {
 
   render() {
     const { roleList, history, handleAdd, handleRemove } = this.props
-    const results = roleList.map(a => (
+    const results = roleList.map((a) => (
       <tr key={a.roleCode}>
         <td className="row-gutters">{a.roleName}</td>
         <td className="row-gutters">
@@ -22,7 +22,7 @@ class StaffRoleProfile extends Component {
             className="button greyButtonNoMinWidth removeButton"
             id={`remove-button-${a.roleCode}`}
             value={a.roleCode}
-            onClick={event => {
+            onClick={(event) => {
               handleRemove(event, history)
             }}
           >
@@ -61,7 +61,7 @@ class StaffRoleProfile extends Component {
                   type="button"
                   className="button"
                   id="add-button"
-                  onClick={event => {
+                  onClick={(event) => {
                     handleAdd(event, history)
                   }}
                 >

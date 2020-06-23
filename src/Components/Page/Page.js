@@ -26,7 +26,7 @@ export class Page extends Component {
     resetErrorDispatch()
   }
 
-  renderTitleString = title => {
+  renderTitleString = (title) => {
     document.title = `${title} - Key worker - Digital Prison Services`
   }
 
@@ -73,12 +73,12 @@ Page.defaultProps = {
   showBreadcrumb: true,
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   loaded: state.app.loaded,
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetErrorDispatch: () => dispatch(resetError()),
 })
 

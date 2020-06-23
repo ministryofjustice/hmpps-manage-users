@@ -16,7 +16,7 @@ const handleClientError = async (apiCall, defaultField, res, errorMapping) => {
   }
 }
 
-const authUserMaintenanceFactory = oauthApi => {
+const authUserMaintenanceFactory = (oauthApi) => {
   const getUser = async (req, res) => {
     const { username } = req.query
     log.debug('Performing get auth user')

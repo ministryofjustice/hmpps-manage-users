@@ -24,12 +24,12 @@ class AuthUserAmendContainer extends Component {
     loadAuthUserAndRolesDispatch(match.params.username)
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target
     this.setState({ [name]: value })
   }
 
-  handleAmend = async event => {
+  handleAmend = async (event) => {
     const { history, setErrorDispatch, resetErrorDispatch, handleAxiosErrorDispatch } = this.props
     const {
       contextUser: { username },
@@ -54,7 +54,7 @@ class AuthUserAmendContainer extends Component {
     }
   }
 
-  handleCancel = e => {
+  handleCancel = (e) => {
     const { history } = this.props
     e.preventDefault()
     // Return to previous page in history. There can be multiple origin pages.
@@ -104,14 +104,14 @@ AuthUserAmendContainer.defaultProps = {
   contextUser: {},
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetErrorDispatch: () => dispatch(resetError()),
-  setErrorDispatch: error => dispatch(setError(error)),
-  handleAxiosErrorDispatch: error => dispatch(handleAxiosError(error)),
-  loadAuthUserAndRolesDispatch: username => dispatch(loadAuthUserRolesAndGroups(username)),
+  setErrorDispatch: (error) => dispatch(setError(error)),
+  handleAxiosErrorDispatch: (error) => dispatch(handleAxiosError(error)),
+  loadAuthUserAndRolesDispatch: (username) => dispatch(loadAuthUserRolesAndGroups(username)),
 })
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   contextUser: state.maintainAuthUsers.contextUser,
   error: state.app.error,
 })

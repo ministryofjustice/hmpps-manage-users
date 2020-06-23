@@ -191,7 +191,7 @@ describe('Test clients built by oauthEnabledClient', () => {
         }
       })
       it('Should retry twice if request fails', async () => {
-        const pipe = new Promise(resolve => {
+        const pipe = new Promise((resolve) => {
           mock
             .get('/api/users/me')
             .reply(500, { failure: 'one' })
@@ -212,7 +212,7 @@ describe('Test clients built by oauthEnabledClient', () => {
         expect(res.write).toHaveBeenCalled()
       })
       it('Should retry many time if configure with more retires if request fails', async () => {
-        const pipe = new Promise(resolve => {
+        const pipe = new Promise((resolve) => {
           mock
             .get('/api/users/me')
             .reply(500, { failure: 'one' })
@@ -244,7 +244,7 @@ describe('Test clients built by oauthEnabledClient', () => {
         expect(res.write).toHaveBeenCalled()
       })
       it('Should set headers on response to pipe to', async () => {
-        const pipe = new Promise(resolve => {
+        const pipe = new Promise((resolve) => {
           mock.get('/api/users/me').reply(200, Buffer.from('some binary data'), {
             'Content-Type': 'image/png',
             'Content-Length': 123,
@@ -271,9 +271,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
     it('Should set the url correctly if ends with a /', async () => {
       const client = clientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
-      nock(hostname)
-        .get('/api/users/me')
-        .reply(200, {})
+      nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}
       contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
@@ -285,9 +283,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
     it("Should set the url correctly if doesn't end with a /", async () => {
       const client = clientFactory({ baseUrl: hostname, timeout: 2000 })
-      nock(hostname)
-        .get('/api/users/me')
-        .reply(200, {})
+      nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}
       contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)

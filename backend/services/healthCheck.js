@@ -5,8 +5,8 @@ const service = (name, url) => {
   const check = serviceCheckFactory(name, healthUrl)
   return () =>
     check()
-      .then(result => ({ name, status: 'UP', message: result }))
-      .catch(err => ({ name, status: 'ERROR', message: err }))
+      .then((result) => ({ name, status: 'UP', message: result }))
+      .catch((err) => ({ name, status: 'ERROR', message: err }))
 }
 
 const gatherCheckInfo = (total, currentValue) => Object.assign({}, total, { [currentValue.name]: currentValue.message })
@@ -20,7 +20,7 @@ const getBuild = () => {
   }
 }
 
-const addAppInfo = result => {
+const addAppInfo = (result) => {
   const buildInformation = getBuild()
   const buildInfo = {
     uptime: process.uptime(),
@@ -38,9 +38,9 @@ module.exports = function healthcheckFactory(authUrl, elite2Url, tokenverificati
     service('tokenverification', tokenverificationUrl),
   ]
 
-  return callback =>
-    Promise.all(checks.map(fn => fn())).then(checkResults => {
-      const allOk = checkResults.every(item => item.status === 'UP') ? 'UP' : 'DOWN'
+  return (callback) =>
+    Promise.all(checks.map((fn) => fn())).then((checkResults) => {
+      const allOk = checkResults.every((item) => item.status === 'UP') ? 'UP' : 'DOWN'
       const result = {
         name: 'manage-hmpps-auth-accounts',
         status: allOk,

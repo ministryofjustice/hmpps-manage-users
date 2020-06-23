@@ -29,18 +29,18 @@ class AuthUserCreateContainer extends Component {
 
     try {
       const { data } = await axios.get('/api/auth-groups')
-      this.setState(state => ({ ...state, groups: data }))
+      this.setState((state) => ({ ...state, groups: data }))
     } catch (error) {
       handleAxiosErrorDispatch(error)
     }
   }
 
-  handleChange = event => {
+  handleChange = (event) => {
     const { name, value } = event.target
     this.setState({ [name]: value })
   }
 
-  handleCreate = async event => {
+  handleCreate = async (event) => {
     const { history, setErrorDispatch, resetErrorDispatch, handleAxiosErrorDispatch, user } = this.props
     const { username } = this.state
 
@@ -90,14 +90,14 @@ AuthUserCreateContainer.propTypes = {
   user: userType.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetErrorDispatch: () => dispatch(resetError()),
-  setErrorDispatch: error => dispatch(setError(error)),
-  handleAxiosErrorDispatch: error => dispatch(handleAxiosError(error)),
-  dispatchLoaded: value => dispatch(setLoaded(value)),
+  setErrorDispatch: (error) => dispatch(setError(error)),
+  handleAxiosErrorDispatch: (error) => dispatch(handleAxiosError(error)),
+  dispatchLoaded: (value) => dispatch(setLoaded(value)),
 })
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   error: state.app.error,
   user: state.app.user,
 })

@@ -6,7 +6,7 @@ import { GREY_3, BLACK } from 'govuk-colours'
 import AuthUserSearch from './AuthUserSearch'
 import { authUserListType, errorType } from '../../../types'
 
-const AuthUserSearchResults = props => {
+const AuthUserSearchResults = (props) => {
   const { user, userList, handleChange, handleSearch, handleEdit, error } = props
   const results = userList.map((a, index) => (
     <Table.Row key={a.username}>

@@ -1,4 +1,4 @@
-const getRolesFactory = elite2Api => {
+const getRolesFactory = (elite2Api) => {
   const getRoles = async (req, res) => {
     const { hasAdminRole } = req.query
     const data =

@@ -42,9 +42,9 @@ AuthUserSearchContainer.propTypes = {
   dispatchLoaded: PropTypes.func.isRequired,
 }
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   resetErrorDispatch: () => dispatch(resetError()),
-  dispatchLoaded: value => dispatch(setLoaded(value)),
+  dispatchLoaded: (value) => dispatch(setLoaded(value)),
 })
 
 export default withRouter(searchComponent(connect(null, mapDispatchToProps)(AuthUserSearchContainer)))

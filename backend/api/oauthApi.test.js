@@ -29,7 +29,7 @@ describe('oathApi tests', () => {
 
     beforeAll(() => {
       // Some hackery to catch the configuration used by axios to make the authentication / refresh request.
-      oauthApi.oauthAxios.interceptors.request.use(config => {
+      oauthApi.oauthAxios.interceptors.request.use((config) => {
         requestConfig = config
         return config
       })
@@ -46,18 +46,18 @@ describe('oathApi tests', () => {
 
     describe('should save tokens', () => {
       it('should save access token', () =>
-        refreshResponse.then(response => {
+        refreshResponse.then((response) => {
           expect(response.access_token).toEqual('newAccessToken')
         }))
 
       it('should save refresh token', () =>
-        refreshResponse.then(response => {
+        refreshResponse.then((response) => {
           expect(response.refresh_token).toEqual('newRefreshToken')
         }))
     })
 
     it('should have set correct request configuration', () =>
-      refreshResponse.then(response => {
+      refreshResponse.then((response) => {
         expect(requestConfig.method).toEqual('post')
         expect(requestConfig.baseURL).toEqual(url)
         expect(requestConfig.url).toEqual('http://localhost/oauth/token')
