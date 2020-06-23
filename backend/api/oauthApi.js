@@ -18,30 +18,30 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
  * @returns a configured oauthApi instance
  */
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
-  const get = (context, path) => client.get(context, path).then(response => response.data)
-  const put = (context, path, body) => client.put(context, path, body).then(response => response.data)
-  const post = (context, path, body) => client.post(context, path, body).then(response => response.data)
-  const del = (context, path) => client.del(context, path).then(response => response.data)
-  const currentUser = context => get(context, 'api/user/me')
-  const currentRoles = context => get(context, 'api/user/me/roles')
-  const getUser = (context, { username }) => get(context, `api/authuser/${username}`)
-  const createUser = (context, username, user) => put(context, `api/authuser/${username}`, user)
-  const userRoles = (context, { username }) => get(context, `api/authuser/${username}/roles`)
-  const userGroups = (context, { username }) => get(context, `api/authuser/${username}/groups`)
-  const userSearch = (context, { nameFilter }) => get(context, `api/authuser?email=${encodeQueryString(nameFilter)}`)
-  const addUserRole = (context, { username, role }) => put(context, `api/authuser/${username}/roles/${role}`)
-  const removeUserRole = (context, { username, role }) => del(context, `api/authuser/${username}/roles/${role}`)
-  const addUserGroup = (context, { username, group }) => put(context, `api/authuser/${username}/groups/${group}`)
-  const removeUserGroup = (context, { username, group }) => del(context, `api/authuser/${username}/groups/${group}`)
-  const assignableGroups = context => get(context, 'api/authuser/me/assignable-groups')
-  const enableUser = (context, { username }) => put(context, `api/authuser/${username}/enable`)
-  const disableUser = (context, { username }) => put(context, `api/authuser/${username}/disable`)
-  const assignableRoles = (context, { username }) => get(context, `api/authuser/${username}/assignable-roles`)
-  const amendUser = (context, username, email) => post(context, `api/authuser/${username}`, email)
+  const get = (context, path) => client.get(context, path).then(response => response.body)
+  const put = (context, path, body) => client.put(context, path, body).then(response => response.body)
+  const post = (context, path, body) => client.post(context, path, body).then(response => response.body)
+  const del = (context, path) => client.del(context, path).then(response => response.body)
+  const currentUser = context => get(context, '/api/user/me')
+  const currentRoles = context => get(context, '/api/user/me/roles')
+  const getUser = (context, { username }) => get(context, `/api/authuser/${username}`)
+  const createUser = (context, username, user) => put(context, `/api/authuser/${username}`, user)
+  const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
+  const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups`)
+  const userSearch = (context, { nameFilter }) => get(context, `/api/authuser?email=${encodeQueryString(nameFilter)}`)
+  const addUserRole = (context, { username, role }) => put(context, `/api/authuser/${username}/roles/${role}`)
+  const removeUserRole = (context, { username, role }) => del(context, `/api/authuser/${username}/roles/${role}`)
+  const addUserGroup = (context, { username, group }) => put(context, `/api/authuser/${username}/groups/${group}`)
+  const removeUserGroup = (context, { username, group }) => del(context, `/api/authuser/${username}/groups/${group}`)
+  const assignableGroups = context => get(context, '/api/authuser/me/assignable-groups')
+  const enableUser = (context, { username }) => put(context, `/api/authuser/${username}/enable`)
+  const disableUser = (context, { username }) => put(context, `/api/authuser/${username}/disable`)
+  const assignableRoles = (context, { username }) => get(context, `/api/authuser/${username}/assignable-roles`)
+  const amendUser = (context, username, email) => post(context, `/api/authuser/${username}`, email)
 
   const oauthAxios = axios.create({
     baseURL: url,
-    url: 'oauth/token',
+    url: '/oauth/token',
     method: 'post',
     timeout: 30000,
     headers: {

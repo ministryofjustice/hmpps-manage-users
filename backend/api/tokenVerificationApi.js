@@ -9,7 +9,7 @@ const tokenVerificationApiFactory = client => {
     }
     return client
       .post(context, `/token/verify`)
-      .then(response => Boolean(response.data && response.data.active))
+      .then(response => Boolean(response.body && response.body.active))
       .catch(() => false)
   }
 

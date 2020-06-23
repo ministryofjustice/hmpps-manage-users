@@ -4,9 +4,9 @@ const handleClientError = async (apiCall, defaultField, res, errorMapping) => {
   try {
     await apiCall()
   } catch (e) {
-    if (e.response && e.response.data && e.response.status < 500) {
+    if (e.response && e.response.body && e.response.status < 500) {
       res.status(e.response.status)
-      const { field, error, error_description: errorDescription } = e.response.data
+      const { field, error, error_description: errorDescription } = e.response.body
       const description = (errorMapping && errorMapping[error]) || errorDescription
       if (!field && !description) throw e
       else res.json([{ targetName: field || defaultField, text: description, error }])
