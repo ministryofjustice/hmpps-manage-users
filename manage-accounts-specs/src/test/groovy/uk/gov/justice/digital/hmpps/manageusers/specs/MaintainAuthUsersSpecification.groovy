@@ -307,4 +307,24 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then: "The email address is amended and user is taken back to the user page"
         at AuthUserPage
     }
+
+    def "should show empty list if searching for non-existing user"() {
+        def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
+        oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
+
+        given: "I have navigated to the Maintain Auth User search page"
+        fixture.loginWithoutStaffRoles(ITAG_USER)
+        elite2api.stubGetRoles()
+        to AuthUserSearchPage
+
+        when: "I perform a search by email for a non-existing user"
+        oauthApi.stubAuthEmailSearchNoUsersFound()
+        search('not.a.user@justice.gov.uk')
+
+        then: "The error message is displayed"
+        at AuthUserSearchResultsPage
+        assert waitFor { errorSummary.text().contains('There is a problem') }
+        assert errorSummary.text().contains('not.a.user@justice.gov.uk')
+        !rows.displayed
+    }
 }

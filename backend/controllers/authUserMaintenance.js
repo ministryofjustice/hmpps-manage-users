@@ -47,7 +47,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
           ? await oauthApi.userSearch(res.locals, { nameFilter })
           : [await oauthApi.getUser(res.locals, { username: nameFilter })]
 
-        if (!response) {
+        if (!response || Object.entries(response).length === 0) {
           res.status(404)
           res.json([{ targetName: 'user', text: `No accounts for email address ${nameFilter} found` }])
           return
