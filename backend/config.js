@@ -34,7 +34,7 @@ const apis = {
   },
   tokenverification: {
     url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
-    timeoutSeconds: process.env.TOKENVERIFICATION_API_URL || 5,
+    timeoutSeconds: process.env.TOKENVERIFICATION_API_TIMEOUT_SECONDS || 10,
     enabled: process.env.TOKENVERIFICATION_API_ENABLED === 'true',
   },
 }
