@@ -218,6 +218,16 @@ class OauthApi extends WireMockRule {
                                 .withBody(AuthUserSearchResponse.getEmailResponse())))
     }
 
+    void stubAuthEmailSearchNoUsersFound() {
+        this.stubFor(
+                get(urlPathMatching("/auth/api/authuser"))
+                        .willReturn(
+                        aResponse()
+                                .withStatus(200)
+                                .withHeader('Content-Type', 'application/json')
+                                .withBody("{}"))) // This is what superagent transforms a 204 with no body into which is arguably a bug
+    }
+
     void stubAuthUserEnable() {
         this.stubFor(
                 put(urlPathMatching("/auth/api/authuser/.*/enable"))
