@@ -13,7 +13,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: "nginx"
     # note this limit is per ingress replica
-    nginx.ingress.kubernetes.io/limit-rpm: 10
+    nginx.ingress.kubernetes.io/limit-rpm: "10"
     # setting to 429 (default is 503) so we can alert on this
     nginx.ingress.kubernetes.io/server-snippet: |
       limit_req_status 429;
