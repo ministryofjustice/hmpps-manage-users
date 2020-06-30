@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import qs from 'query-string'
+import qs from 'qs'
 import ReactRouterPropTypes from 'react-router-prop-types'
 
 const searchComponent = (WrappedComponent) => {

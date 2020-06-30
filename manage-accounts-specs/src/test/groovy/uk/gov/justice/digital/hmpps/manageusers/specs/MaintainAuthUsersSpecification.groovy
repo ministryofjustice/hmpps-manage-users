@@ -267,10 +267,9 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then:
         at AuthUserPage
 
-        userRows[4].find("td", 0).text() == 'No'
+        waitFor { userRows[4].find("td", 0).text() == 'No' }
         oauthApi.stubAuthUserEnable()
         enableButton.click()
-
     }
 
     def "should amend a user"() {
