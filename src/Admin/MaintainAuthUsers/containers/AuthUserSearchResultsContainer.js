@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import axios from 'axios/index'
-import qs from 'query-string'
+import qs from 'qs'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { withRouter } from 'react-router'
 import { handleAxiosError, resetError, setError, setLoaded } from '../../../redux/actions/index'
@@ -50,7 +50,7 @@ class AuthUserSearchResultsContainer extends Component {
       handleAxiosErrorDispatch,
     } = this.props
 
-    const { user } = qs.parse(search)
+    const { user } = qs.parse(search.slice(search.lastIndexOf('?') + 1))
     const errors = validateSearch(user)
     if (errors.length) {
       setErrorDispatch(errors)
@@ -83,7 +83,7 @@ class AuthUserSearchResultsContainer extends Component {
       handleSearch,
       handleChange,
     } = this.props
-    const { user } = qs.parse(search)
+    const { user } = qs.parse(search.slice(search.lastIndexOf('?') + 1))
     return (
       <Page title="Search for auth user results" alwaysRender>
         <AuthUserSearchResults
