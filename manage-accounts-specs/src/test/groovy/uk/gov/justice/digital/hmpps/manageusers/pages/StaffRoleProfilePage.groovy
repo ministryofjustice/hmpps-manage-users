@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.manageusers.pages;
+package uk.gov.justice.digital.hmpps.manageusers.pages
 
 import geb.Page
 
@@ -9,7 +9,7 @@ class StaffRoleProfilePage extends Page {
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Staff roles')
+        headingText.contains('roles')
     }
 
     static content = {

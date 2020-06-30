@@ -27,11 +27,11 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
         def maintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([maintainAuthUsersRole])
 
-        given: "I logged in and go to the Maintain HMPPS Users page"
+        given: "I logged in and go to the Manage user accounts page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         to AdminUtilitiesPage
 
-        when: "I am on the Maintain HMPPS Users page"
+        when: "I am on the Manage user accounts page"
 
         then: "I should see the maintain auth users link"
         assert maintainAuthUsersLink.displayed
@@ -41,11 +41,11 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
         def maintainAuthUsersRole = [roleId: -1, roleCode: 'AUTH_GROUP_MANAGER']
         oauthApi.stubGetMyRoles([maintainAuthUsersRole])
 
-        given: "I logged in and go to the Maintain HMPPS Users page"
+        given: "I logged in and go to the Manage user accounts page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         to AdminUtilitiesPage
 
-        when: "I am on the Maintain HMPPS Users page"
+        when: "I am on the Manage user accounts page"
 
         then: "I should see the maintain auth users link"
         assert maintainAuthUsersLink.displayed

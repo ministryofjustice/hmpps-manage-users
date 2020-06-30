@@ -9,7 +9,7 @@ class AddRolePage extends Page {
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Add staff role')
+        headingText.contains('Add another role')
     }
 
     static content = {

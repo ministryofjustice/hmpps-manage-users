@@ -213,7 +213,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const createUser = async (req, res) => {
     const { username } = req.query
-    log.debug('Performing create auth user')
+    log.debug('Performing create auth users')
 
     await handleClientError(
       async () => {

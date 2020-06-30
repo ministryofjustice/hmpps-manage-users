@@ -118,7 +118,7 @@ class UserSearchContainer extends Component {
 
   render() {
     return (
-      <Page title="Search for NOMIS user results">
+      <Page title="Search for a user results">
         <UserSearchResults
           handleRoleFilterChange={this.handleRoleFilterChange}
           handleNameFilterChange={this.handleNameFilterChange}

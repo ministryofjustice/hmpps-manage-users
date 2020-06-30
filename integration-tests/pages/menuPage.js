@@ -1,6 +1,6 @@
 const page = require('./page')
 
-const menuPage = () => page('Maintain HMPPS Users', {})
+const menuPage = () => page('Manage user accounts', {})
 
 export default {
   verifyOnPage: menuPage,

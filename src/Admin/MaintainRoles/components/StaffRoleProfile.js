@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { withRouter } from 'react-router'
+import Link from '@govuk-react/link'
+import { Link as RouterLink } from 'react-router-dom'
 import { roleListType } from '../../../types'
 
 class StaffRoleProfile extends Component {
@@ -26,7 +28,7 @@ class StaffRoleProfile extends Component {
               handleRemove(event, history)
             }}
           >
-            Remove
+            Delete role
           </button>
         </td>
       </tr>
@@ -41,7 +43,7 @@ class StaffRoleProfile extends Component {
                 <table>
                   <thead>
                     <tr>
-                      <th>Current roles</th>
+                      <th>Role</th>
                       <th />
                     </tr>
                   </thead>
@@ -65,8 +67,11 @@ class StaffRoleProfile extends Component {
                     handleAdd(event, history)
                   }}
                 >
-                  Add role
+                  Add another role
                 </button>
+                <Link as={RouterLink} className="link padding-left" title="Search for a user" to="/maintain-roles">
+                  Search for a user
+                </Link>
               </div>
             </div>
           </div>

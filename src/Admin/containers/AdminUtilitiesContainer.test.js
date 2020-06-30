@@ -37,7 +37,7 @@ describe('<AdminUtilitiesContainer />', () => {
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
       const manageRolesLink = wrapper.find('Link').find({ to: '/maintain-roles' })
 
-      expect(manageRolesLink.prop('children')).toEqual('Manage NOMIS user roles')
+      expect(manageRolesLink.prop('children')).toEqual('Manage user roles')
     })
 
     it('should render a Link to Maintain auth users if user has maintain auth user roles', () => {
@@ -45,7 +45,7 @@ describe('<AdminUtilitiesContainer />', () => {
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
       const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Manage auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
     })
 
     it('should render a Link to Maintain auth users if user has group manager role', () => {
@@ -53,7 +53,7 @@ describe('<AdminUtilitiesContainer />', () => {
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
       const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Manage auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
     })
 
     it('should render a Link to create auth users if user has maintain auth user roles', () => {
@@ -61,11 +61,11 @@ describe('<AdminUtilitiesContainer />', () => {
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
       const maintainUsersLink = wrapper.find('Link').find({ to: '/create-auth-user' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Create auth user')
+      expect(maintainUsersLink.prop('children')).toEqual('Create auth users')
     })
   })
 
-  it('should render the Maintain HMPPS Users page', () => {
+  it('should render the Manage user accounts page', () => {
     props.user.maintainAccessAdmin = true
     props.user.migration = true
     props.user.maintainAuthUsers = true
