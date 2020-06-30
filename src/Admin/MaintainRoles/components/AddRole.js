@@ -54,7 +54,7 @@ const AddRole = ({
               {rolesAvailable && (
                 <div className="margin-left-15">
                   <label className="form-label" htmlFor="role-select">
-                    Choose new role
+                    Select role
                   </label>
                   <ValidationErrors validationErrors={validationErrors} fieldName="role-select" />
                   {roleSelect}
@@ -73,7 +73,7 @@ const AddRole = ({
                 handleAdd(event, history)
               }}
             >
-              Add role
+              Confirm
             </button>
           )}
           <button

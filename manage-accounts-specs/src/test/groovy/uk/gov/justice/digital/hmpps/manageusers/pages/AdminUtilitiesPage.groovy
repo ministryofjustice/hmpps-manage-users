@@ -6,7 +6,7 @@ class AdminUtilitiesPage extends Page {
     static url = "/"
 
     static at = {
-        headingText == 'Maintain HMPPS Users'
+        headingText == 'Manage user accounts'
     }
 
     static content = {

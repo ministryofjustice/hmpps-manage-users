@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`<AdminUtilitiesContainer /> should render the Maintain HMPPS Users page 1`] = `
+exports[`<AdminUtilitiesContainer /> should render the Manage user accounts page 1`] = `
 Array [
   <div
     className="sc-dnqmqq covUjf"
@@ -22,7 +22,7 @@ Array [
         className="sc-gZMcBi cRHLOy"
       >
         <span>
-          Maintain HMPPS Users
+          Manage user accounts
         </span>
       </li>
     </ul>
@@ -35,7 +35,7 @@ Array [
       className="sc-bdVaJa dSUtdh"
       size="LARGE"
     >
-      Maintain HMPPS Users
+      Manage user accounts
     </h1>
     <div
       className="page-content"
@@ -51,13 +51,10 @@ Array [
             href="/maintain-roles"
             id="maintain_roles_link"
             onClick={[Function]}
-            title="Manage NOMIS user roles"
+            title="Manage user roles"
           >
-            Manage NOMIS user roles
+            Manage user roles
           </a>
-          <div>
-            Add and remove NOMIS user roles.
-          </div>
         </div>
         <div
           className="sc-VigVT dUvdCr"
@@ -67,9 +64,9 @@ Array [
             href="/maintain-auth-users"
             id="maintain_auth_users_link"
             onClick={[Function]}
-            title="Manage auth users"
+            title="Maintain auth users"
           >
-            Manage auth users
+            Maintain auth users
           </a>
           <div>
             Maintain users that do not exist in NOMIS, only in auth.
@@ -83,9 +80,9 @@ Array [
             href="/create-auth-user"
             id="create_auth_user_link"
             onClick={[Function]}
-            title="Create auth user"
+            title="Create auth users"
           >
-            Create auth user
+            Create auth users
           </a>
           <div>
             Create user in auth (not in NOMIS).

@@ -3,9 +3,9 @@
 import AuthUserBreadcrumb from './Components/Breadcrumb/AuthUserBreadcrumb'
 
 export default [
-  { path: '/', breadcrumb: 'Maintain HMPPS Users' },
-  { path: '/maintain-roles', breadcrumb: 'Manage NOMIS user roles' },
-  { path: '/create-auth-user', breadcrumb: 'Create auth user' },
+  { path: '/', breadcrumb: 'Manage user accounts' },
+  { path: '/maintain-roles', breadcrumb: 'Manage user roles' },
+  { path: '/create-auth-user', breadcrumb: 'Create auth users' },
   { path: '/maintain-auth-users', breadcrumb: 'Maintain auth users' },
   { path: '/maintain-auth-users/search-results', breadcrumb: 'Results' },
   { path: '/maintain-auth-users/:username', breadcrumb: AuthUserBreadcrumb },

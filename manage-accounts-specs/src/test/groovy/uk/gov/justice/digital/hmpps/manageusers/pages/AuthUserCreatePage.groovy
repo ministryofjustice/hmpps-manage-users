@@ -2,12 +2,12 @@ package uk.gov.justice.digital.hmpps.manageusers.pages
 
 import geb.Page
 
-public class AuthUserCreatePage extends Page {
+class AuthUserCreatePage extends Page {
     static url = "/create-auth-user"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Create auth user')
+        headingText.contains('Create auth users')
     }
 
     static content = {

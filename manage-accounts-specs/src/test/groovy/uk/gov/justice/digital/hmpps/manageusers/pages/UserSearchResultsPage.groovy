@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.manageusers.pages;
+package uk.gov.justice.digital.hmpps.manageusers.pages
 
 import geb.Page
 
@@ -9,7 +9,7 @@ class UserSearchResultsPage extends Page {
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for NOMIS user')
+        headingText.contains('Search for a user')
     }
 
     static content = {

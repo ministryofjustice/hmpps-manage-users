@@ -113,7 +113,7 @@ class AddRoleContainer extends Component {
       contextUser && `${properCaseName(contextUser.firstName)} ${properCaseName(contextUser.lastName)}`
 
     return (
-      <Page title={`Add staff role: ${formattedName}`}>
+      <Page title={`Add another role for ${formattedName}`}>
         <AddRole
           handleAdd={this.handleAdd}
           handleCancel={this.handleCancel}

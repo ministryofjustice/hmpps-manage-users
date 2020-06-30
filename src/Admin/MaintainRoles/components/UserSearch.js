@@ -41,10 +41,15 @@ const UserSearch = ({
       <div className="pure-g">
         <div className="pure-u-md-11-12 ">
           <form onSubmit={() => handleSearch(history)}>
+            <div className="pure-u-md-11-12 padding-top padding-bottom-large padding-left-30">
+              You must search for a user by their name, username or role.
+              <br />
+              Names should be in the format `&apos;`Last name, First name`&apos;` or `&apos;`Last name`&apos;`.
+            </div>
             <div className="pure-u-md-11-12 searchForm padding-top padding-bottom-large padding-left-30">
               <div className="pure-u-md-4-12">
                 <label className="form-label" htmlFor="name-filter">
-                  Name or staff User ID
+                  Name or username
                 </label>
                 <input
                   type="text"
@@ -57,7 +62,7 @@ const UserSearch = ({
               </div>
               <div className="pure-u-md-3-12 margin-left">
                 <label className="form-label" htmlFor="role-select">
-                  Filter by role
+                  Role
                 </label>
                 {roleSelect}
               </div>

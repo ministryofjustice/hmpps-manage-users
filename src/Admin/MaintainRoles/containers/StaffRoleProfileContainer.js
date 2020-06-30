@@ -93,7 +93,7 @@ class StaffRoleProfileContainer extends Component {
       contextUser && `${properCaseName(contextUser.firstName)} ${properCaseName(contextUser.lastName)}`
 
     return (
-      <Page title={`Staff roles: ${formattedName}`}>
+      <Page title={`${formattedName}'s roles`}>
         <StaffRoleProfile handleRemove={this.handleRemove} handleAdd={this.handleAdd} {...this.props} />
       </Page>
     )
