@@ -56,7 +56,7 @@
     "passport": "^0.4.0",
     "passport-oauth2": "^1.4.0",
     "prop-types": "^15.7.2",
-    "query-string": "^6.4.0",
+    "query-string": "^5.1.1",
     "react": "^16.8.6",
     "react-datetime": "^2.14.0",
     "react-dom": "^16.8.6",
@@ -137,7 +137,7 @@
   "scripts": {
     "start": "node backend/index.js",
     "start-feature": "export $(cat $npm_config_env) && node backend/index.js",
-    "start-feature-no-webpack": "export $(cat $npm_config_env) && DISABLE_WEBPACK=true && node backend/index.js",
+    "start-feature-no-webpack": "export $(cat $npm_config_env) && DISABLE_WEBPACK=true node backend/index.js",
     "start-prod": "NODE_ENV=production node backend/index.js",
     "build": "webpack --mode=production",
     "build:analyse": "BUNDLE_ANALYSE=true npm run build",
