@@ -5,6 +5,7 @@ import { withRouter } from 'react-router'
 import Link from '@govuk-react/link'
 import { Link as RouterLink } from 'react-router-dom'
 import { roleListType } from '../../../types'
+import ButtonContainer from '../../../Components/ButtonContainer/ButtonContainer'
 
 class StaffRoleProfile extends Component {
   goBack = (e, history) => {
@@ -58,7 +59,7 @@ class StaffRoleProfile extends Component {
                   </tbody>
                 </table>
               </div>
-              <div>
+              <ButtonContainer>
                 <button
                   type="button"
                   className="button"
@@ -72,7 +73,7 @@ class StaffRoleProfile extends Component {
                 <Link as={RouterLink} className="link padding-left" title="Search for a user" to="/maintain-roles">
                   Search for a user
                 </Link>
-              </div>
+              </ButtonContainer>
             </div>
           </div>
         </div>
