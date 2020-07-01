@@ -14,6 +14,10 @@ class StaffRoleProfile extends Component {
   }
 
   render() {
+    const aDivMiddle = {
+      padding: '10px 15px 5px 15px',
+      display: 'inline-block',
+    }
     const { roleList, history, handleAdd, handleRemove } = this.props
     const results = roleList.map((a) => (
       <tr key={a.roleCode}>
@@ -69,9 +73,11 @@ class StaffRoleProfile extends Component {
                 >
                   Add another role
                 </button>
-                <Link as={RouterLink} className="link padding-left" title="Search for a user" to="/maintain-roles">
-                  Search for a user
-                </Link>
+                <div style={aDivMiddle}>
+                  <Link as={RouterLink} className="link padding-left" title="Search for a user" to="/maintain-roles">
+                    Search for a user
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
