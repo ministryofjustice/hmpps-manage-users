@@ -44,7 +44,7 @@ const UserSearch = ({
             <div className="pure-u-md-11-12 padding-top padding-bottom-large padding-left-30">
               You must search for a user by their name, username or role.
               <br />
-              Names should be in the format `&apos;`Last name, First name`&apos;` or `&apos;`Last name`&apos;`.
+              Names should be in the format &apos;Last name, First name&apos; or &apos;Last name&apos;.
             </div>
             <div className="pure-u-md-11-12 searchForm padding-top padding-bottom-large padding-left-30">
               <div className="pure-u-md-4-12">
