@@ -11,12 +11,12 @@ const { userSearchFactory } = require('./controllers/userSearch')
 const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
 
-const configureRoutes = ({ oauthApi, elite2Api }) => {
+const configureRoutes = ({ oauthApi, prisonApi }) => {
   const router = express.Router()
 
   router.use('/api/config', withErrorHandler(getConfiguration))
-  router.use('/api/me', withErrorHandler(userMeFactory(oauthApi, elite2Api).userMeService))
-  router.use('/api/userSearch', withErrorHandler(userSearchFactory(elite2Api).userSearch))
+  router.use('/api/me', withErrorHandler(userMeFactory(oauthApi, prisonApi).userMeService))
+  router.use('/api/userSearch', withErrorHandler(userSearchFactory(prisonApi).userSearch))
   const authUserMaintenance = authUserMaintenanceFactory(oauthApi)
   router.use('/api/auth-user-get', withErrorHandler(authUserMaintenance.getUser))
   router.use('/api/auth-user-create', withErrorHandler(authUserMaintenance.createUser))
@@ -33,11 +33,11 @@ const configureRoutes = ({ oauthApi, elite2Api }) => {
   router.use('/api/auth-groups', withErrorHandler(authUserMaintenance.assignableGroups))
   router.use('/api/auth-user-create', withErrorHandler(authUserMaintenance.createUser))
   router.use('/api/auth-user-amend', withErrorHandler(authUserMaintenance.amendUser))
-  router.use('/api/getRoles', withErrorHandler(getRolesFactory(elite2Api).getRoles))
-  router.use('/api/getUser', withErrorHandler(getUserFactory(elite2Api).getUser))
-  router.use('/api/removeRole', withErrorHandler(removeRoleFactory(elite2Api).removeRole))
-  router.use('/api/addRole', withErrorHandler(addRoleFactory(elite2Api).addRole))
-  router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(elite2Api).contextUserRoles))
+  router.use('/api/getRoles', withErrorHandler(getRolesFactory(prisonApi).getRoles))
+  router.use('/api/getUser', withErrorHandler(getUserFactory(prisonApi).getUser))
+  router.use('/api/removeRole', withErrorHandler(removeRoleFactory(prisonApi).removeRole))
+  router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi).addRole))
+  router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
 
   return router
 }

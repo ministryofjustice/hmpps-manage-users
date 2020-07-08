@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.manageusers.specs
 
 
 import org.junit.Rule
-import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.PrisonApi
 
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
@@ -19,13 +19,13 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
     OauthApi oauthApi = new OauthApi()
 
     @Rule
-    Elite2Api elite2api = new Elite2Api()
+    PrisonApi prisonApi = new PrisonApi()
 
     @Rule
     TokenVerificationApi tokenVerificationApi = new TokenVerificationApi()
 
 
-    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi, tokenVerificationApi)
+    TestFixture fixture = new TestFixture(browser, prisonApi, oauthApi, tokenVerificationApi)
 
     def "should allow an unsupported prison's default settings to be displayed"() {
         finish
@@ -39,13 +39,13 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain roles - User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
 
         when: "i perform a search"
         at UserSearchPage
-        elite2api.stubUserLocalAdministratorSearch()
+        prisonApi.stubUserLocalAdministratorSearch()
         searchButton.click()
 
         then: "the user search results page is displayed"
@@ -62,13 +62,13 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain roles - User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRolesIncludingAdminRoles()
+        prisonApi.stubGetRolesIncludingAdminRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
 
         when: "i perform a global user search"
         at UserSearchPage
-        elite2api.stubUserSearchAdmin(0)
+        prisonApi.stubUserSearchAdmin(0)
         searchButton.click()
 
         then: "the user search results page is displayed"
@@ -78,9 +78,9 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetailsMultipleAgencies(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetailsMultipleAgencies(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
         editButtonAPI_TEST_USER.click()
 
         then: "i am presented with the Staff profile page"
@@ -97,13 +97,13 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain roles - User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRolesIncludingAdminRoles()
+        prisonApi.stubGetRolesIncludingAdminRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
 
         when: "i perform a global user search"
         at UserSearchPage
-        elite2api.stubUserSearchAdmin(0)
+        prisonApi.stubUserSearchAdmin(0)
         searchButton.click()
 
         then: "the user search results page is displayed"
@@ -113,9 +113,9 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetailsEmptyResult(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetailsEmptyResult(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
         editButtonAPI_TEST_USER.click()
 
         then: "i am presented with the Staff profile page without a caseload description"
@@ -134,13 +134,13 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain roles - User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
 
         when: "i perform a search"
         at UserSearchPage
-        elite2api.stubUserLocalAdministratorSearch(0)
+        prisonApi.stubUserLocalAdministratorSearch(0)
         searchButton.click()
 
         then: "the user search results page is displayed"
@@ -151,7 +151,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         rows[0].find("td",1).text() == 'user0'
 
         and: "i click on the next page link"
-        elite2api.stubUserLocalAdministratorSearch(1)
+        prisonApi.stubUserLocalAdministratorSearch(1)
         nextPage.click()
 
         then:
@@ -162,7 +162,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         rows[0].find("td",1).text() == 'user1'
         MaintainRolesSpecification
         and: "i click on the next page link"
-        elite2api.stubUserLocalAdministratorSearch(2)
+        prisonApi.stubUserLocalAdministratorSearch(2)
         nextPage.click()
 
         then:
@@ -173,7 +173,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         rows[0].find("td",1).text() == 'user2'
 
         and: "i click on the previous page link"
-        elite2api.stubUserLocalAdministratorSearch(1)
+        prisonApi.stubUserLocalAdministratorSearch(1)
         previousPage.click()
 
         then:
@@ -182,7 +182,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         waitFor { previousPage.text() == "Previous\n1 of 3" }
 
         and: "i click on the previous page link"
-        elite2api.stubUserLocalAdministratorSearch(0)
+        prisonApi.stubUserLocalAdministratorSearch(0)
         previousPage.click()
 
         then: "i'm back to the first page"
@@ -201,24 +201,24 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Staff Profile page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
         at UserSearchPage
-        elite2api.stubUserLocalAdministratorSearch()
+        prisonApi.stubUserLocalAdministratorSearch()
         searchButton.click()
         at UserSearchResultsPage
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetails(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetails(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
         editButtonAPI_TEST_USER.click()
         at StaffRoleProfilePage
 
         when: "I remove a role"
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetails(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, false)
-        elite2api.stubRemoveNWEBRole(UserAccount.API_TEST_USER.username, "OMIC_ADMIN")
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetails(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, false)
+        prisonApi.stubRemoveNWEBRole(UserAccount.API_TEST_USER.username, "OMIC_ADMIN")
         removeButtonOMIC_ADMIN.click()
 
         then: "The new role list is displayed"
@@ -235,16 +235,16 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Staff Profile page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AdminUtilitiesPage
         maintainRolesLink.click()
         at UserSearchPage
-        elite2api.stubUserLocalAdministratorSearch()
+        prisonApi.stubUserLocalAdministratorSearch()
         searchButton.click()
         at UserSearchResultsPage
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetails(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetails(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
         editButtonAPI_TEST_USER.click()
         at StaffRoleProfilePage
 
@@ -254,11 +254,11 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
 
         when: "I select a new role and submit"
         at AddRolePage
-        elite2api.stubGetUserDetails(UserAccount.API_TEST_USER)
-        elite2api.stubGetAgencyDetails(Caseload.LEI)
-        elite2api.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
+        prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
+        prisonApi.stubGetAgencyDetails(Caseload.LEI)
+        prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
         roleOptionUSER_ADMIN.click()
-        elite2api.stubAddNWEBRole(UserAccount.API_TEST_USER.username, 'USER_ADMIN')
+        prisonApi.stubAddNWEBRole(UserAccount.API_TEST_USER.username, 'USER_ADMIN')
         addButton.click()
 
         then: "I am returned to the StaffRoleProfile page with an updated role list"

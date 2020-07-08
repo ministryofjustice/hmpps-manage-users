@@ -1,8 +1,8 @@
-const getRolesFactory = (elite2Api) => {
+const getRolesFactory = (prisonApi) => {
   const getRoles = async (req, res) => {
     const { hasAdminRole } = req.query
     const data =
-      hasAdminRole === 'true' ? await elite2Api.getRolesAdmin(res.locals) : await elite2Api.getRoles(res.locals)
+      hasAdminRole === 'true' ? await prisonApi.getRolesAdmin(res.locals) : await prisonApi.getRoles(res.locals)
     res.json(data)
   }
 

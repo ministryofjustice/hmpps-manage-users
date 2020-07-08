@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.manageusers.model
 
 import geb.Browser
-import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.PrisonApi
 
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
@@ -10,15 +10,15 @@ import uk.gov.justice.digital.hmpps.manageusers.pages.AdminUtilitiesPage
 class TestFixture {
 
     Browser browser
-    Elite2Api elite2Api
+    PrisonApi prisonApi
     OauthApi oauthApi
     TokenVerificationApi tokenVerificationApi
 
     UserAccount currentUser
 
-    TestFixture(Browser browser, Elite2Api elite2Api, OauthApi oauthApi, TokenVerificationApi tokenVerificationApi) {
+    TestFixture(Browser browser, PrisonApi prisonApi, OauthApi oauthApi, TokenVerificationApi tokenVerificationApi) {
         this.browser = browser
-        this.elite2Api = elite2Api
+        this.prisonApi = prisonApi
         this.oauthApi = oauthApi
         this.tokenVerificationApi = tokenVerificationApi
     }
@@ -27,7 +27,7 @@ class TestFixture {
         currentUser = user
         oauthApi.stubValidOAuthTokenLogin()
         oauthApi.stubGetMyDetails currentUser
-        elite2Api.stubGetMyCaseloads currentUser.caseloads
+        prisonApi.stubGetMyCaseloads currentUser.caseloads
 
         oauthApi.stubGetMyRoles([[roleId: -1, roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN']])
 
@@ -38,7 +38,7 @@ class TestFixture {
         currentUser = user
         oauthApi.stubValidOAuthTokenLogin()
         oauthApi.stubGetMyDetails currentUser
-        elite2Api.stubGetMyCaseloads currentUser.caseloads
+        prisonApi.stubGetMyCaseloads currentUser.caseloads
         tokenVerificationApi.stubVerifyToken()
 
         browser.to AdminUtilitiesPage

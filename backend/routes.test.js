@@ -3,7 +3,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const routes = require('./routes')
 
-const { elite2ApiFactory } = require('./api/elite2Api')
+const { prisonApiFactory } = require('./api/prisonApi')
 const { oauthApiFactory } = require('./api/oauthApi')
 
 const errorResponse = {
@@ -18,7 +18,7 @@ const errorResponse = {
 describe('Routes', () => {
   let client
   let oauthApi
-  let elite2Api
+  let prisonApi
   let app
 
   beforeEach(() => {
@@ -30,11 +30,11 @@ describe('Routes', () => {
     }
 
     oauthApi = oauthApiFactory(client, {})
-    elite2Api = elite2ApiFactory(client, {})
+    prisonApi = prisonApiFactory(client, {})
 
     app = express()
     app.use(bodyParser.json())
-    app.use(routes({ oauthApi, elite2Api }))
+    app.use(routes({ oauthApi, prisonApi }))
   })
 
   const getRoutes = [

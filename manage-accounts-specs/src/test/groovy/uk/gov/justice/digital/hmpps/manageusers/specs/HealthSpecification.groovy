@@ -4,7 +4,7 @@ import groovyx.net.http.HttpBuilder
 import groovyx.net.http.HttpException
 import org.junit.Rule
 import spock.lang.Specification
-import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.PrisonApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
 
@@ -13,7 +13,7 @@ import static groovyx.net.http.HttpBuilder.configure
 class HealthSpecification extends Specification {
 
   @Rule
-  Elite2Api elite2Api = new Elite2Api()
+  PrisonApi prisonApi = new PrisonApi()
 
   @Rule
   OauthApi oauthApi = new OauthApi()
@@ -32,7 +32,7 @@ class HealthSpecification extends Specification {
   def "Health page reports ok"() {
 
     given:
-    elite2Api.stubHealth()
+    prisonApi.stubHealth()
     oauthApi.stubHealth()
     tokenVerificationApi.stubHealth()
 
@@ -42,13 +42,13 @@ class HealthSpecification extends Specification {
     response.uptime > 0.0
     response.name == "manage-hmpps-auth-accounts"
     !response.version.isEmpty()
-    response.api == [auth: 'UP', elite2: 'UP', tokenverification: 'UP']
+    response.api == [auth: 'UP', prison: 'UP', tokenverification: 'UP']
   }
 
   def "Health page reports API down"() {
 
     given:
-    elite2Api.stubDelayedError('/health/ping', 500)
+    prisonApi.stubDelayedError('/health/ping', 500)
     oauthApi.stubHealth()
     tokenVerificationApi.stubHealth()
 
@@ -64,7 +64,7 @@ class HealthSpecification extends Specification {
     response.name == "manage-hmpps-auth-accounts"
     !response.version.isEmpty()
     response.api == [auth             : 'UP',
-                     elite2           : [timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2],
+                     prison           : [timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2],
                      tokenverification: 'UP']
   }
 }

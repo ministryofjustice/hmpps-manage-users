@@ -18,10 +18,10 @@ Ensure that you have these installed using your system package manager and/or np
 When running locally this service needs to use several other supporting services which
 need to be running and available at known locations.
 
-- Elite2API        port: 8080
+- prison-api        port: 8080
 - Oauth2 Server    port: 9090
 
-For simplicity, the easiest way to make these services available is to clone the elite2api
+For simplicity, the easiest way to make these services available is to clone the prison-api
 repository and to run the docker compose file in the root directory to bring up local 
 versions of all three. This starts the services at the above default ports on your
 machine.
@@ -56,9 +56,9 @@ The following environment variables supply these values:
 
 | Environment Variable    | Description                                  |
 |------------------------ |:--------------------------------------------:|
-| API_CLIENT_ID           | Client ID for accessing elite2api            |
-| API_CLIENT_SECRET       | Client secret for accessing elite2api        |
-| API_ENDPOINT_URL        | URL to the elite2api                         |
+| API_CLIENT_ID           | Client ID for accessing prison-api            |
+| API_CLIENT_SECRET       | Client secret for accessing prison-api        |
+| API_ENDPOINT_URL        | URL to the prison-api                         |
 | OAUTH_ENDPOINT_URL      | URL to the Oauth2 server                     |
 | NN_ENDPOINT_URL         | New Nomis UI                                 |
 | SESSION_COOKIE_SECRET   | Session cookie secret                        | 
@@ -89,7 +89,7 @@ The `manage-accounts-specs` directory contains a set of integration tests for th
 The tests are written in the Groovy programming language using a test framework called Spock. 
 
 The tests drive the UI using 'Geb', a Groovy wrapper for Selenium Webdriver and use WireMock to 
-stub the application's dependencies on the elite2 and oauth RESTful APIs.
+stub the application's dependencies on the prison and oauth RESTful APIs.
 
 # Running the feature tests
 
@@ -141,7 +141,7 @@ A choice of web browsers can be configured, though Chrome or Chrome headless are
 ## Cypress integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the elite2, ouath and whreabouts RESTful APIs.
+These tests WireMock to stub the application's dependencies on the prison, ouath and whreabouts RESTful APIs.
 
 ### Running the Cypress tests
 
@@ -154,7 +154,7 @@ the reqest log at `localhost:9191/__admin/requests/` and a JSON representation o
 ### Starting feature tests node instance
 
 A separate node instance needs to be started for the feature tests. This will run on port 3008 and won't conflict
-with any of the api services, e.g. elite2-api or oauth. It will also not conflict with the Groovy integration tests.
+with any of the api services, e.g. prison-api or oauth. It will also not conflict with the Groovy integration tests.
 
 ```npm run start-feature --env=cypress.env```
 

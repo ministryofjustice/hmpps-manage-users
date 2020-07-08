@@ -51,7 +51,7 @@ app.use(
   })
 )
 
-const health = healthFactory(config.apis.oauth2.url, config.apis.elite2.url, config.apis.tokenverification.url)
+const health = healthFactory(config.apis.oauth2.url, config.apis.prison.url, config.apis.tokenverification.url)
 
 app.get('/health', (req, res, next) => {
   health((err, result) => {
