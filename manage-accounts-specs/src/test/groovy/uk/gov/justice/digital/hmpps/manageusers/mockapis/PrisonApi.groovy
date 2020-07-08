@@ -11,9 +11,9 @@ import uk.gov.justice.digital.hmpps.manageusers.model.UserAccount
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*
 
-class Elite2Api extends WireMockRule {
+class PrisonApi extends WireMockRule {
 
-    Elite2Api() {
+    PrisonApi() {
         super(18080)
     }
 

@@ -1,7 +1,7 @@
-const removeRoleFactory = (elite2Api) => {
+const removeRoleFactory = (prisonApi) => {
   const removeRole = async (req, res) => {
     const { agencyId, username, roleCode } = req.query
-    await elite2Api.removeRole(res.locals, agencyId, username, roleCode)
+    await prisonApi.removeRole(res.locals, agencyId, username, roleCode)
     res.json({})
   }
 

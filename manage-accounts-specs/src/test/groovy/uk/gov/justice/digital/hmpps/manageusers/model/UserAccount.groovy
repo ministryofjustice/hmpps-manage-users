@@ -9,7 +9,7 @@ import static Caseload.*
 @TupleConstructor
 enum UserAccount {
 
-    ELITE2_API_USER('ELITE2_API_USER', SM_1, GENERAL, NWEB, []),
+    PRISON_API_USER('PRISON_API_USER', SM_1, GENERAL, NWEB, []),
     ITAG_USER('ITAG_USER', SM_2, GENERAL, LEI, [BXI, LEI, MDI, SYI, WAI]),
     API_TEST_USER('API_TEST_USER', SM_4, GENERAL, MUL, [MUL]),
     EXOFF5('EXOFF5', SM_10, GENERAL, LEI, []),
