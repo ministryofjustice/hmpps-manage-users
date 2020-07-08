@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.manageusers.specs
 
 import com.github.tomakehurst.wiremock.client.WireMock
 import org.junit.Rule
-import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.PrisonApi
 
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
@@ -19,12 +19,12 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
     OauthApi oauthApi = new OauthApi()
 
     @Rule
-    Elite2Api elite2api = new Elite2Api()
+    PrisonApi prisonApi = new PrisonApi()
 
     @Rule
     TokenVerificationApi tokenVerificationApi = new TokenVerificationApi()
 
-    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi, tokenVerificationApi)
+    TestFixture fixture = new TestFixture(browser, prisonApi, oauthApi, tokenVerificationApi)
 
     def "should allow a user search and display results"() {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
@@ -32,7 +32,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AuthUserSearchPage
 
         when: "I perform a search by username"
@@ -73,7 +73,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AuthUserSearchPage
 
         when: "I perform a search by username"
@@ -127,7 +127,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AuthUserSearchPage
 
         when: "I perform a search by username"
@@ -179,7 +179,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Create Auth User page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         oauthApi.stubAuthAllGroups()
         to AuthUserCreatePage
 
@@ -215,7 +215,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Create Auth User page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         oauthApi.stubAuthAllGroups()
         to AuthUserCreatePage
 
@@ -251,7 +251,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         oauthApi.stubAuthUsernameSearch()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
@@ -278,7 +278,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         oauthApi.stubAuthUsernameSearch()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
@@ -313,7 +313,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         given: "I have navigated to the Maintain Auth User search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
-        elite2api.stubGetRoles()
+        prisonApi.stubGetRoles()
         to AuthUserSearchPage
 
         when: "I perform a search by email for a non-existing user"

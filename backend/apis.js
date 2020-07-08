@@ -1,13 +1,13 @@
 const config = require('./config')
 const clientFactory = require('./api/oauthEnabledClient')
-const { elite2ApiFactory } = require('./api/elite2Api')
+const { prisonApiFactory } = require('./api/prisonApi')
 const { oauthApiFactory } = require('./api/oauthApi')
 const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
 
-const elite2Api = elite2ApiFactory(
+const prisonApi = prisonApiFactory(
   clientFactory({
-    baseUrl: config.apis.elite2.url,
-    timeout: config.apis.elite2.timeoutSeconds * 1000,
+    baseUrl: config.apis.prison.url,
+    timeout: config.apis.prison.timeoutSeconds * 1000,
   })
 )
 
@@ -27,7 +27,7 @@ const tokenVerificationApi = tokenVerificationApiFactory(
 )
 
 module.exports = {
-  elite2Api,
+  prisonApi,
   oauthApi,
   tokenVerificationApi,
 }

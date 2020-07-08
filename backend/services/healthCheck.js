@@ -31,10 +31,10 @@ const addAppInfo = (result) => {
   return Object.assign({}, result, buildInfo)
 }
 
-module.exports = function healthcheckFactory(authUrl, elite2Url, tokenverificationUrl) {
+module.exports = function healthcheckFactory(authUrl, prisonUrl, tokenverificationUrl) {
   const checks = [
     service('auth', authUrl),
-    service('elite2', elite2Url),
+    service('prison', prisonUrl),
     service('tokenverification', tokenverificationUrl),
   ]
 

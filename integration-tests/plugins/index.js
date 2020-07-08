@@ -1,5 +1,5 @@
 const auth = require('../mockApis/auth')
-const elite2api = require('../mockApis/elite2')
+const prisonApi = require('../mockApis/prison')
 const tokenverification = require('../mockApis/tokenverification')
 
 const { resetStubs } = require('../mockApis/wiremock')
@@ -13,7 +13,7 @@ module.exports = (on) => {
     },
     getLoginUrl: auth.getLoginUrl,
     stubLogin: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
-      Promise.all([auth.stubLogin(username, roles), elite2api.stubUserMe(), tokenverification.stubVerifyToken(true)]),
+      Promise.all([auth.stubLogin(username, roles), prisonApi.stubUserMe(), tokenverification.stubVerifyToken(true)]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
   })
