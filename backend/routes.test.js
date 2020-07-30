@@ -8,7 +8,7 @@ const { oauthApiFactory } = require('./api/oauthApi')
 
 const errorResponse = {
   response: {
-    data: {
+    body: {
       status: 500,
       userMessage: 'Test error',
     },
@@ -39,9 +39,6 @@ describe('Routes', () => {
 
   const getRoutes = [
     'me',
-    'usercaseloads',
-    'setactivecaseload',
-    'userLocations',
     'userSearch',
     'auth-user-get',
     'auth-user-create',
@@ -77,7 +74,4 @@ describe('Routes', () => {
         .expect(500)
         .expect('"Test error"'))
   )
-
-  it('POST api/manualoverride should go through error handler', () =>
-    request(app).post('/api/manualoverride').set('Accept', 'application/json').expect(500))
 })

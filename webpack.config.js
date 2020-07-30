@@ -104,10 +104,12 @@ module.exports = {
               {
                 loader: 'sass-loader',
                 options: {
-                  includePaths: [
-                    'node_modules/govuk_frontend_toolkit/stylesheets',
-                    'node_modules/govuk-elements-sass/public/sass',
-                  ],
+                  sassOptions: {
+                    includePaths: [
+                      'node_modules/govuk_frontend_toolkit/stylesheets',
+                      'node_modules/govuk-elements-sass/public/sass',
+                    ],
+                  },
                 },
               },
             ],
@@ -138,5 +140,6 @@ module.exports = {
   plugins,
   resolve: {
     alias: { path: false },
+    modules: ['src', 'node_modules', 'node_modules/govuk_frontend_toolkit/images'],
   },
 }
