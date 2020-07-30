@@ -9,6 +9,7 @@ const bodyParser = require('body-parser')
 const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
 const helmet = require('helmet')
+const noCache = require('nocache')
 const apis = require('./apis')
 
 const ensureHttps = require('./middleware/ensureHttps')
@@ -73,7 +74,7 @@ if (config.app.production) {
 }
 
 // Don't cache dynamic resources
-app.use(helmet.noCache())
+app.use(noCache())
 
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
