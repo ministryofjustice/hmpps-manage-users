@@ -5,7 +5,7 @@ import groovy.transform.TupleConstructor
 @TupleConstructor
 enum StaffMember {
 
-    SM_1(-1, Caseload.NWEB, Caseload.NWEB, 'User', 'Elite2', 'API', true),
+    SM_1(-1, Caseload.NWEB, Caseload.NWEB, 'User', 'Prison', 'API', true),
     SM_2(-2, Caseload.LEI, Caseload.LEI, 'User', 'API', 'ITAG', true),
     SM_3(-3, Caseload.LEI, Caseload.LEI, 'User', 'HPA', null, true),
     SM_4(-4, Caseload.MUL, Caseload.MUL, 'User', 'Test', null, true),

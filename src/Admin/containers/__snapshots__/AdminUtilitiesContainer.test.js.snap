@@ -3,13 +3,13 @@
 exports[`<AdminUtilitiesContainer /> should render the Manage user accounts page 1`] = `
 Array [
   <div
-    className="sc-dnqmqq covUjf"
+    className="sc-fzozJi kmnVrx"
   >
     <ul
-      className="sc-iwsKbI cWIuJK"
+      className="sc-fzoLsD iIyIpF"
     >
       <li
-        className="sc-gZMcBi cRHLOy"
+        className="sc-fzpans hFMplx"
       >
         <a
           data-qa="breadcrumb-home-page-link"
@@ -19,7 +19,7 @@ Array [
         </a>
       </li>
       <li
-        className="sc-gZMcBi cRHLOy"
+        className="sc-fzpans hFMplx"
       >
         <span>
           Manage user accounts
@@ -28,11 +28,11 @@ Array [
     </ul>
   </div>,
   <div
-    className="sc-htoDjs bCKyuL"
+    className="sc-AxmLO lcDemq"
   >
     
     <h1
-      className="sc-bdVaJa dSUtdh"
+      className="sc-AxjAm cDEtdP"
       size="LARGE"
     >
       Manage user accounts
@@ -41,10 +41,10 @@ Array [
       className="page-content"
     >
       <div
-        className="sc-gqjmRU cthAvw"
+        className="sc-fzplWN iUslJo"
       >
         <div
-          className="sc-VigVT dUvdCr"
+          className="sc-fznyAO hgfQjo"
         >
           <a
             className="link"
@@ -57,7 +57,7 @@ Array [
           </a>
         </div>
         <div
-          className="sc-VigVT dUvdCr"
+          className="sc-fznyAO hgfQjo"
         >
           <a
             className="link"
@@ -73,7 +73,7 @@ Array [
           </div>
         </div>
         <div
-          className="sc-VigVT dUvdCr"
+          className="sc-fznyAO hgfQjo"
         >
           <a
             className="link"

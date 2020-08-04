@@ -46,9 +46,9 @@ describe('Test request forwarding', () => {
         resolve()
       })
 
-    const eliteApi = { get: apiFunction, post: apiFunction }
+    const prisonApi = { get: apiFunction, post: apiFunction }
 
-    const forwardingHandler = requestForwarding.forwardingHandlerFactory(eliteApi)
+    const forwardingHandler = requestForwarding.forwardingHandlerFactory(prisonApi)
 
     const app = express()
     app.use(bodyParser.json())

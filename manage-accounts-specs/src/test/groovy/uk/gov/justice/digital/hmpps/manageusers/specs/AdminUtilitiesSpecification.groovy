@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.manageusers.specs
 
 
 import org.junit.Rule
-import uk.gov.justice.digital.hmpps.manageusers.mockapis.Elite2Api
+import uk.gov.justice.digital.hmpps.manageusers.mockapis.PrisonApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.OauthApi
 import uk.gov.justice.digital.hmpps.manageusers.mockapis.TokenVerificationApi
 import uk.gov.justice.digital.hmpps.manageusers.model.TestFixture
@@ -15,12 +15,12 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
     OauthApi oauthApi = new OauthApi()
 
     @Rule
-    Elite2Api elite2api = new Elite2Api()
+    PrisonApi prisonApi = new PrisonApi()
 
     @Rule
     TokenVerificationApi tokenVerificationApi = new TokenVerificationApi()
 
-    TestFixture fixture = new TestFixture(browser, elite2api, oauthApi, tokenVerificationApi)
+    TestFixture fixture = new TestFixture(browser, prisonApi, oauthApi, tokenVerificationApi)
 
 
     def "should see maintain auth users link if the user has the MAINTAIN_OAUTH_USERS role"() {

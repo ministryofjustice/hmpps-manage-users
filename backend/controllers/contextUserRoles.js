@@ -1,7 +1,7 @@
-const contextUserRolesFactory = (elite2Api) => {
+const contextUserRolesFactory = (prisonApi) => {
   const contextUserRoles = async (req, res) => {
     const { username, hasAdminRole } = req.query
-    const data = await elite2Api.contextUserRoles(res.locals, username, hasAdminRole)
+    const data = await prisonApi.contextUserRoles(res.locals, username, hasAdminRole)
     res.json(data)
   }
 

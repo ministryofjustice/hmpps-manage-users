@@ -2,10 +2,9 @@
 
 const fs = require('fs')
 const { dirname } = require('path')
-const mkdirp = require('mkdirp')
 
 function writeFile(path, contents, callback) {
-  mkdirp(dirname(path), (err) => {
+  fs.mkdir(dirname(path), { recursive: true }, (err) => {
     if (err) return callback(err)
 
     fs.writeFile(path, contents, callback)
