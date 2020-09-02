@@ -11,7 +11,7 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/ingress.class: {{ .Release.Namespace }}
     # note this limit is per ingress replica
     nginx.ingress.kubernetes.io/limit-rpm: "60"
     # setting to 429 (default is 503) so we can alert on this
