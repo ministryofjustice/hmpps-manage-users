@@ -3,25 +3,25 @@
 exports[`Auth search results form no results should render correctly with no user and no results 1`] = `
 <div>
   <div
-    className="sc-fznyAO fLoaye"
+    className="sc-crzoUp dCgppB"
   >
     <div
-      className="sc-fznKkj kxQUeY"
+      className="sc-dIsAE duhJEp"
     >
       <form
         onSubmit={[Function]}
       >
         <label
-          className="sc-AxmLO iStjYY"
+          className="sc-fujyUd jkxA-dF"
           htmlFor="user"
         >
           <span
-            className="sc-fzozJi iCqBeU"
+            className="sc-pNWxx caSoSk"
           >
             Username or email address
           </span>
           <input
-            className="sc-fzplWN edmmWN"
+            className="sc-iqAbSa byAOZe"
             defaultValue=""
             id="user"
             name="user"
@@ -30,7 +30,7 @@ exports[`Auth search results form no results should render correctly with no use
           />
         </label>
         <button
-          className="sc-AxheI eEbryY"
+          className="sc-gKAblj iXATGr"
           disabled={false}
           id="search-button"
           type="submit"
@@ -46,25 +46,25 @@ exports[`Auth search results form no results should render correctly with no use
 exports[`Auth search results form some results should render correctly with user and results 1`] = `
 <div>
   <div
-    className="sc-fznyAO fLoaye"
+    className="sc-crzoUp dCgppB"
   >
     <div
-      className="sc-fznKkj kxQUeY"
+      className="sc-dIsAE duhJEp"
     >
       <form
         onSubmit={[Function]}
       >
         <label
-          className="sc-AxmLO iStjYY"
+          className="sc-fujyUd jkxA-dF"
           htmlFor="user"
         >
           <span
-            className="sc-fzozJi iCqBeU"
+            className="sc-pNWxx caSoSk"
           >
             Username or email address
           </span>
           <input
-            className="sc-fzplWN edmmWN"
+            className="sc-iqAbSa byAOZe"
             defaultValue="someuser"
             id="user"
             name="user"
@@ -73,7 +73,7 @@ exports[`Auth search results form some results should render correctly with user
           />
         </label>
         <button
-          className="sc-AxheI eEbryY"
+          className="sc-gKAblj iXATGr"
           disabled={false}
           id="search-button"
           type="submit"
@@ -84,80 +84,80 @@ exports[`Auth search results form some results should render correctly with user
     </div>
   </div>
   <table
-    className="sc-AxgMl EndUi"
+    className="sc-jSFkmK bVAlUI"
   >
     <tbody
-      className="sc-AxirZ bJCmFu"
+      className="sc-gtssRu"
     >
       <tr
-        className="sc-AxhUy fxWvvr"
+        className="sc-eCApGN"
       >
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
           Name
         </th>
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
           Username
         </th>
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
           Email
         </th>
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
           Locked
         </th>
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
           Enabled
         </th>
         <th
-          className="sc-AxhCb kcuEKC"
+          className="sc-hKFyIo frRdSr"
         >
            
         </th>
       </tr>
       <tr
-        className="sc-AxhUy fxWvvr"
+        className="sc-eCApGN"
       >
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           Auth
            
           Adm
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           AUTH_ADM
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           auth_test2@digital.justice.gov.uk
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           Yes
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           No
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           <button
-            className="sc-AxheI yLjXU"
+            className="sc-gKAblj hkIJTD"
             disabled={false}
             id="edit-button-AUTH_ADM"
             onClick={[Function]}
@@ -168,40 +168,40 @@ exports[`Auth search results form some results should render correctly with user
         </td>
       </tr>
       <tr
-        className="sc-AxhUy fxWvvr"
+        className="sc-eCApGN"
       >
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           Auth
            
           Expired
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           AUTH_EXPIRED
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           auth_test2@digital.justice.gov.uk
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           No
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           Yes
         </td>
         <td
-          className="sc-AxhCb iBdqAC"
+          className="sc-hKFyIo gngZTL"
         >
           <button
-            className="sc-AxheI yLjXU"
+            className="sc-gKAblj hkIJTD"
             disabled={false}
             id="edit-button-AUTH_EXPIRED"
             onClick={[Function]}
