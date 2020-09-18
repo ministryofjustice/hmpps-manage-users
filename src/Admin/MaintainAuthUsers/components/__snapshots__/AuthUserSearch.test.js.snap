@@ -2,25 +2,25 @@
 
 exports[`Auth search form Form should render correctly with a user 1`] = `
 <div
-  className="sc-Axmtr hjHhIB"
+  className="sc-iCoHVE jPPvpm"
 >
   <div
-    className="sc-AxmLO czuJjP"
+    className="sc-fujyUd juGuta"
   >
     <form
       onSubmit={[Function]}
     >
       <label
-        className="sc-AxjAm bnkTnU"
+        className="sc-bdnylx YDaVd"
         htmlFor="user"
       >
         <span
-          className="sc-AxirZ lbZqdG"
+          className="sc-gtssRu hqOiqN"
         >
           Username or email address
         </span>
         <input
-          className="sc-AxhUy kUaLoB"
+          className="sc-eCApGN gNiOsV"
           defaultValue="someuser"
           id="user"
           name="user"
@@ -29,7 +29,7 @@ exports[`Auth search form Form should render correctly with a user 1`] = `
         />
       </label>
       <button
-        className="sc-AxgMl jWlKPm"
+        className="sc-jSFkmK bVOnRo"
         disabled={false}
         id="search-button"
         type="submit"
@@ -43,25 +43,25 @@ exports[`Auth search form Form should render correctly with a user 1`] = `
 
 exports[`Auth search form Form should render correctly with no user 1`] = `
 <div
-  className="sc-Axmtr hjHhIB"
+  className="sc-iCoHVE jPPvpm"
 >
   <div
-    className="sc-AxmLO czuJjP"
+    className="sc-fujyUd juGuta"
   >
     <form
       onSubmit={[Function]}
     >
       <label
-        className="sc-AxjAm bnkTnU"
+        className="sc-bdnylx YDaVd"
         htmlFor="user"
       >
         <span
-          className="sc-AxirZ lbZqdG"
+          className="sc-gtssRu hqOiqN"
         >
           Username or email address
         </span>
         <input
-          className="sc-AxhUy kUaLoB"
+          className="sc-eCApGN gNiOsV"
           defaultValue=""
           id="user"
           name="user"
@@ -70,7 +70,7 @@ exports[`Auth search form Form should render correctly with no user 1`] = `
         />
       </label>
       <button
-        className="sc-AxgMl jWlKPm"
+        className="sc-jSFkmK bVOnRo"
         disabled={false}
         id="search-button"
         type="submit"

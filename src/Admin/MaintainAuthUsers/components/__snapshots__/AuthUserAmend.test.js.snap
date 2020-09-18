@@ -2,27 +2,27 @@
 
 exports[`Auth Amend form Form should render correctly 1`] = `
 <div
-  className="sc-Axmtr hjHhIB"
+  className="sc-iCoHVE jPPvpm"
 >
   <div
-    className="sc-AxmLO czuJjP"
+    className="sc-fujyUd juGuta"
   >
     <form
       noValidate={true}
       onSubmit={[Function]}
     >
       <label
-        className="sc-AxjAm bnkTnU"
+        className="sc-bdnylx YDaVd"
         htmlFor="email"
       >
         <span
-          className="sc-AxirZ lbZqdG"
+          className="sc-gtssRu hqOiqN"
         >
           Email address
         </span>
         <input
           autoComplete="alter-email"
-          className="sc-AxhUy kUaLoB"
+          className="sc-eCApGN gNiOsV"
           defaultValue="john.smith"
           id="email"
           name="email"
@@ -32,10 +32,10 @@ exports[`Auth Amend form Form should render correctly 1`] = `
         />
       </label>
       <div
-        className="sc-fzozJi lkMuvo"
+        className="sc-pNWxx heSyuw"
       >
         <button
-          className="sc-AxgMl jWlKPm"
+          className="sc-jSFkmK bVOnRo"
           data-qa="amend-button"
           disabled={false}
           type="submit"
@@ -43,7 +43,7 @@ exports[`Auth Amend form Form should render correctly 1`] = `
           Amend
         </button>
         <button
-          className="sc-AxgMl dqThcO"
+          className="sc-jSFkmK hJcAHM"
           data-qa="cancel-button"
           disabled={false}
           onClick={[Function]}
