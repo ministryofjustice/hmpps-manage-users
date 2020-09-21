@@ -6,7 +6,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ReactGA from 'react-ga'
 import UnauthPage from './unauthPage'
-import AdminUtilitiesContainer from './containers/AdminUtilitiesContainer'
 import AuthUserAddRoleContainer from './MaintainAuthUsers/containers/AuthUserAddRoleContainer'
 import AuthUserAddGroupContainer from './MaintainAuthUsers/containers/AuthUserAddGroupContainer'
 import AuthUserContainer from './MaintainAuthUsers/containers/AuthUserContainer'
@@ -123,7 +122,7 @@ class App extends React.Component {
   )
 
   render() {
-    const { menuOpen, boundSetMenuOpen, config, shouldShowTerms, error, user, message, dispatchLoaded } = this.props
+    const { menuOpen, boundSetMenuOpen, config, shouldShowTerms, error, user, dispatchLoaded } = this.props
 
     const hasAdminUtilities =
       user && (user.maintainAccess || user.maintainAccessAdmin || user.maintainAuthUsers || user.groupManager)
@@ -143,18 +142,6 @@ class App extends React.Component {
           <Switch>
             {!hasAdminUtilities && <Route exact path="/" render={() => <Redirect to="/unauthorised" />} />}
             <Route exact path="/unauthorised" render={() => <UnauthPage dispatchLoaded={dispatchLoaded} />} />
-
-            <Route
-              exact
-              path="/"
-              render={() => (
-                <AdminUtilitiesContainer
-                  handleError={this.handleError}
-                  message={message}
-                  clearMessage={this.clearMessage}
-                />
-              )}
-            />
 
             <Route
               exact
@@ -268,13 +255,11 @@ App.propTypes = {
   setMessageDispatch: PropTypes.func.isRequired,
   menuOpen: PropTypes.bool.isRequired,
   boundSetMenuOpen: PropTypes.func.isRequired,
-  message: PropTypes.string.isRequired,
   dispatchLoaded: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => ({
   error: state.app.error,
-  message: state.app.message,
   config: state.app.config,
   user: state.app.user,
   shouldShowTerms: state.app.shouldShowTerms,

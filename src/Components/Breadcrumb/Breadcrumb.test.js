@@ -60,11 +60,10 @@ describe('<Breadcrumb />', () => {
     expect(wrapper.find('BreadcrumbItem').first().find('a').text()).toEqual('Home')
   })
 
-  it('should link back to the Application homepage', () => {
+  it('should have the Menu link as the second Breadcrumb', () => {
     const breadcrumbItem = wrapper.find('BreadcrumbItem').at(1)
 
-    expect(breadcrumbItem.find('Link').prop('to')).toEqual('/')
-    expect(breadcrumbItem.find('span').text()).toEqual('Application homepage')
+    expect(breadcrumbItem.find('a').text()).toEqual('Manage user accounts')
   })
 
   it('should not apply a link to the current page breadcrumb', () => {

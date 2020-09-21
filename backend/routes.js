@@ -44,7 +44,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
 
   router.use(currentUser({ oauthApi }))
 
-  router.use('/menu', menuRouter({ prisonApi, logError }))
+  router.use('/', menuRouter({ prisonApi, logError }))
 
   return router
 }
