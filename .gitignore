@@ -81,3 +81,5 @@ typings/
 # Gradle
 .gradle
 manage-accounts-specs/out/
+/integration-tests/videos/
+/integration-tests/screenshots/

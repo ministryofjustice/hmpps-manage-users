@@ -100,19 +100,16 @@ app.use((req, res, next) => {
   req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
   next()
 })
-app.use(setupWebpackForDev())
 // Extract pagination header information from requests and set on the 'context'
 app.use('/api', requestForwarding.extractRequestPaginationMiddleware)
-
 app.use(routes({ ...apis }))
+
+app.use(setupWebpackForDev())
 
 app.get('/maintain*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))
 })
 app.get('/create*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'))
-})
-app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))
 })
 

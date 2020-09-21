@@ -1,5 +1,4 @@
 const MenuPage = require('../../pages/menuPage')
-const UnauthorisedPage = require('../../pages/unauthorisedPage')
 
 context('Login functionality', () => {
   before(() => {
@@ -53,7 +52,8 @@ context('Login functionality', () => {
   it('Log in as ordinary user receives unauthorised', () => {
     cy.task('stubLogin', { username: 'joe', roles: [{}] })
     cy.login()
-    UnauthorisedPage.verifyOnPage()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.noAdminFunctionsMessage().contains('There are no admin functions associated with your account.')
   })
 
   it('Log in as access roles user', () => {

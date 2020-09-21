@@ -7,7 +7,10 @@ import { BreadcrumbContainer, BreadcrumbList, BreadcrumbListItem } from './Bread
 import routes from '../../routes'
 
 export const Breadcrumb = ({ breadcrumbs }) => {
-  // Pick (pop) the last breadcrumd from the array (also removes it from the array)
+  // temporarily drop breadcrumb item as menu now being handled by nunjucks
+  if (breadcrumbs.length > 0) breadcrumbs.shift()
+
+  // Pick (pop) the last breadcrumb from the array (also removes it from the array)
   const { breadcrumb: poppedBreadcrumb } = breadcrumbs.length > 0 ? breadcrumbs.pop() : breadcrumbs
 
   return (
@@ -16,6 +19,11 @@ export const Breadcrumb = ({ breadcrumbs }) => {
         <BreadcrumbListItem>
           <a data-qa="breadcrumb-home-page-link" href={links.getHomeLink()}>
             Home
+          </a>
+        </BreadcrumbListItem>
+        <BreadcrumbListItem>
+          <a data-qa="breadcrumb-menu-page-link" href="/">
+            Manage user accounts
           </a>
         </BreadcrumbListItem>
         {breadcrumbs.map(({ match, breadcrumb }, i, arr) => {

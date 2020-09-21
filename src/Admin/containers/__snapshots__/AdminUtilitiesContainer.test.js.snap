@@ -21,10 +21,16 @@ Array [
       <li
         className="sc-kEqYlL jBmNmc"
       >
-        <span>
+        <a
+          data-qa="breadcrumb-menu-page-link"
+          href="/"
+        >
           Manage user accounts
-        </span>
+        </a>
       </li>
+      <li
+        className="sc-kEqYlL jBmNmc"
+      />
     </ul>
   </div>,
   <div
