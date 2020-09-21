@@ -4,29 +4,62 @@
 {% set title =  "Manage user accounts" %}
 
  {% block beforeContent %}
-     {{ govukBreadcrumbs({
-         items: [
-             {
-                 text: "Home",
-                 href: homeUrl
-             },
-             {
-                 text: title
-             }
-         ]
-     }) }}
+   {{ govukBreadcrumbs({
+     items: [
+       {
+         text: "Home",
+         href: homeUrl
+       },
+       {
+         text: title
+       }
+     ]
+   }) }}
  {% endblock %}
 
+{% set hasMaintainNomisRolesAccess = user and (user.maintainAccess or user.maintainAccessAdmin) %}
+{% set hasMaintainAuthUsers = user and (user.maintainAuthUsers or user.groupManager) %}
+
 {% block content %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-            <h1 class="govuk-heading-l">{{ title }}</h1>
-            <p class="govuk-body">
-                Manage user roles
-            </p>
-            <p class="govuk-body">
+      {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers %}
+        {% if hasMaintainNomisRolesAccess %}
+          <div class="govuk-grid-column-one-third">
+            <h3 class="govuk-heading-m">
+              <a href="/maintain-roles" id="maintain_roles_link" title="Maintain user roles" class="govuk-link">
+                Maintain user roles
+              </a>
+            </h3>
+          </div>
+        {% endif %}
+        {% if hasMaintainAuthUsers %}
+          <div class="govuk-grid-column-one-third">
+            <h3 class="govuk-heading-m">
+              <a href="/maintain-auth-users" id="maintain_auth_users_link" title="Maintain auth users"
+                 class="govuk-link">
                 Maintain auth users
-            </p>
-        </div>
+              </a>
+            </h3>
+            <p class="govuk-body">Maintain users that do not exist in NOMIS, only in auth.</p>
+          </div>
+          <div class="govuk-grid-column-one-third">
+            <h3 class="govuk-heading-m">
+              <a href="/create-auth-user" id="create_auth_user_link" title="Create auth users" class="govuk-link">
+                Create auth users
+              </a>
+            </h3>
+            <p class="govuk-body">Create user in auth (not in NOMIS).</p>
+          </div>
+        {% endif %}
+
+      {% else %}
+        <p class="govuk-body">
+          There are no admin functions associated with your account.
+        </p>
+      {% endif %}
     </div>
+  </div>
 {% endblock %}

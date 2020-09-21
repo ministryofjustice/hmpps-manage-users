@@ -7,10 +7,10 @@ describe('Current user', () => {
 
   beforeEach(() => {
     oauthApi.currentUser = jest.fn()
+    oauthApi.currentRoles = jest.fn()
 
-    oauthApi.currentUser.mockReturnValue({
-      name: 'Bob Smith',
-    })
+    oauthApi.currentUser.mockReturnValue({ name: 'Bob Smith' })
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }])
 
     req = { session: {} }
     res = { locals: {} }
@@ -22,8 +22,13 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(oauthApi.currentUser).toHaveBeenCalled()
-    expect(req.session.userDetails).toEqual({
-      name: 'Bob Smith',
+    expect(oauthApi.currentRoles).toHaveBeenCalled()
+    expect(req.session.userDetails).toEqual({ name: 'Bob Smith' })
+    expect(req.session.userRoles).toEqual({
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
     })
   })
 
@@ -32,8 +37,82 @@ describe('Current user', () => {
 
     await controller(req, res, () => {})
 
-    expect(res.locals.user).toEqual({
-      displayName: 'Bob Smith',
+    expect(res.locals.user).toEqual({ displayName: 'Bob Smith' })
+  })
+
+  it('should set group manager', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'AUTH_GROUP_MANAGER' }])
+    const controller = currentUser({ oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: true,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+    })
+  })
+
+  it('should set maintain access', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES' }])
+    const controller = currentUser({ oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: false,
+      maintainAccess: true,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+    })
+  })
+
+  it('should set maintain access admin', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
+    const controller = currentUser({ oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: true,
+      maintainAuthUsers: false,
+    })
+  })
+
+  it('should set maintain auth users', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_OAUTH_USERS' }])
+    const controller = currentUser({ oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: true,
+    })
+  })
+
+  it('should set all roles', async () => {
+    oauthApi.currentRoles.mockReturnValue([
+      { roleCode: 'FRED' },
+      { roleCode: 'MAINTAIN_OAUTH_USERS' },
+      { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' },
+      { roleCode: 'AUTH_GROUP_MANAGER' },
+      { roleCode: 'MAINTAIN_ACCESS_ROLES' },
+    ])
+    const controller = currentUser({ oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: true,
+      maintainAccess: true,
+      maintainAccessAdmin: true,
+      maintainAuthUsers: true,
     })
   })
 
@@ -46,6 +125,7 @@ describe('Current user', () => {
     await controller(req, res, next)
 
     expect(oauthApi.currentUser.mock.calls.length).toEqual(0)
+    expect(oauthApi.currentRoles.mock.calls.length).toEqual(0)
     expect(next).toHaveBeenCalled()
   })
 })
