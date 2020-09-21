@@ -52,7 +52,7 @@ jobs:
           key: gradle-cache-{{ checksum "manage-accounts-specs/build.gradle" }}
       - run:
           name: Run Integration Tests
-          command: ./gradlew test
+          command: ./gradlew check
       - save_cache:
           key: gradle-wrapper-{{ checksum "gradle/wrapper/gradle-wrapper.properties" }}
           paths:

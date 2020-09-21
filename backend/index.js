@@ -18,11 +18,14 @@ const requestForwarding = require('./request-forwarding')
 const healthFactory = require('./services/healthCheck')
 
 const setupAuth = require('./setupAuth')
+const setupSass = require('./setupSass')
 
 const routes = require('./routes')
 
 const setupWebSession = require('./setupWebSession')
 const setupWebpackForDev = require('./setupWebpackForDev')
+const setupStaticContent = require('./setupStaticContent')
+const nunjucksSetup = require('./nunjucksSetup')
 
 const log = require('./log')
 const config = require('./config')
@@ -32,8 +35,10 @@ const app = express()
 const sixtyDaysInSeconds = 5184000
 
 app.set('trust proxy', 1) // trust first proxy
-
 app.set('view engine', 'ejs')
+app.set('view engine', 'njk')
+
+nunjucksSetup(app, path)
 
 app.use(helmet())
 
@@ -79,8 +84,8 @@ app.use(noCache())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use('/bundle.js', express.static(path.join(__dirname, '../build/bundle.js')))
-app.use(express.static(path.join(__dirname, '../build/static')))
+app.use(setupSass())
+app.use(setupStaticContent())
 
 app.get('/terms', async (req, res) => {
   res.render('terms', { mailTo: config.app.mailTo, homeLink: config.app.notmEndpointUrl })
