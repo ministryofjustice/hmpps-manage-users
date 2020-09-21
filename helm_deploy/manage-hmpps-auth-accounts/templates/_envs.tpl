@@ -61,6 +61,9 @@ env:
   - name: NN_ENDPOINT_URL
     value: {{ .Values.env.NN_ENDPOINT_URL | quote }}
 
+  - name: DPS_ENDPOINT_URL
+    value: {{ .Values.env.DPS_ENDPOINT_URL | quote }}
+
   - name: TOKENVERIFICATION_API_URL
     value: {{ .Values.env.TOKENVERIFICATION_API_URL | quote }}
 

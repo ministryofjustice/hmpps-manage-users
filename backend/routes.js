@@ -12,6 +12,7 @@ const { userSearchFactory } = require('./controllers/userSearch')
 const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
 const menuRouter = require('./routes/menuRouter')
+const currentUser = require('./middleware/currentUser')
 
 const configureRoutes = ({ oauthApi, prisonApi }) => {
   const router = express.Router()
@@ -40,6 +41,8 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/removeRole', withErrorHandler(removeRoleFactory(prisonApi).removeRole))
   router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi).addRole))
   router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
+
+  router.use(currentUser({ oauthApi }))
 
   router.use('/menu', menuRouter({ prisonApi, logError }))
 
