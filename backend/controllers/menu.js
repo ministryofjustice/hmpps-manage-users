@@ -9,6 +9,7 @@ const menuFactory = (prisonApi, logError) => {
         contentUrl: `${config.app.dpsEndpointUrl}/content`,
         user: {
           displayName: req.session.userDetails.name,
+          ...req.session.userRoles,
         },
       })
     } catch (error) {
