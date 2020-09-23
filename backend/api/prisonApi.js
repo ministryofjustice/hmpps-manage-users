@@ -15,6 +15,7 @@ const prisonApiFactory = (client) => {
 
   const del = (context, url, data) => client.del(context, url, data).then(processResponse(context))
 
+  const userCaseLoads = (context) => (context.authSource !== 'auth' ? get(context, '/api/users/me/caseLoads') : [])
   const getAgencyDetails = (context, caseloadId) => get(context, `/api/agencies/caseload/${caseloadId}`)
   const userSearch = (context, { nameFilter, roleFilter }) =>
     get(
@@ -46,6 +47,7 @@ const prisonApiFactory = (client) => {
     getUser,
     userSearchAdmin,
     getAgencyDetails,
+    userCaseLoads,
   }
 }
 

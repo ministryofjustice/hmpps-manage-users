@@ -6,11 +6,7 @@ const menuFactory = (prisonApi, logError) => {
       res.render('menu.njk', {
         title: 'Manage user accounts',
         homeUrl: config.app.notmEndpointUrl,
-        contentUrl: `${config.app.dpsEndpointUrl}/content`,
-        user: {
-          displayName: req.session.userDetails.name,
-          ...req.session.userRoles,
-        },
+        dpsUrl: `${config.app.dpsEndpointUrl}/content`,
       })
     } catch (error) {
       logError(req.originalUrl, error, 'Sorry, the service is unavailable')

@@ -2,28 +2,31 @@ const currentUser = require('./currentUser')
 
 describe('Current user', () => {
   const oauthApi = {}
+  const prisonApi = {}
   let req
   let res
 
   beforeEach(() => {
     oauthApi.currentUser = jest.fn()
     oauthApi.currentRoles = jest.fn()
+    prisonApi.userCaseLoads = jest.fn()
 
-    oauthApi.currentUser.mockReturnValue({ name: 'Bob Smith' })
+    oauthApi.currentUser.mockReturnValue({ name: 'Bob Smith', activeCaseLoadId: 'MDI' })
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }])
+    prisonApi.userCaseLoads.mockReturnValue([{ caseLoadId: 'MDI', description: 'Moorland' }])
 
     req = { session: {} }
     res = { locals: {} }
   })
 
   it('should request and store user details', async () => {
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
     expect(oauthApi.currentUser).toHaveBeenCalled()
     expect(oauthApi.currentRoles).toHaveBeenCalled()
-    expect(req.session.userDetails).toEqual({ name: 'Bob Smith' })
+    expect(req.session.userDetails).toEqual({ name: 'Bob Smith', activeCaseLoadId: 'MDI' })
     expect(req.session.userRoles).toEqual({
       groupManager: false,
       maintainAccess: false,
@@ -33,16 +36,32 @@ describe('Current user', () => {
   })
 
   it('should stash data into res.locals', async () => {
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
-    expect(res.locals.user).toEqual({ displayName: 'Bob Smith' })
+    expect(res.locals.user).toEqual({
+      allCaseloads: [
+        {
+          caseLoadId: 'MDI',
+          description: 'Moorland',
+        },
+      ],
+      activeCaseLoad: {
+        caseLoadId: 'MDI',
+        description: 'Moorland',
+      },
+      displayName: 'Bob Smith',
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+    })
   })
 
   it('should set group manager', async () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'AUTH_GROUP_MANAGER' }])
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
@@ -56,7 +75,7 @@ describe('Current user', () => {
 
   it('should set maintain access', async () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES' }])
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
@@ -70,7 +89,7 @@ describe('Current user', () => {
 
   it('should set maintain access admin', async () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
@@ -84,7 +103,7 @@ describe('Current user', () => {
 
   it('should set maintain auth users', async () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_OAUTH_USERS' }])
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
@@ -104,7 +123,7 @@ describe('Current user', () => {
       { roleCode: 'AUTH_GROUP_MANAGER' },
       { roleCode: 'MAINTAIN_ACCESS_ROLES' },
     ])
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
 
@@ -117,7 +136,7 @@ describe('Current user', () => {
   })
 
   it('ignore xhr requests', async () => {
-    const controller = currentUser({ oauthApi })
+    const controller = currentUser({ prisonApi, oauthApi })
     req.xhr = true
 
     const next = jest.fn()
