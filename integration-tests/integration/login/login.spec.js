@@ -61,4 +61,12 @@ context('Login functionality', () => {
     cy.login()
     MenuPage.verifyOnPage()
   })
+
+  it('Log in and check header of user', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.headerUsername().contains('James Stuart')
+    menuPage.headerCaseload().contains('Moorland')
+  })
 })

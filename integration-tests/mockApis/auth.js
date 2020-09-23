@@ -128,7 +128,9 @@ const stubUserMe = (username = 'ITAG_USER') =>
       jsonBody: {
         firstName: 'JAMES',
         lastName: 'STUART',
+        name: 'James Stuart',
         username,
+        activeCaseLoadId: 'MDI',
       },
     },
   })

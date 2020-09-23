@@ -13,7 +13,12 @@ module.exports = (on) => {
     },
     getLoginUrl: auth.getLoginUrl,
     stubLogin: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
-      Promise.all([auth.stubLogin(username, roles), prisonApi.stubUserMe(), tokenverification.stubVerifyToken(true)]),
+      Promise.all([
+        auth.stubLogin(username, roles),
+        prisonApi.stubUserMe(),
+        prisonApi.stubUserCaseloads(),
+        tokenverification.stubVerifyToken(true),
+      ]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
   })

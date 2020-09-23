@@ -42,7 +42,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi).addRole))
   router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
 
-  router.use(currentUser({ oauthApi }))
+  router.use(currentUser({ prisonApi, oauthApi }))
 
   router.use('/', menuRouter({ prisonApi, logError }))
 
