@@ -141,6 +141,7 @@ module.exports = (app, path) => {
   njkEnv.addFilter('truthy', (data) => Boolean(data))
   njkEnv.addGlobal('homeUrl', config.app.notmEndpointUrl)
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
+  njkEnv.addGlobal('supportUrl', config.app.supportUrl)
   njkEnv.addGlobal('googleAnalyticsId', config.analytics.googleAnalyticsId)
 
   return njkEnv

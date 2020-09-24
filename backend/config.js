@@ -4,6 +4,7 @@ const app = {
   disableWebpack: process.env.DISABLE_WEBPACK === 'true',
   notmEndpointUrl: process.env.NN_ENDPOINT_URL || 'http://localhost:3000/',
   dpsEndpointUrl: process.env.DPS_ENDPOINT_URL || 'http://localhost:3002',
+  supportUrl: process.env.SUPPORT_URL || 'http://localhost:3003',
   mailTo: process.env.MAIL_TO || 'feedback@digital.justice.gov.uk',
   tokenRefreshThresholdSeconds: process.env.TOKEN_REFRESH_THRESHOLD_SECONDS || 60,
   applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',

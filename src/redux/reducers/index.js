@@ -3,7 +3,8 @@ import * as ActionTypes from '../actions/actionTypes'
 
 const appInitialState = {
   config: {
-    mailTo: '',
+    supportUrl: '',
+    dpsEndpointUrl: '',
     notmEndpointUrl: '',
   },
   user: {
@@ -16,7 +17,6 @@ const appInitialState = {
     staffId: 0,
     username: '',
   },
-  shouldShowTerms: false,
   error: '',
   message: '',
   loaded: false,
@@ -66,8 +66,6 @@ export function app(state = appInitialState, action) {
       return updateObject(state, {
         user: action.user,
       })
-    case ActionTypes.SET_TERMS_VISIBILITY:
-      return { ...state, shouldShowTerms: action.shouldShowTerms }
 
     case ActionTypes.SET_ERROR:
       return updateObject(state, {

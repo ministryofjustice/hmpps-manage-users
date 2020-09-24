@@ -18,8 +18,9 @@ const props = {
     username: 'TestUser',
   },
   config: {
-    mailTo: 'email@test.com',
-    notmEndpointUrl: '//notm.url',
+    notmEndpointUrl: '/notm/endpoint',
+    supportUrl: 'https://support',
+    dpsEndpointUrl: 'http://dps',
   },
   message: '',
 }

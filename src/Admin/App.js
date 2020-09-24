@@ -17,19 +17,9 @@ import UserSearchContainer from './MaintainRoles/containers/UserSearchContainer'
 import UserSearchResultsContainer from './MaintainRoles/containers/UserSearchResultsContainer'
 import StaffRoleProfileContainer from './MaintainRoles/containers/StaffRoleProfileContainer'
 import AddRoleContainer from './MaintainRoles/containers/AddRoleContainer'
-import Terms from '../Footer/terms-and-conditions'
 import Error from '../Error'
 import links from '../links'
-import {
-  resetError,
-  setConfig,
-  setError,
-  setLoaded,
-  setMenuOpen,
-  setMessage,
-  setTermsVisibility,
-  setUserDetails,
-} from '../redux/actions'
+import { resetError, setConfig, setError, setLoaded, setMenuOpen, setMessage, setUserDetails } from '../redux/actions'
 import { configType, errorType, userType } from '../types'
 
 const axios = require('axios')
@@ -73,11 +63,6 @@ class App extends React.Component {
     userDetailsDispatch({ ...user.data })
   }
 
-  hideTermsAndConditions = () => {
-    const { setTermsVisibilityDispatch } = this.props
-    setTermsVisibilityDispatch(false)
-  }
-
   clearMessage = () => {
     const { setMessageDispatch } = this.props
     setMessageDispatch('')
@@ -109,8 +94,8 @@ class App extends React.Component {
   }
 
   shouldDisplayInnerContent = () => {
-    const { shouldShowTerms, user } = this.props
-    return !shouldShowTerms && user && user.username
+    const { user } = this.props
+    return user && user.username
   }
 
   displayBack = () => (
@@ -122,7 +107,7 @@ class App extends React.Component {
   )
 
   render() {
-    const { menuOpen, boundSetMenuOpen, config, shouldShowTerms, error, user, dispatchLoaded } = this.props
+    const { menuOpen, boundSetMenuOpen, config, error, user, dispatchLoaded } = this.props
 
     const hasAdminUtilities =
       user && (user.maintainAccess || user.maintainAccessAdmin || user.maintainAuthUsers || user.groupManager)
@@ -233,9 +218,8 @@ class App extends React.Component {
               )
             }}
           />
-          {shouldShowTerms && <Terms close={() => this.hideTermsAndConditions()} />}
           {innerContent}
-          <FooterContainer feedbackEmail={config.mailTo} prisonStaffHubUrl={config.prisonStaffHubUrl} />
+          <FooterContainer supportUrl={config.supportUrl} prisonStaffHubUrl={`${config.dpsEndpointUrl}/`} />
         </div>
       </Router>
     )
@@ -246,10 +230,8 @@ App.propTypes = {
   error: errorType.isRequired,
   config: configType.isRequired,
   user: userType.isRequired,
-  shouldShowTerms: PropTypes.bool.isRequired,
   configDispatch: PropTypes.func.isRequired,
   userDetailsDispatch: PropTypes.func.isRequired,
-  setTermsVisibilityDispatch: PropTypes.func.isRequired,
   setErrorDispatch: PropTypes.func.isRequired,
   resetErrorDispatch: PropTypes.func.isRequired,
   setMessageDispatch: PropTypes.func.isRequired,
@@ -262,14 +244,12 @@ const mapStateToProps = (state) => ({
   error: state.app.error,
   config: state.app.config,
   user: state.app.user,
-  shouldShowTerms: state.app.shouldShowTerms,
   menuOpen: state.app.menuOpen,
 })
 
 const mapDispatchToProps = (dispatch) => ({
   configDispatch: (config) => dispatch(setConfig(config)),
   userDetailsDispatch: (user) => dispatch(setUserDetails(user)),
-  setTermsVisibilityDispatch: (shouldShowTerms) => dispatch(setTermsVisibility(shouldShowTerms)),
   setErrorDispatch: (error) => dispatch(setError(error)),
   resetErrorDispatch: () => dispatch(resetError()),
   setMessageDispatch: (message) => dispatch(setMessage(message)),

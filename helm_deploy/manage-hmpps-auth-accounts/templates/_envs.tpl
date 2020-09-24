@@ -85,4 +85,6 @@ env:
   - name: WEB_SESSION_TIMEOUT_IN_MINUTES
     value: {{ .Values.env.WEB_SESSION_TIMEOUT_IN_MINUTES | quote }}
 
+  - name: SUPPORT_URL
+    value: {{ .Values.env.SUPPORT_URL | quote }}
 {{- end -}}
