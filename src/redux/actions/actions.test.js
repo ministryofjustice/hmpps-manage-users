@@ -6,7 +6,6 @@ import {
   SET_ERROR,
   SET_LOADED,
   SET_MESSAGE,
-  SET_TERMS_VISIBILITY,
   SET_USER_DETAILS,
   SET_USER_SEARCH_NAME_FILTER,
   SET_USER_SEARCH_PAGINATION_PAGE_NUMBER,
@@ -25,10 +24,18 @@ describe('actions', () => {
     const expectedAction = {
       type: SET_CONFIG,
       config: {
-        mailTo: 'a@b.com',
+        notmEndpointUrl: '/notm/endpoint',
+        supportUrl: 'https://support',
+        dpsEndpointUrl: 'http://dps',
       },
     }
-    expect(actions.setConfig({ mailTo: 'a@b.com' })).toEqual(expectedAction)
+    expect(
+      actions.setConfig({
+        notmEndpointUrl: '/notm/endpoint',
+        supportUrl: 'https://support',
+        dpsEndpointUrl: 'http://dps',
+      })
+    ).toEqual(expectedAction)
   })
 
   it('should create an action to setup login details', () => {
@@ -38,15 +45,6 @@ describe('actions', () => {
       user,
     }
     expect(actions.setUserDetails(user)).toEqual(expectedAction)
-  })
-
-  it('should create an action to toggle ts and cs', () => {
-    const shouldShowTerms = true
-    const expectedAction = {
-      type: SET_TERMS_VISIBILITY,
-      shouldShowTerms,
-    }
-    expect(actions.setTermsVisibility(shouldShowTerms)).toEqual(expectedAction)
   })
 
   it('should create an action to store an error', () => {

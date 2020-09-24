@@ -69,7 +69,8 @@ const authGroupType = shape({
 export const authGroupListType = arrayOf(authGroupType)
 
 export const configType = shape({
-  mailTo: string.isRequired,
+  dpsEndpointUrl: string.isRequired,
+  supportUrl: string.isRequired,
   notmEndpointUrl: string.isRequired,
 })
 

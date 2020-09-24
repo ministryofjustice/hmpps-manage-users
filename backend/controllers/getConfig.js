@@ -3,7 +3,8 @@ const config = require('../config')
 const getConfiguration = async (req, res) =>
   res.json({
     notmEndpointUrl: config.app.notmEndpointUrl,
-    mailTo: config.app.mailTo,
+    dpsEndpointUrl: config.app.dpsEndpointUrl,
+    supportUrl: config.app.supportUrl,
     googleAnalyticsId: config.analytics.googleAnalyticsId,
   })
 

@@ -7,7 +7,8 @@ jest.mock('../Spinner/index', () => '')
 
 const config = {
   notmEndpointUrl: '/notm/endpoint',
-  mailTo: 'email@test.com',
+  supportUrl: 'https://support',
+  dpsEndpointUrl: 'http://dps',
 }
 
 const user = {
@@ -32,10 +33,8 @@ const props = {
   setMessageDispatch: jest.fn(),
   menuOpen: false,
   boundSetMenuOpen: jest.fn(),
-  setTermsVisibilityDispatch: jest.fn(),
   error: '',
   page: 0,
-  shouldShowTerms: false,
   resetErrorDispatch: jest.fn(),
   message: '',
   allowAuto: false,
@@ -111,6 +110,8 @@ describe('App component', () => {
   it('should pass through correct props to the footer container', () => {
     const component = shallow(<App {...props} />)
 
-    expect(component.find({ feedbackEmail: config.mailTo }).prop('prisonStaffHubUrl')).toEqual(config.prisonStaffHubUrl)
+    expect(component.find({ supportUrl: config.supportUrl }).prop('prisonStaffHubUrl')).toEqual(
+      `${config.dpsEndpointUrl}/`
+    )
   })
 })

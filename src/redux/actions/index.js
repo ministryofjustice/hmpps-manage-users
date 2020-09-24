@@ -6,7 +6,6 @@ import {
   SET_LOADED,
   SET_MENU_OPEN,
   SET_MESSAGE,
-  SET_TERMS_VISIBILITY,
   SET_USER_DETAILS,
   SET_USER_SEARCH_CONTEXT_USER,
   SET_USER_SEARCH_NAME_FILTER,
@@ -24,8 +23,6 @@ import {
 export const setConfig = (config) => ({ type: SET_CONFIG, config })
 
 export const setUserDetails = (user) => ({ type: SET_USER_DETAILS, user })
-
-export const setTermsVisibility = (shouldShowTerms) => ({ type: SET_TERMS_VISIBILITY, shouldShowTerms })
 
 export const setError = (error) => ({ type: SET_ERROR, error })
 export const resetError = (error) => ({ type: RESET_ERROR })

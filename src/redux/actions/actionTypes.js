@@ -1,7 +1,6 @@
 export const SET_CONFIG = 'SET_CONFIG'
 
 export const SET_USER_DETAILS = 'SET_USER_DETAILS'
-export const SET_TERMS_VISIBILITY = 'SET_TERMS_VISIBILITY'
 
 export const SET_ERROR = 'SET_ERROR'
 export const RESET_ERROR = 'RESET_ERROR'

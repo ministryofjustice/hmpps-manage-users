@@ -49,7 +49,8 @@ describe('app (global) reducer', () => {
   it('should return the initial state', () => {
     expect(app(undefined, {})).toEqual({
       config: {
-        mailTo: '',
+        supportUrl: '',
+        dpsEndpointUrl: '',
         notmEndpointUrl: '',
       },
       user: {
@@ -62,7 +63,6 @@ describe('app (global) reducer', () => {
         staffId: 0,
         username: '',
       },
-      shouldShowTerms: false,
       error: '',
       message: '',
       loaded: false,
@@ -96,20 +96,6 @@ describe('app (global) reducer', () => {
       error: null,
       message: null,
       user: { field: 'value' },
-      loaded: false,
-    })
-  })
-
-  it('should handle SET_TERMS_VISIBILITY', () => {
-    expect(
-      app(appInitialState, {
-        type: types.SET_TERMS_VISIBILITY,
-        shouldShowTerms: true,
-      })
-    ).toEqual({
-      error: null,
-      message: null,
-      shouldShowTerms: true,
       loaded: false,
     })
   })
