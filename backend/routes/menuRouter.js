@@ -3,8 +3,8 @@ const { menuFactory } = require('../controllers/menu')
 
 const router = express.Router()
 
-const controller = ({ prisonApi, logError }) => {
-  const { index } = menuFactory(prisonApi, logError)
+const controller = ({ logError }) => {
+  const { index } = menuFactory(logError)
 
   router.get('/', index)
   return router

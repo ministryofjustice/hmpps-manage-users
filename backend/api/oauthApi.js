@@ -30,6 +30,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups`)
   const userSearch = (context, { nameFilter }) => get(context, `/api/authuser?email=${encodeQueryString(nameFilter)}`)
   const addUserRole = (context, { username, role }) => put(context, `/api/authuser/${username}/roles/${role}`)
+  const addUserRoles = (context, { username, roles }) => post(context, `/api/authuser/${username}/roles`, roles)
   const removeUserRole = (context, { username, role }) => del(context, `/api/authuser/${username}/roles/${role}`)
   const addUserGroup = (context, { username, group }) => put(context, `/api/authuser/${username}/groups/${group}`)
   const removeUserGroup = (context, { username, group }) => del(context, `/api/authuser/${username}/groups/${group}`)
@@ -106,6 +107,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     userRoles,
     userGroups,
     addUserRole,
+    addUserRoles,
     removeUserRole,
     addUserGroup,
     removeUserGroup,
