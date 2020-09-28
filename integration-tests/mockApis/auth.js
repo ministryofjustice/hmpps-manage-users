@@ -201,11 +201,11 @@ const stubAuthAssignableRoles = () =>
     ],
   })
 
-const stubAuthAddRole = () =>
+const stubAuthAddRoles = () =>
   stubFor({
     request: {
-      method: 'PUT',
-      urlPattern: '/auth/api/authuser/.*/roles/.*',
+      method: 'POST',
+      urlPattern: '/auth/api/authuser/.*/roles',
     },
     response: {
       status: 200,
@@ -225,6 +225,12 @@ const stubAuthRemoveRole = () =>
     },
   })
 
+const verifyAddRoles = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/authuser/.*/roles',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
@@ -239,7 +245,8 @@ module.exports = {
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,
-  stubAuthAddRole,
+  stubAuthAddRoles,
   stubAuthRemoveRole,
   stubAuthAssignableRoles,
+  verifyAddRoles,
 }

@@ -46,7 +46,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use(currentUser({ prisonApi, oauthApi }))
 
   router.use('/', menuRouter({ logError }))
-  router.use('/manage-auth-users/:username/select-role', manageAuthUserRouter({ oauthApi, prisonApi, logError }))
+  router.use('/manage-auth-users/:username/select-roles', manageAuthUserRouter({ oauthApi, prisonApi, logError }))
 
   return router
 }

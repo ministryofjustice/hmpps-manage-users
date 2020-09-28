@@ -25,8 +25,9 @@ module.exports = (on) => {
     stubAuthEmailSearch: auth.stubAuthEmailSearch,
     stubAuthUserGroups: auth.stubAuthUserGroups,
     stubAuthUserRoles: auth.stubAuthUserRoles,
-    stubAuthAddRole: auth.stubAuthAddRole,
+    stubAuthAddRoles: auth.stubAuthAddRoles,
     stubAuthRemoveRole: auth.stubAuthRemoveRole,
     stubAuthAssignableRoles: auth.stubAuthAssignableRoles,
+    verifyAddRoles: auth.verifyAddRoles,
   })
 }

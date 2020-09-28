@@ -99,27 +99,6 @@ const authUserMaintenanceFactory = (oauthApi) => {
     )
   }
 
-  const addRole = async (req, res) => {
-    const { username, role } = req.query
-    log.debug(`Adding role ${role} to user ${username}`)
-
-    if (!role) {
-      res.status(400)
-      res.json([{ targetName: 'role', text: 'Select a role' }])
-      return
-    }
-
-    await handleClientError(
-      async () => {
-        const response = await oauthApi.addUserRole(res.locals, { username, role })
-        res.json(response)
-      },
-      'role',
-      res,
-      { 'role.noaccess': `User ${username} isn't in one of your groups.` }
-    )
-  }
-
   const removeRole = async (req, res) => {
     const { username, role } = req.query
     log.debug(`Removing role ${role} from user ${username}`)
@@ -278,7 +257,6 @@ const authUserMaintenanceFactory = (oauthApi) => {
     search,
     roles,
     groups,
-    addRole,
     removeRole,
     addGroup,
     removeGroup,

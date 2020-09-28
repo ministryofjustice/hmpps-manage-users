@@ -7,7 +7,6 @@ describe('Auth user maintenance controller', () => {
     search,
     roles,
     groups,
-    addRole,
     removeRole,
     addGroup,
     removeGroup,
@@ -25,7 +24,6 @@ describe('Auth user maintenance controller', () => {
     oauthApi.userSearch = jest.fn()
     oauthApi.userRoles = jest.fn()
     oauthApi.userGroups = jest.fn()
-    oauthApi.addUserRole = jest.fn()
     oauthApi.removeUserRole = jest.fn()
     oauthApi.addUserGroup = jest.fn()
     oauthApi.removeUserGroup = jest.fn()
@@ -251,51 +249,6 @@ describe('Auth user maintenance controller', () => {
       })
       it('should pass error through if known issue occurs', async () => {
         expect(res.json).toBeCalledWith([{ targetName: 'user', text: 'Some problem occurred', error: 'Not Found' }])
-      })
-      it('show pass through status', () => {
-        expect(res.status).toBeCalledWith(404)
-      })
-    })
-  })
-
-  describe('addRole', () => {
-    it('should call addRole', async () => {
-      const response = {}
-
-      oauthApi.addUserRole.mockReturnValueOnce(response)
-
-      await addRole({ query: { username: 'joe', role: 'maintain' } }, res)
-
-      expect(res.json).toBeCalledWith(response)
-    })
-
-    describe('missing query', () => {
-      beforeEach(async () => {
-        await addRole({ query: { username: 'joe' } }, res)
-      })
-
-      it('should return 400 if missing query', async () => {
-        expect(res.json).toBeCalledWith([{ targetName: 'role', text: 'Select a role' }])
-      })
-      it('show return not found status', () => {
-        expect(res.status).toBeCalledWith(400)
-      })
-    })
-
-    describe('known issue', () => {
-      const response = { status: 404, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
-
-      beforeEach(async () => {
-        oauthApi.addUserRole.mockImplementation(() => {
-          const error = new Error('something went wrong')
-          error.response = response
-          throw error
-        })
-
-        await addRole({ query: { username: 'joe', role: 'role' } }, res)
-      })
-      it('should pass error through if known issue occurs', async () => {
-        expect(res.json).toBeCalledWith([{ targetName: 'role', text: 'Some problem occurred', error: 'Not Found' }])
       })
       it('show pass through status', () => {
         expect(res.status).toBeCalledWith(404)

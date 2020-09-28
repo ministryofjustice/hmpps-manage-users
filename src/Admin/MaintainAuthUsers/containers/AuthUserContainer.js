@@ -57,13 +57,6 @@ class AuthUserContainer extends Component {
     disableDispatch(event.target.value)
   }
 
-  handleRoleAdd = (event) => {
-    const { contextUser, history } = this.props
-
-    event.preventDefault()
-    history.push(`/maintain-auth-users/${contextUser.username}/add-role`)
-  }
-
   handleGroupAdd = (event) => {
     const { contextUser, history } = this.props
 
@@ -89,7 +82,6 @@ class AuthUserContainer extends Component {
         <AuthUser
           handleRoleRemove={this.handleRoleRemove}
           handleGroupRemove={this.handleGroupRemove}
-          handleRoleAdd={this.handleRoleAdd}
           handleGroupAdd={this.handleGroupAdd}
           handleEnable={this.handleEnable}
           handleDisable={this.handleDisable}

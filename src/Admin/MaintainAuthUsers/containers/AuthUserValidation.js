@@ -8,8 +8,6 @@ const validateSearch = (user) => {
   return []
 }
 
-const validateAddRole = (role) => (!role ? [{ targetName: 'role', text: 'Select a role' }] : [])
-
 const validateAddGroup = (group) => (!group ? [{ targetName: 'group', text: 'Select a group' }] : [])
 
 const validateEmailFormat = (email) => {
@@ -88,4 +86,4 @@ const validateAmend = ({ email }) => {
   return validateEmailFormat(email)
 }
 
-export { validateSearch, validateAddRole, validateAddGroup, validateCreate, validateAmend }
+export { validateSearch, validateAddGroup, validateCreate, validateAmend }

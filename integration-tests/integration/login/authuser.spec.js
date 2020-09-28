@@ -65,15 +65,19 @@ context('Auth User functionality', () => {
 
     cy.task('stubAuthAssignableRoles')
     userPage.addRole().click()
-    cy.wait('@getUser')
-    const addRole = AuthUserAddRolePage.verifyOnPage('Auth Adm')
+    const addRole = AuthUserAddRolePage.verifyOnPage()
 
-    cy.task('stubAuthAddRole')
-    addRole.choose('Licence Vary')
-    cy.route({ method: 'GET', url: '/api/auth-user-roles-add?username=AUTH_ADM&role=LICENCE_VARY' }).as('addRole')
+    cy.task('stubAuthAddRoles')
+    addRole.choose('LICENCE_VARY')
+    addRole.choose('LICENCE_RO')
     addRole.addRoleButton().click()
 
-    cy.wait('@addRole').should('have.property', 'status', 200)
+    cy.task('verifyAddRoles').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal(['LICENCE_RO', 'LICENCE_VARY'])
+    })
+
     cy.wait('@getUser')
     AuthUserPage.verifyOnPage('Auth Adm')
 

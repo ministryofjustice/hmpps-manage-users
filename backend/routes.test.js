@@ -49,7 +49,6 @@ describe('Routes', () => {
     'getRoles',
     'getUser',
     'removeRole',
-    'addRole',
     'contextUserRoles',
   ]
 
@@ -61,7 +60,6 @@ describe('Routes', () => {
   const queryRoutes = [
     { route: 'auth-user-search', query: { nameFilter: 'john doe' } },
     { route: 'auth-user-roles', query: { username: 'john doe' } },
-    { route: 'auth-user-roles-add', query: { role: 'admin' } },
     { route: 'auth-user-roles-remove', query: { role: 'admin' } },
   ]
 
