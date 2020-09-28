@@ -12,6 +12,7 @@ const { userSearchFactory } = require('./controllers/userSearch')
 const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
 const menuRouter = require('./routes/menuRouter')
+const manageAuthUserRouter = require('./routes/manageAuthUserRouter')
 const currentUser = require('./middleware/currentUser')
 
 const configureRoutes = ({ oauthApi, prisonApi }) => {
@@ -39,12 +40,13 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/getRoles', withErrorHandler(getRolesFactory(prisonApi).getRoles))
   router.use('/api/getUser', withErrorHandler(getUserFactory(prisonApi).getUser))
   router.use('/api/removeRole', withErrorHandler(removeRoleFactory(prisonApi).removeRole))
-  router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi).addRole))
+  router.use('/api/addRole', withErrorHandler(addRoleFactory(oauthApi, prisonApi, logError).addRole))
   router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
 
   router.use(currentUser({ prisonApi, oauthApi }))
 
-  router.use('/', menuRouter({ prisonApi, logError }))
+  router.use('/', menuRouter({ logError }))
+  router.use('/manage-auth-users/:username/select-role', manageAuthUserRouter({ oauthApi, prisonApi, logError }))
 
   return router
 }

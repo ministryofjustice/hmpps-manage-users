@@ -1,0 +1,53 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set title =  "Select roles" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: maintainTitle, href: maintainUrl },
+       { text: staff.name, href: maintainUrl + '/' + staff.username },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-third">
+        <form method="POST">
+          {{ govukCheckboxes({
+            idPrefix: 'roles',
+            name: 'roles',
+            items: roleDropdownValues,
+            errorMessage: errors | findError('roles')
+          }) }}
+
+          {{ govukButton({ text: "Confirm", type: "submit" }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: maintainUrl + '/' + staff.username,
+            classes: "govuk-button--secondary"
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
