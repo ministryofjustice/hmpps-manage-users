@@ -123,20 +123,6 @@ describe('Auth user container', () => {
       })
     })
 
-    describe('handleRoleAdd', () => {
-      it('should set history when add button clicked', () => {
-        wrapper.find('[data-qa="add-role-button"] button').simulate('click')
-
-        expect(mockHistory.push).toBeCalledWith('/maintain-auth-users/joesmith/add-role')
-      })
-
-      it('should prevent default on the form submission', () => {
-        wrapper.find('[data-qa="add-role-button"] button').simulate('click', event)
-
-        expect(event.preventDefault).toBeCalled()
-      })
-    })
-
     describe('handleGroupRemove', () => {
       it('should call axios to remove group when remove button clicked', () => {
         wrapper.find('[data-qa="remove-button-group1"] button').simulate('click')

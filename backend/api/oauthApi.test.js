@@ -180,22 +180,22 @@ describe('oathApi tests', () => {
     })
   })
 
-  describe('addUserRole', () => {
+  describe('addUserRoles', () => {
     const errorResponse = { field: 'hello' }
     let actual
 
     beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
+      client.post = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = oauthApi.addUserRole(context, { username: 'bob', role: 'maintain' })
+      actual = oauthApi.addUserRoles(context, { username: 'bob', roles: ['maintain'] })
     })
 
     it('should return any error from endpoint', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/roles/maintain', undefined)
+      expect(client.post).toBeCalledWith(context, '/api/authuser/bob/roles', ['maintain'])
     })
   })
 

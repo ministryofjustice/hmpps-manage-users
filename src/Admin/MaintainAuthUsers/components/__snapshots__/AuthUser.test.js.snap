@@ -218,14 +218,15 @@ exports[`Auth user display no groups - add groups available for admin user shoul
     </div>
   </div>
   <div>
-    <button
-      className="sc-fujyUd xaCzL"
+    <a
+      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
       data-qa="add-role-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-roles"
+      muted={false}
     >
       Add role
-    </button>
+    </a>
   </div>
   <div
     className="sc-gKAblj cMBmtJ"
@@ -503,14 +504,15 @@ exports[`Auth user display no groups - add groups not available for Group Manage
     </div>
   </div>
   <div>
-    <button
-      className="sc-fujyUd xaCzL"
+    <a
+      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
       data-qa="add-role-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-roles"
+      muted={false}
     >
       Add role
-    </button>
+    </a>
   </div>
   <div
     className="sc-gKAblj cMBmtJ"
@@ -788,14 +790,15 @@ exports[`Auth user display no roles should render correctly with user and no rol
     </div>
   </div>
   <div>
-    <button
-      className="sc-fujyUd xaCzL"
+    <a
+      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
       data-qa="add-role-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-roles"
+      muted={false}
     >
       Add role
-    </button>
+    </a>
   </div>
   <div
     className="sc-gKAblj cMBmtJ"
@@ -1103,14 +1106,15 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </div>
   </div>
   <div>
-    <button
-      className="sc-fujyUd xaCzL"
+    <a
+      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
       data-qa="add-role-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-roles"
+      muted={false}
     >
       Add role
-    </button>
+    </a>
   </div>
   <div
     className="sc-gKAblj cMBmtJ"
@@ -1448,14 +1452,15 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </div>
   </div>
   <div>
-    <button
-      className="sc-fujyUd xaCzL"
+    <a
+      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
       data-qa="add-role-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-roles"
+      muted={false}
     >
       Add role
-    </button>
+    </a>
   </div>
   <div
     className="sc-gKAblj cMBmtJ"

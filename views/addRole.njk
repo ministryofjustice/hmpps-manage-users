@@ -38,7 +38,11 @@
             errorMessage: errors | findError('roles')
           }) }}
 
-          {{ govukButton({ text: "Confirm", type: "submit" }) }}
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            attributes: { "data-qa": "add-button" }
+          }) }}
 
           {{ govukButton({
             text: "Cancel",

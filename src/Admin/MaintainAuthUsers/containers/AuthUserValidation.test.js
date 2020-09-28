@@ -1,4 +1,4 @@
-import { validateSearch, validateAddRole, validateAddGroup, validateCreate, validateAmend } from './AuthUserValidation'
+import { validateSearch, validateAddGroup, validateCreate, validateAmend } from './AuthUserValidation'
 
 describe('Auth search validation', () => {
   describe('missing username', () => {
@@ -34,19 +34,6 @@ describe('Auth search validation', () => {
 
   it('should success if user specified', () => {
     expect(validateSearch('    someuser  ')).toEqual([])
-  })
-})
-
-describe('Auth add validation', () => {
-  describe('missing role', () => {
-    const missingResponse = [{ targetName: 'role', text: 'Select a role' }]
-    it('should return error if no role specified', () => {
-      expect(validateAddRole(undefined)).toEqual(missingResponse)
-    })
-  })
-
-  it('should success if role specified', () => {
-    expect(validateAddRole({ roleCode: 'roleA' })).toEqual([])
   })
 })
 
