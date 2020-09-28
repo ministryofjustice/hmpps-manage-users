@@ -88,4 +88,15 @@ context('Auth User functionality', () => {
     userPage.removeRole('GLOBAL_SEARCH').click()
     cy.wait('@removeRole').should('have.property', 'status', 200)
   })
+
+  it('Should display message if no roles to add', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthUsernameSearch')
+    cy.task('stubAuthAssignableRoles', [])
+    cy.visit('/manage-auth-users/AUTH_RO_USER_TEST/select-roles')
+    const addRole = AuthUserAddRolePage.verifyOnPage()
+    addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
+  })
 })
