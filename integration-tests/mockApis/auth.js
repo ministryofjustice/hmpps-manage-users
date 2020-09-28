@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { stubFor, getMatchingRequests } = require('./wiremock')
+const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
 
 const createToken = () => {
   const payload = {
@@ -24,16 +24,7 @@ const getLoginUrl = () =>
     return `/login/callback?code=codexxxx&state=${stateValue}`
   })
 
-const favicon = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: '/favicon.ico',
-    },
-    response: {
-      status: 200,
-    },
-  })
+const favicon = () => getFor({ urlPattern: '/favicon.ico' })
 
 const redirect = () =>
   stubFor({
@@ -92,79 +83,39 @@ const token = () =>
 
 const stubUser = (username) => {
   const user = username || 'ITAG_USER'
-  return stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/${encodeURI(user)}`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {
-        user_name: user,
-        staffId: 231232,
-        username: user,
-        active: true,
-        name: `${user} name`,
-        authSource: 'nomis',
-      },
+  return getFor({
+    urlPattern: `/auth/api/user/${encodeURI(user)}`,
+    body: {
+      user_name: user,
+      staffId: 231232,
+      username: user,
+      active: true,
+      name: `${user} name`,
+      authSource: 'nomis',
     },
   })
 }
 
 const stubUserMe = (username = 'ITAG_USER') =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: '/auth/api/user/me',
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {
-        firstName: 'JAMES',
-        lastName: 'STUART',
-        name: 'James Stuart',
-        username,
-        activeCaseLoadId: 'MDI',
-      },
+  getFor({
+    urlPattern: '/auth/api/user/me',
+    body: {
+      firstName: 'JAMES',
+      lastName: 'STUART',
+      name: 'James Stuart',
+      username,
+      activeCaseLoadId: 'MDI',
     },
   })
 
-const stubUserMeRoles = (roles) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/me/roles`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: roles,
-    },
-  })
+const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
 
 const stubEmail = (username) =>
-  stubFor({
-    request: {
-      method: 'GET',
-      url: `/auth/api/user/${encodeURI(username)}/email`,
-    },
-    response: {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {
-        username,
-        email: `${username}@gov.uk`,
-      },
+  getFor({
+    urlPath: `/auth/api/user/${encodeURI(username)}/email`,
+    body: {
+      username,
+      email: `${username}@gov.uk`,
     },
   })
 
@@ -183,6 +134,97 @@ const stubUnverifiedEmail = (username) =>
     },
   })
 
+const stubAuthUsernameSearch = (enabled = true) =>
+  getFor({
+    urlPattern: '/auth/api/authuser/[^/]*',
+    body: {
+      username: 'AUTH_ADM',
+      email: 'auth_test2@digital.justice.gov.uk',
+      enabled,
+      locked: false,
+      verified: false,
+      firstName: 'Auth',
+      lastName: 'Adm',
+    },
+  })
+
+const stubAuthEmailSearch = () =>
+  getFor({
+    urlPath: '/auth/api/authuser',
+    body: [
+      {
+        username: 'AUTH_ADM',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled: true,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+      },
+      {
+        username: 'AUTH_EXPIRED',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled: true,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Expired',
+      },
+    ],
+  })
+
+const stubAuthUserGroups = () =>
+  getFor({
+    urlPattern: '/auth/api/authuser/.*/groups',
+    body: [
+      { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
+      { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
+    ],
+  })
+
+const stubAuthUserRoles = () =>
+  getFor({
+    urlPattern: '/auth/api/authuser/.*/roles',
+    body: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+    ],
+  })
+
+const stubAuthAssignableRoles = () =>
+  getFor({
+    urlPattern: '/auth/api/authuser/.*/assignable-roles',
+    body: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+      { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
+    ],
+  })
+
+const stubAuthAddRole = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/auth/api/authuser/.*/roles/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubAuthRemoveRole = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/auth/api/authuser/.*/roles/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
@@ -193,4 +235,11 @@ module.exports = {
   stubUserMeRoles,
   stubEmail,
   redirect,
+  stubAuthUsernameSearch,
+  stubAuthEmailSearch,
+  stubAuthUserRoles,
+  stubAuthUserGroups,
+  stubAuthAddRole,
+  stubAuthRemoveRole,
+  stubAuthAssignableRoles,
 }

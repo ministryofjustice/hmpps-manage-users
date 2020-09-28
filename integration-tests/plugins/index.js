@@ -21,5 +21,12 @@ module.exports = (on) => {
       ]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
+    stubAuthUsernameSearch: auth.stubAuthUsernameSearch,
+    stubAuthEmailSearch: auth.stubAuthEmailSearch,
+    stubAuthUserGroups: auth.stubAuthUserGroups,
+    stubAuthUserRoles: auth.stubAuthUserRoles,
+    stubAuthAddRole: auth.stubAuthAddRole,
+    stubAuthRemoveRole: auth.stubAuthRemoveRole,
+    stubAuthAssignableRoles: auth.stubAuthAssignableRoles,
   })
 }

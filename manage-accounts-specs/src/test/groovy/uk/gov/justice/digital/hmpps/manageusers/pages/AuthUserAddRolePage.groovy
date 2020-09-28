@@ -17,7 +17,6 @@ public class AuthUserAddRolePage extends Page {
     }
 
     void choose(String role) {
-        def option = selectOption { $("[data-qa='${role}_option']") }
         selectOption.find("option").find { it.text() == role }.click()
         addRole.click()
     }
