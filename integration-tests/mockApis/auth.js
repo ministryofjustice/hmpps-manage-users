@@ -191,10 +191,10 @@ const stubAuthUserRoles = () =>
     ],
   })
 
-const stubAuthAssignableRoles = () =>
+const stubAuthAssignableRoles = (body) =>
   getFor({
     urlPattern: '/auth/api/authuser/.*/assignable-roles',
-    body: [
+    body: body || [
       { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
       { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
       { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },

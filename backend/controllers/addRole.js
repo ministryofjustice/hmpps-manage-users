@@ -58,7 +58,7 @@ const addRoleFactory = (oauthApi, prisonApi, logError) => {
       }
     } catch (error) {
       logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
+      res.render('error.njk', { url: `${staffUrl}/select-roles` })
     }
   }
 
