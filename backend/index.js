@@ -40,7 +40,11 @@ app.set('view engine', 'njk')
 
 nunjucksSetup(app, path)
 
-app.use(helmet())
+app.use(
+  helmet({
+    contentSecurityPolicy: false,
+  })
+)
 
 app.use(
   hsts({
