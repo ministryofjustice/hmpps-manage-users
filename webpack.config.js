@@ -30,7 +30,6 @@ const plugins = [
   new HtmlWebpackPlugin({
     template: 'html-template/index.html',
     filename: 'index.html',
-    publicPath: process.env.PUBLIC_URL,
   }),
 ]
 
@@ -44,7 +43,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.join(__dirname, 'build'),
-    publicPath: process.env.PUBLIC_URL || '/',
+    publicPath: '/',
     ecmaVersion: 5,
   },
   module: {
