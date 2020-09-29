@@ -5,7 +5,7 @@ import geb.Page
 class AddRolePage extends Page {
 
 
-    static url = "/roles/add-role"
+    static url = "/add-role"
 
     static at = {
         browser.currentUrl.contains(url)
