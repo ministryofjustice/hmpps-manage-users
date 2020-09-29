@@ -11,8 +11,8 @@ export default [
   { path: '/maintain-auth-users/:username', breadcrumb: AuthUserBreadcrumb },
   { path: '/maintain-auth-users/:username/add-role', breadcrumb: 'Add role' },
   { path: '/maintain-auth-users/:username/add-group', breadcrumb: 'Add group' },
-  { path: '/maintain-roles/:staffId/roles', breadcrumb: 'Current profile roles' },
-  { path: '/maintain-roles/:staffId/roles/add-role', breadcrumb: 'Add role' },
+  { path: '/maintain-roles/:staffId', breadcrumb: 'Current profile roles' },
+  { path: '/maintain-roles/:staffId/add-role', breadcrumb: 'Add role' },
   { path: '/maintain-roles/search-results', breadcrumb: 'Results' },
   { path: '/maintain-roles/:staffId', breadcrumb: null },
 ]

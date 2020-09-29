@@ -69,7 +69,7 @@ class StaffRoleProfileContainer extends Component {
     const { setRoleFilterDispatch, contextUser } = this.props
 
     setRoleFilterDispatch('')
-    history.push(`/maintain-roles/${contextUser.username}/roles/add-role`)
+    history.push(`/maintain-roles/${contextUser.username}/add-role`)
   }
 
   async loadUser(username) {

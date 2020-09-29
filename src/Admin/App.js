@@ -151,7 +151,7 @@ class App extends React.Component {
             />
             <Route
               exact
-              path="/maintain-roles/:username/roles"
+              path="/maintain-roles/:username"
               render={() => (
                 <StaffRoleProfileContainer
                   displayBack={this.displayBack}
@@ -162,7 +162,7 @@ class App extends React.Component {
             />
             <Route
               exact
-              path="/maintain-roles/:username/roles/add-role"
+              path="/maintain-roles/:username/add-role"
               render={() => (
                 <AddRoleContainer
                   displayBack={this.displayBack}
