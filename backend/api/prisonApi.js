@@ -31,9 +31,9 @@ const prisonApiFactory = (client) => {
       context,
       `/api/users/${username}/access-roles/caseload/${config.app.applicationCaseload}?includeAdmin=${hasAdminRole}`
     )
-  const removeRole = (context, agencyId, username, roleCode) =>
+  const removeRole = (context, username, roleCode) =>
     del(context, `/api/users/${username}/caseload/${config.app.applicationCaseload}/access-role/${roleCode}`)
-  const addRole = (context, agencyId, username, roleCode) =>
+  const addRole = (context, username, roleCode) =>
     put(context, `/api/users/${username}/caseload/${config.app.applicationCaseload}/access-role/${roleCode}`)
   const getUser = (context, username) => get(context, `/api/users/${username}`)
 

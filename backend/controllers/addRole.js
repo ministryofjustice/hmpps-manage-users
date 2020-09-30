@@ -1,14 +1,16 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const maintainUrl = '/maintain-auth-users'
-
-const addRoleFactory = (oauthApi, prisonApi, logError) => {
+const addRoleFactory = (prisonApi) => {
   const addRole = async (req, res) => {
-    const { agencyId, username, roleCode } = req.query
-    await prisonApi.addRole(res.locals, agencyId, username, roleCode)
+    const { username, roleCode } = req.query
+    await prisonApi.addRole(res.locals, username, roleCode)
     res.json({})
   }
 
+  return { addRole }
+}
+
+const selectRolesFactory = (getUserAndRoles, saveRoles, maintainUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -19,17 +21,14 @@ const addRoleFactory = (oauthApi, prisonApi, logError) => {
     const staffUrl = `${maintainUrl}/${username}`
 
     try {
-      const [assignableRoles, user] = await Promise.all([
-        oauthApi.assignableRoles(res.locals, { username }),
-        oauthApi.getUser(res.locals, { username }),
-      ])
+      const [assignableRoles, user] = await getUserAndRoles(res.locals, username)
       const roleDropdownValues = assignableRoles.map((r) => ({
         text: r.roleName,
         value: r.roleCode,
       }))
 
       res.render('addRole.njk', {
-        maintainTitle: 'Maintain auth users',
+        maintainTitle,
         maintainUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
@@ -53,7 +52,7 @@ const addRoleFactory = (oauthApi, prisonApi, logError) => {
         stashStateAndRedirectToIndex(req, res, errors)
       } else {
         const roleArray = Array.isArray(roles) ? roles : [roles]
-        await oauthApi.addUserRoles(res.locals, { username, roles: roleArray })
+        await saveRoles(res.locals, username, roleArray)
         res.redirect(staffUrl)
       }
     } catch (error) {
@@ -62,9 +61,10 @@ const addRoleFactory = (oauthApi, prisonApi, logError) => {
     }
   }
 
-  return { addRole, index, post }
+  return { index, post }
 }
 
 module.exports = {
   addRoleFactory,
+  selectRolesFactory,
 }
