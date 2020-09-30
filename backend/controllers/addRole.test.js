@@ -1,16 +1,24 @@
-const { addRoleFactory } = require('./addRole')
+const { selectRolesFactory } = require('./addRole')
 
-describe('addRole factory', () => {
-  const oauthApi = {}
-  const prisonApi = {}
+describe('select roles factory', () => {
+  const getUserAndRoles = jest.fn()
+  const saveRoles = jest.fn()
   const logError = jest.fn()
-  const addRole = addRoleFactory(oauthApi, prisonApi, logError)
+  const addRole = selectRolesFactory(
+    getUserAndRoles,
+    saveRoles,
+    '/maintain-auth-users',
+    'Maintain auth users',
+    logError
+  )
 
   describe('index', () => {
     it('should call addRole render', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn() }
-      oauthApi.assignableRoles = jest.fn().mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
-      oauthApi.getUser = jest.fn().mockResolvedValue({ username: 'BOB', firstName: 'Billy', lastName: 'Bob' })
+      getUserAndRoles.mockResolvedValue([
+        [{ roleName: 'name', roleCode: 'code' }],
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+      ])
 
       const render = jest.fn()
       await addRole.index(req, { render })
@@ -26,8 +34,7 @@ describe('addRole factory', () => {
 
     it('should copy any flash errors over', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
-      oauthApi.assignableRoles = jest.fn().mockResolvedValue([])
-      oauthApi.getUser = jest.fn().mockResolvedValue({ username: 'BOB', firstName: 'Billy', lastName: 'Bob' })
+      getUserAndRoles.mockResolvedValue([[], { username: 'BOB', firstName: 'Billy', lastName: 'Bob' }])
 
       const render = jest.fn()
       await addRole.index(req, { render })
@@ -43,7 +50,7 @@ describe('addRole factory', () => {
 
     it('should call error on failure', async () => {
       const render = jest.fn()
-      oauthApi.assignableRoles = jest.fn().mockRejectedValue(new Error('This failed'))
+      getUserAndRoles.mockRejectedValue(new Error('This failed'))
       await addRole.index({ params: { username: 'joe' } }, { render })
       expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
     })
@@ -52,24 +59,22 @@ describe('addRole factory', () => {
   describe('post', () => {
     it('should add the role and redirect', async () => {
       const req = { params: { username: 'joe' }, body: { roles: ['GLOBAL_SEARCH', 'BOB'] }, flash: jest.fn() }
-      oauthApi.addUserRoles = jest.fn()
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
-      expect(oauthApi.addUserRoles).toBeCalledWith(locals, { username: 'joe', roles: ['GLOBAL_SEARCH', 'BOB'] })
+      expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH', 'BOB'])
     })
 
     it('should cope with single role being added', async () => {
       const req = { params: { username: 'joe' }, body: { roles: 'GLOBAL_SEARCH' }, flash: jest.fn() }
-      oauthApi.addUserRoles = jest.fn()
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
-      expect(oauthApi.addUserRoles).toBeCalledWith(locals, { username: 'joe', roles: ['GLOBAL_SEARCH'] })
+      expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH'])
     })
 
     it('should stash the errors and redirect if no roles selected', async () => {
@@ -83,7 +88,7 @@ describe('addRole factory', () => {
 
     it('should call error on failure', async () => {
       const render = jest.fn()
-      oauthApi.addUserRoles = jest.fn().mockRejectedValue(new Error('This failed'))
+      saveRoles.mockRejectedValue(new Error('This failed'))
       await addRole.index({ params: { username: 'joe' } }, { render })
       expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
     })

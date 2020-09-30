@@ -11,7 +11,7 @@
        { text: "Home", href: homeUrl },
        { text: "Manage user accounts", href: '/' },
        { text: maintainTitle, href: maintainUrl },
-       { text: staff.name, href: maintainUrl + '/' + staff.username },
+       { text: staff.name, href: staffUrl },
        { text: title }
      ]
    }) }}
@@ -52,7 +52,7 @@
           {{ govukButton({
             text: "Cancel",
             element: 'a',
-            href: maintainUrl + '/' + staff.username,
+            href: staffUrl,
             classes: "govuk-button--secondary"
           }) }}
         </form>

@@ -27,7 +27,6 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/auth-user-search', withErrorHandler(authUserMaintenance.search))
   router.use('/api/auth-user-roles', withErrorHandler(authUserMaintenance.roles))
   router.use('/api/auth-user-groups', withErrorHandler(authUserMaintenance.groups))
-  router.use('/api/auth-user-roles-add', withErrorHandler(authUserMaintenance.addRole))
   router.use('/api/auth-user-roles-remove', withErrorHandler(authUserMaintenance.removeRole))
   router.use('/api/auth-user-groups-add', withErrorHandler(authUserMaintenance.addGroup))
   router.use('/api/auth-user-groups-remove', withErrorHandler(authUserMaintenance.removeGroup))
@@ -40,7 +39,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/getRoles', withErrorHandler(getRolesFactory(prisonApi).getRoles))
   router.use('/api/getUser', withErrorHandler(getUserFactory(prisonApi).getUser))
   router.use('/api/removeRole', withErrorHandler(removeRoleFactory(prisonApi).removeRole))
-  router.use('/api/addRole', withErrorHandler(addRoleFactory(oauthApi, prisonApi, logError).addRole))
+  router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi, logError).addRole))
   router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
 
   router.use(currentUser({ prisonApi, oauthApi }))
