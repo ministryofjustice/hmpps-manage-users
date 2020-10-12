@@ -14,6 +14,7 @@ metadata:
     # setting to 429 (default is 503) so we can alert on this
     nginx.ingress.kubernetes.io/server-snippet: |
       limit_req_status 429;
+    {{- if .Values.ingress.modsecurity_enabled -}}
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
     nginx.ingress.kubernetes.io/modsecurity-snippet: |
       Include /etc/nginx/owasp-modsecurity-crs/nginx-modsecurity.conf
@@ -32,6 +33,7 @@ metadata:
          pass,\
          t:none,\
          setvar:tx.paranoia_level=2"
+    {{- end }}
     nginx.ingress.kubernetes.io/custom-http-errors: "418"
     {{ if .Values.ingress.enable_whitelist }}nginx.ingress.kubernetes.io/whitelist-source-range: {{ include "app.joinListWithComma" .Values.whitelist | quote }}{{ end }}
 spec:
