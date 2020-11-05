@@ -44,8 +44,8 @@ module.exports = {
     filename: 'bundle.js',
     path: path.join(__dirname, 'build'),
     publicPath: '/',
-    ecmaVersion: 5,
   },
+  target: ['web', 'es5'],
   module: {
     rules: [
       {

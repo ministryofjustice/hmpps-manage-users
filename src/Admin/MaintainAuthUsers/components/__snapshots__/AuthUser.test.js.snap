@@ -3,76 +3,76 @@
 exports[`Auth user display no groups - add groups available for admin user should render correctly with user and no groups 1`] = `
 <div>
   <div
-    className="sc-gKAblj zZzyC"
+    className="sc-gKsewC EobHg"
   >
     <div
-      className="sc-iCoHVE dLqnWd"
+      className="sc-iBPRYJ eQAjnI"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-details"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Username
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joesmith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Name
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Joe
                
               Smith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Email
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joe.smith@justice.gov.uk
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <a
-                className="sc-jrsJCI dKNLPL"
+                className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
                 href="/maintain-auth-users/joesmith/amend"
                 muted={false}
@@ -85,42 +85,42 @@ exports[`Auth user display no groups - add groups available for admin user shoul
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Locked
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Enabled
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="enable-button"
                 disabled={false}
                 onClick={[Function]}
@@ -131,39 +131,39 @@ exports[`Auth user display no groups - add groups available for admin user shoul
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Verified
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Last logged in
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               2 February 2019 - 12:05:10
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -173,42 +173,42 @@ exports[`Auth user display no groups - add groups available for admin user shoul
     </div>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-roles"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current roles
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No roles found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -219,7 +219,7 @@ exports[`Auth user display no groups - add groups available for admin user shoul
   </div>
   <div>
     <a
-      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-role-button"
       disabled={false}
       href="/manage-auth-users/joesmith/select-roles"
@@ -229,42 +229,42 @@ exports[`Auth user display no groups - add groups available for admin user shoul
     </a>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-groups"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current groups
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No groups found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -275,7 +275,7 @@ exports[`Auth user display no groups - add groups available for admin user shoul
   </div>
   <div>
     <button
-      className="sc-fujyUd xaCzL"
+      className="sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
       onClick={[Function]}
@@ -289,76 +289,76 @@ exports[`Auth user display no groups - add groups available for admin user shoul
 exports[`Auth user display no groups - add groups not available for Group Manager should render correctly with user and no groups 1`] = `
 <div>
   <div
-    className="sc-gKAblj zZzyC"
+    className="sc-gKsewC EobHg"
   >
     <div
-      className="sc-iCoHVE dLqnWd"
+      className="sc-iBPRYJ eQAjnI"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-details"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Username
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joesmith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Name
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Joe
                
               Smith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Email
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joe.smith@justice.gov.uk
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <a
-                className="sc-jrsJCI dKNLPL"
+                className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
                 href="/maintain-auth-users/joesmith/amend"
                 muted={false}
@@ -371,42 +371,42 @@ exports[`Auth user display no groups - add groups not available for Group Manage
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Locked
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Enabled
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="enable-button"
                 disabled={false}
                 onClick={[Function]}
@@ -417,39 +417,39 @@ exports[`Auth user display no groups - add groups not available for Group Manage
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Verified
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Last logged in
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               2 February 2019 - 12:05:10
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -459,42 +459,42 @@ exports[`Auth user display no groups - add groups not available for Group Manage
     </div>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-roles"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current roles
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No roles found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -505,7 +505,7 @@ exports[`Auth user display no groups - add groups not available for Group Manage
   </div>
   <div>
     <a
-      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-role-button"
       disabled={false}
       href="/manage-auth-users/joesmith/select-roles"
@@ -515,42 +515,42 @@ exports[`Auth user display no groups - add groups not available for Group Manage
     </a>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-groups"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current groups
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No groups found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -561,7 +561,7 @@ exports[`Auth user display no groups - add groups not available for Group Manage
   </div>
   <div>
     <button
-      className="sc-fujyUd xaCzL"
+      className="sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
       onClick={[Function]}
@@ -575,76 +575,76 @@ exports[`Auth user display no groups - add groups not available for Group Manage
 exports[`Auth user display no roles should render correctly with user and no roles 1`] = `
 <div>
   <div
-    className="sc-gKAblj zZzyC"
+    className="sc-gKsewC EobHg"
   >
     <div
-      className="sc-iCoHVE dLqnWd"
+      className="sc-iBPRYJ eQAjnI"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-details"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Username
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joesmith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Name
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Joe
                
               Smith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Email
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joe.smith@justice.gov.uk
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <a
-                className="sc-jrsJCI dKNLPL"
+                className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
                 href="/maintain-auth-users/joesmith/amend"
                 muted={false}
@@ -657,42 +657,42 @@ exports[`Auth user display no roles should render correctly with user and no rol
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Locked
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Enabled
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="enable-button"
                 disabled={false}
                 onClick={[Function]}
@@ -703,39 +703,39 @@ exports[`Auth user display no roles should render correctly with user and no rol
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Verified
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Last logged in
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               2 February 2019 - 12:05:10
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -745,42 +745,42 @@ exports[`Auth user display no roles should render correctly with user and no rol
     </div>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-roles"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current roles
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No roles found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -791,7 +791,7 @@ exports[`Auth user display no roles should render correctly with user and no rol
   </div>
   <div>
     <a
-      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-role-button"
       disabled={false}
       href="/manage-auth-users/joesmith/select-roles"
@@ -801,42 +801,42 @@ exports[`Auth user display no roles should render correctly with user and no rol
     </a>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-groups"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current groups
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No groups found
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -847,7 +847,7 @@ exports[`Auth user display no roles should render correctly with user and no rol
   </div>
   <div>
     <button
-      className="sc-fujyUd xaCzL"
+      className="sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
       onClick={[Function]}
@@ -861,76 +861,76 @@ exports[`Auth user display no roles should render correctly with user and no rol
 exports[`Auth user display should render correctly with user roles and groups - add groups available for admin user 1`] = `
 <div>
   <div
-    className="sc-gKAblj zZzyC"
+    className="sc-gKsewC EobHg"
   >
     <div
-      className="sc-iCoHVE dLqnWd"
+      className="sc-iBPRYJ eQAjnI"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-details"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Username
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joesmith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Name
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Joe
                
               Smith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Email
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joe.smith@justice.gov.uk
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <a
-                className="sc-jrsJCI dKNLPL"
+                className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
                 href="/maintain-auth-users/joesmith/amend"
                 muted={false}
@@ -943,42 +943,42 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Locked
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Enabled
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="enable-button"
                 disabled={false}
                 onClick={[Function]}
@@ -989,39 +989,39 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Verified
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Last logged in
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               2 February 2019 - 12:05:10
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -1031,45 +1031,45 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </div>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-roles"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current roles
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Role A
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-roleA"
                 disabled={false}
                 onClick={[Function]}
@@ -1080,18 +1080,18 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Role B
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-roleB"
                 disabled={false}
                 onClick={[Function]}
@@ -1107,7 +1107,7 @@ exports[`Auth user display should render correctly with user roles and groups - 
   </div>
   <div>
     <a
-      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-role-button"
       disabled={false}
       href="/manage-auth-users/joesmith/select-roles"
@@ -1117,45 +1117,45 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </a>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-groups"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current groups
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Group 1
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-group1"
                 disabled={false}
                 onClick={[Function]}
@@ -1166,18 +1166,18 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Group 2
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-group2"
                 disabled={false}
                 onClick={[Function]}
@@ -1193,7 +1193,7 @@ exports[`Auth user display should render correctly with user roles and groups - 
   </div>
   <div>
     <button
-      className="sc-fujyUd xaCzL"
+      className="sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
       onClick={[Function]}
@@ -1207,76 +1207,76 @@ exports[`Auth user display should render correctly with user roles and groups - 
 exports[`Auth user display should render correctly with user roles and groups - add groups not available for Group Manager 1`] = `
 <div>
   <div
-    className="sc-gKAblj zZzyC"
+    className="sc-gKsewC EobHg"
   >
     <div
-      className="sc-iCoHVE dLqnWd"
+      className="sc-iBPRYJ eQAjnI"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-details"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Username
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joesmith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Name
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Joe
                
               Smith
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Email
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               joe.smith@justice.gov.uk
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <a
-                className="sc-jrsJCI dKNLPL"
+                className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
                 href="/maintain-auth-users/joesmith/amend"
                 muted={false}
@@ -1289,42 +1289,42 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Locked
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               No
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Enabled
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="enable-button"
                 disabled={false}
                 onClick={[Function]}
@@ -1335,39 +1335,39 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Verified
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Yes
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Last logged in
             </th>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               2 February 2019 - 12:05:10
             </td>
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
                
             </td>
@@ -1377,45 +1377,45 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </div>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-roles"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current roles
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Role A
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-roleA"
                 disabled={false}
                 onClick={[Function]}
@@ -1426,18 +1426,18 @@ exports[`Auth user display should render correctly with user roles and groups - 
             </td>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Role B
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             >
               <button
-                className="sc-fujyUd bkpJKP"
+                className="sc-fubCfw fQSkEI"
                 data-qa="remove-button-roleB"
                 disabled={false}
                 onClick={[Function]}
@@ -1453,7 +1453,7 @@ exports[`Auth user display should render correctly with user roles and groups - 
   </div>
   <div>
     <a
-      className="sc-jrsJCI dKNLPL sc-fujyUd xaCzL"
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-role-button"
       disabled={false}
       href="/manage-auth-users/joesmith/select-roles"
@@ -1463,54 +1463,54 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </a>
   </div>
   <div
-    className="sc-gKAblj cMBmtJ"
+    className="sc-gKsewC iDInLL"
   >
     <div
-      className="sc-iCoHVE ipJZGi"
+      className="sc-iBPRYJ iogDSD"
     >
       <table
-        className="sc-jSFkmK bVAlUI"
+        className="sc-jSgupP eofvCY"
         data-qa="user-groups"
       >
         <tbody
-          className="sc-gtssRu"
+          className="sc-gsTCUz"
         >
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
               Current groups
             </th>
             <th
-              className="sc-hKFyIo frRdSr"
+              className="sc-hKgILt jPnCCV"
             >
                
             </th>
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Group 1
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             />
           </tr>
           <tr
-            className="sc-eCApGN"
+            className="sc-eCssSg"
           >
             <td
-              className="sc-hKFyIo gngZTL"
+              className="sc-hKgILt ispPLd"
             >
               Group 2
             </td>
             <td
-              className="sc-hKFyIo hzoxWY"
+              className="sc-hKgILt knnxum"
             />
           </tr>
         </tbody>
