@@ -11,7 +11,8 @@ image:
 
 ingress:
   enabled: true
-  modsecurity_enabled: false
+  class: modsec01
+  modsecurity_enabled: true
   modsecurity_audit_enabled: false
   enable_whitelist: true
   host: manage-hmpps-auth-accounts-preprod.prison.service.justice.gov.uk
