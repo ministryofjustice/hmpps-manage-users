@@ -101,7 +101,7 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(groups)
     })
     it('should call auth groups endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/authuser/joe/groups?noChildren=true')
+      expect(client.get).toBeCalledWith(context, '/api/authuser/joe/groups?children=false')
     })
   })
 
