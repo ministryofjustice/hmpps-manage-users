@@ -13,7 +13,9 @@ describe('menu factory', () => {
 
     it('should call error on render failure', () => {
       const render = jest.fn()
-      render.mockImplementation(() => throw new Error('This failed'))
+      render.mockImplementation(() => {
+        throw new Error('This failed')
+      })
       menu.index({}, { render })
       expect(render.mock.calls).toEqual([['menu.njk'], ['error.njk', { url: '/menu' }]])
     })

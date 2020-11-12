@@ -1,3 +1,4 @@
+/** @type {any} */
 const MockAdapter = require('axios-mock-adapter')
 const querystring = require('querystring')
 const { oauthApiFactory } = require('./oauthApi')
@@ -132,7 +133,7 @@ describe('oathApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => userDetails,
       })
-      actual = oauthApi.currentUser(context, { username: 'joe' })
+      actual = oauthApi.currentUser(context)
     })
 
     it('should return user details from endpoint', () => {
@@ -151,7 +152,7 @@ describe('oathApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => roles,
       })
-      actual = oauthApi.currentRoles(context, { username: 'joe' })
+      actual = oauthApi.currentRoles(context)
     })
 
     it('should return roles from endpoint', () => {

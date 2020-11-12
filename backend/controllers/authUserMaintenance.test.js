@@ -93,6 +93,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.getUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -113,6 +114,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.getUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -138,6 +140,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.getUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -158,6 +161,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.getUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -196,6 +200,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.userRoles.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -241,6 +246,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.userGroups.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -286,6 +292,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.removeUserRole.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -331,6 +338,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.addUserGroup.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -376,6 +384,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.removeUserGroup.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -408,6 +417,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.assignableRoles.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -440,6 +450,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.assignableGroups.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -460,6 +471,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.assignableGroups.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -493,6 +505,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.createUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -513,6 +526,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.createUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -528,6 +542,7 @@ describe('Auth user maintenance controller', () => {
 
       oauthApi.createUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -564,6 +579,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.enableUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -584,6 +600,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.enableUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -612,6 +629,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.disableUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -632,6 +650,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.disableUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -661,6 +680,7 @@ describe('Auth user maintenance controller', () => {
       beforeEach(async () => {
         oauthApi.amendUser.mockImplementation(() => {
           const error = new Error('something went wrong')
+          // @ts-ignore
           error.response = response
           throw error
         })
@@ -681,6 +701,7 @@ describe('Auth user maintenance controller', () => {
       const e = new Error('something went wrong')
       oauthApi.amendUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })
@@ -696,6 +717,7 @@ describe('Auth user maintenance controller', () => {
 
       oauthApi.amendUser.mockImplementation(() => {
         const error = new Error('something went wrong')
+        // @ts-ignore
         error.response = response
         throw error
       })

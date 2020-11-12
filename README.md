@@ -173,6 +173,17 @@ Just on the command line (any console log outputs will not be visible, they appe
 npm run int-test
 ```
 
+### Linting and unit tests
+
+to run typescript typechecking:
+```npm run typecheck```
+
+to run linting:
+```npm run lint```
+
+to run jest unit tests:
+```npm test```
+
 
 ### Useful links
 

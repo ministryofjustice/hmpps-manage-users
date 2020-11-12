@@ -1,3 +1,4 @@
+/** @type {any} */
 const axios = require('axios')
 const querystring = require('querystring')
 const logger = require('../log')
@@ -12,9 +13,10 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
 /**
  * Return an oauthApi built using the supplied configuration.
  * @param client
- * @param clientId
- * @param clientSecret
- * @param url
+ * @param {object} params
+ * @param {string} params.clientId
+ * @param {string} params.clientSecret
+ * @param {string} params.url
  * @returns a configured oauthApi instance
  */
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
