@@ -1,10 +1,6 @@
 /* eslint-disable max-nested-callbacks */
 const supertest = require('supertest')
 const express = require('express')
-const chai = require('chai')
-
-const { expect } = chai
-chai.use(require('sinon-chai'))
 const bodyParser = require('body-parser')
 
 const contextProperties = require('../contextProperties')
@@ -30,7 +26,7 @@ describe('Test request forwarding', () => {
         .set('junk', 'junkValue')
         .expect(200)
         .then(() => {
-          expect(contextProperties.getRequestPagination(context)).to.deep.equal({
+          expect(contextProperties.getRequestPagination(context)).toEqual({
             'page-offset': '20',
             'page-limit': '10',
           })
