@@ -24,7 +24,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
     it('Should set the authorization header with "Bearer <access token>"', async () => {
       const context = {}
-      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
+      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
       const response = await client.get(context, '/api/users/me')
 
@@ -245,9 +245,9 @@ describe('Test clients built by oauthEnabledClient', () => {
       })
       it('Should set headers on response to pipe to', async () => {
         const pipe = new Promise((resolve) => {
-          mock.get('/api/users/me').reply(200, Buffer.from('some binary data'), {
+          mock.get('/api/users/me').reply(200, () => Buffer.from('some binary data'), {
             'Content-Type': 'image/png',
-            'Content-Length': 123,
+            'Content-Length': '123',
           })
 
           client.pipe({}, '/api/users/me', {
@@ -274,7 +274,7 @@ describe('Test clients built by oauthEnabledClient', () => {
       nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}
-      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
+      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: null }, context)
 
       const response = await client.get(context, '/api/users/me')
 
@@ -286,7 +286,7 @@ describe('Test clients built by oauthEnabledClient', () => {
       nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}
-      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
+      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: null }, context)
 
       const response = await client.get(context, '/api/users/me')
 

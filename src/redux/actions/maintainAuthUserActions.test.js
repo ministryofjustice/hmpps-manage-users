@@ -58,11 +58,15 @@ describe('maintain auth users', () => {
         const roleB = { roleCode: 'roleB', roleName: 'Role B' }
         const groupB = { groupCode: 'groupB', groupName: 'Group B' }
         axios.get = jest.fn()
-        axios.get.mockImplementationOnce(() =>
-          Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} })
-        )
-        axios.get.mockImplementationOnce(() => Promise.resolve({ status: 200, data: [roleB], config: {} }))
-        axios.get.mockImplementationOnce(() => Promise.resolve({ status: 200, data: [groupB], config: {} }))
+        jest
+          .spyOn(axios, 'get')
+          .mockImplementationOnce(() => Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} }))
+        jest
+          .spyOn(axios, 'get')
+          .mockImplementationOnce(() => Promise.resolve({ status: 200, data: [roleB], config: {} }))
+        jest
+          .spyOn(axios, 'get')
+          .mockImplementationOnce(() => Promise.resolve({ status: 200, data: [groupB], config: {} }))
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -85,7 +89,9 @@ describe('maintain auth users', () => {
       it('should handle axios errors', async () => {
         const roleB = { roleCode: 'roleB', roleName: 'Role B' }
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => throw new Error('User not found'))
+        jest.spyOn(axios, 'get').mockImplementation(() => {
+          throw new Error('User not found')
+        })
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -110,7 +116,7 @@ describe('maintain auth users', () => {
       it('should create an action to remove auth role from user', async () => {
         const roleB = { roleCode: 'roleB', roleName: 'Role B' }
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: [roleB], config: {} }))
+        jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({ status: 200, data: [roleB], config: {} }))
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -128,7 +134,9 @@ describe('maintain auth users', () => {
       it('should handle axios errors', async () => {
         const roleB = { roleCode: 'roleB', roleName: 'Role B' }
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => throw new Error('User not found'))
+        jest.spyOn(axios, 'get').mockImplementation(() => {
+          throw new Error('User not found')
+        })
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -149,7 +157,7 @@ describe('maintain auth users', () => {
       it('should create an action to remove auth group from user', async () => {
         const groupB = { groupCode: 'groupB', groupName: 'Group B' }
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: [groupB], config: {} }))
+        jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({ status: 200, data: [groupB], config: {} }))
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -164,7 +172,9 @@ describe('maintain auth users', () => {
       it('should handle axios errors', async () => {
         const groupB = { groupCode: 'groupB', groupName: 'Group B' }
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => throw new Error('User not found'))
+        jest.spyOn(axios, 'get').mockImplementation(() => {
+          throw new Error('User not found')
+        })
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -181,10 +191,10 @@ describe('maintain auth users', () => {
     describe('enableUser', () => {
       it('should create an action to enable a user', async () => {
         axios.get = jest.fn()
-        axios.get.mockImplementationOnce(() => Promise.resolve({ status: 200, config: {} }))
-        axios.get.mockImplementationOnce(() =>
-          Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} })
-        )
+        jest.spyOn(axios, 'get').mockImplementationOnce(() => Promise.resolve({ status: 200, config: {} }))
+        jest
+          .spyOn(axios, 'get')
+          .mockImplementationOnce(() => Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} }))
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -202,7 +212,9 @@ describe('maintain auth users', () => {
       })
       it('should handle axios errors', async () => {
         axios.get = jest.fn()
-        axios.get.mockImplementationOnce(() => throw new Error('User not found'))
+        jest.spyOn(axios, 'get').mockImplementationOnce(() => {
+          throw new Error('User not found')
+        })
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -218,10 +230,10 @@ describe('maintain auth users', () => {
     describe('disableUser', () => {
       it('should create an action to disable a user', async () => {
         axios.get = jest.fn()
-        axios.get.mockImplementationOnce(() => Promise.resolve({ status: 200, config: {} }))
-        axios.get.mockImplementationOnce(() =>
-          Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} })
-        )
+        jest.spyOn(axios, 'get').mockImplementationOnce(() => Promise.resolve({ status: 200, config: {} }))
+        jest
+          .spyOn(axios, 'get')
+          .mockImplementationOnce(() => Promise.resolve({ status: 200, data: { username: 'fetcheduser' }, config: {} }))
 
         const store = mockStore({
           maintainAuthUsers: {
@@ -236,7 +248,9 @@ describe('maintain auth users', () => {
       })
       it('should handle axios errors', async () => {
         axios.get = jest.fn()
-        axios.get.mockImplementationOnce(() => throw new Error('User not found'))
+        jest.spyOn(axios, 'get').mockImplementationOnce(() => {
+          throw new Error('User not found')
+        })
 
         const store = mockStore({
           maintainAuthUsers: {

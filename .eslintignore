@@ -11,3 +11,4 @@ package-lock.json
 cypress.json
 cypress-reporter-config.json
 integration-tests/mockApis/responses/*
+tsconfig.json
