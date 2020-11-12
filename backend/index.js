@@ -35,7 +35,6 @@ const app = express()
 const sixtyDaysInSeconds = 5184000
 
 app.set('trust proxy', 1) // trust first proxy
-app.set('view engine', 'ejs')
 app.set('view engine', 'njk')
 
 nunjucksSetup(app, path)
@@ -90,10 +89,6 @@ app.use(bodyParser.json())
 
 app.use(setupSass())
 app.use(setupStaticContent())
-
-app.get('/terms', async (req, res) => {
-  res.render('terms', { mailTo: config.app.mailTo, homeLink: config.app.notmEndpointUrl })
-})
 
 app.use(setupWebSession())
 app.use(setupAuth({ oauthApi: apis.oauthApi, tokenVerificationApi: apis.tokenVerificationApi }))

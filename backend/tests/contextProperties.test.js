@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-expressions */
-const { expect } = require('chai')
 const contextProperties = require('../contextProperties')
 
 describe('Should read/write properties', () => {
@@ -8,13 +7,13 @@ describe('Should read/write properties', () => {
     contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
     it('should set the access token', () => {
-      expect(contextProperties.getAccessToken(context)).to.be.equal('a')
+      expect(contextProperties.getAccessToken(context)).toEqual('a')
     })
     it('should set the refresh token', () => {
-      expect(contextProperties.getRefreshToken(context)).to.be.equal('b')
+      expect(contextProperties.getRefreshToken(context)).toEqual('b')
     })
     it('should set the auth source', () => {
-      expect(context.authSource).to.be.equal('joe')
+      expect(context.authSource).toEqual('joe')
     })
   })
 
@@ -22,22 +21,22 @@ describe('Should read/write properties', () => {
     const context = {}
 
     it('access token', () => {
-      expect(contextProperties.getAccessToken(context)).to.be.null
+      expect(contextProperties.getAccessToken(context)).toBeNull()
     })
     it('refresh token', () => {
-      expect(contextProperties.getRefreshToken(context)).to.be.null
+      expect(contextProperties.getRefreshToken(context)).toBeNull()
     })
   })
 
   describe('Should know if the context has no tokens', () => {
     it('null', () => {
-      expect(contextProperties.hasTokens(null)).to.be.false
+      expect(contextProperties.hasTokens(null)).toBe(false)
     })
     it('undefined', () => {
-      expect(contextProperties.hasTokens(undefined)).to.be.false
+      expect(contextProperties.hasTokens(undefined)).toBe(false)
     })
     it('empty object', () => {
-      expect(contextProperties.hasTokens({})).to.be.false
+      expect(contextProperties.hasTokens({})).toBe(false)
     })
   })
 
@@ -46,23 +45,23 @@ describe('Should read/write properties', () => {
 
     it('no tokens', () => {
       contextProperties.setTokens({}, context)
-      expect(contextProperties.hasTokens(context)).to.be.false
+      expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('empty tokens', () => {
       contextProperties.setTokens({ access_token: '', refresh_token: '' }, context)
-      expect(contextProperties.hasTokens(context)).to.be.false
+      expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('only access token', () => {
       contextProperties.setTokens({ access_token: 'a', refresh_token: '' }, context)
-      expect(contextProperties.hasTokens(context)).to.be.false
+      expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('only refresh tokenb', () => {
       contextProperties.setTokens({ access_token: '', refresh_token: 'b' }, context)
-      expect(contextProperties.hasTokens(context)).to.be.false
+      expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('both tokens', () => {
       contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
-      expect(contextProperties.hasTokens(context)).to.be.true
+      expect(contextProperties.hasTokens(context)).toBe(true)
     })
   })
 
@@ -74,7 +73,7 @@ describe('Should read/write properties', () => {
       'SORT-FIELDS': 'a,b',
       'sort-order': 'ASC',
     })
-    expect(contextProperties.getRequestPagination(context)).to.deep.equal({
+    expect(contextProperties.getRequestPagination(context)).toEqual({
       'page-offset': 1,
       'page-limit': 10,
       'sort-fields': 'a,b',
@@ -83,7 +82,7 @@ describe('Should read/write properties', () => {
   })
 
   it('Should return an empty requestPagination object even when the setter has not been called', () => {
-    expect(contextProperties.getRequestPagination({})).to.deep.equal({})
+    expect(contextProperties.getRequestPagination({})).toEqual({})
   })
 
   it('Should set the response pagination properties', () => {
@@ -95,7 +94,7 @@ describe('Should read/write properties', () => {
       'sort-order': 'ASC',
       'total-records': 100,
     })
-    expect(contextProperties.getResponsePagination(context)).to.deep.equal({
+    expect(contextProperties.getResponsePagination(context)).toEqual({
       'page-offset': 1,
       'page-limit': 10,
       'sort-fields': 'a,b',
@@ -107,10 +106,10 @@ describe('Should read/write properties', () => {
   it('Should return an empty responsePagination object if no values were set', () => {
     const context = {}
     contextProperties.setResponsePagination(context, {})
-    expect(contextProperties.getResponsePagination(context)).to.deep.equal({})
+    expect(contextProperties.getResponsePagination(context)).toEqual({})
   })
 
   it('Should return an empty responsePagination object even when the setter has not been called', () => {
-    expect(contextProperties.getResponsePagination({})).to.deep.equal({})
+    expect(contextProperties.getResponsePagination({})).toEqual({})
   })
 })
