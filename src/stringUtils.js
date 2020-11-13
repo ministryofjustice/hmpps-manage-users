@@ -21,25 +21,25 @@ const toFullName = ({ firstName, lastName, name }) =>
     : (!isBlank(lastName) ? `${properCaseName(lastName)}, ` : '') +
       (!isBlank(firstName) ? properCaseName(firstName) : '')
 
+const notPresentString = '--'
+
+function formatOrNotPresent(theMoment, screenFormat) {
+  if (theMoment.isValid()) return theMoment.format(screenFormat)
+  return notPresentString
+}
+
+function render(date, screenFormat, parseFormat) {
+  if (typeof date === 'string') return formatOrNotPresent(moment(date, parseFormat), screenFormat)
+  if (date instanceof moment) return formatOrNotPresent(date, screenFormat)
+  return notPresentString
+}
+
 /**
  * Render a moment object or ISO 8601 formatted string in the standard ui date format.  This format is
  * dd/MM/yyyy.  If the date parameter is not present or cannot be understood the function returns '--'.
- * @param date An object which is a moment, an ISO 8601 date formatted string or anything else including null or undefined.
+ * @param {any} date An object whicould be both ch is a moment, an ISO 8601 date formatted string or anything else including null or undefined.
  */
-const renderDate = (date) => {
-  const screenFormat = 'DD/MM/YYYY'
-  const notPresentString = '--'
-
-  const theMoment = typeof date === 'string' ? moment(date, iso8601DateFormat) : date
-
-  if (theMoment instanceof moment) {
-    if (theMoment.isValid()) {
-      return theMoment.format(screenFormat)
-    }
-  }
-
-  return notPresentString
-}
+const renderDate = (date) => render(date, 'DD/MM/YYYY', iso8601DateFormat)
 
 const formatDateToLongHand = (date) => {
   if (!date || typeof date !== 'string') throw new Error('date should not be null and be of type string')
@@ -47,21 +47,7 @@ const formatDateToLongHand = (date) => {
   return moment(date, iso8601DateFormat).format('Do MMMM YYYY')
 }
 
-const renderDateTime = (date) => {
-  const screenFormat = 'DD/MM/YYYY HH:mm'
-  const iso8601DateTimeFormat = 'YYYY-MM-DDTHH:mm:ss.SSS.'
-  const notPresentString = '--'
-
-  const theMoment = typeof date === 'string' ? moment(date, iso8601DateTimeFormat) : date
-
-  if (theMoment instanceof moment) {
-    if (theMoment.isValid()) {
-      return theMoment.format(screenFormat)
-    }
-  }
-
-  return notPresentString
-}
+const renderDateTime = (date) => render(date, 'DD/MM/YYYY HH:mm', 'YYYY-MM-DDTHH:mm:ss.SSS.')
 
 const switchToIsoDateFormat = (displayDateString) =>
   isBlank(displayDateString) ? undefined : moment(displayDateString, 'DD/MM/YYYY').format(iso8601DateFormat)

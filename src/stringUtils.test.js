@@ -5,7 +5,7 @@ describe('the renderDate function', () => {
   const notPresentString = '--'
 
   it('should render a value that is not a moment as "--"', () => {
-    expect(renderDate()).toBe(notPresentString)
+    expect(renderDate(undefined)).toBe(notPresentString)
   })
 
   it('should render a moment as DD/MM/YYYY', () => {
@@ -45,6 +45,7 @@ describe('the renderDate function', () => {
   })
 
   it('should render a boolean as "--"', () => {
+    // @ts-ignore
     expect(renderDate(false)).toBe(notPresentString)
   })
 
