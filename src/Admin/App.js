@@ -2,6 +2,7 @@
 import React from 'react'
 import { FooterContainer, Header } from 'new-nomis-shared-components'
 import { BrowserRouter as Router, Link, Redirect, Route, Switch } from 'react-router-dom'
+import axios from 'axios'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ReactGA from 'react-ga'
@@ -21,8 +22,6 @@ import links from '../links'
 import { resetError, setConfig, setError, setLoaded, setMenuOpen, setMessage, setUserDetails } from '../redux/actions'
 import { configType, errorType, userType } from '../types'
 
-const axios = require('axios')
-
 class App extends React.Component {
   async componentDidMount() {
     const { configDispatch, setErrorDispatch } = this.props
@@ -34,6 +33,7 @@ class App extends React.Component {
           alert(
             "There is a newer version of this website available, click ok to ensure you're using the latest version."
           )
+          // @ts-ignore
           window.location = '/auth/logout'
         }
         return config
@@ -89,6 +89,7 @@ class App extends React.Component {
 
   displayAlertAndLogout = (message) => {
     alert(message) // eslint-disable-line no-alert
+    // @ts-ignore
     window.location = '/auth/logout'
   }
 

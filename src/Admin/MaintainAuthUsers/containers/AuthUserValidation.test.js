@@ -52,7 +52,7 @@ describe('Auth add validation', () => {
 
 describe('Auth create validation', () => {
   it('should return errors if no fields specified', () => {
-    expect(validateCreate({})).toEqual(
+    expect(validateCreate({ username: null, email: null, firstName: null, lastName: null, groupCode: null })).toEqual(
       expect.arrayContaining([
         { targetName: 'username', text: 'Enter a username' },
         { targetName: 'email', text: 'Enter an email address' },
@@ -125,7 +125,7 @@ describe('Auth create validation', () => {
 
 describe('Auth amend validation', () => {
   it('should return errors if no fields specified', () => {
-    expect(validateAmend({})).toEqual([{ targetName: 'email', text: 'Enter an email address' }])
+    expect(validateAmend({ email: null })).toEqual([{ targetName: 'email', text: 'Enter an email address' }])
   })
   it('should disallow fields in wrong format', () => {
     expect(validateAmend({ email: 'b' })).toEqual([

@@ -1,4 +1,4 @@
-const { logger } = require('./log')
+const logger = require('./log')
 const contextProperties = require('./contextProperties')
 const errorStatusCode = require('./error-status-code')
 

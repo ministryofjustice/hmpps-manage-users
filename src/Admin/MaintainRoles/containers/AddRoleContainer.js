@@ -21,7 +21,7 @@ import Page from '../../../Components/Page'
 
 class AddRoleContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
     props.resetValidationErrorsDispatch()
   }

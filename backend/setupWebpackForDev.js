@@ -10,6 +10,7 @@ const router = express.Router()
 
 module.exports = () => {
   if (config.app.production === false && config.app.disableWebpack === false) {
+    // @ts-ignore
     const compiler = webpack(webpackConfig)
     router.use(middleware(compiler, { writeToDisk: true }))
     router.use(hrm(compiler, {}))

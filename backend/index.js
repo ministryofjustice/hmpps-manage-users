@@ -96,6 +96,7 @@ app.use(setupAuth({ oauthApi: apis.oauthApi, tokenVerificationApi: apis.tokenVer
 // Ensure cookie session is extended (once per minute) when user interacts with the server
 app.use((req, res, next) => {
   // eslint-disable-next-line no-param-reassign
+  // @ts-ignore
   req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
   next()
 })

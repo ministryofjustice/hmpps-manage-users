@@ -18,7 +18,7 @@ import Page from '../../../Components/Page'
 
 class StaffRoleProfileContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
   }
 

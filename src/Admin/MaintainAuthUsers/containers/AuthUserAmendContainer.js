@@ -37,6 +37,7 @@ class AuthUserAmendContainer extends Component {
 
     event.preventDefault()
 
+    // @ts-ignore
     const errors = validateAmend(this.state)
     if (errors.length) {
       setErrorDispatch(errors)
