@@ -52,7 +52,8 @@ describe('Test the routes and middleware installed by sessionManagementRoutes', 
   sessionManagementRoutes.configureRoutes({
     app,
     tokenRefresher,
-    mailTo: 'test@site.com',
+    tokenVerifier: null,
+    homeLink: '',
   })
 
   // some content to send for '/'

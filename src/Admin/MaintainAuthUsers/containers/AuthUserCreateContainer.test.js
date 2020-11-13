@@ -26,7 +26,7 @@ describe('Auth create container', () => {
     const state = { app: { error: '', loaded: true }, groups }
     store.getState.mockReturnValue(state)
     axios.get = jest.fn()
-    axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: groups }))
+    jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({ status: 200, data: groups }))
 
     let wrapper
     let dispatchFns
@@ -96,7 +96,7 @@ describe('Auth create container', () => {
         .find('input#lastName')
         .simulate('change', { target: { name: 'lastName', value: 'last' }, preventDefault: jest.fn() })
       axios.post = jest.fn()
-      axios.post.mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
+      jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
 
       const submitEvent = { target: { value: 'create' }, preventDefault: jest.fn() }
       await wrapper.find('form').simulate('submit', submitEvent)
@@ -121,7 +121,7 @@ describe('Auth create container', () => {
         .find('input#lastName')
         .simulate('change', { target: { name: 'lastName', value: 'last' }, preventDefault: jest.fn() })
       axios.post = jest.fn()
-      axios.post.mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
+      jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
 
       const submitEvent = { target: { value: 'create' }, preventDefault: jest.fn() }
       await wrapper.find('form').simulate('submit', submitEvent)

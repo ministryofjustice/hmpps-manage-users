@@ -22,7 +22,7 @@ describe('JWT access token refresh', () => {
     const refreshTokens = tokenRefresher.factory(stubOauthRefresh, 60)
 
     const context = {}
-    contextProperties.setTokens({ access_token: ACCESS_TOKEN, refresh_token: 'XXX' }, context)
+    contextProperties.setTokens({ access_token: ACCESS_TOKEN, refresh_token: 'XXX', authSource: null }, context)
 
     const nowInSeconds = EXPIRY_TIME - 59
 
@@ -36,7 +36,7 @@ describe('JWT access token refresh', () => {
     const refreshTokens = tokenRefresher.factory(stubOauthRefresh, 60)
 
     const context = {}
-    contextProperties.setTokens({ access_token: ACCESS_TOKEN, refresh_token: 'XXX' }, context)
+    contextProperties.setTokens({ access_token: ACCESS_TOKEN, refresh_token: 'XXX', authSource: null }, context)
 
     const nowInSeconds = EXPIRY_TIME - 60
 

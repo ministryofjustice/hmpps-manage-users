@@ -12,10 +12,11 @@ const isXHRRequest = (req) =>
 /**
  * Add session management related routes to an express 'app'.
  * These handle login, logout, and middleware to handle the JWT token cookie. (hmppsCookie).
- * @param app an Express instance.
- * @param tokenRefresher a function which uses the 'context' object to perform an OAuth token refresh (returns a promise).
- * @param tokenVerifier a function which uses the 'context' object to check whether the token is valid (returns a promise).
- * @param homeLink The URL for the home page.
+ * @param {Object} params Parameter object
+ * @param {any} params.app an Express instance.
+ * @param {any} params.tokenRefresher a function which uses the 'context' object to perform an OAuth token refresh (returns a promise).
+ * @param {any} params.tokenVerifier a function which uses the 'context' object to check whether the token is valid (returns a promise).
+ * @param {any} params.homeLink The URL for the home page.
  */
 const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
   const authLogoutUrl = `${config.apis.oauth2.ui_url}/logout?client_id=${config.apis.oauth2.clientId}&redirect_uri=${config.app.url}`

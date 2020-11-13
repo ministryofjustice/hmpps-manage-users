@@ -45,7 +45,6 @@ describe('Auth user display', () => {
           contextUser={user}
           roleList={[]}
           groupList={[]}
-          handleRoleAdd={stubFunc}
           handleRoleRemove={stubFunc}
           handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
@@ -73,7 +72,6 @@ describe('Auth user display', () => {
           contextUser={user}
           roleList={[]}
           groupList={[]}
-          handleRoleAdd={stubFunc}
           handleRoleRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
@@ -101,7 +99,6 @@ describe('Auth user display', () => {
           contextUser={user}
           roleList={[]}
           groupList={[]}
-          handleRoleAdd={stubFunc}
           handleRoleRemove={stubFunc}
           handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
@@ -136,7 +133,6 @@ describe('Auth user display', () => {
             { groupCode: 'group1', groupName: 'Group 1' },
             { groupCode: 'group2', groupName: 'Group 2' },
           ]}
-          handleRoleAdd={stubFunc}
           handleRoleRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
@@ -164,7 +160,6 @@ describe('Auth user display', () => {
             { groupCode: 'group1', groupName: 'Group 1' },
             { groupCode: 'group2', groupName: 'Group 2' },
           ]}
-          handleRoleAdd={stubFunc}
           handleRoleRemove={stubFunc}
           handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
