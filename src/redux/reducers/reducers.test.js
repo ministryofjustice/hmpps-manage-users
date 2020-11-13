@@ -74,6 +74,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_CONFIG', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_CONFIG,
         config: { mailTo: 'a@b.com' },
@@ -88,6 +89,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_USER_DETAILS', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_USER_DETAILS,
         user: { field: 'value' },
@@ -102,6 +104,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_ERROR', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_ERROR,
         error: 'HELP!',
@@ -115,6 +118,7 @@ describe('app (global) reducer', () => {
 
   it('should handle RESET_ERROR', () => {
     expect(
+      // @ts-ignore
       app(appWithErrorState, {
         type: types.RESET_ERROR,
       })
@@ -123,6 +127,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_MESSAGE', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_MESSAGE,
         message: 'An important message!',
@@ -136,6 +141,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_LOADED', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_LOADED,
         loaded: true,
@@ -149,6 +155,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_VALIDATION_ERROR (first error)', () => {
     expect(
+      // @ts-ignore
       app(appInitialState, {
         type: types.SET_VALIDATION_ERROR,
         fieldName: 'myField',
@@ -164,6 +171,7 @@ describe('app (global) reducer', () => {
 
   it('should handle SET_VALIDATION_ERROR (second error)', () => {
     expect(
+      // @ts-ignore
       app(appWithValidationErrorState, {
         type: types.SET_VALIDATION_ERROR,
         fieldName: 'myField2',
@@ -179,6 +187,7 @@ describe('app (global) reducer', () => {
 
   it('should handle RESET_VALIDATION_ERRORS', () => {
     expect(
+      // @ts-ignore
       app(appWithValidationErrorState, {
         type: types.RESET_VALIDATION_ERRORS,
       })
@@ -188,10 +197,12 @@ describe('app (global) reducer', () => {
   })
 
   it('should handle SET_MENU_OPEN', () => {
+    // @ts-ignore
     let state = app(appInitialState, setMenuOpen(true))
 
     expect(state.menuOpen).toBe(true)
 
+    // @ts-ignore
     state = app(appInitialState, setMenuOpen(false))
 
     expect(state.menuOpen).toBe(false)
@@ -308,6 +319,7 @@ describe('Maintain roles reducer', () => {
   it('should handle SET_USER_SEARCH_CONTEXT_USER', () => {
     const user = { firstName: 'Jack', lastName: 'Jill' }
     const updatedMaintainRoles = maintainRolesInitialState
+    // @ts-ignore
     updatedMaintainRoles.contextUser = user
     expect(
       maintainRoles(maintainRolesInitialState, {

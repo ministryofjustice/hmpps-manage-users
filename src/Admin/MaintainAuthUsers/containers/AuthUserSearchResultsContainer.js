@@ -90,6 +90,7 @@ class AuthUserSearchResultsContainer extends Component {
           handleChange={handleChange}
           handleSearch={handleSearch}
           handleEdit={this.handleEdit}
+          // @ts-ignore
           user={user}
           userList={userList}
           error={error}
