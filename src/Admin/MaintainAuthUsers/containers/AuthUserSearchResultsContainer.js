@@ -16,7 +16,7 @@ import { setMaintainAuthUsersList } from '../../../redux/actions/maintainAuthUse
 
 class AuthUserSearchResultsContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
   }
 

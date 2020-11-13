@@ -67,7 +67,7 @@ describe('Auth user add group container', () => {
       })
 
       axios.get = jest.fn()
-      axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: groups, config: {} }))
+      jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({ status: 200, data: groups, config: {} }))
 
       const wrapper = await mount(
         <Provider store={store}>
@@ -127,7 +127,7 @@ describe('Auth user add group container', () => {
 
       it('should call axios to add group', () => {
         axios.get = jest.fn()
-        axios.get.mockImplementation(() => Promise.resolve({ status: 200, data: groups, config: {} }))
+        jest.spyOn(axios, 'get').mockImplementation(() => Promise.resolve({ status: 200, data: groups, config: {} }))
 
         wrapper.find('#group select').simulate('change', event)
         wrapper.find('form').simulate('submit', event)

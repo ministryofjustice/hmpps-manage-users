@@ -44,23 +44,23 @@ describe('Should read/write properties', () => {
     const context = {}
 
     it('no tokens', () => {
-      contextProperties.setTokens({}, context)
+      contextProperties.setTokens({ access_token: null, refresh_token: null, authSource: null }, context)
       expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('empty tokens', () => {
-      contextProperties.setTokens({ access_token: '', refresh_token: '' }, context)
+      contextProperties.setTokens({ access_token: '', refresh_token: '', authSource: null }, context)
       expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('only access token', () => {
-      contextProperties.setTokens({ access_token: 'a', refresh_token: '' }, context)
+      contextProperties.setTokens({ access_token: 'a', refresh_token: '', authSource: null }, context)
       expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('only refresh tokenb', () => {
-      contextProperties.setTokens({ access_token: '', refresh_token: 'b' }, context)
+      contextProperties.setTokens({ access_token: '', refresh_token: 'b', authSource: null }, context)
       expect(contextProperties.hasTokens(context)).toBe(false)
     })
     it('both tokens', () => {
-      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b' }, context)
+      contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: null }, context)
       expect(contextProperties.hasTokens(context)).toBe(true)
     })
   })

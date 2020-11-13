@@ -14,7 +14,7 @@ import { validateAddGroup } from './AuthUserValidation'
 
 class AuthUserAddGroupContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
     this.state = {}
   }

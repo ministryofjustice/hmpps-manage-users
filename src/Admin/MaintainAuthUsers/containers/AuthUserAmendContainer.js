@@ -13,7 +13,7 @@ import { loadAuthUserRolesAndGroups } from '../../../redux/actions/maintainAuthU
 
 class AuthUserAmendContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
     this.state = {}
   }

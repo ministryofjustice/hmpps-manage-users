@@ -62,7 +62,7 @@ describe('Auth create validation', () => {
     )
   })
   it('should disallow fields that are too short', () => {
-    expect(validateCreate({ username: 'a', email: 'b', firstName: 'c', lastName: 'd' })).toEqual(
+    expect(validateCreate({ username: 'a', email: 'b', firstName: 'c', lastName: 'd', groupCode: null })).toEqual(
       expect.arrayContaining([
         { targetName: 'username', text: 'Username must be 6 characters or more' },
         { targetName: 'email', text: 'Enter an email address in the correct format, like first.last@justice.gov.uk' },
@@ -78,6 +78,7 @@ describe('Auth create validation', () => {
         email: 'joe@bloggs.com',
         firstName: 'ccccccccccccccccccccccccccccccccccccccccccccccccccc',
         lastName: 'dddddddddddddddddddddddddddddddddddddddddddddddddddd',
+        groupCode: null,
       })
     ).toEqual(
       expect.arrayContaining([
@@ -88,7 +89,9 @@ describe('Auth create validation', () => {
     )
   })
   it('should validate specific characters allowed', () => {
-    expect(validateCreate({ username: '"', email: 'b@c,d.com', firstName: 'ca', lastName: 'de' })).toEqual(
+    expect(
+      validateCreate({ username: '"', email: 'b@c,d.com', firstName: 'ca', lastName: 'de', groupCode: null })
+    ).toEqual(
       expect.arrayContaining([
         { targetName: 'username', text: 'Username must be 6 characters or more' },
         { targetName: 'username', text: 'Username can only contain A-Z, 0-9 and _ characters' },
@@ -98,12 +101,24 @@ describe('Auth create validation', () => {
   })
   it('should pass validation', () => {
     expect(
-      validateCreate({ username: 'joejoe', email: 'joe+bloggs@joe.com', firstName: 'joe', lastName: 'joe' })
+      validateCreate({
+        username: 'joejoe',
+        email: 'joe+bloggs@joe.com',
+        firstName: 'joe',
+        lastName: 'joe',
+        groupCode: null,
+      })
     ).toEqual([])
   })
   it('should pass validation with microsoft special quote', () => {
     expect(
-      validateCreate({ username: 'joejoe', email: 'joe.b’loggs@joe.com', firstName: 'joe', lastName: 'joe' })
+      validateCreate({
+        username: 'joejoe',
+        email: 'joe.b’loggs@joe.com',
+        firstName: 'joe',
+        lastName: 'joe',
+        groupCode: null,
+      })
     ).toEqual([])
   })
 })

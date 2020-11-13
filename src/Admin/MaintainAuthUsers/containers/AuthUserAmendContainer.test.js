@@ -98,7 +98,7 @@ describe('Auth amend container', () => {
         .find('input#email')
         .simulate('change', { target: { name: 'email', value: 'useramendd.com' }, preventDefault: jest.fn() })
       axios.post = jest.fn()
-      axios.post.mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
+      jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
 
       const submitEvent = { target: { value: 'amend' }, preventDefault: jest.fn() }
       await wrapper.find('form').simulate('submit', submitEvent)
@@ -114,7 +114,7 @@ describe('Auth amend container', () => {
         .find('input#email')
         .simulate('change', { target: { name: 'email', value: 'user@amendd.com' }, preventDefault: jest.fn() })
       axios.post = jest.fn()
-      axios.post.mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
+      jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve({ status: 200, data: {}, config: {} }))
 
       const submitEvent = { target: { value: 'amend' }, preventDefault: jest.fn() }
       await wrapper.find('form').simulate('submit', submitEvent)
