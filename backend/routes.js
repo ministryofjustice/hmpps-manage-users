@@ -19,7 +19,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   const router = express.Router()
 
   router.use('/api/config', withErrorHandler(getConfiguration))
-  router.use('/api/me', withErrorHandler(userMeFactory(oauthApi, prisonApi).userMeService))
+  router.use('/api/me', withErrorHandler(userMeFactory(oauthApi).userMeService))
   router.use('/api/userSearch', withErrorHandler(userSearchFactory(prisonApi).userSearch))
   const authUserMaintenance = authUserMaintenanceFactory(oauthApi)
   router.use('/api/auth-user-get', withErrorHandler(authUserMaintenance.getUser))
@@ -39,7 +39,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/api/getRoles', withErrorHandler(getRolesFactory(prisonApi).getRoles))
   router.use('/api/getUser', withErrorHandler(getUserFactory(prisonApi).getUser))
   router.use('/api/removeRole', withErrorHandler(removeRoleFactory(prisonApi).removeRole))
-  router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi, logError).addRole))
+  router.use('/api/addRole', withErrorHandler(addRoleFactory(prisonApi).addRole))
   router.use('/api/contextUserRoles', withErrorHandler(contextUserRolesFactory(prisonApi).contextUserRoles))
 
   router.use(currentUser({ prisonApi, oauthApi }))

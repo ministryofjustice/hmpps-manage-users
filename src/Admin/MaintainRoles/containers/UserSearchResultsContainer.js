@@ -20,7 +20,7 @@ import Page from '../../../Components/Page'
 
 class UserSearchContainer extends Component {
   constructor(props) {
-    super()
+    super(props)
     props.resetErrorDispatch()
   }
 

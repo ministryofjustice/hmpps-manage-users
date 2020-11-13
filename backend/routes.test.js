@@ -29,8 +29,8 @@ describe('Routes', () => {
       del: () => Promise.reject(errorResponse),
     }
 
-    oauthApi = oauthApiFactory(client, {})
-    prisonApi = prisonApiFactory(client, {})
+    oauthApi = oauthApiFactory(client, { clientId: undefined, clientSecret: undefined, url: undefined })
+    prisonApi = prisonApiFactory(client)
 
     app = express()
     app.use(bodyParser.json())

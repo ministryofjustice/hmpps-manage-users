@@ -35,6 +35,7 @@ export const handleAxiosError = (error) => (dispatch) => {
   ) {
     // eslint-disable-next-line no-alert
     alert('Your session has expired, please click OK to be redirected back to the login page')
+    // @ts-ignore
     window.location = '/auth/logout'
   } else {
     dispatch(setError((error.response && error.response.data) || `Something went wrong: ${error}`))

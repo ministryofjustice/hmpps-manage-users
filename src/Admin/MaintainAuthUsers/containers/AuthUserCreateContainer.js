@@ -46,6 +46,7 @@ class AuthUserCreateContainer extends Component {
 
     event.preventDefault()
 
+    // @ts-ignore
     const errors = validateCreate(this.state, user.groupManager)
     if (errors.length) {
       setErrorDispatch(errors)
