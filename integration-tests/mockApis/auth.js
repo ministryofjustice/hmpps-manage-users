@@ -201,6 +201,16 @@ const stubAuthAssignableRoles = (body) =>
     ],
   })
 
+const stubAuthAssignableGroups = (body) =>
+  getFor({
+    urlPattern: '/auth/api/authuser/.*/assignable-groups',
+    body: body || [
+      { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
+      { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
+      { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
+    ],
+  })
+
 const stubAuthAddRoles = () =>
   stubFor({
     request: {
@@ -248,5 +258,6 @@ module.exports = {
   stubAuthAddRoles,
   stubAuthRemoveRole,
   stubAuthAssignableRoles,
+  stubAuthAssignableGroups,
   verifyAddRoles,
 }
