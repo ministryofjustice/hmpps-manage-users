@@ -274,14 +274,15 @@ exports[`Auth user display no groups - add groups available for admin user shoul
     </div>
   </div>
   <div>
-    <button
-      className="sc-fubCfw kDqHwc"
+    <a
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-group"
+      muted={false}
     >
       Add group
-    </button>
+    </a>
   </div>
 </div>
 `;
@@ -560,14 +561,15 @@ exports[`Auth user display no groups - add groups not available for Group Manage
     </div>
   </div>
   <div>
-    <button
-      className="sc-fubCfw kDqHwc"
+    <a
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-group"
+      muted={false}
     >
       Add group
-    </button>
+    </a>
   </div>
 </div>
 `;
@@ -846,14 +848,15 @@ exports[`Auth user display no roles should render correctly with user and no rol
     </div>
   </div>
   <div>
-    <button
-      className="sc-fubCfw kDqHwc"
+    <a
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-group"
+      muted={false}
     >
       Add group
-    </button>
+    </a>
   </div>
 </div>
 `;
@@ -1192,14 +1195,15 @@ exports[`Auth user display should render correctly with user roles and groups - 
     </div>
   </div>
   <div>
-    <button
-      className="sc-fubCfw kDqHwc"
+    <a
+      className="sc-jrAGrp IehAh sc-fubCfw kDqHwc"
       data-qa="add-group-button"
       disabled={false}
-      onClick={[Function]}
+      href="/manage-auth-users/joesmith/select-group"
+      muted={false}
     >
       Add group
-    </button>
+    </a>
   </div>
 </div>
 `;

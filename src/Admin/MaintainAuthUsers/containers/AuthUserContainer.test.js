@@ -137,20 +137,6 @@ describe('Auth user container', () => {
       })
     })
 
-    describe('handleGroupAdd', () => {
-      it('should set history when add button clicked', () => {
-        wrapper.find('[data-qa="add-group-button"] button').simulate('click')
-
-        expect(mockHistory.push).toBeCalledWith('/maintain-auth-users/joesmith/add-group')
-      })
-
-      it('should prevent default on the form submission', () => {
-        wrapper.find('[data-qa="add-group-button"] button').simulate('click', event)
-
-        expect(event.preventDefault).toBeCalled()
-      })
-    })
-
     describe('handleDisable', () => {
       it('should call axios to disable user when button clicked', () => {
         wrapper.find('[data-qa="enable-button"] button').simulate('click')

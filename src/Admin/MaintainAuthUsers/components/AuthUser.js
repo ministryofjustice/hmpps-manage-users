@@ -17,7 +17,6 @@ const AuthUser = (props) => {
     groupList,
     handleRoleRemove,
     handleGroupRemove,
-    handleGroupAdd,
     contextUser,
     handleEnable,
     handleDisable,
@@ -167,7 +166,7 @@ const AuthUser = (props) => {
       </GridRow>
       {maintainAuthUsers && (
         <div>
-          <Button data-qa="add-group-button" onClick={handleGroupAdd}>
+          <Button data-qa="add-group-button" as={Link} href={`/manage-auth-users/${contextUser.username}/select-group`}>
             Add group
           </Button>
         </div>
@@ -183,7 +182,6 @@ AuthUser.propTypes = {
   groupList: authGroupListType.isRequired,
   handleRoleRemove: PropTypes.func.isRequired,
   handleGroupRemove: PropTypes.func.isRequired,
-  handleGroupAdd: PropTypes.func.isRequired,
   handleEnable: PropTypes.func.isRequired,
   handleDisable: PropTypes.func.isRequired,
 }

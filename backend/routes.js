@@ -13,6 +13,7 @@ const authUserMaintenanceFactory = require('./controllers/authUserMaintenance')
 const { getConfiguration } = require('./controllers/getConfig')
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')
+const manageAuthUserGroupRouter = require('./routes/manageAuthUserGroupRouter')
 const manageGroupsRouter = require('./routes/manageGroupsRouter')
 const currentUser = require('./middleware/currentUser')
 
@@ -47,6 +48,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
 
   router.use('/', menuRouter({ logError }))
   router.use('/manage-auth-users/:username/select-roles', manageAuthUserRouter({ oauthApi, logError }))
+  router.use('/manage-auth-users/:username/select-group', manageAuthUserGroupRouter({ oauthApi, logError }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi, logError }))
 
   return router
