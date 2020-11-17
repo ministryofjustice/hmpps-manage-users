@@ -46,7 +46,6 @@ describe('Auth user display', () => {
           roleList={[]}
           groupList={[]}
           handleRoleRemove={stubFunc}
-          handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
@@ -75,7 +74,6 @@ describe('Auth user display', () => {
           handleRoleRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
-          handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
         />
       </MemoryRouter>
@@ -100,7 +98,6 @@ describe('Auth user display', () => {
           roleList={[]}
           groupList={[]}
           handleRoleRemove={stubFunc}
-          handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
@@ -136,7 +133,6 @@ describe('Auth user display', () => {
           handleRoleRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}
-          handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
         />
       </MemoryRouter>
@@ -161,7 +157,6 @@ describe('Auth user display', () => {
             { groupCode: 'group2', groupName: 'Group 2' },
           ]}
           handleRoleRemove={stubFunc}
-          handleGroupAdd={stubFunc}
           handleGroupRemove={stubFunc}
           handleEnable={stubFunc}
           handleDisable={stubFunc}

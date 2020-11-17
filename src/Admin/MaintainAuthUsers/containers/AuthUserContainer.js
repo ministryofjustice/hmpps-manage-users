@@ -82,7 +82,6 @@ class AuthUserContainer extends Component {
         <AuthUser
           handleRoleRemove={this.handleRoleRemove}
           handleGroupRemove={this.handleGroupRemove}
-          handleGroupAdd={this.handleGroupAdd}
           handleEnable={this.handleEnable}
           handleDisable={this.handleDisable}
           {...this.props}

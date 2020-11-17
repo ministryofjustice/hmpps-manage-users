@@ -65,7 +65,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         at AuthUserAddGroupPage
 
         then: 'I am on the add group page'
-        assert waitFor { headingText == 'Add group: Auth Adm' }
+        assert waitFor { headingText == 'Select group' }
         oauthApi.stubAuthAddGroup()
 
         when: 'I select to add the Site 1 - Group 3 to the user'
