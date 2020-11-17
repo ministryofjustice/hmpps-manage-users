@@ -11,6 +11,7 @@ module.exports = () => {
     '../node_modules/govuk-frontend/govuk/assets',
     '../node_modules/govuk-frontend',
     '../node_modules/@ministryofjustice/frontend',
+    '../node_modules/accessible-autocomplete/dist',
   ]
   assetPaths.forEach((dir) => {
     router.use('/assets', express.static(path.join(__dirname, dir)))

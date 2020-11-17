@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.manageusers.pages;
 
 import geb.Page
+import org.openqa.selenium.Keys
 
 public class AuthUserAddGroupPage extends Page {
     static url = "/manage-auth-users/"
@@ -17,8 +18,8 @@ public class AuthUserAddGroupPage extends Page {
     }
 
     void choose(String group) {
-        def option = selectOption { $('select') }
-        selectOption.find("option").find { it.text() == group }.click()
+        selectOption = group
+        selectOption << Keys.ENTER
         addGroup.click()
     }
 }

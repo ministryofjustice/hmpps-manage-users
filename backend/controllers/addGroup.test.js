@@ -26,7 +26,10 @@ describe('select groups factory', () => {
         errors: undefined,
         maintainTitle: 'Maintain auth users',
         maintainUrl: '/maintain-auth-users',
-        groupDropdownValues: [{ text: 'name', value: 'code' }],
+        groupDropdownValues: [
+          { text: '', value: '' },
+          { text: 'name', value: 'code' },
+        ],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/maintain-auth-users/joe',
       })
@@ -42,7 +45,7 @@ describe('select groups factory', () => {
         errors: { error: 'some error' },
         maintainTitle: 'Maintain auth users',
         maintainUrl: '/maintain-auth-users',
-        groupDropdownValues: [],
+        groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/maintain-auth-users/joe',
       })

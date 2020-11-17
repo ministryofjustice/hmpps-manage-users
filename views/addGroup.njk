@@ -3,6 +3,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
 {% set title =  "Select group" %}
 
  {% block beforeContent %}
@@ -36,13 +41,15 @@
           </p>
         {% endif %}
         <form method="POST">
-          {{ govukSelect({
-            idPrefix: 'group',
-            name: 'group',
-            id: 'group',
-            items: groupDropdownValues,
-            errorMessage: errors | findError('group')
-          }) }}
+          <div class="govuk-list">
+            {{ govukSelect({
+              idPrefix: 'group',
+              name: 'group',
+              id: 'group',
+              items: groupDropdownValues,
+              errorMessage: errors | findError('group')
+            }) }}
+          </div>
 
           {{ govukButton({
             text: "Confirm",
@@ -60,4 +67,16 @@
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script>
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#group'),
+      showAllValues: true,
+      defaultValue: '',
+    })
+  </script>
 {% endblock %}
