@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ReactGA from 'react-ga'
 import UnauthPage from './unauthPage'
-import AuthUserAddGroupContainer from './MaintainAuthUsers/containers/AuthUserAddGroupContainer'
 import AuthUserContainer from './MaintainAuthUsers/containers/AuthUserContainer'
 import AuthUserCreateContainer from './MaintainAuthUsers/containers/AuthUserCreateContainer'
 import AuthUserAmendContainer from './MaintainAuthUsers/containers/AuthUserAmendContainer'
@@ -175,7 +174,6 @@ class App extends React.Component {
             <Route exact path="/maintain-auth-users" render={() => <AuthUserSearchContainer />} />
             <Route exact path="/maintain-auth-users/search-results" render={() => <AuthUserSearchResultsContainer />} />
             <Route exact path="/maintain-auth-users/:username" render={() => <AuthUserContainer />} />
-            <Route exact path="/maintain-auth-users/:username/add-group" render={() => <AuthUserAddGroupContainer />} />
             <Route exact path="/maintain-auth-users/:username/amend" render={() => <AuthUserAmendContainer />} />
             <Route exact path="/create-auth-user" render={() => <AuthUserCreateContainer />} />
           </Switch>

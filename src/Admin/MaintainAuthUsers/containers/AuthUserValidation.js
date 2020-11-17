@@ -8,8 +8,6 @@ const validateSearch = (user) => {
   return []
 }
 
-const validateAddGroup = (group) => (!group ? [{ targetName: 'group', text: 'Select a group' }] : [])
-
 const validateEmailFormat = (email) => {
   const errors = []
   if (!email.match(/.*@.*\..*/)) {
@@ -86,4 +84,4 @@ const validateAmend = ({ email }) => {
   return validateEmailFormat(email)
 }
 
-export { validateSearch, validateAddGroup, validateCreate, validateAmend }
+export { validateSearch, validateCreate, validateAmend }
