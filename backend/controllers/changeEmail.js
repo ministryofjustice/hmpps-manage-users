@@ -29,21 +29,20 @@ const changeEmailFactory = (getUser, changeEmail, maintainUrl, maintainTitle, lo
 
   const post = async (req, res) => {
     const { username } = req.params
-    const { roles } = req.body
+    const { email } = req.body
     const staffUrl = `${maintainUrl}/${username}`
 
     try {
-      if (!roles) {
-        const errors = [{ href: '#roles', text: 'Select at least one role' }]
+      if (!email) {
+        const errors = [{ href: '#email', text: 'Enter an email address' }]
         stashStateAndRedirectToIndex(req, res, errors)
       } else {
-        const roleArray = Array.isArray(roles) ? roles : [roles]
-        await saveRoles(res.locals, username, roleArray)
+        await changeEmail(res.locals, username, email)
         res.redirect(staffUrl)
       }
     } catch (error) {
       logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: `${staffUrl}/select-roles` })
+      res.render('error.njk', { url: `${staffUrl}/change-email` })
     }
   }
 
