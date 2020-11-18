@@ -11,11 +11,11 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTi
     const staffUrl = `${maintainUrl}/${username}`
 
     try {
-      const [assignableGroups, user] = await getUserAndGroups(res.locals, username)
-      const groupDropdownValues = assignableGroups.map((g) => ({
-        text: g.groupName,
-        value: g.groupCode,
-      }))
+      const [assignableGroups, user, userGroups] = await getUserAndGroups(res.locals, username)
+      const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
+      const groupDropdownValues = assignableGroups
+        .filter((g) => !userGroupsCodes.has(g.groupCode))
+        .map((g) => ({ text: g.groupName, value: g.groupCode }))
 
       res.render('addGroup.njk', {
         maintainTitle,
@@ -36,17 +36,23 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTi
     const { group } = req.body
     const staffUrl = `${maintainUrl}/${username}`
 
-    try {
-      if (!group) {
-        const errors = [{ href: '#group', text: 'Select a group' }]
-        stashStateAndRedirectToIndex(req, res, errors)
-      } else {
+    if (!group) {
+      const errors = [{ href: '#group', text: 'Select a group' }]
+      stashStateAndRedirectToIndex(req, res, errors)
+    } else {
+      try {
         await saveGroup(res.locals, username, group)
         res.redirect(staffUrl)
+      } catch (error) {
+        if (error.status === 409) {
+          // user is already in the group
+          const errors = [{ href: '#group', text: 'User already belongs to that group' }]
+          stashStateAndRedirectToIndex(req, res, errors)
+        } else {
+          logError(req.originalUrl, error, serviceUnavailableMessage)
+          res.render('error.njk', { url: `${staffUrl}/select-group` })
+        }
       }
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: `${staffUrl}/select-group` })
     }
   }
 
