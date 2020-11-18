@@ -18,6 +18,7 @@ describe('select groups factory', () => {
       getUserAndGroups.mockResolvedValue([
         [{ groupName: 'name', groupCode: 'code' }],
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [{ groupName: 'name2', groupCode: 'code2' }],
       ])
 
       const render = jest.fn()
@@ -35,9 +36,32 @@ describe('select groups factory', () => {
       })
     })
 
+    it('should filter out existing groups', async () => {
+      const req = { params: { username: 'joe' }, flash: jest.fn() }
+      getUserAndGroups.mockResolvedValue([
+        [{ groupName: 'name', groupCode: 'code' }],
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { groupName: 'name', groupCode: 'code' },
+          { groupName: 'name2', groupCode: 'code2' },
+        ],
+      ])
+
+      const render = jest.fn()
+      await addGroup.index(req, { render })
+      expect(render).toBeCalledWith('addGroup.njk', {
+        errors: undefined,
+        maintainTitle: 'Maintain auth users',
+        maintainUrl: '/maintain-auth-users',
+        groupDropdownValues: [{ text: '', value: '' }],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/maintain-auth-users/joe',
+      })
+    })
+
     it('should copy any flash errors over', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
-      getUserAndGroups.mockResolvedValue([[], { username: 'BOB', firstName: 'Billy', lastName: 'Bob' }])
+      getUserAndGroups.mockResolvedValue([[], { username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, []])
 
       const render = jest.fn()
       await addGroup.index(req, { render })
@@ -82,8 +106,29 @@ describe('select groups factory', () => {
     it('should call error on failure', async () => {
       const render = jest.fn()
       saveGroup.mockRejectedValue(new Error('This failed'))
-      await addGroup.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
+      await addGroup.post(
+        { params: { username: 'joe' }, body: { group: 'GLOBAL_SEARCH' }, flash: jest.fn() },
+        { render }
+      )
+      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe/select-group' })
+    })
+
+    it('should fail gracefully if group already on user', async () => {
+      const redirect = jest.fn()
+      const error = new Error('This failed')
+      // @ts-ignore
+      error.status = 409
+      saveGroup.mockRejectedValue(error)
+      await addGroup.post(
+        {
+          params: { username: 'joe' },
+          body: { group: 'GLOBAL_SEARCH' },
+          flash: jest.fn(),
+          originalUrl: '/some-location',
+        },
+        { redirect }
+      )
+      expect(redirect).toBeCalledWith('/some-location')
     })
   })
 })

@@ -5,7 +5,11 @@ const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi, logError }) => {
   const getUserAndGroups = (context, username) =>
-    Promise.all([oauthApi.assignableGroups(context, { username }), oauthApi.getUser(context, { username })])
+    Promise.all([
+      oauthApi.assignableGroups(context, { username }),
+      oauthApi.getUser(context, { username }),
+      oauthApi.userGroups(context, { username }),
+    ])
 
   const saveGroup = (context, username, group) => oauthApi.addUserGroup(context, { username, group })
 
