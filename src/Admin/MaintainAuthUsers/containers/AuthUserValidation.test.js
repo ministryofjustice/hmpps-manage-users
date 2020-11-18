@@ -1,4 +1,4 @@
-import { validateSearch, validateAddGroup, validateCreate, validateAmend } from './AuthUserValidation'
+import { validateSearch, validateCreate, validateAmend } from './AuthUserValidation'
 
 describe('Auth search validation', () => {
   describe('missing username', () => {
@@ -34,19 +34,6 @@ describe('Auth search validation', () => {
 
   it('should success if user specified', () => {
     expect(validateSearch('    someuser  ')).toEqual([])
-  })
-})
-
-describe('Auth add validation', () => {
-  describe('missing group', () => {
-    const missingResponse = [{ targetName: 'group', text: 'Select a group' }]
-    it('should return error if no group specified', () => {
-      expect(validateAddGroup(undefined)).toEqual(missingResponse)
-    })
-  })
-
-  it('should success if group specified', () => {
-    expect(validateAddGroup({ groupCode: 'groupA' })).toEqual([])
   })
 })
 
