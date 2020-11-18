@@ -8,13 +8,11 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY package.json .
-COPY package-lock.json .
+COPY package.json package-lock.json *.js ./
 ADD ./src/ src/
 ADD ./scripts/ scripts/
 ADD ./static/ static/
 ADD ./html-template/ html-template/
-COPY *.js ./
 
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit && \
     npm run build && \
@@ -45,6 +43,8 @@ ADD --chown=appuser:appgroup . .
 COPY --from=builder --chown=appuser:appgroup /app/build /app/build
 COPY --from=builder --chown=appuser:appgroup /app/node_modules /app/node_modules
 COPY --from=builder --chown=appuser:appgroup /app/build-info.json /app/build-info.json
+
+RUN npm prune --production
 
 ENV PORT=3000
 
