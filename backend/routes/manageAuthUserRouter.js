@@ -22,7 +22,7 @@ const controller = ({ oauthApi, logError }) => {
 
   const saveRoles = (context, username, roles) => oauthApi.addUserRoles(context, { username, roles })
 
-  const changeEmail = (context, username, email) => oauthApi.amendUser(context, username, email)
+  const changeEmail = (context, username, email) => oauthApi.amendUser(context, username, { email })
 
   const { index: selectGroup, post: postGroup } = selectGroupFactory(
     getUserAndGroups,
