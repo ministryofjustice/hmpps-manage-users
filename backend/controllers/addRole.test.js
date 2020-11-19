@@ -89,8 +89,8 @@ describe('select roles factory', () => {
     it('should call error on failure', async () => {
       const render = jest.fn()
       saveRoles.mockRejectedValue(new Error('This failed'))
-      await addRole.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
+      await addRole.post({ params: { username: 'joe' }, body: { roles: 'GLOBAL_SEARCH' } }, { render })
+      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe/select-roles' })
     })
   })
 })

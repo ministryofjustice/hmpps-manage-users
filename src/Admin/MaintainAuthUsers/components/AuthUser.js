@@ -5,7 +5,6 @@ import GridCol from '@govuk-react/grid-col'
 import Button from '@govuk-react/button'
 import Table from '@govuk-react/table'
 import Link from '@govuk-react/link'
-import { Link as RouterLink } from 'react-router-dom'
 import { BLACK, GREY_3 } from 'govuk-colours'
 import moment from 'moment'
 import { authGroupListType, authRoleListType, contextAuthUserType, userType } from '../../../types'
@@ -81,7 +80,7 @@ const AuthUser = (props) => {
               <Table.CellHeader>Email</Table.CellHeader>
               <Table.Cell>{contextUser.email}</Table.Cell>
               <Table.Cell>
-                <Link data-qa="amend-link" as={RouterLink} to={`/maintain-auth-users/${contextUser.username}/amend`}>
+                <Link data-qa="amend-link" href={`/manage-auth-users/${contextUser.username}/change-email`}>
                   Change
                 </Link>
               </Table.Cell>
