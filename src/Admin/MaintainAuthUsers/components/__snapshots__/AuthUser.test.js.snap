@@ -74,11 +74,8 @@ exports[`Auth user display no groups - add groups available for admin user shoul
               <a
                 className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
-                href="/maintain-auth-users/joesmith/amend"
+                href="/manage-auth-users/joesmith/change-email"
                 muted={false}
-                noVisitedState={false}
-                onClick={[Function]}
-                textColour={false}
               >
                 Change
               </a>
@@ -361,11 +358,8 @@ exports[`Auth user display no groups - add groups not available for Group Manage
               <a
                 className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
-                href="/maintain-auth-users/joesmith/amend"
+                href="/manage-auth-users/joesmith/change-email"
                 muted={false}
-                noVisitedState={false}
-                onClick={[Function]}
-                textColour={false}
               >
                 Change
               </a>
@@ -648,11 +642,8 @@ exports[`Auth user display no roles should render correctly with user and no rol
               <a
                 className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
-                href="/maintain-auth-users/joesmith/amend"
+                href="/manage-auth-users/joesmith/change-email"
                 muted={false}
-                noVisitedState={false}
-                onClick={[Function]}
-                textColour={false}
               >
                 Change
               </a>
@@ -935,11 +926,8 @@ exports[`Auth user display should render correctly with user roles and groups - 
               <a
                 className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
-                href="/maintain-auth-users/joesmith/amend"
+                href="/manage-auth-users/joesmith/change-email"
                 muted={false}
-                noVisitedState={false}
-                onClick={[Function]}
-                textColour={false}
               >
                 Change
               </a>
@@ -1282,11 +1270,8 @@ exports[`Auth user display should render correctly with user roles and groups - 
               <a
                 className="sc-jrAGrp IehAh"
                 data-qa="amend-link"
-                href="/maintain-auth-users/joesmith/amend"
+                href="/manage-auth-users/joesmith/change-email"
                 muted={false}
-                noVisitedState={false}
-                onClick={[Function]}
-                textColour={false}
               >
                 Change
               </a>
