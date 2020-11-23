@@ -23,12 +23,15 @@ const setupSass = require('./setupSass')
 const routes = require('./routes')
 
 const setupWebSession = require('./setupWebSession')
-const setupWebpackForDev = require('./setupWebpackForDev')
+const config = require('./config')
+
+const setupWebpackForDev =
+  config.app.production === false && config.app.disableWebpack === false ? require('./setupWebpackForDev') : undefined
+
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
 
 const log = require('./log')
-const config = require('./config')
 
 const app = express()
 
@@ -104,7 +107,7 @@ app.use((req, res, next) => {
 app.use('/api', requestForwarding.extractRequestPaginationMiddleware)
 app.use(routes({ ...apis }))
 
-app.use(setupWebpackForDev())
+if (setupWebpackForDev) app.use(setupWebpackForDev())
 
 app.get('/maintain*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))
