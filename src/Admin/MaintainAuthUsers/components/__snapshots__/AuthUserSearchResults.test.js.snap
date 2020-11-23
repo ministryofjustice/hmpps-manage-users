@@ -3,25 +3,25 @@
 exports[`Auth search results form no results should render correctly with no user and no results 1`] = `
 <div>
   <div
-    className="sc-crrsfI LbLNm"
+    className="sc-dQppl bRKjeo"
   >
     <div
-      className="sc-dQppl fjXHPX"
+      className="sc-bqyKva fxZGmk"
     >
       <form
         onSubmit={[Function]}
       >
         <label
-          className="sc-fubCfw dNDEWO"
+          className="sc-pFZIQ gVJURd"
           htmlFor="user"
         >
           <span
-            className="sc-pFZIQ naUaM"
+            className="sc-jrAGrp kYeQkM"
           >
             Username or email address
           </span>
           <input
-            className="sc-iqHYGH juKShc"
+            className="sc-crrsfI gxaTrt"
             defaultValue=""
             id="user"
             name="user"
@@ -46,25 +46,25 @@ exports[`Auth search results form no results should render correctly with no use
 exports[`Auth search results form some results should render correctly with user and results 1`] = `
 <div>
   <div
-    className="sc-crrsfI LbLNm"
+    className="sc-dQppl bRKjeo"
   >
     <div
-      className="sc-dQppl fjXHPX"
+      className="sc-bqyKva fxZGmk"
     >
       <form
         onSubmit={[Function]}
       >
         <label
-          className="sc-fubCfw dNDEWO"
+          className="sc-pFZIQ gVJURd"
           htmlFor="user"
         >
           <span
-            className="sc-pFZIQ naUaM"
+            className="sc-jrAGrp kYeQkM"
           >
             Username or email address
           </span>
           <input
-            className="sc-iqHYGH juKShc"
+            className="sc-crrsfI gxaTrt"
             defaultValue="someuser"
             id="user"
             name="user"
@@ -156,15 +156,16 @@ exports[`Auth search results form some results should render correctly with user
         <td
           className="sc-hKgILt ispPLd"
         >
-          <button
-            className="sc-gKsewC kGNoax"
+          <a
+            className="sc-fubCfw jyHaCq sc-gKsewC kGNoax"
             disabled={false}
+            href="/manage-auth-users/AUTH_ADM"
             id="edit-button-AUTH_ADM"
-            onClick={[Function]}
+            muted={false}
             value={0}
           >
             Edit
-          </button>
+          </a>
         </td>
       </tr>
       <tr
@@ -200,15 +201,16 @@ exports[`Auth search results form some results should render correctly with user
         <td
           className="sc-hKgILt ispPLd"
         >
-          <button
-            className="sc-gKsewC kGNoax"
+          <a
+            className="sc-fubCfw jyHaCq sc-gKsewC kGNoax"
             disabled={false}
+            href="/manage-auth-users/AUTH_EXPIRED"
             id="edit-button-AUTH_EXPIRED"
-            onClick={[Function]}
+            muted={false}
             value={1}
           >
             Edit
-          </button>
+          </a>
         </td>
       </tr>
     </tbody>
