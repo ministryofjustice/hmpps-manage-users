@@ -1,6 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTitle, logError) => {
+const selectGroupFactory = (getUserAndGroups, saveGroup, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addGroupErrors', errors)
     res.redirect(req.originalUrl)
@@ -8,7 +8,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTi
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     try {
       const [assignableGroups, user, userGroups] = await getUserAndGroups(res.locals, username)
@@ -19,7 +19,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTi
 
       res.render('addGroup.njk', {
         maintainTitle,
-        maintainUrl,
+        maintainUrl: reactUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         groupDropdownValues: [{ text: '', value: '' }].concat(groupDropdownValues),
@@ -34,7 +34,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, maintainUrl, maintainTi
   const post = async (req, res) => {
     const { username } = req.params
     const { group } = req.body
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     if (!group) {
       const errors = [{ href: '#group', text: 'Select a group' }]

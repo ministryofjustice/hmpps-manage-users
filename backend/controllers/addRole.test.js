@@ -8,6 +8,7 @@ describe('select roles factory', () => {
     getUserAndRoles,
     saveRoles,
     '/maintain-auth-users',
+    '/manage-auth-users',
     'Maintain auth users',
     logError
   )
@@ -28,7 +29,7 @@ describe('select roles factory', () => {
         maintainUrl: '/maintain-auth-users',
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
@@ -44,7 +45,7 @@ describe('select roles factory', () => {
         maintainUrl: '/maintain-auth-users',
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
@@ -52,7 +53,7 @@ describe('select roles factory', () => {
       const render = jest.fn()
       getUserAndRoles.mockRejectedValue(new Error('This failed'))
       await addRole.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe' })
     })
   })
 
@@ -63,7 +64,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
       expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH', 'BOB'])
     })
 
@@ -73,7 +74,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
       expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH'])
     })
 
@@ -90,7 +91,7 @@ describe('select roles factory', () => {
       const render = jest.fn()
       saveRoles.mockRejectedValue(new Error('This failed'))
       await addRole.post({ params: { username: 'joe' }, body: { roles: 'GLOBAL_SEARCH' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe/select-roles' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe/select-roles' })
     })
   })
 })

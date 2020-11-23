@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
-import ReactRouterPropTypes from 'react-router-prop-types'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
 import axios from 'axios'
@@ -41,7 +40,7 @@ class AuthUserCreateContainer extends Component {
   }
 
   handleCreate = async (event) => {
-    const { history, setErrorDispatch, resetErrorDispatch, handleAxiosErrorDispatch, user } = this.props
+    const { setErrorDispatch, resetErrorDispatch, handleAxiosErrorDispatch, user } = this.props
     const { username } = this.state
 
     event.preventDefault()
@@ -58,7 +57,8 @@ class AuthUserCreateContainer extends Component {
         params: { username },
       })
       resetErrorDispatch()
-      history.push(`/maintain-auth-users/${username}`)
+      // @ts-ignore
+      window.location = `/manage-auth-users/${username}`
     } catch (error) {
       handleAxiosErrorDispatch(error)
     }
@@ -86,7 +86,6 @@ AuthUserCreateContainer.propTypes = {
   setErrorDispatch: PropTypes.func.isRequired,
   handleAxiosErrorDispatch: PropTypes.func.isRequired,
   dispatchLoaded: PropTypes.func.isRequired,
-  history: ReactRouterPropTypes.history.isRequired,
   error: errorType.isRequired,
   user: userType.isRequired,
 }

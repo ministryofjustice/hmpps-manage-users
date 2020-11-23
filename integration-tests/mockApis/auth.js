@@ -175,7 +175,7 @@ const stubAuthEmailSearch = () =>
 
 const stubAuthUserGroups = () =>
   getFor({
-    urlPattern: '/auth/api/authuser/.*/groups',
+    urlPattern: '/auth/api/authuser/.*/groups\\?children=false',
     body: [
       { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
       { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
@@ -241,6 +241,12 @@ const verifyAddRoles = () =>
     urlPathPattern: '/auth/api/authuser/.*/roles',
   }).then((data) => data.body.requests)
 
+const verifyRemoveRole = () =>
+  getMatchingRequests({
+    method: 'DELETE',
+    urlPathPattern: '/auth/api/authuser/.*/roles/.*',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
@@ -260,4 +266,5 @@ module.exports = {
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   verifyAddRoles,
+  verifyRemoveRole,
 }

@@ -1,7 +1,7 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
 
-const changeEmailFactory = (getUser, changeEmail, maintainUrl, maintainTitle, logError) => {
+const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
     req.flash('changeEmail', email)
@@ -10,16 +10,16 @@ const changeEmailFactory = (getUser, changeEmail, maintainUrl, maintainTitle, lo
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     try {
-      const user = await getUser(res.locals, username)
+      const user = await getUserApi(res.locals, username)
       const flashEmail = req.flash('changeEmail')
       const email = flashEmail != null && flashEmail.length > 0 ? flashEmail[0] : user.email
 
       res.render('changeEmail.njk', {
         maintainTitle,
-        maintainUrl,
+        maintainUrl: reactUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         currentEmail: email,
@@ -34,7 +34,7 @@ const changeEmailFactory = (getUser, changeEmail, maintainUrl, maintainTitle, lo
   const post = async (req, res) => {
     const { username } = req.params
     const { email } = req.body
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     try {
       const errors = validateChangeEmail(email)

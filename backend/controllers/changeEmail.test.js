@@ -1,15 +1,22 @@
 const { changeEmailFactory } = require('./changeEmail')
 
 describe('change email factory', () => {
-  const getUser = jest.fn()
+  const getUserApi = jest.fn()
   const saveEmail = jest.fn()
   const logError = jest.fn()
-  const changeEmail = changeEmailFactory(getUser, saveEmail, '/maintain-auth-users', 'Maintain auth users', logError)
+  const changeEmail = changeEmailFactory(
+    getUserApi,
+    saveEmail,
+    '/maintain-auth-users',
+    '/manage-auth-users',
+    'Maintain auth users',
+    logError
+  )
 
   describe('index', () => {
     it('should call changeEmail render', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn() }
-      getUser.mockResolvedValue({
+      getUserApi.mockResolvedValue({
         username: 'BOB',
         firstName: 'Billy',
         lastName: 'Bob',
@@ -22,7 +29,7 @@ describe('change email factory', () => {
         maintainTitle: 'Maintain auth users',
         maintainUrl: '/maintain-auth-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
         currentEmail: 'bob@digital.justice.gov.uk',
         errors: undefined,
       })
@@ -30,7 +37,7 @@ describe('change email factory', () => {
 
     it('should copy any flash errors over', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
-      getUser.mockResolvedValue({
+      getUserApi.mockResolvedValue({
         username: 'BOB',
         firstName: 'Billy',
         lastName: 'Bob',
@@ -45,15 +52,15 @@ describe('change email factory', () => {
         maintainUrl: '/maintain-auth-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
         currentEmail: 'bob@digital.justice.gov.uk',
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
     it('should call error on failure', async () => {
       const render = jest.fn()
-      getUser.mockRejectedValue(new Error('This failed'))
+      getUserApi.mockRejectedValue(new Error('This failed'))
       await changeEmail.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe' })
     })
   })
 
@@ -64,7 +71,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
@@ -110,7 +117,7 @@ describe('change email factory', () => {
       const render = jest.fn()
       saveEmail.mockRejectedValue(new Error('This failed'))
       await changeEmail.post({ params: { username: 'joe' }, body: { email: 'bob@digital.justice.gov.uk' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe/change-email' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe/change-email' })
     })
   })
 })

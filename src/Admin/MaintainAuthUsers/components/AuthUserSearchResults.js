@@ -1,13 +1,14 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Button from '@govuk-react/button'
+import Link from '@govuk-react/link'
 import Table from '@govuk-react/table'
 import { GREY_3, BLACK } from 'govuk-colours'
 import AuthUserSearch from './AuthUserSearch'
 import { authUserListType, errorType } from '../../../types'
 
 const AuthUserSearchResults = (props) => {
-  const { user, userList, handleChange, handleSearch, handleEdit, error } = props
+  const { user, userList, handleChange, handleSearch, error } = props
   const results = userList.map((a, index) => (
     <Table.Row key={a.username}>
       <Table.Cell>
@@ -24,7 +25,8 @@ const AuthUserSearchResults = (props) => {
           mb={0}
           id={`edit-button-${a.username}`}
           value={index}
-          onClick={handleEdit}
+          as={Link}
+          href={`/manage-auth-users/${a.username}`}
         >
           Edit
         </Button>
@@ -58,7 +60,6 @@ AuthUserSearchResults.propTypes = {
   userList: authUserListType.isRequired,
   handleChange: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
   error: errorType.isRequired,
 }
 

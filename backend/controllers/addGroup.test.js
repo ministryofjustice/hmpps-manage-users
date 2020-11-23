@@ -8,6 +8,7 @@ describe('select groups factory', () => {
     getUserAndGroups,
     saveGroup,
     '/maintain-auth-users',
+    '/manage-auth-users',
     'Maintain auth users',
     logError
   )
@@ -32,7 +33,7 @@ describe('select groups factory', () => {
           { text: 'name', value: 'code' },
         ],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
@@ -55,7 +56,7 @@ describe('select groups factory', () => {
         maintainUrl: '/maintain-auth-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
@@ -71,7 +72,7 @@ describe('select groups factory', () => {
         maintainUrl: '/maintain-auth-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/maintain-auth-users/joe',
+        staffUrl: '/manage-auth-users/joe',
       })
     })
 
@@ -79,7 +80,7 @@ describe('select groups factory', () => {
       const render = jest.fn()
       getUserAndGroups.mockRejectedValue(new Error('This failed'))
       await addGroup.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe' })
     })
   })
 
@@ -90,7 +91,7 @@ describe('select groups factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/maintain-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
       expect(saveGroup).toBeCalledWith(locals, 'joe', 'GLOBAL_SEARCH')
     })
 
@@ -110,7 +111,7 @@ describe('select groups factory', () => {
         { params: { username: 'joe' }, body: { group: 'GLOBAL_SEARCH' }, flash: jest.fn() },
         { render }
       )
-      expect(render).toBeCalledWith('error.njk', { url: '/maintain-auth-users/joe/select-group' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe/select-group' })
     })
 
     it('should fail gracefully if group already on user', async () => {

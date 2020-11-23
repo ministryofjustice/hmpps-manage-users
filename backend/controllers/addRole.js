@@ -10,7 +10,7 @@ const addRoleFactory = (prisonApi) => {
   return { addRole }
 }
 
-const selectRolesFactory = (getUserAndRoles, saveRoles, maintainUrl, maintainTitle, logError) => {
+const selectRolesFactory = (getUserAndRoles, saveRoles, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -18,7 +18,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, maintainUrl, maintainTit
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     try {
       const [assignableRoles, user] = await getUserAndRoles(res.locals, username)
@@ -29,7 +29,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, maintainUrl, maintainTit
 
       res.render('addRole.njk', {
         maintainTitle,
-        maintainUrl,
+        maintainUrl: reactUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         roleDropdownValues,
@@ -44,7 +44,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, maintainUrl, maintainTit
   const post = async (req, res) => {
     const { username } = req.params
     const { roles } = req.body
-    const staffUrl = `${maintainUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}`
 
     try {
       if (!roles) {
