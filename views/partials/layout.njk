@@ -4,35 +4,39 @@
 
 {% block head %}
 
-{% if googleAnalyticsId %}
-<!-- Global site tag (gtag.js) - Google Analytics -->
-<script async src="{{'https://www.googletagmanager.com/gtag/js?id=' + googleAnalyticsId}}"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  {% if googleAnalyticsId %}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="{{ 'https://www.googletagmanager.com/gtag/js?id=' + googleAnalyticsId }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || []
 
-  gtag('config', '{{googleAnalyticsId}}');
-</script>
-{% endif %}
+      function gtag() {
+        dataLayer.push(arguments)
+      }
 
-<!--[if !IE 8]><!-->
-<script src="https://code.jquery.com/jquery-1.12.4.min.js"
-  integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
-  crossorigin="anonymous"></script>
+      gtag('js', new Date())
 
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-  crossorigin="anonymous"></script>
+      gtag('config', '{{ googleAnalyticsId }}')
+    </script>
+  {% endif %}
 
-<link href = "https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel = "stylesheet">
-<link href="/stylesheets/application.css" rel="stylesheet" />
-<title>{% block pageTitle %}{% if errors.length %}Error: {% endif %}{{title}} - Digital Prison Services{% endblock %}</title>
-<!--<![endif]-->
+  <!--[if !IE 8]><!-->
+  <script src="https://code.jquery.com/jquery-1.12.4.min.js"
+          integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ="
+          crossorigin="anonymous"></script>
 
-{% block headIcons %}
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
+          integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
+          crossorigin="anonymous"></script>
+
+  <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+  <link href="/stylesheets/application.css" rel="stylesheet" />
+  <title>{% block pageTitle %}{% if errors.length %}Error: {% endif %}{{ title }} - Digital Prison Services{% endblock %}</title>
+  <!--<![endif]-->
+
+  {% block headIcons %}
     <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/favicon.ico" type="image/x-icon" />
-{% endblock %}
+  {% endblock %}
 
 {% endblock %}
 
@@ -45,12 +49,12 @@
 {% endblock %}
 
 {% block bodyEnd %}
-{# Run JavaScript at end of the
+  {# Run JavaScript at end of the
 <body>, to avoid blocking the initial render. #}
-<script src="/assets/govuk/all.js"></script>
-<script>window.GOVUKFrontend.initAll();</script>
-<script>var MOJFrontend = {};</script>
-    {# Javascript block for individual pages #}
-    {% block pageScripts %}
-    {%  endblock %}
+  <script src="/assets/govuk/all.js"></script>
+  <script>window.GOVUKFrontend.initAll()</script>
+  <script>var MOJFrontend = {}</script>
+  {# Javascript block for individual pages #}
+  {% block pageScripts %}
+  {% endblock %}
 {% endblock %}
