@@ -1,1 +1,6 @@
 // Whenever we have/want to diverge from govuk-frontend
+.user-enabled-status {
+  .govuk-table__cell {
+    border-bottom: 0
+  }
+}

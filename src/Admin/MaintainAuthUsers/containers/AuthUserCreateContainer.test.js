@@ -132,7 +132,6 @@ describe('Auth create container', () => {
         { email: 'user@created.com', firstName: 'first', lastName: 'last', username: 'userme', groups },
         { params: { username: 'userme' } }
       )
-      expect(mockHistory.push).toBeCalledWith('/maintain-auth-users/userme')
     })
 
     it('should prevent default on the form submission', () => {

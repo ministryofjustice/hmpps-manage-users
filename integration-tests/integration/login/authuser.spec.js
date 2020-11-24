@@ -52,16 +52,14 @@ context('Auth User functionality', () => {
     cy.task('stubAuthUserRoles')
     cy.task('stubAuthUserGroups')
     cy.server()
-    cy.route({ method: 'GET', url: '/api/auth-user-get?username=AUTH_ADM' }).as('getUser')
     results.edit('AUTH_ADM')
 
-    cy.wait('@getUser')
     const userPage = AuthUserPage.verifyOnPage('Auth Adm')
-    userPage.userRows().eq(1).should('contain', 'Auth Adm')
-    userPage.userRows().eq(2).should('contain', 'auth_test2@digital.justice.gov.uk')
+    userPage.userRows().eq(0).should('contain', 'AUTH_ADM')
+    userPage.userRows().eq(1).should('contain', 'auth_test2@digital.justice.gov.uk')
 
-    userPage.roleRows().should('have.length', 3)
-    userPage.roleRows().eq(1).should('contain', 'Global Search')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Global Search')
 
     cy.task('stubAuthAssignableRoles')
     userPage.addRole().click()
@@ -78,15 +76,16 @@ context('Auth User functionality', () => {
       expect(JSON.parse(requests[0].body)).to.deep.equal(['LICENCE_RO', 'LICENCE_VARY'])
     })
 
-    cy.wait('@getUser')
     AuthUserPage.verifyOnPage('Auth Adm')
 
     cy.task('stubAuthRemoveRole')
-    cy.route({ method: 'GET', url: '/api/auth-user-roles-remove?username=AUTH_ADM&role=GLOBAL_SEARCH' }).as(
-      'removeRole'
-    )
     userPage.removeRole('GLOBAL_SEARCH').click()
-    cy.wait('@removeRole').should('have.property', 'status', 200)
+
+    cy.task('verifyRemoveRole').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/roles/GLOBAL_SEARCH')
+    })
   })
 
   it('Should display message if no roles to add', () => {

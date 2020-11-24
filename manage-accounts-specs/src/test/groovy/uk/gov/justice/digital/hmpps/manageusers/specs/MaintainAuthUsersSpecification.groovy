@@ -51,11 +51,12 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         then: "I can see the user details"
         at AuthUserPage
-        userRows[1].find("td", 0).text() == 'Auth Adm'
-        userRows[2].find("td", 0).text() == 'auth_test2@digital.justice.gov.uk'
+        headingText == 'Auth Adm'
+        userRows[0].find("td", 1).text() == 'AUTH_ADM'
+        userRows[1].find("td", 1).text() == 'auth_test2@digital.justice.gov.uk'
 
-        groupRows.size() == 3
-        groupRows[1].find("td", 0).text() == 'Site 1 - Group 1'
+        groupRows.size() == 2
+        groupRows[0].find("td", 0).text() == 'Site 1 - Group 1'
 
         oauthApi.stubAuthAllGroups()
 
@@ -74,7 +75,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         at AuthUserPage
         then: 'I remove the Site 1 - Group 3 from the user'
         oauthApi.stubAuthRemoveGroup()
-        groupRows[1].find("[data-qa='remove-button-SITE_1_GROUP_1']").click()
+        groupRows[0].find("[data-qa='remove-button-SITE_1_GROUP_1']").click()
 
     }
 
@@ -108,8 +109,8 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then: "My user is created"
         at AuthUserPage
 
-        userRows[1].find("td", 0).text() == 'Auth Adm'
-        userRows[2].find("td", 0).text() == 'auth_test2@digital.justice.gov.uk'
+        userRows[0].find("td", 1).text() == 'AUTH_ADM'
+        userRows[1].find("td", 1).text() == 'auth_test2@digital.justice.gov.uk'
 
         oauthApi.verify(WireMock.getRequestedFor(urlPathEqualTo("/auth/api/authuser/$username")));
     }
@@ -144,8 +145,8 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then: "My user is created"
         at AuthUserPage
 
-        userRows[1].find("td", 0).text() == 'Auth Adm'
-        userRows[2].find("td", 0).text() == 'auth_test2@digital.justice.gov.uk'
+        userRows[0].find("td", 1).text() == 'AUTH_ADM'
+        userRows[1].find("td", 1).text() == 'auth_test2@digital.justice.gov.uk'
 
         oauthApi.verify(WireMock.getRequestedFor(urlPathEqualTo("/auth/api/authuser/$username")));
     }
@@ -162,9 +163,9 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUserGroups()
 
         when:
-        browser.go('/maintain-auth-users/AUTH_TEST')
+        browser.go('/manage-auth-users/AUTH_TEST')
         at AuthUserPage
-        userRows[4].find("td", 0).text() == 'Yes'
+        enabled.text() == 'ACTIVE ACCOUNT'
         oauthApi.stubAuthUserDisable()
         oauthApi.stubAuthUsernameSearch(false)
         enableButton.click()
@@ -172,7 +173,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then:
         at AuthUserPage
 
-        waitFor { userRows[4].find("td", 0).text() == 'No' }
+        enabled.text() == 'INACTIVE ACCOUNT'
         oauthApi.stubAuthUserEnable()
         enableButton.click()
     }
@@ -189,9 +190,8 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUserGroups()
 
         when:
-        browser.go('/maintain-auth-users/AUTH_TEST')
+        browser.go('/manage-auth-users/AUTH_TEST')
         at AuthUserPage
-        userRows[4].find("td", 0).text() == 'Yes'
         amendLink.click()
 
         then:
