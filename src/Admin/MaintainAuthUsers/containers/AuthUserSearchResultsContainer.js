@@ -37,7 +37,7 @@ class AuthUserSearchResultsContainer extends Component {
     const chosenUser = userList[event.target.value]
 
     event.preventDefault()
-    history.push(`/maintain-auth-users/${chosenUser.username}`)
+    history.push(`/maintain-external-users/${chosenUser.username}`)
   }
 
   async performSearch() {

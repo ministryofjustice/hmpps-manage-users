@@ -7,8 +7,8 @@ describe('select groups factory', () => {
   const addGroup = selectGroupFactory(
     getUserAndGroups,
     saveGroup,
-    '/maintain-auth-users',
-    '/manage-auth-users',
+    '/maintain-external-users',
+    '/manage-external-users',
     'Maintain auth users',
     logError
   )
@@ -27,13 +27,13 @@ describe('select groups factory', () => {
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: undefined,
         maintainTitle: 'Maintain auth users',
-        maintainUrl: '/maintain-auth-users',
+        maintainUrl: '/maintain-external-users',
         groupDropdownValues: [
           { text: '', value: '' },
           { text: 'name', value: 'code' },
         ],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-auth-users/joe',
+        staffUrl: '/manage-external-users/joe',
       })
     })
 
@@ -53,10 +53,10 @@ describe('select groups factory', () => {
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: undefined,
         maintainTitle: 'Maintain auth users',
-        maintainUrl: '/maintain-auth-users',
+        maintainUrl: '/maintain-external-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-auth-users/joe',
+        staffUrl: '/manage-external-users/joe',
       })
     })
 
@@ -69,10 +69,10 @@ describe('select groups factory', () => {
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: { error: 'some error' },
         maintainTitle: 'Maintain auth users',
-        maintainUrl: '/maintain-auth-users',
+        maintainUrl: '/maintain-external-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-auth-users/joe',
+        staffUrl: '/manage-external-users/joe',
       })
     })
 
@@ -80,7 +80,7 @@ describe('select groups factory', () => {
       const render = jest.fn()
       getUserAndGroups.mockRejectedValue(new Error('This failed'))
       await addGroup.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
     })
   })
 
@@ -91,7 +91,7 @@ describe('select groups factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe')
       expect(saveGroup).toBeCalledWith(locals, 'joe', 'GLOBAL_SEARCH')
     })
 
@@ -111,7 +111,7 @@ describe('select groups factory', () => {
         { params: { username: 'joe' }, body: { group: 'GLOBAL_SEARCH' }, flash: jest.fn() },
         { render }
       )
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe/select-group' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe/select-group' })
     })
 
     it('should fail gracefully if group already on user', async () => {

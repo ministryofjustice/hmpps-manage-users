@@ -67,7 +67,7 @@ Array [
         >
           <a
             className="link"
-            href="/maintain-auth-users"
+            href="/maintain-external-users"
             id="maintain_auth_users_link"
             onClick={[Function]}
             title="Maintain auth users"
@@ -83,7 +83,7 @@ Array [
         >
           <a
             className="link"
-            href="/create-auth-user"
+            href="/create-external-user"
             id="create_auth_user_link"
             onClick={[Function]}
             title="Create auth users"

@@ -42,7 +42,7 @@ export class AdminUtilitiesContainer extends Component {
                 id="maintain_auth_users_link"
                 title="Maintain auth users"
                 className="link"
-                to="/maintain-auth-users"
+                to="/maintain-external-users"
               >
                 Maintain auth users
               </Link>
@@ -51,7 +51,7 @@ export class AdminUtilitiesContainer extends Component {
           )}
           {hasMaintainAuthUsers && (
             <AdminUtility>
-              <Link id="create_auth_user_link" title="Create auth users" className="link" to="/create-auth-user">
+              <Link id="create_auth_user_link" title="Create auth users" className="link" to="/create-external-user">
                 Create auth users
               </Link>
               <div>Create user in auth (not in NOMIS).</div>

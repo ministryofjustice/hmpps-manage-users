@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.manageusers.pages
 import geb.Page
 
 class AuthUserCreatePage extends Page {
-    static url = "/create-auth-user"
+    static url = "/create-external-user"
 
     static at = {
         browser.currentUrl.contains(url)

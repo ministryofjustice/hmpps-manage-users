@@ -58,7 +58,7 @@ class AuthUserCreateContainer extends Component {
       })
       resetErrorDispatch()
       // @ts-ignore
-      window.location = `/manage-auth-users/${username}`
+      window.location = `/manage-external-users/${username}`
     } catch (error) {
       handleAxiosErrorDispatch(error)
     }

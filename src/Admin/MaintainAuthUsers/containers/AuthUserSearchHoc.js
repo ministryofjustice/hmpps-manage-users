@@ -14,7 +14,7 @@ const searchComponent = (WrappedComponent) => {
       const userQuery = qs.stringify(this.state)
 
       event.preventDefault()
-      history.push({ pathname: '/maintain-auth-users/search-results', search: userQuery })
+      history.push({ pathname: '/maintain-external-users/search-results', search: userQuery })
     }
 
     render() {

@@ -1,7 +1,7 @@
 package uk.gov.justice.digital.hmpps.manageusers.pages
 
 public class AuthUserSearchResultsPage extends AuthUserSearchPage {
-    static url = "/maintain-auth-users/search-results"
+    static url = "/maintain-external-users/search-results"
 
     static at = {
         browser.currentUrl.contains(url)

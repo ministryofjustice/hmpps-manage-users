@@ -44,7 +44,7 @@ describe('Auth search results container', () => {
         location: { pathname, search },
       } = wrapper.find('AuthUserSearchResultsContainer').props()
 
-      expect(pathname).toEqual('/maintain-auth-users/search-results')
+      expect(pathname).toEqual('/maintain-external-users/search-results')
       expect(search).toEqual('?user=usersearched')
     })
 

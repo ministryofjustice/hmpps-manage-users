@@ -159,7 +159,7 @@ exports[`Auth search results form some results should render correctly with user
           <a
             className="sc-fubCfw jyHaCq sc-gKsewC kGNoax"
             disabled={false}
-            href="/manage-auth-users/AUTH_ADM"
+            href="/manage-external-users/AUTH_ADM"
             id="edit-button-AUTH_ADM"
             muted={false}
             value={0}
@@ -204,7 +204,7 @@ exports[`Auth search results form some results should render correctly with user
           <a
             className="sc-fubCfw jyHaCq sc-gKsewC kGNoax"
             disabled={false}
-            href="/manage-auth-users/AUTH_EXPIRED"
+            href="/manage-external-users/AUTH_EXPIRED"
             id="edit-button-AUTH_EXPIRED"
             muted={false}
             value={1}

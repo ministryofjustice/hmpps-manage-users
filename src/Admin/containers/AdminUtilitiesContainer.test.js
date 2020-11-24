@@ -44,7 +44,7 @@ describe('<AdminUtilitiesContainer />', () => {
     it('should render a Link to Maintain auth users if user has maintain auth user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-external-users' })
 
       expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
     })
@@ -52,7 +52,7 @@ describe('<AdminUtilitiesContainer />', () => {
     it('should render a Link to Maintain auth users if user has group manager role', () => {
       props.user.groupManager = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-external-users' })
 
       expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
     })
@@ -60,7 +60,7 @@ describe('<AdminUtilitiesContainer />', () => {
     it('should render a Link to create auth users if user has maintain auth user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/create-auth-user' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/create-external-user' })
 
       expect(maintainUsersLink.prop('children')).toEqual('Create auth users')
     })

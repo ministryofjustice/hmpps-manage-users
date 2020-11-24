@@ -26,7 +26,7 @@ const AuthUserSearchResults = (props) => {
           id={`edit-button-${a.username}`}
           value={index}
           as={Link}
-          href={`/manage-auth-users/${a.username}`}
+          href={`/manage-external-users/${a.username}`}
         >
           Edit
         </Button>

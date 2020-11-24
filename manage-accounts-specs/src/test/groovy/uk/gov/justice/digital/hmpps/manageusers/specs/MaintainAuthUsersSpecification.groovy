@@ -163,7 +163,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUserGroups()
 
         when:
-        browser.go('/manage-auth-users/AUTH_TEST')
+        browser.go('/manage-external-users/AUTH_TEST')
         at AuthUserPage
         enabled.text() == 'ACTIVE ACCOUNT'
         oauthApi.stubAuthUserDisable()
@@ -190,7 +190,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUserGroups()
 
         when:
-        browser.go('/manage-auth-users/AUTH_TEST')
+        browser.go('/manage-external-users/AUTH_TEST')
         at AuthUserPage
         amendLink.click()
 
