@@ -7,7 +7,7 @@ public class AuthUserSearchPage extends Page {
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for auth user')
+        headingText.contains('Search for external user')
     }
 
     static content = {

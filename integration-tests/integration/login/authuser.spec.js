@@ -20,7 +20,7 @@ function searchForUser() {
   return results
 }
 
-context('Auth User functionality', () => {
+context('External user functionality', () => {
   before(() => {
     cy.clearCookies()
   })

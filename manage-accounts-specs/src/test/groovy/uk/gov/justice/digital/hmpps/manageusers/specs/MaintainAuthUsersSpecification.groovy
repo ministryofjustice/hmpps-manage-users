@@ -30,7 +30,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Maintain Auth User search page"
+        given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         to AuthUserSearchPage
@@ -39,7 +39,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUsernameSearch()
         search('sometext')
 
-        then: "The auth user search results page is displayed"
+        then: "The external user search results page is displayed"
         at AuthUserSearchResultsPage
         assert waitFor { rows.size() == 2 }
         user.value() == 'sometext'
@@ -83,7 +83,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Create Auth User page"
+        given: "I have navigated to the Create External user page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         oauthApi.stubAuthAllGroups()
@@ -119,7 +119,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'AUTH_GROUP_MANAGER']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Create Auth User page"
+        given: "I have navigated to the Create External user page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         oauthApi.stubAuthAllGroups()
@@ -155,7 +155,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Maintain Auth User search page"
+        given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         oauthApi.stubAuthUsernameSearch()
@@ -182,7 +182,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Maintain Auth User search page"
+        given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         oauthApi.stubAuthUsernameSearch()
@@ -216,7 +216,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
 
-        given: "I have navigated to the Maintain Auth User search page"
+        given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
         to AuthUserSearchPage

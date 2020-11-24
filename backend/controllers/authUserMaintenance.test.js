@@ -1,6 +1,6 @@
 const authUserMaintenanceFactory = require('./authUserMaintenance')
 
-describe('Auth user maintenance controller', () => {
+describe('External user maintenance controller', () => {
   const oauthApi = {}
   const res = { locals: {} }
   const {

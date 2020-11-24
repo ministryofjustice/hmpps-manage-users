@@ -70,9 +70,9 @@ Array [
             href="/maintain-external-users"
             id="maintain_auth_users_link"
             onClick={[Function]}
-            title="Maintain auth users"
+            title="Maintain external users"
           >
-            Maintain auth users
+            Maintain external users
           </a>
           <div>
             Maintain users that do not exist in NOMIS, only in auth.
@@ -86,9 +86,9 @@ Array [
             href="/create-external-user"
             id="create_auth_user_link"
             onClick={[Function]}
-            title="Create auth users"
+            title="Create external users"
           >
-            Create auth users
+            Create external users
           </a>
           <div>
             Create user in auth (not in NOMIS).

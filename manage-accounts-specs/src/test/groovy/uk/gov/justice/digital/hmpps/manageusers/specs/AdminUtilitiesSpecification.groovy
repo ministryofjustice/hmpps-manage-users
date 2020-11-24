@@ -23,7 +23,7 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
     TestFixture fixture = new TestFixture(browser, prisonApi, oauthApi, tokenVerificationApi)
 
 
-    def "should see maintain auth users link if the user has the MAINTAIN_OAUTH_USERS role"() {
+    def "should see maintain external users link if the user has the MAINTAIN_OAUTH_USERS role"() {
         def maintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
         oauthApi.stubGetMyRoles([maintainAuthUsersRole])
 
@@ -33,11 +33,11 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
 
         when: "I am on the Manage user accounts page"
 
-        then: "I should see the maintain auth users link"
+        then: "I should see the maintain external users link"
         assert maintainAuthUsersLink.displayed
     }
 
-    def "should see maintain auth users link if the user has the group manager role"() {
+    def "should see maintain external users link if the user has the group manager role"() {
         def maintainAuthUsersRole = [roleId: -1, roleCode: 'AUTH_GROUP_MANAGER']
         oauthApi.stubGetMyRoles([maintainAuthUsersRole])
 
@@ -47,7 +47,7 @@ class AdminUtilitiesSpecification extends BrowserReportingSpec {
 
         when: "I am on the Manage user accounts page"
 
-        then: "I should see the maintain auth users link"
+        then: "I should see the maintain external users link"
         assert maintainAuthUsersLink.displayed
     }
 

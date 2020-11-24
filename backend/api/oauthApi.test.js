@@ -120,7 +120,7 @@ describe('oathApi tests', () => {
     it('should return roles from endpoint', () => {
       expect(actual).toEqual(userDetails)
     })
-    it('should call auth user endpoint', () => {
+    it('should call external user endpoint', () => {
       expect(client.get).toBeCalledWith(context, '/api/authuser/joe')
     })
   })
@@ -305,7 +305,7 @@ describe('oathApi tests', () => {
       oauthApi.createUser(context, 'joe', user)
     })
 
-    it('should call auth user endpoint', () => {
+    it('should call external user endpoint', () => {
       expect(client.put).toBeCalledWith(context, '/api/authuser/joe', user)
     })
   })

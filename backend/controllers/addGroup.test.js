@@ -9,7 +9,7 @@ describe('select groups factory', () => {
     saveGroup,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -26,7 +26,7 @@ describe('select groups factory', () => {
       await addGroup.index(req, { render })
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: undefined,
-        maintainTitle: 'Maintain auth users',
+        maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
         groupDropdownValues: [
           { text: '', value: '' },
@@ -52,7 +52,7 @@ describe('select groups factory', () => {
       await addGroup.index(req, { render })
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: undefined,
-        maintainTitle: 'Maintain auth users',
+        maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -68,7 +68,7 @@ describe('select groups factory', () => {
       await addGroup.index(req, { render })
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: { error: 'some error' },
-        maintainTitle: 'Maintain auth users',
+        maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
         groupDropdownValues: [{ text: '', value: '' }],
         staff: { name: 'Billy Bob', username: 'BOB' },

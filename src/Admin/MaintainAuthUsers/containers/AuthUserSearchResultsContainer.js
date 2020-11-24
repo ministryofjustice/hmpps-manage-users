@@ -85,7 +85,7 @@ class AuthUserSearchResultsContainer extends Component {
     } = this.props
     const { user } = qs.parse(search.slice(search.lastIndexOf('?') + 1))
     return (
-      <Page title="Search for auth user results" alwaysRender>
+      <Page title="Search for external user results" alwaysRender>
         <AuthUserSearchResults
           handleChange={handleChange}
           handleSearch={handleSearch}

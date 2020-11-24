@@ -15,7 +15,7 @@ describe('user detail factory', () => {
     disableUserApi,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -37,7 +37,7 @@ describe('user detail factory', () => {
     const render = jest.fn()
     await userDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      maintainTitle: 'Maintain auth users',
+      maintainTitle: 'Maintain external users',
       maintainUrl: '/maintain-external-users',
       staff: {
         firstName: 'Billy',

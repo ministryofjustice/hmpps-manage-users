@@ -58,7 +58,7 @@ describe('userMe controller', () => {
         maintainAccessAdmin: true,
       })
     })
-    it('should have maintainAuthUsers when the user has the maintain auth users role', async () => {
+    it('should have maintainAuthUsers when the user has the maintain external users role', async () => {
       currentRoles.mockImplementation(() => [{ roleCode: 'MAINTAIN_OAUTH_USERS' }])
       await userMeService(req, res)
 

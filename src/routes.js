@@ -5,8 +5,8 @@ import AuthUserBreadcrumb from './Components/Breadcrumb/AuthUserBreadcrumb'
 export default [
   { path: '/', breadcrumb: 'Manage user accounts' },
   { path: '/maintain-roles', breadcrumb: 'Manage user roles' },
-  { path: '/create-external-user', breadcrumb: 'Create auth users' },
-  { path: '/maintain-external-users', breadcrumb: 'Maintain auth users' },
+  { path: '/create-external-user', breadcrumb: 'Create external users' },
+  { path: '/maintain-external-users', breadcrumb: 'Maintain external users' },
   { path: '/maintain-external-users/search-results', breadcrumb: 'Results' },
   { path: '/maintain-external-users/:username', breadcrumb: AuthUserBreadcrumb },
   { path: '/maintain-external-users/:username/add-role', breadcrumb: 'Add role' },

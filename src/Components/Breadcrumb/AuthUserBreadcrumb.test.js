@@ -3,7 +3,7 @@ import renderer from 'react-test-renderer'
 
 import AuthUserBreadcrumb from './AuthUserBreadcrumb'
 
-describe('Auth user breadcrumb', () => {
+describe('External user breadcrumb', () => {
   it('should render correctly retrieving user from state', () => {
     const store = { subscribe: jest.fn(), dispatch: jest.fn(), getState: jest.fn(), setState: jest.fn() }
     store.getState.mockReturnValue({

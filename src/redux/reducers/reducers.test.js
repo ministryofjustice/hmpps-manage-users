@@ -330,7 +330,7 @@ describe('Maintain roles reducer', () => {
   })
 })
 
-describe('maintain auth users', () => {
+describe('maintain external users', () => {
   it('should return the initial state', () => {
     expect(maintainAuthUsers(undefined, {})).toEqual(maintainAuthUsersInitialState)
   })

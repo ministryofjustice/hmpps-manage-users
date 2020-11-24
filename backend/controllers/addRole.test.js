@@ -9,7 +9,7 @@ describe('select roles factory', () => {
     saveRoles,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -25,7 +25,7 @@ describe('select roles factory', () => {
       await addRole.index(req, { render })
       expect(render).toBeCalledWith('addRole.njk', {
         errors: undefined,
-        maintainTitle: 'Maintain auth users',
+        maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -41,7 +41,7 @@ describe('select roles factory', () => {
       await addRole.index(req, { render })
       expect(render).toBeCalledWith('addRole.njk', {
         errors: { error: 'some error' },
-        maintainTitle: 'Maintain auth users',
+        maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },

@@ -24,9 +24,9 @@ import {
 
 const mockStore = configureMockStore([thunk])
 
-describe('maintain auth users', () => {
+describe('maintain external users', () => {
   describe('simple actions', () => {
-    it('should create an action to maintain auth users', () => {
+    it('should create an action to maintain external users', () => {
       const someList = [{ username: 'username' }]
       const expectedAction = {
         type: SET_AUTH_USER_SEARCH_RESULTS_LIST,
@@ -54,7 +54,7 @@ describe('maintain auth users', () => {
 
   describe('thunks', () => {
     describe('loadAuthUserRolesAndGroups', () => {
-      it('should create an action to load auth users and roles', async () => {
+      it('should create an action to load external users and roles', async () => {
         const roleB = { roleCode: 'roleB', roleName: 'Role B' }
         const groupB = { groupCode: 'groupB', groupName: 'Group B' }
         axios.get = jest.fn()

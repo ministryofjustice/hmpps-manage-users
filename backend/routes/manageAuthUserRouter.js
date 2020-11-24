@@ -39,7 +39,7 @@ const controller = ({ oauthApi, logError }) => {
     saveGroupApi,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -48,7 +48,7 @@ const controller = ({ oauthApi, logError }) => {
     saveRolesApi,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -57,7 +57,7 @@ const controller = ({ oauthApi, logError }) => {
     changeEmailApi,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 
@@ -69,7 +69,7 @@ const controller = ({ oauthApi, logError }) => {
     disableUserApi,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain auth users',
+    'Maintain external users',
     logError
   )
 

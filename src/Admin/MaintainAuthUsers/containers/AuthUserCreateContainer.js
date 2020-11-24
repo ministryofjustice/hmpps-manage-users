@@ -69,7 +69,7 @@ class AuthUserCreateContainer extends Component {
     const { groups } = this.state
 
     return (
-      <Page title="Create auth users" alwaysRender>
+      <Page title="Create external users" alwaysRender>
         <AuthUserCreate
           handleCreate={this.handleCreate}
           handleChange={this.handleChange}
