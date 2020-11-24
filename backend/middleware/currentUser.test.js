@@ -101,7 +101,7 @@ describe('Current user', () => {
     })
   })
 
-  it('should set maintain auth users', async () => {
+  it('should set maintain external users', async () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_OAUTH_USERS' }])
     const controller = currentUser({ prisonApi, oauthApi })
 

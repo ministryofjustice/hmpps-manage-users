@@ -7,9 +7,9 @@ describe('change email factory', () => {
   const changeEmail = changeEmailFactory(
     getUserApi,
     saveEmail,
-    '/maintain-auth-users',
-    '/manage-auth-users',
-    'Maintain auth users',
+    '/maintain-external-users',
+    '/manage-external-users',
+    'Maintain external users',
     logError
   )
 
@@ -26,10 +26,10 @@ describe('change email factory', () => {
       const render = jest.fn()
       await changeEmail.index(req, { render })
       expect(render).toBeCalledWith('changeEmail.njk', {
-        maintainTitle: 'Maintain auth users',
-        maintainUrl: '/maintain-auth-users',
+        maintainTitle: 'Maintain external users',
+        maintainUrl: '/maintain-external-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-auth-users/joe',
+        staffUrl: '/manage-external-users/joe',
         currentEmail: 'bob@digital.justice.gov.uk',
         errors: undefined,
       })
@@ -48,11 +48,11 @@ describe('change email factory', () => {
       await changeEmail.index(req, { render })
       expect(render).toBeCalledWith('changeEmail.njk', {
         errors: { error: 'some error' },
-        maintainTitle: 'Maintain auth users',
-        maintainUrl: '/maintain-auth-users',
+        maintainTitle: 'Maintain external users',
+        maintainUrl: '/maintain-external-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
         currentEmail: 'bob@digital.justice.gov.uk',
-        staffUrl: '/manage-auth-users/joe',
+        staffUrl: '/manage-external-users/joe',
       })
     })
 
@@ -60,7 +60,7 @@ describe('change email factory', () => {
       const render = jest.fn()
       getUserApi.mockRejectedValue(new Error('This failed'))
       await changeEmail.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
     })
   })
 
@@ -71,7 +71,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-auth-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
@@ -117,7 +117,7 @@ describe('change email factory', () => {
       const render = jest.fn()
       saveEmail.mockRejectedValue(new Error('This failed'))
       await changeEmail.post({ params: { username: 'joe' }, body: { email: 'bob@digital.justice.gov.uk' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-auth-users/joe/change-email' })
+      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe/change-email' })
     })
   })
 })

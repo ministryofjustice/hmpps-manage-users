@@ -41,28 +41,28 @@ describe('<AdminUtilitiesContainer />', () => {
       expect(manageRolesLink.prop('children')).toEqual('Manage user roles')
     })
 
-    it('should render a Link to Maintain auth users if user has maintain auth user roles', () => {
+    it('should render a Link to Maintain external users if user has maintain external user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-external-users' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Maintain external users')
     })
 
-    it('should render a Link to Maintain auth users if user has group manager role', () => {
+    it('should render a Link to Maintain external users if user has group manager role', () => {
       props.user.groupManager = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-auth-users' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/maintain-external-users' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Maintain auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Maintain external users')
     })
 
-    it('should render a Link to create auth users if user has maintain auth user roles', () => {
+    it('should render a Link to create external users if user has maintain external user roles', () => {
       props.user.maintainAuthUsers = true
       const wrapper = shallow(<AdminUtilitiesContainer {...props} />)
-      const maintainUsersLink = wrapper.find('Link').find({ to: '/create-auth-user' })
+      const maintainUsersLink = wrapper.find('Link').find({ to: '/create-external-user' })
 
-      expect(maintainUsersLink.prop('children')).toEqual('Create auth users')
+      expect(maintainUsersLink.prop('children')).toEqual('Create external users')
     })
   })
 

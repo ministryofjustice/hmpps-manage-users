@@ -27,7 +27,7 @@ class AuthUserSearchContainer extends Component {
     } = this.props
 
     return (
-      <Page title="Search for auth user" alwaysRender>
+      <Page title="Search for external user" alwaysRender>
         <AuthUserSearch handleSearch={handleSearch} handleChange={handleChange} user={user} />
       </Page>
     )

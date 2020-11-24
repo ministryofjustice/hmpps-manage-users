@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.manageusers.pages;
 import geb.Page
 
 public class AuthUserAddRolePage extends Page {
-    static url = "/maintain-auth-users/"
+    static url = "/maintain-external-users/"
 
     static at = {
         browser.currentUrl.contains(url)

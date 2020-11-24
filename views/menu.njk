@@ -28,8 +28,8 @@
         {% if hasMaintainNomisRolesAccess %}
           <div class="govuk-grid-column-one-third">
             <h3 class="govuk-heading-m">
-              <a href="/maintain-roles" id="maintain_roles_link" title="Maintain user roles" class="govuk-link">
-                Maintain user roles
+              <a href="/maintain-roles" id="maintain_roles_link" class="govuk-link">
+                Maintain DPS users
               </a>
             </h3>
           </div>
@@ -37,20 +37,17 @@
         {% if hasMaintainAuthUsers %}
           <div class="govuk-grid-column-one-third">
             <h3 class="govuk-heading-m">
-              <a href="/maintain-auth-users" id="maintain_auth_users_link" title="Maintain auth users"
-                 class="govuk-link">
-                Maintain auth users
+              <a href="/maintain-external-users" id="maintain_auth_users_link" class="govuk-link">
+                Maintain external users
               </a>
             </h3>
-            <p class="govuk-body">Maintain users that do not exist in NOMIS, only in auth.</p>
           </div>
           <div class="govuk-grid-column-one-third">
             <h3 class="govuk-heading-m">
-              <a href="/create-auth-user" id="create_auth_user_link" title="Create auth users" class="govuk-link">
-                Create auth users
+              <a href="/create-external-user" id="create_auth_user_link" class="govuk-link">
+                Create external users
               </a>
             </h3>
-            <p class="govuk-body">Create user in auth (not in NOMIS).</p>
           </div>
         {% endif %}
 

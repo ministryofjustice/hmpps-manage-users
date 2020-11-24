@@ -3,11 +3,11 @@ package uk.gov.justice.digital.hmpps.manageusers.pages;
 import geb.Page
 
 public class AuthUserSearchPage extends Page {
-    static url = "/maintain-auth-users"
+    static url = "/maintain-external-users"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for auth user')
+        headingText.contains('Search for external user')
     }
 
     static content = {

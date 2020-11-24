@@ -4,7 +4,7 @@ import geb.Page
 import org.openqa.selenium.Keys
 
 public class AuthUserAddGroupPage extends Page {
-    static url = "/manage-auth-users/"
+    static url = "/manage-external-users/"
 
     static at = {
         browser.currentUrl.contains(url)

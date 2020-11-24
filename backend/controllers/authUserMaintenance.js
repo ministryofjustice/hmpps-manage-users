@@ -19,7 +19,7 @@ const handleClientError = async (apiCall, defaultField, res, errorMapping) => {
 const authUserMaintenanceFactory = (oauthApi) => {
   const getUser = async (req, res) => {
     const { username } = req.query
-    log.debug('Performing get auth user')
+    log.debug('Performing get external user')
 
     await handleClientError(
       async () => {
@@ -33,7 +33,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const search = async (req, res) => {
     const { nameFilter } = req.query
-    log.debug('Performing auth user search')
+    log.debug('Performing external user search')
 
     if (!nameFilter) {
       res.status(400)
@@ -61,7 +61,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const roles = async (req, res) => {
     const { username } = req.query
-    log.debug('Performing auth user roles query')
+    log.debug('Performing external user roles query')
 
     if (!username) {
       res.status(400)
@@ -81,7 +81,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const groups = async (req, res) => {
     const { username } = req.query
-    log.debug('Performing auth user groups query')
+    log.debug('Performing external user groups query')
 
     if (!username) {
       res.status(400)
@@ -178,7 +178,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
   }
 
   const assignableGroups = async (req, res) => {
-    log.debug('Performing auth user assignable groups')
+    log.debug('Performing external user assignable groups')
 
     await handleClientError(
       async () => {
@@ -192,7 +192,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const createUser = async (req, res) => {
     const { username } = req.query
-    log.debug('Performing create auth users')
+    log.debug('Performing create external users')
 
     await handleClientError(
       async () => {
@@ -207,7 +207,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const enableUser = async (req, res) => {
     const { username } = req.query
-    log.debug(`Enabling auth user ${username}`)
+    log.debug(`Enabling external user ${username}`)
 
     await handleClientError(
       async () => {
@@ -221,7 +221,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const disableUser = async (req, res) => {
     const { username } = req.query
-    log.debug(`Disabling auth user ${username}`)
+    log.debug(`Disabling external user ${username}`)
 
     await handleClientError(
       async () => {
@@ -235,7 +235,7 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
   const amendUser = async (req, res) => {
     const { username } = req.query
-    log.debug(`Amending auth user ${username}`)
+    log.debug(`Amending external user ${username}`)
 
     await handleClientError(
       async () => {

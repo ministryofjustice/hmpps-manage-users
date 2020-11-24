@@ -20,7 +20,7 @@ function searchForUser() {
   return results
 }
 
-context('Auth User functionality', () => {
+context('External user functionality', () => {
   before(() => {
     cy.clearCookies()
   })
@@ -94,7 +94,7 @@ context('Auth User functionality', () => {
 
     cy.task('stubAuthUsernameSearch')
     cy.task('stubAuthAssignableRoles', [])
-    cy.visit('/manage-auth-users/AUTH_RO_USER_TEST/select-roles')
+    cy.visit('/manage-external-users/AUTH_RO_USER_TEST/select-roles')
     const addRole = AuthUserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
   })

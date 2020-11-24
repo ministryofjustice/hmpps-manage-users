@@ -58,7 +58,7 @@ class AuthUserCreateContainer extends Component {
       })
       resetErrorDispatch()
       // @ts-ignore
-      window.location = `/manage-auth-users/${username}`
+      window.location = `/manage-external-users/${username}`
     } catch (error) {
       handleAxiosErrorDispatch(error)
     }
@@ -69,7 +69,7 @@ class AuthUserCreateContainer extends Component {
     const { groups } = this.state
 
     return (
-      <Page title="Create auth users" alwaysRender>
+      <Page title="Create external users" alwaysRender>
         <AuthUserCreate
           handleCreate={this.handleCreate}
           handleChange={this.handleChange}
