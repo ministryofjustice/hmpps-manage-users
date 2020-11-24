@@ -257,9 +257,8 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
         prisonApi.stubGetAgencyDetails(Caseload.LEI)
         prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
-        roleOptionUSER_ADMIN.click()
-        prisonApi.stubAddNWEBRole(UserAccount.API_TEST_USER.username, 'USER_ADMIN')
-        addButton.click()
+        prisonApi.stubAddNWEBRole(UserAccount.API_TEST_USER.username)
+        choose("USER_ADMIN")
 
         then: "I am returned to the StaffRoleProfile page with an updated role list"
         at StaffRoleProfilePage

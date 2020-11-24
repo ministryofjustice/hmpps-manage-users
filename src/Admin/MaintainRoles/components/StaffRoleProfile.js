@@ -3,8 +3,9 @@ import PropTypes from 'prop-types'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { withRouter } from 'react-router'
 import Link from '@govuk-react/link'
+import Button from '@govuk-react/button'
 import { Link as RouterLink } from 'react-router-dom'
-import { roleListType } from '../../../types'
+import { contextUserType, roleListType } from '../../../types'
 import ButtonContainer from '../../../Components/ButtonContainer/ButtonContainer'
 
 class StaffRoleProfile extends Component {
@@ -15,7 +16,7 @@ class StaffRoleProfile extends Component {
   }
 
   render() {
-    const { roleList, history, handleAdd, handleRemove } = this.props
+    const { roleList, history, contextUser, handleRemove } = this.props
     const results = roleList.map((a) => (
       <tr key={a.roleCode}>
         <td className="row-gutters">{a.roleName}</td>
@@ -60,16 +61,9 @@ class StaffRoleProfile extends Component {
                 </table>
               </div>
               <ButtonContainer>
-                <button
-                  type="button"
-                  className="button"
-                  id="add-button"
-                  onClick={(event) => {
-                    handleAdd(event, history)
-                  }}
-                >
+                <Button id="add-button" as={Link} href={`/manage-dps-users/${contextUser.username}/select-roles`}>
                   Add another role
-                </button>
+                </Button>
                 <Link as={RouterLink} className="link padding-left" title="Search for a user" to="/maintain-roles">
                   Search for a user
                 </Link>
@@ -85,8 +79,8 @@ class StaffRoleProfile extends Component {
 StaffRoleProfile.propTypes = {
   history: ReactRouterPropTypes.history.isRequired,
   roleList: roleListType.isRequired,
+  contextUser: contextUserType.isRequired,
   handleRemove: PropTypes.func.isRequired,
-  handleAdd: PropTypes.func.isRequired,
 }
 
 const StaffRoleProfileWithRouter = withRouter(StaffRoleProfile)

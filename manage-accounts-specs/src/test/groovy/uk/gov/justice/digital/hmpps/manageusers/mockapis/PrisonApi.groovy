@@ -206,13 +206,13 @@ class PrisonApi extends WireMockRule {
                                 .withStatus(200)))
     }
 
-    void stubAddNWEBRole(String username, String roleCode) {
+    void stubAddNWEBRole(String username) {
 
         this.stubFor(
-                put(urlPathEqualTo("/api/users/${username}/caseload/NWEB/access-role/${roleCode}"))
+                post(urlPathEqualTo("/api/users/${username}/access-role"))
                         .willReturn(
                         aResponse()
-                                .withStatus(201)))
+                                .withStatus(200)))
     }
 
 

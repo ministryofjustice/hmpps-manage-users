@@ -65,13 +65,6 @@ class StaffRoleProfileContainer extends Component {
     }
   }
 
-  handleAdd = (event, history) => {
-    const { setRoleFilterDispatch, contextUser } = this.props
-
-    setRoleFilterDispatch('')
-    history.push(`/maintain-roles/${contextUser.username}/add-role`)
-  }
-
   async loadUser(username) {
     const { contextUserDispatch, handleError } = this.props
 
@@ -94,7 +87,7 @@ class StaffRoleProfileContainer extends Component {
 
     return (
       <Page title={`${formattedName}'s roles`}>
-        <StaffRoleProfile handleRemove={this.handleRemove} handleAdd={this.handleAdd} {...this.props} />
+        <StaffRoleProfile handleRemove={this.handleRemove} {...this.props} />
       </Page>
     )
   }
