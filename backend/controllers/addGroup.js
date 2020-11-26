@@ -11,7 +11,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, reactUrl, manageUrl, ma
     const staffUrl = `${manageUrl}/${username}`
 
     try {
-      const [assignableGroups, user, userGroups] = await getUserAndGroups(res.locals, username)
+      const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username)
       const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
       const groupDropdownValues = assignableGroups
         .filter((g) => !userGroupsCodes.has(g.groupCode))

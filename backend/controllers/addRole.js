@@ -22,7 +22,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, reactUrl, manageUrl, mai
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
     try {
-      const [assignableRoles, user] = await getUserAndRoles(res.locals, username, hasAdminRole)
+      const [user, assignableRoles] = await getUserAndRoles(res.locals, username, hasAdminRole)
       const roleDropdownValues = assignableRoles.map((r) => ({
         text: r.roleName,
         value: r.roleCode,

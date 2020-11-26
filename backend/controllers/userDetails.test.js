@@ -16,6 +16,7 @@ describe('user detail factory', () => {
     '/maintain-external-users',
     '/manage-external-users',
     'Maintain external users',
+    true,
     logError
   )
 
@@ -53,6 +54,9 @@ describe('user detail factory', () => {
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
       hasMaintainAuthUsers: false,
+      showEnableDisable: true,
+      showExtraUserDetails: true,
+      showGroups: true,
       errors: undefined,
     })
   })
@@ -91,8 +95,104 @@ describe('user detail factory', () => {
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
       hasMaintainAuthUsers: true,
+      showEnableDisable: true,
+      showExtraUserDetails: true,
+      showGroups: true,
       errors: undefined,
     })
+  })
+
+  it('should pass through show fields if not set', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const dpsUserDetails = userDetailsFactory(
+      getUserRolesAndGroupsApi,
+      removeRoleApi,
+      undefined,
+      undefined,
+      undefined,
+      '/maintain-external-users',
+      '/manage-external-users',
+      'Maintain external users',
+      false,
+      logError
+    )
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const render = jest.fn()
+    await dpsUserDetails.index(req, { render })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      maintainTitle: 'Maintain external users',
+      maintainUrl: '/maintain-external-users',
+      staff: {
+        firstName: 'Billy',
+        lastName: 'Bob',
+        name: 'Billy Bob',
+        username: 'BOB',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      staffUrl: '/manage-external-users/joe',
+      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      hasMaintainAuthUsers: false,
+      showEnableDisable: false,
+      showExtraUserDetails: false,
+      showGroups: false,
+      errors: undefined,
+    })
+  })
+
+  it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const locals = { user: { maintainAuthUsers: true } }
+    await userDetails.index(req, { render: jest.fn(), locals })
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', false)
+  })
+
+  it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const locals = { user: { maintainAccessAdmin: true } }
+    await userDetails.index(req, { render: jest.fn(), locals })
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', true)
   })
 
   describe('remove role', () => {

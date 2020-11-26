@@ -1,14 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import ReactRouterPropTypes from 'react-router-prop-types'
 import { withRouter } from 'react-router'
+import { BLACK, GREY_3 } from 'govuk-colours'
+import Link from '@govuk-react/link'
+import Button from '@govuk-react/button'
 import { UserSearch } from './UserSearch'
 import { properCaseName } from '../../../stringUtils'
 import PreviousNextNavigation from '../../../PreviousNextNavigation'
 import { roleFilterListType, userListType } from '../../../types'
 
 const UserSearchResults = (props) => {
-  const { pageSize, pageNumber, totalRecords, userList, handlePageAction, handleEdit, history } = props
+  const { pageSize, pageNumber, totalRecords, userList, handlePageAction } = props
   const pagination = { perPage: pageSize, pageNumber }
   const results = userList.map((a, index) => {
     const formattedName = `${properCaseName(a.lastName)}, ${properCaseName(a.firstName)}`
@@ -19,17 +21,17 @@ const UserSearchResults = (props) => {
         <td className="row-gutters width5em">{a.activeCaseLoadId}</td>
         <td className="row-gutters width5em">{a.active ? 'Yes' : 'No'}</td>
         <td className="row-gutters width5em">
-          <button
-            type="button"
-            className="button greyButtonNoMinWidth"
+          <Button
+            buttonColour={GREY_3}
+            buttonTextColour={BLACK}
+            mb={0}
             id={`edit-button-${a.username}`}
             value={index}
-            onClick={(event) => {
-              handleEdit(event, history)
-            }}
+            as={Link}
+            href={`/manage-dps-users/${a.username}`}
           >
             Edit
-          </button>
+          </Button>
         </td>
       </tr>
     )
@@ -86,13 +88,11 @@ UserSearchResults.propTypes = {
   handleRoleFilterChange: PropTypes.func.isRequired,
   handleNameFilterChange: PropTypes.func.isRequired,
   handleSearch: PropTypes.func.isRequired,
-  handleEdit: PropTypes.func.isRequired,
   handlePageAction: PropTypes.func.isRequired,
   resetErrorDispatch: PropTypes.func.isRequired,
   roleFilterList: roleFilterListType.isRequired,
   userList: userListType.isRequired,
   displayBack: PropTypes.func.isRequired,
-  history: ReactRouterPropTypes.history.isRequired,
   pageNumber: PropTypes.number.isRequired,
   pageSize: PropTypes.number.isRequired,
   totalRecords: PropTypes.number.isRequired,

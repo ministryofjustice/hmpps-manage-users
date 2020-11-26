@@ -9,15 +9,17 @@ const userDetailsFactory = (
   reactUrl,
   manageUrl,
   maintainTitle,
+  showExtraUserDetails,
   logError
 ) => {
   const index = async (req, res) => {
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
+    const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
     try {
-      const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username)
+      const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
       res.render('userDetails.njk', {
         maintainTitle,
         maintainUrl: reactUrl,
@@ -27,6 +29,9 @@ const userDetailsFactory = (
         groups,
         hasMaintainAuthUsers,
         errors: req.flash('errors'),
+        showEnableDisable: Boolean(enableUserApi && disableUserApi),
+        showGroups: Boolean(removeGroupApi),
+        showExtraUserDetails,
       })
     } catch (error) {
       logError(req.originalUrl, error, serviceUnavailableMessage)
