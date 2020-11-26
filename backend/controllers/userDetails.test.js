@@ -52,6 +52,45 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      hasMaintainAuthUsers: false,
+      errors: undefined,
+    })
+  })
+
+  it('should pass through hasMaintainAuthUsers to userDetail render', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const render = jest.fn()
+    await userDetails.index(req, { render, locals: { user: { maintainAuthUsers: true } } })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      maintainTitle: 'Maintain external users',
+      maintainUrl: '/maintain-external-users',
+      staff: {
+        firstName: 'Billy',
+        lastName: 'Bob',
+        name: 'Billy Bob',
+        username: 'BOB',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      staffUrl: '/manage-external-users/joe',
+      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      hasMaintainAuthUsers: true,
       errors: undefined,
     })
   })
