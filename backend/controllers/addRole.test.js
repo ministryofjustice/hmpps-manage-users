@@ -17,8 +17,8 @@ describe('select roles factory', () => {
     it('should call addRole render', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn() }
       getUserAndRoles.mockResolvedValue([
-        [{ roleName: 'name', roleCode: 'code' }],
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [{ roleName: 'name', roleCode: 'code' }],
       ])
 
       const render = jest.fn()
@@ -35,7 +35,7 @@ describe('select roles factory', () => {
 
     it('should copy any flash errors over', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
-      getUserAndRoles.mockResolvedValue([[], { username: 'BOB', firstName: 'Billy', lastName: 'Bob' }])
+      getUserAndRoles.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, []])
 
       const render = jest.fn()
       await addRole.index(req, { render })

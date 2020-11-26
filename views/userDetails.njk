@@ -24,69 +24,86 @@
         <table class="govuk-table">
           <tbody class="govuk-table__body">
           <tr class="govuk-table__row user-enabled-status">
-            {% if staff.enabled %}
-              <td class="govuk-table__cell">
-                {{ govukTag({
-                  text: "Active account",
-                  classes: "govuk-tag--turquoise",
-                  attributes: { "data-qa": "enabled" }
-                }) }}
-              </td>
-              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                <a href="{{ staffUrl }}/deactivate" class="govuk-link" data-qa="enable-button">Deactivate account</a>
-              </td>
-            {% else %}
-              <td class="govuk-table__cell">
-                {{ govukTag({
-                  text: "Inactive account",
-                  classes: "govuk-tag--pink",
-                  attributes: { "data-qa": "enabled" }
-                }) }}
-              </td>
-              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
-              </td>
+            {% if showEnableDisable %}
+              {% if staff.enabled %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: "Active account",
+                    classes: "govuk-tag--turquoise",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                  <a href="{{ staffUrl }}/deactivate" class="govuk-link" data-qa="enable-button">Deactivate account</a>
+                </td>
+              {% else %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: "Inactive account",
+                    classes: "govuk-tag--pink",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                  <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
+                </td>
+              {% endif %}
             {% endif %}
           </tr>
           </tbody>
         </table>
 
-        {{ govukTable({
-          caption: "Account details",
-          rows: [
-            [
-              {text: "Username"},
-              {text: staff.username},
-              {text: ''}
-            ],
-            [
-              {text: "Email"},
-              {text: staff.email},
-              {
-                html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-                classes: 'govuk-!-width-one-quarter',
-                format: "numeric"
-              }
-            ],
-            [
-              {text: "Verified"},
-              {text: staff.verified | formatYesNo()},
-              {text: ''}
-            ],
-            [
-              {text: "Locked"},
-              {text: staff.locked | formatYesNo()},
-              {text: ''}
-            ],
+        {% if showExtraUserDetails %}
+          {{ govukTable({
+            caption: "Account details",
+            rows: [
+              [
+                {text: "Username"},
+                {text: staff.username},
+                {text: ''}
+              ],
+              [
+                {text: "Email"},
+                {text: staff.email},
+                {
+                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+                  classes: 'govuk-!-width-one-quarter',
+                  format: "numeric"
+                }
+              ],
+              [
+                {text: "Verified"},
+                {text: staff.verified | formatYesNo()},
+                {text: ''}
+              ],
+              [
+                {text: "Locked"},
+                {text: staff.locked | formatYesNo()},
+                {text: ''}
+              ],
 
-            [
-              {text: "Last logged in"},
-              {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
-              {text: ''}
-            ]
-          ],
-          attributes: { "data-qa": "user-details" }
-        }) }}
+              [
+                {text: "Last logged in"},
+                {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
+                {text: ''}
+              ]
+            ],
+            attributes: { "data-qa": "user-details" }
+          }) }}
+        {% else %}
+          {{ govukTable({
+            caption: "Account details",
+            rows: [
+              [
+                {text: "Username"},
+                {text: staff.username},
+                {text: ''}
+              ]
+            ],
+            attributes: { "data-qa": "user-details" }
+          }) }}
+        {% endif %}
+
         {% set rows = [] %}
         {% for userRole in roles %}
           {% set roleLink = '<a href="' + staffUrl + '/roles/' + userRole.roleCode + '/remove" class="govuk-link" data-qa="remove-button-' + userRole.roleCode +'">Remove role</a>' %}
@@ -110,37 +127,42 @@
           attributes: { "data-qa": "add-role-button" }
         }) }}
 
-        {% set rows = [] %}
-        {% for userGroup in groups %}
-          {% if hasMaintainAuthUsers %}
-            {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
-            {% set rows = (rows.push([
-              { text: userGroup.groupName },
-              { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-            ]), rows) %}
-          {% else %}
-            {% set rows = (rows.push([
-              { text: userGroup.groupName },
-              { text: "" }
-            ]), rows) %}
-          {% endif %}
-        {% endfor %}
+        {% if showGroups %}
+          {% set rows = [] %}
+          {% for userGroup in groups %}
+            {% if hasMaintainAuthUsers %}
+              {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
+              {% set rows = (rows.push([
+                { text: userGroup.groupName },
+                { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+              ]), rows) %}
+            {% else %}
+              {% set rows = (rows.push([
+                { text: userGroup.groupName },
+                { text: "" }
+              ]), rows) %}
+            {% endif %}
+          {% endfor %}
 
-        {{ govukTable({
-          caption: "Groups",
-          rows: rows,
-          attributes: { "data-qa": "user-groups" }
-        }) }}
-
-        {% if hasMaintainAuthUsers %}
-          {{ govukButton({
-            text: "Add another group",
-            element: 'a',
-            href: staffUrl + '/select-group',
-            classes: "govuk-button",
-            attributes: { "data-qa": "add-group-button" }
+          {{ govukTable({
+            caption: "Groups",
+            rows: rows,
+            attributes: { "data-qa": "user-groups" }
           }) }}
+
+          {% if hasMaintainAuthUsers %}
+            {{ govukButton({
+              text: "Add another group",
+              element: 'a',
+              href: staffUrl + '/select-group',
+              classes: "govuk-button",
+              attributes: { "data-qa": "add-group-button" }
+            }) }}
+          {% endif %}
         {% endif %}
+        <p class="govuk-body">
+          <a href="{{ maintainUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
+        </p>
       </div>
     </div>
   </div>

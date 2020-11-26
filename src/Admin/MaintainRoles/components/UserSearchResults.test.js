@@ -52,7 +52,6 @@ describe('User search Results component', () => {
         roleFilterListDispatch={jest.fn()}
         handleRoleFilterChange={jest.fn()}
         handleNameFilterChange={jest.fn()}
-        handleEdit={jest.fn()}
         handleSearch={jest.fn()}
         {...props}
       />
@@ -65,7 +64,6 @@ describe('User search Results component', () => {
 
   it('should handle updates', async () => {
     const handleSubmitMock = jest.fn()
-    const handleEditMock = jest.fn()
     const handleNameFilterMock = jest.fn()
     const handleRoleSelectMock = jest.fn()
     const component = shallow(
@@ -97,7 +95,6 @@ describe('User search Results component', () => {
         roleFilterListDispatch={jest.fn()}
         handleRoleFilterChange={handleRoleSelectMock}
         handleNameFilterChange={handleNameFilterMock}
-        handleEdit={handleEditMock}
         handleSearch={handleSubmitMock}
         {...props}
       />

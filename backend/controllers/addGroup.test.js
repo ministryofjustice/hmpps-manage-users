@@ -17,8 +17,8 @@ describe('select groups factory', () => {
     it('should call addGroup render', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
-        [{ groupName: 'name', groupCode: 'code' }],
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [{ groupName: 'name', groupCode: 'code' }],
         [{ groupName: 'name2', groupCode: 'code2' }],
       ])
 
@@ -40,8 +40,8 @@ describe('select groups factory', () => {
     it('should filter out existing groups', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
-        [{ groupName: 'name', groupCode: 'code' }],
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [{ groupName: 'name', groupCode: 'code' }],
         [
           { groupName: 'name', groupCode: 'code' },
           { groupName: 'name2', groupCode: 'code2' },
@@ -62,7 +62,7 @@ describe('select groups factory', () => {
 
     it('should copy any flash errors over', async () => {
       const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
-      getUserAndGroups.mockResolvedValue([[], { username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, []])
+      getUserAndGroups.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, [], []])
 
       const render = jest.fn()
       await addGroup.index(req, { render })
