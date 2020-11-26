@@ -76,6 +76,47 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         then: 'I remove the Site 1 - Group 3 from the user'
         oauthApi.stubAuthRemoveGroup()
         groupRows[0].find("[data-qa='remove-button-SITE_1_GROUP_1']").click()
+    }
+
+    def "add and remove a group not available for group managers"() {
+        def MaintainAuthUsersRole = [roleId: -1, roleCode: 'AUTH_GROUP_MANAGER']
+        oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
+
+        given: "I have navigated to the Maintain External user search page"
+        fixture.loginWithoutStaffRoles(ITAG_USER)
+        prisonApi.stubGetRoles()
+        to AuthUserSearchPage
+
+        when: "I perform a search by username"
+        oauthApi.stubAuthUsernameSearch()
+        search('sometext')
+
+        then: "The external user search results page is displayed"
+        at AuthUserSearchResultsPage
+        assert waitFor { rows.size() == 2 }
+        user.value() == 'sometext'
+
+        when: "I choose a user to edit"
+        oauthApi.stubAuthUserRoles()
+        oauthApi.stubAuthUserGroups()
+        rows[1].find("#edit-button-AUTH_ADM").click()
+
+        then: "I can see the user details"
+        at AuthUserPage
+        headingText == 'Auth Adm'
+        userRows[0].find("td", 1).text() == 'AUTH_ADM'
+        userRows[1].find("td", 1).text() == 'auth_test2@digital.justice.gov.uk'
+
+        groupRows.size() == 2
+        groupRows[0].find("td", 0).text() == 'Site 1 - Group 1'
+
+        oauthApi.stubAuthAllGroups()
+
+        then: 'The add group button is missing'
+        assert !addGroupButton.displayed
+
+        then: 'The remove group button is missing'
+        assert !groupRows[0].find("[data-qa='remove-button-SITE_1_GROUP_1']").displayed
 
     }
 

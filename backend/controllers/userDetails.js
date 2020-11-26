@@ -14,6 +14,7 @@ const userDetailsFactory = (
   const index = async (req, res) => {
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
+    const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
 
     try {
       const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username)
@@ -24,6 +25,7 @@ const userDetailsFactory = (
         staffUrl,
         roles,
         groups,
+        hasMaintainAuthUsers,
         errors: req.flash('errors'),
       })
     } catch (error) {

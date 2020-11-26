@@ -13,7 +13,7 @@ public class AuthUserPage extends AuthUserSearchPage {
         roleRows(required: false) { $('[data-qa="user-roles"] tbody tr') }
         groupRows(required: false) { $('[data-qa="user-groups"] tbody tr') }
         addRoleButton { $('[data-qa="add-role-button"]')}
-        addGroupButton { $('[data-qa="add-group-button"]')}
+        addGroupButton(required: false) { $('[data-qa="add-group-button"]')}
         enableButton { $('[data-qa="enable-button"]')}
         enabled { $('[data-qa="enabled"]')}
         amendLink(required: false) { $('[data-qa="amend-link"]')}

@@ -19,7 +19,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, reactUrl, manageUrl, mai
   const index = async (req, res) => {
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
-    const hasAdminRole = res.locals && res.locals.user && res.locals.user.maintainAccessAdmin
+    const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
     try {
       const [assignableRoles, user] = await getUserAndRoles(res.locals, username, hasAdminRole)
