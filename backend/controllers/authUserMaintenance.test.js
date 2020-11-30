@@ -38,17 +38,7 @@ describe('External user maintenance controller', () => {
   })
 
   describe('search', () => {
-    it('should call getUser if no @ in query', async () => {
-      const response = { username: 'bob' }
-
-      oauthApi.getUser.mockReturnValueOnce(response)
-
-      await search({ query: { nameFilter: 'bob' } }, res)
-
-      expect(res.json).toBeCalledWith([response])
-    })
-
-    it('should call userSearch if @ in query', async () => {
+    it('should call userSearch', async () => {
       const response = [{ username: 'bob' }, { username: 'joe' }]
 
       oauthApi.userSearch.mockReturnValueOnce(response)
@@ -65,9 +55,7 @@ describe('External user maintenance controller', () => {
       })
 
       it('should return json error if no results', async () => {
-        expect(res.json).toBeCalledWith([
-          { targetName: 'user', text: 'No accounts for email address bob@joe.com found' },
-        ])
+        expect(res.json).toBeCalledWith([{ targetName: 'user', text: 'No results for bob@joe.com found' }])
       })
       it('show return not found status', () => {
         expect(res.status).toBeCalledWith(404)
@@ -91,7 +79,7 @@ describe('External user maintenance controller', () => {
       const response = { status: 419, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       beforeEach(async () => {
-        oauthApi.getUser.mockImplementation(() => {
+        oauthApi.userSearch.mockImplementation(() => {
           const error = new Error('something went wrong')
           // @ts-ignore
           error.response = response
@@ -112,7 +100,7 @@ describe('External user maintenance controller', () => {
       const response = { status: 500, body: { error: 'Not Found', error_description: 'Some problem occurred' } }
 
       const e = new Error('something went wrong')
-      oauthApi.getUser.mockImplementation(() => {
+      oauthApi.userSearch.mockImplementation(() => {
         const error = new Error('something went wrong')
         // @ts-ignore
         error.response = response
@@ -166,7 +154,7 @@ describe('External user maintenance controller', () => {
         throw error
       })
 
-      await expect(search({ query: { nameFilter: 'joe' } }, res)).rejects.toThrow(e)
+      await expect(getUser({ query: { nameFilter: 'joe' } }, res)).rejects.toThrow(e)
     })
   })
 

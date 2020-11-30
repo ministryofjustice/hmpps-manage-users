@@ -45,6 +45,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         user.value() == 'sometext'
 
         when: "I choose a user to edit"
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
         rows[1].find("#edit-button-AUTH_ADM").click()
@@ -97,6 +98,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         user.value() == 'sometext'
 
         when: "I choose a user to edit"
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
         rows[1].find("#edit-button-AUTH_ADM").click()
@@ -142,7 +144,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def email = "${RandomStringUtils.randomAlphanumeric(6)}.noone@justice.gov.uk"
 
         oauthApi.stubAuthCreateUser()
-        oauthApi.stubAuthUsernameSearch()
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
         createUser(username, email, 'first', 'last', '')
@@ -178,7 +180,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         def email = "${RandomStringUtils.randomAlphanumeric(6)}.noone@justice.gov.uk"
 
         oauthApi.stubAuthCreateUser()
-        oauthApi.stubAuthUsernameSearch()
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
         createUser(username, email, 'first', 'last', 'Site 1 - Group 1')
@@ -199,7 +201,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
-        oauthApi.stubAuthUsernameSearch()
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
 
@@ -208,7 +210,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         at AuthUserPage
         enabled.text() == 'ACTIVE ACCOUNT'
         oauthApi.stubAuthUserDisable()
-        oauthApi.stubAuthUsernameSearch(false)
+        oauthApi.stubAuthGetUsername(false)
         enableButton.click()
 
         then:
@@ -226,7 +228,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
-        oauthApi.stubAuthUsernameSearch()
+        oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
 

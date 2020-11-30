@@ -198,7 +198,7 @@ class OauthApi extends WireMockRule {
                                 .withHeader('Content-Type', 'application/json')))
     }
 
-    void stubAuthUsernameSearch(enabled = true) {
+    void stubAuthGetUsername(enabled = true) {
         this.stubFor(
                 get(urlPathMatching("/auth/api/authuser/.*"))
                         .willReturn(
@@ -208,19 +208,19 @@ class OauthApi extends WireMockRule {
                                 .withBody(AuthUserSearchResponse.getUsernameResponse(enabled))))
     }
 
-    void stubAuthEmailSearch() {
+    void stubAuthUsernameSearch(enabled = true) {
         this.stubFor(
-                get(urlPathMatching("/auth/api/authuser"))
+                get(urlPathMatching("/auth/api/authuser/search"))
                         .willReturn(
                         aResponse()
                                 .withStatus(200)
                                 .withHeader('Content-Type', 'application/json')
-                                .withBody(AuthUserSearchResponse.getEmailResponse())))
+                                .withBody(AuthUserSearchResponse.usernameSearchResponse(enabled))))
     }
 
     void stubAuthEmailSearchNoUsersFound() {
         this.stubFor(
-                get(urlPathMatching("/auth/api/authuser"))
+                get(urlPathMatching("/auth/api/authuser/search"))
                         .willReturn(
                         aResponse()
                                 .withStatus(200)

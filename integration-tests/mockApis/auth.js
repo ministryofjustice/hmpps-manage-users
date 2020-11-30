@@ -134,7 +134,7 @@ const stubUnverifiedEmail = (username) =>
     },
   })
 
-const stubAuthUsernameSearch = (enabled = true) =>
+const stubAuthGetUsername = (enabled = true) =>
   getFor({
     urlPattern: '/auth/api/authuser/[^/]*',
     body: {
@@ -148,29 +148,61 @@ const stubAuthUsernameSearch = (enabled = true) =>
     },
   })
 
+const stubAuthUsernameSearch = (enabled = true) =>
+  getFor({
+    urlPath: '/auth/api/authuser/search',
+    body: {
+      content: [
+        {
+          username: 'AUTH_ADM',
+          email: 'auth_test2@digital.justice.gov.uk',
+          enabled,
+          locked: false,
+          verified: false,
+          firstName: 'Auth',
+          lastName: 'Adm',
+        },
+      ],
+      pageable: {
+        offset: 0,
+        pageNumber: 0,
+        pageSize: 10,
+      },
+      totalElements: 1,
+    },
+  })
+
 const stubAuthEmailSearch = () =>
   getFor({
-    urlPath: '/auth/api/authuser',
-    body: [
-      {
-        username: 'AUTH_ADM',
-        email: 'auth_test2@digital.justice.gov.uk',
-        enabled: true,
-        locked: false,
-        verified: false,
-        firstName: 'Auth',
-        lastName: 'Adm',
+    urlPath: '/auth/api/authuser/search',
+    body: {
+      content: [
+        {
+          username: 'AUTH_ADM',
+          email: 'auth_test2@digital.justice.gov.uk',
+          enabled: true,
+          locked: false,
+          verified: false,
+          firstName: 'Auth',
+          lastName: 'Adm',
+        },
+        {
+          username: 'AUTH_EXPIRED',
+          email: 'auth_test2@digital.justice.gov.uk',
+          enabled: true,
+          locked: false,
+          verified: false,
+          firstName: 'Auth',
+          lastName: 'Expired',
+        },
+      ],
+      pageable: {
+        offset: 0,
+        pageNumber: 0,
+        pageSize: 10,
       },
-      {
-        username: 'AUTH_EXPIRED',
-        email: 'auth_test2@digital.justice.gov.uk',
-        enabled: true,
-        locked: false,
-        verified: false,
-        firstName: 'Auth',
-        lastName: 'Expired',
-      },
-    ],
+      totalElements: 2,
+    },
   })
 
 const stubAuthUserGroups = () =>
@@ -257,6 +289,7 @@ module.exports = {
   stubUserMeRoles,
   stubEmail,
   redirect,
+  stubAuthGetUsername,
   stubAuthUsernameSearch,
   stubAuthEmailSearch,
   stubAuthUserRoles,
