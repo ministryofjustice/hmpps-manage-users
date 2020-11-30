@@ -49,9 +49,9 @@ context('External user functionality', () => {
   it('Should add and remove a role from a user', () => {
     const results = searchForUser()
 
+    cy.task('stubAuthGetUsername')
     cy.task('stubAuthUserRoles')
     cy.task('stubAuthUserGroups')
-    cy.server()
     results.edit('AUTH_ADM')
 
     const userPage = AuthUserPage.verifyOnPage('Auth Adm')
@@ -92,7 +92,7 @@ context('External user functionality', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
-    cy.task('stubAuthUsernameSearch')
+    cy.task('stubAuthGetUsername')
     cy.task('stubAuthAssignableRoles', [])
     cy.visit('/manage-external-users/AUTH_RO_USER_TEST/select-roles')
     const addRole = AuthUserAddRolePage.verifyOnPage()

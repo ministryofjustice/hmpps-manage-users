@@ -3,12 +3,25 @@ const axios = require('axios')
 const querystring = require('querystring')
 const logger = require('../log')
 const errorStatusCode = require('../error-status-code')
+const contextProperties = require('../contextProperties')
 
 const AuthClientErrorName = 'AuthClientError'
 const AuthClientError = (message) => ({ name: AuthClientErrorName, message, stack: new Error().stack })
 
-const encodeQueryString = (input) => encodeURIComponent(input)
 const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+
+const processPageResponse = (context) => (response) => {
+  if (response.body.pageable) {
+    const headers = {
+      'total-records': (response.body.totalElements || 0).toString(),
+      'page-offset': (response.body.pageable.offset || 0).toString(),
+      'page-limit': (response.body.pageable.pageSize || 20).toString(),
+    }
+    contextProperties.setResponsePagination(context, headers)
+    return response.body.content
+  }
+  return response.body
+}
 
 /**
  * Return an oauthApi built using the supplied configuration.
@@ -30,7 +43,10 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const createUser = (context, username, user) => put(context, `/api/authuser/${username}`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups?children=false`)
-  const userSearch = (context, { nameFilter }) => get(context, `/api/authuser?email=${encodeQueryString(nameFilter)}`)
+  const userSearch = (context, { nameFilter, role, group, page, size }) => {
+    const query = querystring.stringify({ name: nameFilter, role, group, page, size })
+    return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
+  }
   const addUserRoles = (context, { username, roles }) => post(context, `/api/authuser/${username}/roles`, roles)
   const removeUserRole = (context, { username, role }) => del(context, `/api/authuser/${username}/roles/${role}`)
   const addUserGroup = (context, { username, group }) => put(context, `/api/authuser/${username}/groups/${group}`)
