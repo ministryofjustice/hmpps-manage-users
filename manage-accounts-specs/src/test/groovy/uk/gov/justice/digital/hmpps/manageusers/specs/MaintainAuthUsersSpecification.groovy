@@ -131,11 +131,11 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         to AuthUserCreatePage
 
         when: "I create a user"
-        createUser('user', 'email@joe', 'first', 'last', '--')
+        createUser('user', 'email@joe', 'first', 'last', '')
 
         then: "I am shown validation errors"
         at AuthUserCreatePage
-        waitFor { errors == 'There is a problem\nUsername must be 6 characters or more\nEnter an email address in the correct format, like first.last@justice.gov.uk'}
+        waitFor { errorSummary.text() == 'There is a problem\nUsername must be 6 characters or more\nEnter an email address in the correct format, like first.last@justice.gov.uk'}
 
         when: "I have another go at creating a user"
         def username = RandomStringUtils.randomAlphanumeric(6)
@@ -145,7 +145,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUsernameSearch()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
-        createUser(username, email, 'first', 'last', '--')
+        createUser(username, email, 'first', 'last', '')
 
         then: "My user is created"
         at AuthUserPage
@@ -167,11 +167,11 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         to AuthUserCreatePage
 
         when: "I create a user"
-        createUser('userdwdw', 'email@digital.justice.gov.uk', 'first', 'last', '--')
+        createUser('userdwdw', 'email@digital.justice.gov.uk', 'first', 'last', '')
 
         then: "I am shown validation errors"
         at AuthUserCreatePage
-        waitFor { errors == 'There is a problem\nSelect a group'}
+        waitFor { errorSummary.text() == 'There is a problem\nSelect a group'}
 
         when: "I have another go at creating a user"
         def username = RandomStringUtils.randomAlphanumeric(6)
@@ -181,7 +181,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         oauthApi.stubAuthUsernameSearch()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
-        createUser(username, email, 'first', 'last', 'GROUP_1')
+        createUser(username, email, 'first', 'last', 'Site 1 - Group 1')
 
         then: "My user is created"
         at AuthUserPage

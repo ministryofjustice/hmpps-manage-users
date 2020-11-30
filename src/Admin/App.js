@@ -175,7 +175,7 @@ class App extends React.Component {
               path="/maintain-external-users/search-results"
               render={() => <AuthUserSearchResultsContainer />}
             />
-            <Route exact path="/create-external-user" render={() => <AuthUserCreateContainer />} />
+            <Route exact path="/create-new-external-user" render={() => <AuthUserCreateContainer />} />
           </Switch>
         </div>
       </div>

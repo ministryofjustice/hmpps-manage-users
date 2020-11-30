@@ -1,9 +1,10 @@
 package uk.gov.justice.digital.hmpps.manageusers.pages
 
 import geb.Page
+import org.openqa.selenium.Keys
 
 class AuthUserCreatePage extends Page {
-    static url = "/create-external-user"
+    static url = "/create-new-external-user"
 
     static at = {
         browser.currentUrl.contains(url)
@@ -12,8 +13,14 @@ class AuthUserCreatePage extends Page {
 
     static content = {
         headingText { $('h1').first().text() }
-        createButton { $('#create-button') }
-        errors { $('#error-summary').text() }
+        createButton { $('[data-qa="create-button"]') }
+        selectOption { $('#groupCode') }
+        errorSummary(required: false) { $('[data-qa-errors]') }
+    }
+
+    void choose(String group) {
+        selectOption = group
+        selectOption << Keys.ENTER
     }
 
     void createUser(String username, String email, String firstName, String lastName, String groupCode) {
@@ -21,7 +28,7 @@ class AuthUserCreatePage extends Page {
         $('form').email = email
         $('form').firstName = firstName
         $('form').lastName = lastName
-        $('form').groupCode = groupCode
+        groupCode == ''? '': choose(groupCode)
         assert createButton.text() == 'Create'
         createButton.click()
     }
