@@ -43,13 +43,11 @@ const authUserMaintenanceFactory = (oauthApi) => {
 
     await handleClientError(
       async () => {
-        const response = nameFilter.includes('@')
-          ? await oauthApi.userSearch(res.locals, { nameFilter })
-          : [await oauthApi.getUser(res.locals, { username: nameFilter })]
+        const response = await oauthApi.userSearch(res.locals, { nameFilter })
 
         if (!response || Object.entries(response).length === 0) {
           res.status(404)
-          res.json([{ targetName: 'user', text: `No accounts for email address ${nameFilter} found` }])
+          res.json([{ targetName: 'user', text: `No results for ${nameFilter} found` }])
           return
         }
         res.json(response)

@@ -3,33 +3,41 @@ package uk.gov.justice.digital.hmpps.manageusers.mockapis.mockResponses
 
 class AuthUserSearchResponse {
 
-    static getUsernameResponse(enabled = true) { """
+  static getUsernameResponse(enabled = true) { """
         {"username": "AUTH_ADM", "email": "auth_test2@digital.justice.gov.uk", "enabled": ${enabled}, "locked": false, "verified": false, "firstName": "Auth", "lastName": "Adm"}
 """ }
 
-    static emailResponse = """[
-        {"username": "AUTH_ADM", "email": "auth_test2@digital.justice.gov.uk", "enabled": true, "locked": false, "verified": false, "firstName": "Auth", "lastName": "Adm"},
-        {"username": "AUTH_EXPIRED", "email": "auth_test2@digital.justice.gov.uk", "enabled": true, "locked": false, "verified": false, "firstName": "Auth", "lastName": "Expired"}
-]"""
+  static usernameSearchResponse(enabled = true) {
+    """ {
+          "content": [
+            {"username": "AUTH_ADM", "email": "auth_test2@digital.justice.gov.uk", "enabled": ${enabled}, "locked": false, "verified": false, "firstName": "Auth", "lastName": "Adm"}
+          ],
+          "pageable": {
+            "offset": 0,
+            "pageNumber": 0,
+            "pageSize": 10
+          },
+          "totalElements": 1
+        } """
+  }
 
-
-    static rolesResponse = """[
+  static rolesResponse = """[
         {"roleCode": "GLOBAL_SEARCH", "roleName": "Global Search"},
         {"roleCode": "LICENCE_RO", "roleName": "Licence Responsible Officer"}
 ]"""
 
-    static groupsResponse = """[
+  static groupsResponse = """[
         {"groupCode": "SITE_1_GROUP_1", "groupName": "Site 1 - Group 1"},
         {"groupCode": "SITE_1_GROUP_2", "groupName": "Site 1 - Group 2"}
 ]"""
 
-    static assignableRolesResponse = """[
+  static assignableRolesResponse = """[
         {"roleCode": "GLOBAL_SEARCH", "roleName": "Global Search"},
         {"roleCode": "LICENCE_RO", "roleName": "Licence Responsible Officer"},
         {"roleCode": "LICENCE_VARY", "roleName": "Licence Vary"}
 ]"""
 
-    static allGroupsResponse = """[
+  static allGroupsResponse = """[
         {"groupCode": "GROUP_1", "groupName": "Site 1 - Group 1"},
         {"groupCode": "GROUP_2", "groupName": "Site 1 - Group 2"},
         {"groupCode": "GROUP_3", "groupName": "Site 1 - Group 3"}

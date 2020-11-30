@@ -22,6 +22,7 @@ module.exports = (on) => {
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
     stubAuthUsernameSearch: auth.stubAuthUsernameSearch,
+    stubAuthGetUsername: auth.stubAuthGetUsername,
     stubAuthEmailSearch: auth.stubAuthEmailSearch,
     stubAuthUserGroups: auth.stubAuthUserGroups,
     stubAuthUserRoles: auth.stubAuthUserRoles,

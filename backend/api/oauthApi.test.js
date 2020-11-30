@@ -177,7 +177,10 @@ describe('oathApi tests', () => {
       expect(actual).toEqual(userDetails)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, "/api/authuser?email=joe'fred%40bananas%25.com")
+      expect(client.get).toBeCalledWith(
+        context,
+        "/api/authuser/search?name=joe'fred%40bananas%25.com&role=&group=&page=&size="
+      )
     })
   })
 
