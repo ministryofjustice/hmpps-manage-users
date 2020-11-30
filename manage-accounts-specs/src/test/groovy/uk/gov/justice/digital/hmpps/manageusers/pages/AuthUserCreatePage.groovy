@@ -4,7 +4,7 @@ import geb.Page
 import org.openqa.selenium.Keys
 
 class AuthUserCreatePage extends Page {
-    static url = "/create-new-external-user"
+    static url = "/create-external-user"
 
     static at = {
         browser.currentUrl.contains(url)

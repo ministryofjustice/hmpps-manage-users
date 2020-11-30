@@ -8,7 +8,7 @@ describe('create user factory', () => {
     getAssignableGroupsApi,
     createUserApi,
     '/create-external-users',
-    '/create-new-external-users',
+    '/create-external-users',
     '/manage-external-users',
     'Maintain external users',
     logError
@@ -53,7 +53,7 @@ describe('create user factory', () => {
       const render = jest.fn()
       getAssignableGroupsApi.mockRejectedValue(new Error('This failed'))
       await createUser.index({ params: {} }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/create-new-external-users' })
+      expect(render).toBeCalledWith('error.njk', { url: '/create-external-users' })
     })
   })
 
@@ -216,7 +216,7 @@ describe('create user factory', () => {
         },
         { render }
       )
-      expect(render).toBeCalledWith('error.njk', { url: '/create-new-external-users' })
+      expect(render).toBeCalledWith('error.njk', { url: '/create-external-users' })
     })
   })
 })
