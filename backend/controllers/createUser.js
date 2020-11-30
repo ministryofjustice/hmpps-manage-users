@@ -59,7 +59,6 @@ const createUserFactory = (
 
           const errorDetails = [{ href: `#${field}`, text: description }]
           stashStateAndRedirectToIndex(req, res, errorDetails, [user])
-
         } else if (err.status === 409 && err.response && err.response.body) {
           // username already exists
           const usernameError = [{ href: '#username', text: 'Username already exists' }]
