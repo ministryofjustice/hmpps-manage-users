@@ -53,12 +53,12 @@ const createUserFactory = (
         res.redirect(`${manageUrl}/${user.username}`)
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
-          const { emailError: error, error_description: errorDescription } = err.response.body
+          const { emailError: error, error_description: errorDescription, field } = err.response.body
           const description =
             error === 'email.domain' ? 'The email domain is not allowed.  Enter a work email address' : errorDescription
 
-          const emailError = [{ href: '#email', text: description }]
-          stashStateAndRedirectToIndex(req, res, emailError, [user])
+          const errorDetails = [{ href: `#${field}`, text: description }]
+          stashStateAndRedirectToIndex(req, res, errorDetails, [user])
         } else if (err.status === 409 && err.response && err.response.body) {
           // username already exists
           const usernameError = [{ href: '#username', text: 'Username already exists' }]
