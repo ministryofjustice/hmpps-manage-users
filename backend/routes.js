@@ -48,7 +48,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use(currentUser({ prisonApi, oauthApi }))
 
   router.use('/', menuRouter({ logError }))
-  router.use('/create-new-external-user', createAuthUserRouter({ oauthApi, logError }))
+  router.use('/create-external-user', createAuthUserRouter({ oauthApi, logError }))
   router.use('/manage-external-users/:username', manageAuthUserRouter({ oauthApi, logError }))
   router.use('/manage-dps-users/:username', manageDpsUserRouter({ prisonApi, logError }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi, logError }))

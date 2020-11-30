@@ -7,7 +7,6 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import ReactGA from 'react-ga'
 import UnauthPage from './unauthPage'
-import AuthUserCreateContainer from './MaintainAuthUsers/containers/AuthUserCreateContainer'
 import AuthUserSearchContainer from './MaintainAuthUsers/containers/AuthUserSearchContainer'
 import AuthUserSearchResultsContainer from './MaintainAuthUsers/containers/AuthUserSearchResultsContainer'
 import UserSearchContainer from './MaintainRoles/containers/UserSearchContainer'
@@ -175,7 +174,6 @@ class App extends React.Component {
               path="/maintain-external-users/search-results"
               render={() => <AuthUserSearchResultsContainer />}
             />
-            <Route exact path="/create-new-external-user" render={() => <AuthUserCreateContainer />} />
           </Switch>
         </div>
       </div>
