@@ -1,19 +1,10 @@
 const page = require('./page')
 
-const user = () => cy.get('#user')
-const submit = () => cy.get('button[type="submit"]')
-
 const authUserSearchPage = () =>
-  page('Search for external user results', {
-    user,
-    search: (text) => {
-      if (text) user().type(text)
-      else user().clear()
-      submit().click()
-    },
-    errorSummary: () => cy.get('#error-summary'),
+  page('Search results', {
     rows: () => cy.get('table tbody tr'),
-    edit: (username) => cy.get(`#edit-button-${username}`).click(),
+    edit: (username) => cy.get(`[data-qa="edit-button-${username}"]`).click(),
+    noResults: () => cy.get('[data-qa="no-results"]'),
   })
 
 export default {

@@ -11,12 +11,11 @@ function searchForUser() {
   menuPage.manageAuthUsers().click()
   const search = AuthUserSearchPage.verifyOnPage()
 
-  cy.task('stubAuthUsernameSearch')
+  cy.task('stubAuthSearch')
   search.search('sometext')
 
   const results = AuthUserSearchResultsPage.verifyOnPage()
-  results.user().should('have.value', 'sometext')
-  results.rows().should('have.length', 2)
+  results.rows().should('have.length', 1)
   return results
 }
 
@@ -29,21 +28,39 @@ context('External user functionality', () => {
     cy.task('reset')
   })
 
+  it('Should display a message if no search results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    const search = AuthUserSearchPage.goTo()
+    cy.task('stubAuthSearch', { content: [] })
+    search.search('nothing doing')
+    const results = AuthUserSearchResultsPage.verifyOnPage()
+    results.noResults().should('contain.text', 'No records found')
+  })
+
   it('Should allow a user search and display results', () => {
     const results = searchForUser()
 
-    // ensure blank search displays error message
-    results.search()
-    results.errorSummary().should('contain', 'Enter a username or email address')
+    results
+      .rows()
+      .eq(0)
+      .find('td')
+      .then(($tableCells) => {
+        // \u00a0 is a non breaking space, won't match on ' ' though
+        expect($tableCells.get(0)).to.contain.text('Auth\u00a0Adm')
+        expect($tableCells.get(1)).to.contain.text('AUTH_ADM')
+        expect($tableCells.get(2)).to.contain.text('auth_test2@digital.justice.gov.uk')
+        expect($tableCells.get(3)).to.contain.text('No')
+        expect($tableCells.get(4)).to.contain.text('Yes')
+      })
 
     cy.task('stubAuthEmailSearch')
-    results.search('sometext@somewhere.com')
+    const search = AuthUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
 
-    results.rows().should('have.length', 3)
-    results.rows().eq(1).should('contain', 'Auth Adm')
-    results.rows().eq(2).should('contain', 'Auth Expired')
-
-    results.errorSummary().should('not.exist')
+    results.rows().should('have.length', 2)
+    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(1).should('include.text', 'Auth\u00a0Expired')
   })
 
   it('Should add and remove a role from a user', () => {
