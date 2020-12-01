@@ -1,0 +1,54 @@
+{% extends "./partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/error-summary/macro.njk" import govukErrorSummary -%}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+
+{% set title =  "Search results" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: searchTitle, href: searchUrl },
+       { text: title}
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    {% if results.length %}
+      <div class="govuk-grid-row">
+        {% set rows = [] %}
+        {% for u in results %}
+          {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '" class="govuk-link" data-qa="edit-button-'
+            + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
+          {% set rows = (rows.push([
+            { html: userLink },
+            { text: u.username },
+            { text: u.email },
+            { text: u.locked | formatYesNo()},
+            { text: u.enabled | formatYesNo() }
+          ]), rows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            { text: "Name" },
+            { text: "Username" },
+            { text: "Email" },
+            { text: "Locked" },
+            { text: "Enabled" }
+          ],
+          rows: rows
+        }) }}
+      </div>
+    {% else %}
+      <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+    {% endif %}
+  </div>
+{% endblock %}

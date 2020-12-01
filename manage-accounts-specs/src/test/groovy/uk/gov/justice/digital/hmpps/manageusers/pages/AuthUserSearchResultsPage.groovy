@@ -1,18 +1,16 @@
 package uk.gov.justice.digital.hmpps.manageusers.pages
 
 public class AuthUserSearchResultsPage extends AuthUserSearchPage {
-    static url = "/maintain-external-users/search-results"
+    static url = "/search-external-users/results"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for external user results')
+        headingText.contains('Search results')
     }
 
     static content = {
         headingText { $('h1').first().text() }
-        searchButton { $('#search-button') }
-        user { $('#user') }
         rows(required: false) { $('table tbody tr') }
-        errorSummary(required: false) { $('#error-summary') }
+        noResults(required: false) { $('[data-qa="no-results"]')}
     }
 }
