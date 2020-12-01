@@ -43,8 +43,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const createUser = (context, username, user) => put(context, `/api/authuser/${username}`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups?children=false`)
-  const userSearch = (context, { nameFilter, role, group, page, size }) => {
-    const query = querystring.stringify({ name: nameFilter, role, group, page, size })
+  const userSearch = (context, { nameFilter, role, group, offset, size }) => {
+    const query = querystring.stringify({ name: nameFilter, role, group, offset, size })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
   const addUserRoles = (context, { username, roles }) => post(context, `/api/authuser/${username}/roles`, roles)

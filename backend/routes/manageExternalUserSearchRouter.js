@@ -5,7 +5,7 @@ const paginationService = require('../services/paginationService')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi, logError }) => {
-  const searchApi = (context, nameFilter, page, size) => oauthApi.userSearch(context, { nameFilter, page, size })
+  const searchApi = (context, nameFilter, offset, size) => oauthApi.userSearch(context, { nameFilter, offset, size })
 
   const { results } = externalSearchFactory(
     paginationService,
