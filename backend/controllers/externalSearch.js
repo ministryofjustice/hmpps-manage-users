@@ -1,18 +1,29 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const contextProperties = require('../contextProperties')
 
-const externalSearchFactory = (searchApi, searchUrl, maintainUrl, searchTitle, logError) => {
+const externalSearchFactory = (paginationService, searchApi, searchUrl, maintainUrl, searchTitle, logError) => {
   const results = async (req, res) => {
-    const { user } = req.query
+    const { user, limit, offset, viewAll } = req.query
+
+    const pageLimit = (limit && parseInt(limit, 10)) || 20
+    const pageOffset = (offset && !viewAll && parseInt(offset, 10)) || 0
 
     try {
-      const searchResults = await searchApi(res.locals, user)
+      const searchResults = await searchApi(res.locals, user, pageOffset, pageLimit)
+      const page = contextProperties.getResponsePagination(res.locals)
+
       res.render('externalSearchResults.njk', {
         searchTitle,
         searchUrl,
         maintainUrl,
         results: searchResults,
-        ...contextProperties.getResponsePagination(res.locals),
+        ...page,
+        pagination: paginationService.getPagination(
+          page['total-records'],
+          pageOffset,
+          pageLimit,
+          new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
+        ),
         errors: req.flash('errors'),
       })
     } catch (error) {
