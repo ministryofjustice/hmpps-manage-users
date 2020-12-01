@@ -148,21 +148,23 @@ const stubAuthGetUsername = (enabled = true) =>
     },
   })
 
-const stubAuthUsernameSearch = (enabled = true) =>
+const stubAuthSearch = (
+  content = [
+    {
+      username: 'AUTH_ADM',
+      email: 'auth_test2@digital.justice.gov.uk',
+      enabled: true,
+      locked: false,
+      verified: false,
+      firstName: 'Auth',
+      lastName: 'Adm',
+    },
+  ]
+) =>
   getFor({
     urlPath: '/auth/api/authuser/search',
     body: {
-      content: [
-        {
-          username: 'AUTH_ADM',
-          email: 'auth_test2@digital.justice.gov.uk',
-          enabled,
-          locked: false,
-          verified: false,
-          firstName: 'Auth',
-          lastName: 'Adm',
-        },
-      ],
+      content,
       pageable: {
         offset: 0,
         pageNumber: 0,
@@ -290,7 +292,7 @@ module.exports = {
   stubEmail,
   redirect,
   stubAuthGetUsername,
-  stubAuthUsernameSearch,
+  stubAuthSearch,
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,

@@ -14,4 +14,8 @@ const authUserSearchPage = () =>
 
 export default {
   verifyOnPage: authUserSearchPage,
+  goTo: () => {
+    cy.visit('/maintain-external-users')
+    return authUserSearchPage()
+  },
 }

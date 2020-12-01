@@ -3,8 +3,6 @@ package uk.gov.justice.digital.hmpps.manageusers.pages
 import geb.Page
 
 class UserSearchResultsPage extends Page {
-
-
     static url = "/maintain-roles/search-results"
 
     static at = {

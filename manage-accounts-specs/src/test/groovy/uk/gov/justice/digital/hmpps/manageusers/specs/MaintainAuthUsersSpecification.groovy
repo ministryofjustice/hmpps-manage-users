@@ -41,14 +41,13 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         then: "The external user search results page is displayed"
         at AuthUserSearchResultsPage
-        assert waitFor { rows.size() == 2 }
-        user.value() == 'sometext'
+        assert waitFor { rows.size() == 1 }
 
         when: "I choose a user to edit"
         oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
-        rows[1].find("#edit-button-AUTH_ADM").click()
+        rows[0].find("[data-qa='edit-button-AUTH_ADM']").click()
 
         then: "I can see the user details"
         at AuthUserPage
@@ -94,14 +93,13 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         then: "The external user search results page is displayed"
         at AuthUserSearchResultsPage
-        assert waitFor { rows.size() == 2 }
-        user.value() == 'sometext'
+        assert waitFor { rows.size() == 1 }
 
         when: "I choose a user to edit"
         oauthApi.stubAuthGetUsername()
         oauthApi.stubAuthUserRoles()
         oauthApi.stubAuthUserGroups()
-        rows[1].find("#edit-button-AUTH_ADM").click()
+        rows[0].find("[data-qa='edit-button-AUTH_ADM']").click()
 
         then: "I can see the user details"
         at AuthUserPage
@@ -270,8 +268,7 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         then: "The error message is displayed"
         at AuthUserSearchResultsPage
-        assert waitFor { errorSummary.text().contains('There is a problem') }
-        assert errorSummary.text().contains('not.a.user@justice.gov.uk')
         !rows.displayed
+        noResults.text() == 'No records found matching search criteria.'
     }
 }

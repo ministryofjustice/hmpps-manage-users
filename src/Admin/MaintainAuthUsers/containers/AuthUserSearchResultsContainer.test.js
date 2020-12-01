@@ -36,23 +36,5 @@ describe('Auth search results container', () => {
     it('should set the user input on the state', () => {
       expect(wrapper.find('AuthUserSearchHoc').state().user).toEqual('usersearched')
     })
-
-    it('should set history when form submitted', () => {
-      wrapper.find('form').simulate('submit')
-
-      const {
-        location: { pathname, search },
-      } = wrapper.find('AuthUserSearchResultsContainer').props()
-
-      expect(pathname).toEqual('/maintain-external-users/search-results')
-      expect(search).toEqual('?user=usersearched')
-    })
-
-    it('should prevent default on the form submission', () => {
-      const submitEvent = { target: { value: 'search' }, preventDefault: jest.fn() }
-      wrapper.find('form').simulate('submit', submitEvent)
-
-      expect(submitEvent.preventDefault).toBeCalled()
-    })
   })
 })

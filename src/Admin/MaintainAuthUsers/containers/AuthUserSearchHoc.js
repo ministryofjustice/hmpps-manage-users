@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import qs from 'qs'
-import ReactRouterPropTypes from 'react-router-prop-types'
 
 const searchComponent = (WrappedComponent) => {
   class AuthUserSearchHoc extends Component {
@@ -10,20 +9,15 @@ const searchComponent = (WrappedComponent) => {
     }
 
     handleSearch = (event) => {
-      const { history } = this.props
       const userQuery = qs.stringify(this.state)
-
       event.preventDefault()
-      history.push({ pathname: '/maintain-external-users/search-results', search: userQuery })
+      // @ts-ignore
+      window.location = `/search-external-users/results?${userQuery}`
     }
 
     render() {
       return <WrappedComponent {...this.props} handleSearch={this.handleSearch} handleChange={this.handleChange} />
     }
-  }
-
-  AuthUserSearchHoc.propTypes = {
-    history: ReactRouterPropTypes.history.isRequired,
   }
 
   return AuthUserSearchHoc
