@@ -12,12 +12,7 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
 
 const processPageResponse = (context) => (response) => {
   if (response.body.pageable) {
-    const headers = {
-      'total-records': (response.body.totalElements || 0).toString(),
-      'page-offset': (response.body.pageable.offset || 0).toString(),
-      'page-limit': (response.body.pageable.pageSize || 20).toString(),
-    }
-    contextProperties.setResponsePagination(context, headers)
+    contextProperties.setPageable(context, response.body)
     return response.body.content
   }
   return response.body
@@ -43,7 +38,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const createUser = (context, username, user) => put(context, `/api/authuser/${username}`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups?children=false`)
-  const userSearch = (context, { nameFilter, role, group, page, size }) => {
+  const userSearch = (context, { nameFilter, role, group }, page, size) => {
     const query = querystring.stringify({ name: nameFilter, role, group, page, size })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }

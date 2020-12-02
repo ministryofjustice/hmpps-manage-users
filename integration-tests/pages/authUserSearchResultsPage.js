@@ -5,6 +5,10 @@ const authUserSearchPage = () =>
     rows: () => cy.get('table tbody tr'),
     edit: (username) => cy.get(`[data-qa="edit-button-${username}"]`).click(),
     noResults: () => cy.get('[data-qa="no-results"]'),
+    nextPage: () => cy.get('.moj-pagination__item--next').first().click(),
+    previousPage: () => cy.get('.moj-pagination__item--prev').first().click(),
+    getPaginationList: () => cy.get('.moj-pagination__list'),
+    getPaginationResults: () => cy.get('.moj-pagination__results'),
   })
 
 export default {

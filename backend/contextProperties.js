@@ -58,6 +58,12 @@ const setResponsePagination = (context, headers) => {
 
 const getResponsePagination = (context) => context.responseHeaders || {}
 
+const setPageable = (context, { totalElements = 0, pageable: { pageNumber = 0, pageSize = 20 } }) => {
+  context.pageable = { totalElements, page: pageNumber, size: pageSize }
+}
+
+const getPageable = (context) => context.pageable
+
 module.exports = {
   setTokens,
   hasTokens,
@@ -67,4 +73,6 @@ module.exports = {
   getRequestPagination,
   setResponsePagination,
   getResponsePagination,
+  setPageable,
+  getPageable,
 }

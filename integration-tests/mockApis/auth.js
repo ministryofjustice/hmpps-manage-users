@@ -148,7 +148,7 @@ const stubAuthGetUsername = (enabled = true) =>
     },
   })
 
-const stubAuthSearch = (
+const stubAuthSearch = ({
   content = [
     {
       username: 'AUTH_ADM',
@@ -159,20 +159,29 @@ const stubAuthSearch = (
       firstName: 'Auth',
       lastName: 'Adm',
     },
-  ]
-) =>
+  ],
+  totalElements = 1,
+  page = 0,
+  size = 10,
+}) =>
   getFor({
     urlPath: '/auth/api/authuser/search',
     body: {
       content,
       pageable: {
         offset: 0,
-        pageNumber: 0,
-        pageSize: 10,
+        pageNumber: page,
+        pageSize: size,
       },
-      totalElements: 1,
+      totalElements,
     },
   })
+
+const verifyAuthSearch = () =>
+  getMatchingRequests({
+    method: 'GET',
+    urlPathPattern: '/auth/api/authuser/search',
+  }).then((data) => data.body.requests)
 
 const stubAuthEmailSearch = () =>
   getFor({
@@ -293,6 +302,7 @@ module.exports = {
   redirect,
   stubAuthGetUsername,
   stubAuthSearch,
+  verifyAuthSearch,
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,

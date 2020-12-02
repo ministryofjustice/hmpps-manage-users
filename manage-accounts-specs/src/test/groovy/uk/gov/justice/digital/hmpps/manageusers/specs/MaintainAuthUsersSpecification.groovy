@@ -253,22 +253,4 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         at AuthUserPage
     }
 
-    def "should show empty list if searching for non-existing user"() {
-        def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
-        oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
-
-        given: "I have navigated to the Maintain External user search page"
-        fixture.loginWithoutStaffRoles(ITAG_USER)
-        prisonApi.stubGetRoles()
-        to AuthUserSearchPage
-
-        when: "I perform a search by email for a non-existing user"
-        oauthApi.stubAuthEmailSearchNoUsersFound()
-        search('not.a.user@justice.gov.uk')
-
-        then: "The error message is displayed"
-        at AuthUserSearchResultsPage
-        !rows.displayed
-        noResults.text() == 'No records found matching search criteria.'
-    }
 }
