@@ -22,7 +22,7 @@ function searchForUser() {
   menuPage.manageAuthUsers().click()
   const search = AuthUserSearchPage.verifyOnPage()
 
-  cy.task('stubAuthSearch')
+  cy.task('stubAuthSearch', {})
   search.search('sometext')
 
   const results = AuthUserSearchResultsPage.verifyOnPage()
@@ -47,29 +47,6 @@ context('External user functionality', () => {
     search.search('nothing doing')
     const results = AuthUserSearchResultsPage.verifyOnPage()
     results.noResults().should('contain.text', 'No records found')
-  })
-
-  it('Should allow a user search and display paged results', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
-    cy.task('stubAuthSearch', {
-      content: replicateUser(5),
-      totalElements: 21,
-      page: 0,
-      size: 5,
-    })
-
-    const search = AuthUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = AuthUserSearchResultsPage.verifyOnPage()
-    results.rows().should('have.length', 5)
-    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm0')
-    results.rows().eq(1).should('include.text', 'Auth\u00a0Adm1')
-    results.rows().eq(2).should('include.text', 'Auth\u00a0Adm2')
-    results.rows().eq(3).should('include.text', 'Auth\u00a0Adm3')
-    results.rows().eq(4).should('include.text', 'Auth\u00a0Adm4')
-
-    results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
   })
 
   it('Should allow a user search and display results', () => {
@@ -97,6 +74,70 @@ context('External user functionality', () => {
     results.rows().eq(1).should('include.text', 'Auth\u00a0Expired')
 
     results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
+  })
+
+  it('Should allow a user search and display paged results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthSearch', {
+      content: replicateUser(5),
+      totalElements: 21,
+      page: 0,
+      size: 5,
+    })
+
+    const search = AuthUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = AuthUserSearchResultsPage.verifyOnPage()
+    results.rows().should('have.length', 5)
+    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm0')
+    results.rows().eq(1).should('include.text', 'Auth\u00a0Adm1')
+    results.rows().eq(2).should('include.text', 'Auth\u00a0Adm2')
+    results.rows().eq(3).should('include.text', 'Auth\u00a0Adm3')
+    results.rows().eq(4).should('include.text', 'Auth\u00a0Adm4')
+
+    results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
+  })
+
+  it('Should move between paged result when next page and previous page selected', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthSearch', {
+      content: replicateUser(5),
+      totalElements: 21,
+      page: 1,
+      size: 5,
+    })
+
+    const search = AuthUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = AuthUserSearchResultsPage.verifyOnPage()
+    results.rows().should('have.length', 5)
+
+    results.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
+    results.nextPage()
+    results.previousPage()
+    cy.task('verifyAuthSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(3)
+
+      expect(requests[0].queryParams).to.deep.equal({
+        group: { key: 'group', values: [''] },
+        name: { key: 'name', values: ['sometext@somewhere.com'] },
+        page: { key: 'page', values: ['0'] },
+        role: { key: 'role', values: [''] },
+        size: { key: 'size', values: ['20'] },
+      })
+
+      expect(requests[1].queryParams.page).to.deep.equal({
+        key: 'page',
+        values: ['2'],
+      })
+
+      expect(requests[2].queryParams.page).to.deep.equal({
+        key: 'page',
+        values: ['0'],
+      })
+    })
   })
 
   it('Should add and remove a role from a user', () => {

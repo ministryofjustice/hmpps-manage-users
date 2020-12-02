@@ -177,6 +177,12 @@ const stubAuthSearch = ({
     },
   })
 
+const verifyAuthSearch = () =>
+  getMatchingRequests({
+    method: 'GET',
+    urlPathPattern: '/auth/api/authuser/search',
+  }).then((data) => data.body.requests)
+
 const stubAuthEmailSearch = () =>
   getFor({
     urlPath: '/auth/api/authuser/search',
@@ -296,6 +302,7 @@ module.exports = {
   redirect,
   stubAuthGetUsername,
   stubAuthSearch,
+  verifyAuthSearch,
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,

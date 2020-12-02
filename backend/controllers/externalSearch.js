@@ -3,10 +3,10 @@ const contextProperties = require('../contextProperties')
 
 const externalSearchFactory = (paginationService, searchApi, searchUrl, maintainUrl, searchTitle, logError) => {
   const results = async (req, res) => {
-    const { user, size, page, viewAll } = req.query
+    const { user, size, page } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
-    const pageNumber = (page && !viewAll && parseInt(page, 10)) || 0
+    const pageNumber = (page && parseInt(page, 10)) || 0
 
     try {
       const searchResults = await searchApi(res.locals, user, pageNumber, pageSize)
