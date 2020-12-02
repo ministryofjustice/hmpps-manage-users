@@ -3,25 +3,22 @@ const contextProperties = require('../contextProperties')
 
 const externalSearchFactory = (paginationService, searchApi, searchUrl, maintainUrl, searchTitle, logError) => {
   const results = async (req, res) => {
-    const { user, limit, offset, viewAll } = req.query
+    const { user, size, page, viewAll } = req.query
 
-    const pageLimit = (limit && parseInt(limit, 10)) || 20
-    const pageOffset = (offset && !viewAll && parseInt(offset, 10)) || 0
+    const pageSize = (size && parseInt(size, 10)) || 20
+    const pageNumber = (page && !viewAll && parseInt(page, 10)) || 0
 
     try {
-      const searchResults = await searchApi(res.locals, user, pageOffset, pageLimit)
-      const page = contextProperties.getResponsePagination(res.locals)
+      const searchResults = await searchApi(res.locals, user, pageNumber, pageSize)
+      const pageResponse = contextProperties.getPageable(res.locals)
 
       res.render('externalSearchResults.njk', {
         searchTitle,
         searchUrl,
         maintainUrl,
         results: searchResults,
-        ...page,
         pagination: paginationService.getPagination(
-          page['total-records'],
-          pageOffset,
-          pageLimit,
+          pageResponse,
           new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
         ),
         errors: req.flash('errors'),

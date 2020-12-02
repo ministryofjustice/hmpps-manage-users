@@ -36,34 +36,32 @@ Rules:
                 ^
  */
 
-const calculateNextUrl = (offset, limit, totalResults, url) => {
-  const newOffset = offset + limit >= totalResults ? offset : offset + limit
-  url.searchParams.set('offset', newOffset)
+const calculateNextUrl = (currentPage, numberOfPages, url) => {
+  const newPage = currentPage === numberOfPages - 1 ? currentPage : currentPage + 1
+  url.searchParams.set('page', newPage)
   return url.href
 }
 
-const calculatePreviousUrl = (offset, limit, url) => {
-  const newOffset = offset > 0 ? offset - limit : 0
-  url.searchParams.set('offset', newOffset)
+const calculatePreviousUrl = (currentPage, url) => {
+  const newPage = currentPage > 0 ? currentPage - 1 : 0
+  url.searchParams.set('page', newPage)
   return url.href
 }
 
-const getPagination = (totalResults, offset, limit, url) => {
-  const toPageNumberNode = (page) => {
-    const pageOffset = limit * page
-
-    url.searchParams.set('offset', pageOffset)
+const getPagination = ({ totalElements: totalResults, page: currentPage, size: limit }, url) => {
+  const toPageNumberNode = (requestedPage) => {
+    url.searchParams.set('page', requestedPage)
 
     return {
-      text: page + 1,
+      text: requestedPage + 1,
       href: url.href,
-      selected: offset === pageOffset,
+      selected: requestedPage === currentPage,
     }
   }
 
   const useLowestNumber = (left, right) => (left >= right ? right : left)
 
-  const calculateFrom = ({ currentPage, numberOfPages }) => {
+  const calculateFrom = (numberOfPages) => {
     if (numberOfPages <= maxNumberOfPageLinks) return 0
 
     const towardsTheEnd = numberOfPages - currentPage <= pageBreakPoint
@@ -73,11 +71,10 @@ const getPagination = (totalResults, offset, limit, url) => {
     return currentPage <= pageBreakPoint ? 0 : currentPage - pageBreakPoint
   }
 
-  const currentPage = offset === 0 ? 0 : Math.ceil(offset / limit)
   const numberOfPages = Math.ceil(totalResults / limit)
 
   const allPages = numberOfPages > 0 && [...Array(numberOfPages).keys()]
-  const from = calculateFrom({ currentPage, numberOfPages })
+  const from = calculateFrom(numberOfPages)
   const to =
     numberOfPages <= maxNumberOfPageLinks
       ? numberOfPages
@@ -89,14 +86,14 @@ const getPagination = (totalResults, offset, limit, url) => {
     numberOfPages > 1
       ? {
           text: 'Previous',
-          href: calculatePreviousUrl(offset, limit, url),
+          href: calculatePreviousUrl(currentPage, url),
         }
       : undefined
   const nextPage =
     numberOfPages > 1
       ? {
           text: 'Next',
-          href: calculateNextUrl(offset, limit, totalResults, url),
+          href: calculateNextUrl(currentPage, numberOfPages, url),
         }
       : undefined
 
@@ -105,8 +102,8 @@ const getPagination = (totalResults, offset, limit, url) => {
     previous: previousPage,
     next: nextPage,
     results: {
-      from: offset + 1,
-      to: numberOfPages > 1 && offset + limit < totalResults ? offset + limit : totalResults,
+      from: currentPage * limit + 1,
+      to: numberOfPages > 1 && currentPage < numberOfPages ? (currentPage + 1) * limit : totalResults,
       count: totalResults,
     },
     classes: 'govuk-!-font-size-19',

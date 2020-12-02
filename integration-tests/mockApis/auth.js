@@ -148,7 +148,7 @@ const stubAuthGetUsername = (enabled = true) =>
     },
   })
 
-const stubAuthSearch = (
+const stubAuthSearch = ({
   content = [
     {
       username: 'AUTH_ADM',
@@ -159,18 +159,21 @@ const stubAuthSearch = (
       firstName: 'Auth',
       lastName: 'Adm',
     },
-  ]
-) =>
+  ],
+  totalElements = 1,
+  page = 0,
+  size = 10,
+}) =>
   getFor({
     urlPath: '/auth/api/authuser/search',
     body: {
       content,
       pageable: {
         offset: 0,
-        pageNumber: 0,
-        pageSize: 10,
+        pageNumber: page,
+        pageSize: size,
       },
-      totalElements: 1,
+      totalElements,
     },
   })
 

@@ -4,6 +4,21 @@ const AuthUserSearchResultsPage = require('../../pages/authUserSearchResultsPage
 const AuthUserPage = require('../../pages/authUserPage')
 const AuthUserAddRolePage = require('../../pages/authUserAddRolePage')
 
+const replicate = ({ data, times }) =>
+  Array(times)
+    .fill()
+    .map(() => data)
+
+const user = {
+  username: 'AUTH_ADM',
+  email: 'auth_test2@digital.justice.gov.uk',
+  enabled: true,
+  locked: false,
+  verified: false,
+  firstName: 'Auth',
+  lastName: 'Adm',
+}
+
 function searchForUser() {
   cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
   cy.login()
@@ -39,6 +54,29 @@ context('External user functionality', () => {
   })
 
   it('Should allow a user search and display results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthSearch', {
+      content: replicate({ data: user, times: 5 }),
+      totalElements: 21,
+      page: 0,
+      size: 5,
+    })
+
+    const search = AuthUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = AuthUserSearchResultsPage.verifyOnPage()
+    results.rows().should('have.length', 5)
+    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(1).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(2).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(3).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(4).should('include.text', 'Auth\u00a0Adm')
+
+    results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
+  })
+
+  it('Should allow a user search and display results', () => {
     const results = searchForUser()
 
     results
@@ -61,6 +99,8 @@ context('External user functionality', () => {
     results.rows().should('have.length', 2)
     results.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
     results.rows().eq(1).should('include.text', 'Auth\u00a0Expired')
+
+    results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
   })
 
   it('Should add and remove a role from a user', () => {
