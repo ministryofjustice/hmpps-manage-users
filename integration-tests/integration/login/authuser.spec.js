@@ -4,20 +4,16 @@ const AuthUserSearchResultsPage = require('../../pages/authUserSearchResultsPage
 const AuthUserPage = require('../../pages/authUserPage')
 const AuthUserAddRolePage = require('../../pages/authUserAddRolePage')
 
-const replicate = ({ data, times }) =>
-  Array(times)
-    .fill()
-    .map(() => data)
-
-const user = {
-  username: 'AUTH_ADM',
-  email: 'auth_test2@digital.justice.gov.uk',
-  enabled: true,
-  locked: false,
-  verified: false,
-  firstName: 'Auth',
-  lastName: 'Adm',
-}
+const replicateUser = (times) =>
+  [...Array(times).keys()].map((i) => ({
+    username: `AUTH_ADM${i}`,
+    email: `auth_test${i}@digital.justice.gov.uk`,
+    enabled: i % 2 === 0,
+    locked: i % 3 === 0,
+    verified: i % 5 === 0,
+    firstName: 'Auth',
+    lastName: `Adm${i}`,
+  }))
 
 function searchForUser() {
   cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
@@ -53,11 +49,11 @@ context('External user functionality', () => {
     results.noResults().should('contain.text', 'No records found')
   })
 
-  it('Should allow a user search and display results', () => {
+  it('Should allow a user search and display paged results', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
     cy.task('stubAuthSearch', {
-      content: replicate({ data: user, times: 5 }),
+      content: replicateUser(5),
       totalElements: 21,
       page: 0,
       size: 5,
@@ -67,11 +63,11 @@ context('External user functionality', () => {
     search.search('sometext@somewhere.com')
     const results = AuthUserSearchResultsPage.verifyOnPage()
     results.rows().should('have.length', 5)
-    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
-    results.rows().eq(1).should('include.text', 'Auth\u00a0Adm')
-    results.rows().eq(2).should('include.text', 'Auth\u00a0Adm')
-    results.rows().eq(3).should('include.text', 'Auth\u00a0Adm')
-    results.rows().eq(4).should('include.text', 'Auth\u00a0Adm')
+    results.rows().eq(0).should('include.text', 'Auth\u00a0Adm0')
+    results.rows().eq(1).should('include.text', 'Auth\u00a0Adm1')
+    results.rows().eq(2).should('include.text', 'Auth\u00a0Adm2')
+    results.rows().eq(3).should('include.text', 'Auth\u00a0Adm3')
+    results.rows().eq(4).should('include.text', 'Auth\u00a0Adm4')
 
     results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
   })
