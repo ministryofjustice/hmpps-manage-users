@@ -23,6 +23,13 @@ module.exports = (app, path) => {
     return null
   })
 
+  njkEnv.addFilter('addBlankOptions', (values, text) =>
+    [
+      { text: '', value: '' },
+      { text, value: '' },
+    ].concat(values)
+  )
+
   njkEnv.addFilter('findErrors', (errors, formFieldIds) => {
     if (!errors) return null
     const fieldIds = formFieldIds.map((field) => `#${field}`)

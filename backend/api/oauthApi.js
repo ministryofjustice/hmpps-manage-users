@@ -39,7 +39,15 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups?children=false`)
   const userSearch = (context, { nameFilter, role, group }, page, size) => {
-    const query = querystring.stringify({ name: nameFilter, role, group, page, size })
+    const groups = group ? [group] : null
+    const roles = role ? [role] : null
+    const query = querystring.stringify({
+      name: nameFilter,
+      groups,
+      roles,
+      page,
+      size,
+    })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
   const addUserRoles = (context, { username, roles }) => post(context, `/api/authuser/${username}/roles`, roles)
@@ -47,6 +55,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const addUserGroup = (context, { username, group }) => put(context, `/api/authuser/${username}/groups/${group}`)
   const removeUserGroup = (context, { username, group }) => del(context, `/api/authuser/${username}/groups/${group}`)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
+  const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
   const enableUser = (context, { username }) => put(context, `/api/authuser/${username}/enable`)
   const disableUser = (context, { username }) => put(context, `/api/authuser/${username}/disable`)
   const assignableRoles = (context, { username }) => get(context, `/api/authuser/${username}/assignable-roles`)
@@ -130,6 +139,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     disableUser,
     amendUser,
     assignableGroups,
+    searchableRoles,
   }
 }
 
