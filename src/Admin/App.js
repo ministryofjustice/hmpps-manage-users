@@ -40,7 +40,7 @@ class App extends React.Component {
     try {
       await this.loadUser()
       const config = await axios.get('/api/config')
-      links.notmEndpointUrl = config.data.notmEndpointUrl
+      links.authUiUrl = config.data.authUiUrl
 
       if (config.data.googleAnalyticsId) {
         ReactGA.initialize(config.data.googleAnalyticsId)
