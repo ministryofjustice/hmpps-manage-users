@@ -1,6 +1,6 @@
 const links = {
-  notmEndpointUrl: '', // set from env by /api/config call
-  getHomeLink: () => `${links.notmEndpointUrl}`,
+  authUiUrl: '', // set from env by /api/config call
+  getHomeLink: () => `${links.authUiUrl}`,
 }
 
 module.exports = links
