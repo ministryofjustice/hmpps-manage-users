@@ -7,12 +7,7 @@ const extractRequestPaginationMiddleware = (req, res, next) => {
   next()
 }
 
-const setPagingHeaders = (context, res) => {
-  res.set(contextProperties.getResponsePagination(context))
-}
-
 const sendJsonResponse = (res) => (data) => {
-  setPagingHeaders(res.locals, res)
   res.json(data)
 }
 
@@ -38,11 +33,6 @@ const forwardingHandlerFactory = (prisonApi) =>
    * @returns {*}
    */
   (req, res) => {
-    // const sendJsonResponse = data => {
-    //   setPagingHeaders(res.locals, res);
-    //   res.json(data);
-    // };
-
     const theUrl = `/api${req.url}`
 
     switch (req.method) {

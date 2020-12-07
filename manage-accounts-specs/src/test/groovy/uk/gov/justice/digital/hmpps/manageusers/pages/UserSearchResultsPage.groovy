@@ -3,7 +3,7 @@ package uk.gov.justice.digital.hmpps.manageusers.pages
 import geb.Page
 
 class UserSearchResultsPage extends Page {
-    static url = "/maintain-roles/search-results"
+    static url = "/search-dps-users/results"
 
     static at = {
         browser.currentUrl.contains(url)

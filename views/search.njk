@@ -9,8 +9,7 @@
   <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
 {% endblock %}
 
-{% set title =  "Search for a DPS user " if dpsSearch else  "Search for an external user " %}
-
+{% set title = "Search for a DPS user " if dpsSearch else  "Search for an external user " %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({
@@ -31,36 +30,36 @@
       <div class="govuk-grid-column-two-thirds">
         <form method="GET" action="{{ searchUrl }}/results">
           {{ govukInput({
-            label: {
-              text: "Name, username or email address"
-            },
+            label: { text: "Name or username" if dpsSearch else "Name, username or email address" },
             classes: "govuk-input--width-25",
             value: username,
             id: "user",
             name: "user",
             errorMessage: errors | findError('user')
           }) }}
+          {% if not dpsSearch %}
           <div class="govuk-list">
-          {{ govukSelect({label: {
-            text: "Select a group"
-          },
-            idPrefix: 'groupCode',
-            name: 'groupCode',
-            id: 'groupCode',
-            items: groupDropdownValues | addBlankOptions('Select a group'),
-            errorMessage: errors | findError('groupCode')
-          }) }}
+            {{ govukSelect({label: {
+              text: "Select a group"
+            },
+              idPrefix: 'groupCode',
+              name: 'groupCode',
+              id: 'groupCode',
+              items: groupDropdownValues | addBlankOptions('Select a group'),
+              errorMessage: errors | findError('groupCode')
+            }) }}
           </div>
+          {% endif %}
           <div class="govuk-list">
-          {{ govukSelect({label: {
-            text: "Select a role"
-          },
-            idPrefix: 'roleCode',
-            name: 'roleCode',
-            id: 'roleCode',
-            items: roleDropdownValues | addBlankOptions('Select a role'),
-            errorMessage: errors | findError('roleCode')
-          }) }}
+            {{ govukSelect({label: {
+              text: "Select a role"
+            },
+              idPrefix: 'roleCode',
+              name: 'roleCode',
+              id: 'roleCode',
+              items: roleDropdownValues | addBlankOptions('Select a role'),
+              errorMessage: errors | findError('roleCode')
+            }) }}
           </div>
           {{ govukButton({
             text: "Search",
@@ -84,12 +83,13 @@
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script>
+    {%- if not dpsSearch %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#groupCode'),
       showAllValues: true,
       preserveNullOptions: true,
-
     })
+    {%- endif %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#roleCode'),
       showAllValues: true,

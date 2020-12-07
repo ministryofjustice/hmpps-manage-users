@@ -1,6 +1,7 @@
 const express = require('express')
-const { externalSearchFactory } = require('../controllers/externalSearch')
+const { searchFactory } = require('../controllers/search')
 const paginationService = require('../services/paginationService')
+const contextProperties = require('../contextProperties')
 
 const router = express.Router({ mergeParams: true })
 
@@ -8,11 +9,12 @@ const controller = ({ oauthApi, logError }) => {
   const searchApi = (context, nameFilter, groupCode, roleCode, page, size) =>
     oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode }, page, size)
 
-  const { index, results } = externalSearchFactory(
+  const { index, results } = searchFactory(
     paginationService,
     oauthApi.assignableGroups,
     oauthApi.searchableRoles,
     searchApi,
+    contextProperties.getPageable,
     '/search-external-users',
     '/manage-external-users',
     'Maintain external users',

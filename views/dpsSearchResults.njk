@@ -1,0 +1,53 @@
+{% extends "./partials/layout.njk" %}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+
+{% set title =  "Search results" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: searchTitle, href: searchUrl },
+       { text: title}
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    {% if results.length %}
+      {{ mojPagination(pagination) }}
+
+      <div class="govuk-grid-row">
+        {% set rows = [] %}
+        {% for u in results %}
+          {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '" class="govuk-link" data-qa="edit-button-'
+            + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
+          {% set rows = (rows.push([
+            { html: userLink },
+            { text: u.username },
+            { text: u.activeCaseLoadId },
+            { text: u.active | formatYesNo() }
+          ]), rows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          head: [
+            { text: "Name" },
+            { text: "Username" },
+            { text: "Active Caseload" },
+            { text: "Active" }
+          ],
+          rows: rows
+        }) }}
+      </div>
+      {{ mojPagination(pagination) }}
+    {% else %}
+      <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+    {% endif %}
+  </div>
+{% endblock %}

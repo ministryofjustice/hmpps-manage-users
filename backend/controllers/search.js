@@ -1,19 +1,21 @@
 const { serviceUnavailableMessage } = require('../common-messages')
-const contextProperties = require('../contextProperties')
 
-const externalSearchFactory = (
+const searchFactory = (
   paginationService,
   getAssignableGroupsApi,
   getSearchableRolesApi,
   searchApi,
+  pagingApi,
   searchUrl,
   maintainUrl,
   searchTitle,
   logError
 ) => {
+  const dpsSearch = getAssignableGroupsApi === undefined
+
   const index = async (req, res) => {
     try {
-      const assignableGroups = await getAssignableGroupsApi(res.locals)
+      const assignableGroups = (!dpsSearch && (await getAssignableGroupsApi(res.locals))) || []
       const groupDropdownValues = assignableGroups.map((g) => ({
         text: g.groupName,
         value: g.groupCode,
@@ -29,6 +31,7 @@ const externalSearchFactory = (
         searchUrl,
         groupDropdownValues,
         roleDropdownValues,
+        dpsSearch,
       })
     } catch (error) {
       logError(req.originalUrl, error, serviceUnavailableMessage)
@@ -37,22 +40,22 @@ const externalSearchFactory = (
   }
 
   const results = async (req, res) => {
-    const { user, groupCode, roleCode, size, page } = req.query
+    const { user, groupCode, roleCode, size, page, offset } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
+    const pageOffset = (offset && parseInt(offset, 10)) || 0
 
     try {
-      const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize)
-      const pageResponse = contextProperties.getPageable(res.locals)
+      const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
 
-      res.render('externalSearchResults.njk', {
+      res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
         searchTitle,
         searchUrl,
         maintainUrl,
         results: searchResults,
         pagination: paginationService.getPagination(
-          pageResponse,
+          pagingApi(res.locals),
           new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
         ),
         errors: req.flash('errors'),
@@ -67,5 +70,5 @@ const externalSearchFactory = (
 }
 
 module.exports = {
-  externalSearchFactory,
+  searchFactory,
 }

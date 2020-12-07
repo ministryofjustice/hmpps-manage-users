@@ -16,7 +16,7 @@ const controller = ({ prisonApi, logError }) => {
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAndAssignableRolesApi,
     saveRolesApi,
-    '/maintain-roles',
+    '/search-dps-users',
     '/manage-dps-users',
     'Manage user roles',
     logError
@@ -28,7 +28,7 @@ const controller = ({ prisonApi, logError }) => {
     undefined,
     undefined,
     undefined,
-    '/maintain-roles',
+    '/search-dps-users',
     '/manage-dps-users',
     'Manage user roles',
     false,

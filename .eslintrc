@@ -29,6 +29,7 @@
     "react/no-deprecated": 0,
     "react/jsx-fragments": 0,
     "no-only-tests/no-only-tests": "error",
+    "no-param-reassign": [1, { "props": true, "ignorePropertyModificationsFor": ["req", "res", "context"] }],
   },
   "plugins": ["prettier", "no-only-tests"],
 }
