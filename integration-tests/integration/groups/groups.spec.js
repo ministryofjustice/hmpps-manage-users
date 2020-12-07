@@ -13,7 +13,7 @@ context('Groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
-    cy.task('stubAuthAssignableGroups')
+    cy.task('stubAuthAssignableGroups', {})
 
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
@@ -27,7 +27,7 @@ context('Groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
-    cy.task('stubAuthAssignableGroups', [])
+    cy.task('stubAuthAssignableGroups', { content: [] })
     cy.visit('/manage-groups')
 
     const groups = GroupsPage.verifyOnPage()

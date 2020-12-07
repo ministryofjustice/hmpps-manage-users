@@ -31,6 +31,7 @@ module.exports = (on) => {
     stubAuthRemoveRole: auth.stubAuthRemoveRole,
     stubAuthAssignableRoles: auth.stubAuthAssignableRoles,
     stubAuthAssignableGroups: auth.stubAuthAssignableGroups,
+    stubAuthSearchableRoles: auth.stubAuthSearchableRoles,
     verifyAddRoles: auth.verifyAddRoles,
     verifyRemoveRole: auth.verifyRemoveRole,
   })

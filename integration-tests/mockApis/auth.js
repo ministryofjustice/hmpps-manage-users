@@ -244,14 +244,28 @@ const stubAuthAssignableRoles = (body) =>
     ],
   })
 
-const stubAuthAssignableGroups = (body) =>
+const stubAuthAssignableGroups = ({
+  content = [
+    { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
+    { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
+    { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
+  ],
+}) =>
   getFor({
     urlPattern: '/auth/api/authuser/.*/assignable-groups',
-    body: body || [
-      { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
-      { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
-      { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
-    ],
+    body: content,
+  })
+
+const stubAuthSearchableRoles = ({
+  content = [
+    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+    { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
+  ],
+}) =>
+  getFor({
+    urlPattern: '/auth/api/authuser/me/searchable-roles',
+    body: content,
   })
 
 const stubAuthAddRoles = () =>
@@ -310,6 +324,7 @@ module.exports = {
   stubAuthRemoveRole,
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
+  stubAuthSearchableRoles,
   verifyAddRoles,
   verifyRemoveRole,
 }

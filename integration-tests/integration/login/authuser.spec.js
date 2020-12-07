@@ -19,6 +19,8 @@ function searchForUser() {
   cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
   cy.login()
   const menuPage = MenuPage.verifyOnPage()
+  cy.task('stubAuthAssignableGroups', { content: [] })
+  cy.task('stubAuthSearchableRoles', { content: [] })
   menuPage.manageAuthUsers().click()
   const search = AuthUserSearchPage.verifyOnPage()
 
@@ -42,6 +44,8 @@ context('External user functionality', () => {
   it('Should display a message if no search results', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
+    cy.task('stubAuthAssignableGroups', { content: [] })
+    cy.task('stubAuthSearchableRoles', { content: [] })
     const search = AuthUserSearchPage.goTo()
     cy.task('stubAuthSearch', { content: [] })
     search.search('nothing doing')
@@ -49,7 +53,7 @@ context('External user functionality', () => {
     results.noResults().should('contain.text', 'No records found')
   })
 
-  it('Should allow a user search and display results', () => {
+  it('Should allow a user search by name and display results', () => {
     const results = searchForUser()
 
     results
@@ -76,9 +80,57 @@ context('External user functionality', () => {
     results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
   })
 
+  it('Should allow a user search by group and display results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthSearchableRoles', {})
+    const searchGroup = AuthUserSearchPage.goTo()
+    cy.task('stubAuthSearch', { content: [] })
+    searchGroup.searchGroup('SOCU North West')
+    AuthUserSearchResultsPage.verifyOnPage()
+
+    cy.task('verifyAuthSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].queryParams).to.deep.equal({
+        groups: { key: 'groups', values: ['SOC_NORTH_WEST'] },
+        name: { key: 'name', values: [''] },
+        page: { key: 'page', values: ['0'] },
+        roles: { key: 'roles', values: [''] },
+        size: { key: 'size', values: ['20'] },
+      })
+    })
+  })
+
+  it('Should allow a user search by role and display results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthSearchableRoles', {})
+    const searchGroup = AuthUserSearchPage.goTo()
+    cy.task('stubAuthSearch', { content: [] })
+    searchGroup.searchRole('Global Search')
+    AuthUserSearchResultsPage.verifyOnPage()
+
+    cy.task('verifyAuthSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].queryParams).to.deep.equal({
+        groups: { key: 'groups', values: [''] },
+        name: { key: 'name', values: [''] },
+        page: { key: 'page', values: ['0'] },
+        roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
+        size: { key: 'size', values: ['20'] },
+      })
+    })
+  })
+
   it('Should allow a user search and display paged results', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
+    cy.task('stubAuthAssignableGroups', { content: [] })
+    cy.task('stubAuthSearchableRoles', { content: [] })
     cy.task('stubAuthSearch', {
       content: replicateUser(5),
       totalElements: 21,
@@ -102,6 +154,8 @@ context('External user functionality', () => {
   it('Should move between paged result when next page and previous page selected', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
+    cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthSearchableRoles', {})
     cy.task('stubAuthSearch', {
       content: replicateUser(5),
       totalElements: 21,
@@ -121,10 +175,10 @@ context('External user functionality', () => {
       expect(requests).to.have.lengthOf(3)
 
       expect(requests[0].queryParams).to.deep.equal({
-        group: { key: 'group', values: [''] },
+        groups: { key: 'groups', values: [''] },
         name: { key: 'name', values: ['sometext@somewhere.com'] },
         page: { key: 'page', values: ['0'] },
-        role: { key: 'role', values: [''] },
+        roles: { key: 'roles', values: [''] },
         size: { key: 'size', values: ['20'] },
       })
 
