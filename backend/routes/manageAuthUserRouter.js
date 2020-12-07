@@ -67,7 +67,7 @@ const controller = ({ oauthApi, logError }) => {
     removeGroupApi,
     enableUserApi,
     disableUserApi,
-    '/maintain-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Maintain external users',
     true,

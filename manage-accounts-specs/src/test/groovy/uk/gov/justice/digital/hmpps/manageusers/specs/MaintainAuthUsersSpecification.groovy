@@ -33,6 +33,8 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
+        oauthApi.stubAuthSearchRoles()
+        oauthApi.stubAuthAllGroups()
         to AuthUserSearchPage
 
         when: "I perform a search by username"
@@ -85,6 +87,8 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
         given: "I have navigated to the Maintain External user search page"
         fixture.loginWithoutStaffRoles(ITAG_USER)
         prisonApi.stubGetRoles()
+        oauthApi.stubAuthSearchRoles()
+        oauthApi.stubAuthAllGroups()
         to AuthUserSearchPage
 
         when: "I perform a search by username"
@@ -251,6 +255,31 @@ class MaintainAuthUsersSpecification extends BrowserReportingSpec {
 
         then: "The email address is amended and user is taken back to the user page"
         at AuthUserPage
+    }
+
+
+    def "should return to search page from user details page when search for a user is selected "() {
+        def MaintainAuthUsersRole = [roleId: -1, roleCode: 'MAINTAIN_OAUTH_USERS']
+        oauthApi.stubGetMyRoles([MaintainAuthUsersRole])
+
+        given: "I have navigated to the Maintain External user search page"
+        fixture.loginWithoutStaffRoles(ITAG_USER)
+        prisonApi.stubGetRoles()
+        oauthApi.stubAuthGetUsername()
+        oauthApi.stubAuthUserRoles()
+        oauthApi.stubAuthUserGroups()
+        oauthApi.stubAuthSearchRoles()
+        oauthApi.stubAuthAllGroups()
+
+        when:"I am on the user details page and I select the search for another user"
+        browser.go('/manage-external-users/AUTH_TEST')
+        at AuthUserPage
+        searchForAnotherUser.click()
+
+        then: "I am return to the search for a user page"
+        at AuthUserSearchPage
+
+
     }
 
 }

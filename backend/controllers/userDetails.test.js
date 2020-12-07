@@ -13,7 +13,7 @@ describe('user detail factory', () => {
     removeGroupApi,
     enableUserApi,
     disableUserApi,
-    '/maintain-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Maintain external users',
     true,
@@ -39,7 +39,7 @@ describe('user detail factory', () => {
     await userDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
       maintainTitle: 'Maintain external users',
-      maintainUrl: '/maintain-external-users',
+      searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
         lastName: 'Bob',
@@ -80,7 +80,7 @@ describe('user detail factory', () => {
     await userDetails.index(req, { render, locals: { user: { maintainAuthUsers: true } } })
     expect(render).toBeCalledWith('userDetails.njk', {
       maintainTitle: 'Maintain external users',
-      maintainUrl: '/maintain-external-users',
+      searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
         lastName: 'Bob',
@@ -110,7 +110,7 @@ describe('user detail factory', () => {
       undefined,
       undefined,
       undefined,
-      '/maintain-external-users',
+      '/search-external-users',
       '/manage-external-users',
       'Maintain external users',
       false,
@@ -133,7 +133,7 @@ describe('user detail factory', () => {
     await dpsUserDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
       maintainTitle: 'Maintain external users',
-      maintainUrl: '/maintain-external-users',
+      searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
         lastName: 'Bob',

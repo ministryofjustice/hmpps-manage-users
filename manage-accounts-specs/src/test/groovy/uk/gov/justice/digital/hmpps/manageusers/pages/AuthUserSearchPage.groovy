@@ -3,16 +3,16 @@ package uk.gov.justice.digital.hmpps.manageusers.pages;
 import geb.Page
 
 public class AuthUserSearchPage extends Page {
-    static url = "/maintain-external-users"
+    static url = "/search-external-users"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for external user')
+        headingText.contains('Search for an external user')
     }
 
     static content = {
         headingText { $('h1').first().text() }
-        searchButton { $('#search-button') }
+        searchButton { $('[data-qa="search-button"]')}
     }
 
     void search(String text) {
