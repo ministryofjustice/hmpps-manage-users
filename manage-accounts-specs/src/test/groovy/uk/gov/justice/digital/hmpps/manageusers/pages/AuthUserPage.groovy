@@ -17,5 +17,6 @@ public class AuthUserPage extends AuthUserSearchPage {
         enableButton { $('[data-qa="enable-button"]')}
         enabled { $('[data-qa="enabled"]')}
         amendLink(required: false) { $('[data-qa="amend-link"]')}
+        searchForAnotherUser { $('[data-qa="search-link"]')}
     }
 }

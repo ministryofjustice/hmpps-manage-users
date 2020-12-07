@@ -178,6 +178,17 @@ class OauthApi extends WireMockRule {
                                         .withBody(AuthUserSearchResponse.getRolesResponse())))
     }
 
+
+    void stubAuthSearchRoles() {
+        this.stubFor(
+            get(urlPathMatching("/auth/api/authuser/me/searchable-roles"))
+                .willReturn(
+                    aResponse()
+                        .withStatus(200)
+                        .withHeader('Content-Type', 'application/json')
+                        .withBody(AuthUserSearchResponse.getRolesResponse())))
+    }
+
     void stubAuthUserGroups() {
         this.stubFor(
                 get(urlPathMatching("/auth/api/authuser/.*/groups"))

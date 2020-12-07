@@ -6,7 +6,7 @@ const userDetailsFactory = (
   removeGroupApi,
   enableUserApi,
   disableUserApi,
-  reactUrl,
+  searchUrl,
   manageUrl,
   maintainTitle,
   showExtraUserDetails,
@@ -22,7 +22,7 @@ const userDetailsFactory = (
       const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
       res.render('userDetails.njk', {
         maintainTitle,
-        maintainUrl: reactUrl,
+        searchUrl,
         staff: { ...user, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         roles,

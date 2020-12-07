@@ -14,6 +14,7 @@ public class AuthUserAmendPage extends Page {
         headingText { $('h1').first().text() }
         amendButton { $('[data-qa="confirm-button"]') }
         errorSummary(required: false) { $('[data-qa-errors]') }
+
     }
 
     void amendUser(String email) {
