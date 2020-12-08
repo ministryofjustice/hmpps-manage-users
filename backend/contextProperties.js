@@ -7,11 +7,10 @@
 
 // eslint-disable-next-line camelcase
 const setTokens = ({ access_token, refresh_token, authSource }, context) => {
-  // eslint-disable-next-line no-param-reassign,camelcase
+  // eslint-disable-next-line camelcase
   context.access_token = access_token
-  // eslint-disable-next-line no-param-reassign,camelcase
+  // eslint-disable-next-line camelcase
   context.refresh_token = refresh_token
-  // eslint-disable-next-line no-param-reassign
   context.authSource = authSource
 }
 
@@ -35,33 +34,32 @@ const copyNamedHeaders = (headerNames, srcHeaders) =>
     if (srcHeaders[name]) {
       return {
         ...previous,
-        [name]: srcHeaders[name],
+        [name]: parseInt(srcHeaders[name], 10),
       }
     }
     return previous
   }, {})
 
-const setRequestPagination = (context, headers) => {
-  const headerNames = ['page-offset', 'page-limit', 'sort-fields', 'sort-order']
-  // eslint-disable-next-line no-param-reassign
-  context.requestHeaders = copyNamedHeaders(headerNames, (headers && normalizeHeaderNames(headers)) || {})
+const setRequestPagination = (context, { offset, size }) => {
+  if (offset || size) context.requestHeaders = { 'page-offset': offset || 0, 'page-limit': size || 0 }
 }
-
 const getRequestPagination = (context) => context.requestHeaders || {}
 
 const setResponsePagination = (context, headers) => {
   const headerNames = ['page-offset', 'page-limit', 'sort-fields', 'sort-order', 'total-records']
 
-  // eslint-disable-next-line no-param-reassign
-  context.responseHeaders = copyNamedHeaders(headerNames, (headers && normalizeHeaderNames(headers)) || {})
+  const { 'total-records': totalElements, 'page-offset': offset, 'page-limit': limit } = copyNamedHeaders(
+    headerNames,
+    (headers && normalizeHeaderNames(headers)) || {}
+  )
+  context.offsetPageable = { totalElements, offset, limit }
 }
 
-const getResponsePagination = (context) => context.responseHeaders || {}
+const getResponsePagination = (context) => context.offsetPageable || {}
 
 const setPageable = (context, { totalElements = 0, pageable: { pageNumber = 0, pageSize = 20 } }) => {
   context.pageable = { totalElements, page: pageNumber, size: pageSize }
 }
-
 const getPageable = (context) => context.pageable
 
 module.exports = {

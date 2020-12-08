@@ -39,7 +39,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
     it('Should set the pagination headers on requests', async () => {
       const context = {}
-      contextProperties.setRequestPagination(context, { 'page-offset': '0', 'page-limit': '10' })
+      contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me')
 
@@ -48,7 +48,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
     it('Should set the results limit header override on requests', async () => {
       const context = {}
-      contextProperties.setRequestPagination(context, { 'page-offset': '0', 'page-limit': '10' })
+      contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me', 500)
 

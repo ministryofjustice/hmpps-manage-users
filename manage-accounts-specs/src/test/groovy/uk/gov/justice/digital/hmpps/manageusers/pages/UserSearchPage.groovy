@@ -5,16 +5,16 @@ import geb.Page
 class UserSearchPage extends Page {
 
 
-    static url = "/maintain-roles"
+    static url = "/search-dps-users"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for a user')
+        headingText.contains('Search for a DPS user')
     }
 
     static content = {
         headingText { $('h1').first().text() }
-        searchButton { $('#search-button') }
+        searchButton { $('[data-qa="search-button"]') }
         backLink { $('a.backlink')}
         roleSelect { $('#role-select')}
         nameFilter { $('#name-Filter')}

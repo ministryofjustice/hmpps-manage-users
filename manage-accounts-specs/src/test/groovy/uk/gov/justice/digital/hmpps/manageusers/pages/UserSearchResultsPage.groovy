@@ -3,11 +3,11 @@ package uk.gov.justice.digital.hmpps.manageusers.pages
 import geb.Page
 
 class UserSearchResultsPage extends Page {
-    static url = "/maintain-roles/search-results"
+    static url = "/search-dps-users/results"
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Search for a user')
+        headingText.contains('Search results')
     }
 
     static content = {
@@ -18,7 +18,7 @@ class UserSearchResultsPage extends Page {
         backLink { $('a.backlink')}
         roleSelect { $('#role-select')}
         nameFilter { $('#name-Filter')}
-        editButtonAPI_TEST_USER (required: false){ $('#edit-button-API_TEST_USER') }
+        editButtonAPI_TEST_USER (required: false){ $('[data-qa="edit-button-API_TEST_USER"]') }
         messageBar(required: false) { $('div #messageBar')}
         rows (required: false) { $('table tbody tr') }
     }

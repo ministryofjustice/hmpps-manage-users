@@ -150,6 +150,7 @@ class PrisonApi extends WireMockRule {
                                 .withStatus(200)
                                 .withHeader('Content-Type', 'application/json')
                                 .withHeader('total-records', "30")
+                                .withHeader('page-offset', "${page * 10}")
                                 .withBody(UserSearchResponse.pagedResponse(page))))
     }
 
@@ -172,6 +173,7 @@ class PrisonApi extends WireMockRule {
                                 .withStatus(200)
                                 .withHeader('Content-Type', 'application/json')
                                 .withHeader('total-records', "30")
+                                .withHeader('page-offset', "${page * 10}")
                                 .withBody(UserSearchResponse.pagedResponse(page))))
     }
 

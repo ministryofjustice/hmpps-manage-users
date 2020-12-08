@@ -51,8 +51,6 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         then: "the user search results page is displayed"
         at UserSearchResultsPage
         rows.size() == 6
-        searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 3
     }
 
     def "should allow an ADMIN user search and display results"() {
@@ -74,8 +72,6 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         then: "the user search results page is displayed"
         at UserSearchResultsPage
         rows.size() == 3
-        searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
@@ -109,8 +105,6 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         then: "the user search results page is displayed"
         at UserSearchResultsPage
         rows.size() == 3
-        searchButton.text() == 'Search'
-        roleSelect.find('option').size() == 5
 
         and: "i select a user to edit"
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
@@ -125,74 +119,6 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         and: 'And no errors are displayed'
         !errorSummary.displayed
     }
-
-
-    def "should handle pagination"() {
-        def MaintainAccessRolesRole = [roleId: -1, roleCode: 'MAINTAIN_ACCESS_ROLES']
-        def roles = [MaintainAccessRolesRole]
-        oauthApi.stubGetMyRoles(roles)
-
-        given: "I have navigated to the Maintain roles - User search page"
-        fixture.loginWithoutStaffRoles(ITAG_USER)
-        prisonApi.stubGetRoles()
-        to AdminUtilitiesPage
-        maintainRolesLink.click()
-
-        when: "i perform a search"
-        at UserSearchPage
-        prisonApi.stubUserLocalAdministratorSearch(0)
-        searchButton.click()
-
-        then: "the user search results page is displayed"
-        at UserSearchResultsPage
-        rows.size() == 3
-        nextPage.text() == "Next\n2 of 3"
-        !previousPage.isDisplayed()
-        rows[0].find("td",1).text() == 'user0'
-
-        and: "i click on the next page link"
-        prisonApi.stubUserLocalAdministratorSearch(1)
-        nextPage.click()
-
-        then:
-        at UserSearchResultsPage
-        rows.size() == 3
-        waitFor { nextPage.text() == "Next\n3 of 3" }
-        previousPage.text() == "Previous\n1 of 3"
-        rows[0].find("td",1).text() == 'user1'
-        MaintainRolesSpecification
-        and: "i click on the next page link"
-        prisonApi.stubUserLocalAdministratorSearch(2)
-        nextPage.click()
-
-        then:
-        at UserSearchResultsPage
-        rows.size() == 3
-        waitFor { !nextPage.isDisplayed() }
-        previousPage.text() == "Previous\n2 of 3"
-        rows[0].find("td",1).text() == 'user2'
-
-        and: "i click on the previous page link"
-        prisonApi.stubUserLocalAdministratorSearch(1)
-        previousPage.click()
-
-        then:
-        at UserSearchResultsPage
-        rows.size() == 3
-        waitFor { previousPage.text() == "Previous\n1 of 3" }
-
-        and: "i click on the previous page link"
-        prisonApi.stubUserLocalAdministratorSearch(0)
-        previousPage.click()
-
-        then: "i'm back to the first page"
-        at UserSearchResultsPage
-        rows.size() == 3
-        waitFor { nextPage.text() == "Next\n2 of 3" }
-        !previousPage.isDisplayed()
-        rows[0].find("td",1).text() == 'user0'
-    }
-
 
     def "should display Staff Role profile and allow role removal"() {
         def MaintainAccessRolesRole = [roleId: -1, roleCode: 'MAINTAIN_ACCESS_ROLES']

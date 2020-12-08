@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-const contextProperties = require('../contextProperties')
+const contextProperties = require('./contextProperties')
 
 describe('Should read/write properties', () => {
   describe('Should set / get tokens', () => {
@@ -67,17 +67,10 @@ describe('Should read/write properties', () => {
 
   it('Should set the request pagination properties', () => {
     const context = {}
-    contextProperties.setRequestPagination(context, {
-      'Page-offset': 1,
-      'Page-Limit': 10,
-      'SORT-FIELDS': 'a,b',
-      'sort-order': 'ASC',
-    })
+    contextProperties.setRequestPagination(context, { offset: 1, size: 10 })
     expect(contextProperties.getRequestPagination(context)).toEqual({
       'page-offset': 1,
       'page-limit': 10,
-      'sort-fields': 'a,b',
-      'sort-order': 'ASC',
     })
   })
 
@@ -88,19 +81,13 @@ describe('Should read/write properties', () => {
   it('Should set the response pagination properties', () => {
     const context = {}
     contextProperties.setResponsePagination(context, {
-      'PAGE-offset': 1,
-      'page-LIMIT': 10,
+      'PAGE-offset': '1',
+      'page-LIMIT': '10',
       'Sort-Fields': 'a,b',
       'sort-order': 'ASC',
-      'total-records': 100,
+      'total-records': '100',
     })
-    expect(contextProperties.getResponsePagination(context)).toEqual({
-      'page-offset': 1,
-      'page-limit': 10,
-      'sort-fields': 'a,b',
-      'sort-order': 'ASC',
-      'total-records': 100,
-    })
+    expect(contextProperties.getResponsePagination(context)).toEqual({ totalElements: 100, offset: 1, limit: 10 })
   })
 
   it('Should return an empty responsePagination object if no values were set', () => {
