@@ -13,7 +13,6 @@ const noCache = require('nocache')
 const apis = require('./apis')
 
 const ensureHttps = require('./middleware/ensureHttps')
-const requestForwarding = require('./request-forwarding')
 
 const healthFactory = require('./services/healthCheck')
 
@@ -103,8 +102,6 @@ app.use((req, res, next) => {
   req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
   next()
 })
-// Extract pagination header information from requests and set on the 'context'
-app.use('/api', requestForwarding.extractRequestPaginationMiddleware)
 app.use(routes({ ...apis }))
 
 if (setupWebpackForDev) app.use(setupWebpackForDev())
