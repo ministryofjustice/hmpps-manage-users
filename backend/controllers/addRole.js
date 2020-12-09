@@ -1,15 +1,5 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const addRoleFactory = (prisonApi) => {
-  const addRole = async (req, res) => {
-    const { username, roleCode } = req.query
-    await prisonApi.addRole(res.locals, username, roleCode)
-    res.json({})
-  }
-
-  return { addRole }
-}
-
 const selectRolesFactory = (getUserAndRoles, saveRoles, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
@@ -66,6 +56,5 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, reactUrl, manageUrl, mai
 }
 
 module.exports = {
-  addRoleFactory,
   selectRolesFactory,
 }
