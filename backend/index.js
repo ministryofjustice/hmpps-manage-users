@@ -17,7 +17,6 @@ const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
 
 const setupAuth = require('./setupAuth')
-const setupSass = require('./setupSass')
 
 const routes = require('./routes')
 
@@ -86,7 +85,6 @@ app.use(noCache())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use(setupSass())
 app.use(setupStaticContent())
 
 app.use(setupWebSession())
