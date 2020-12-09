@@ -24,9 +24,6 @@ const routes = require('./routes')
 const setupWebSession = require('./setupWebSession')
 const config = require('./config')
 
-const setupWebpackForDev =
-  config.app.production === false && config.app.disableWebpack === false ? require('./setupWebpackForDev') : undefined
-
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
 
@@ -103,8 +100,6 @@ app.use((req, res, next) => {
   next()
 })
 app.use(routes({ ...apis }))
-
-if (setupWebpackForDev) app.use(setupWebpackForDev())
 
 app.get('/maintain*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))
