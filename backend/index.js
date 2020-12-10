@@ -17,15 +17,11 @@ const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
 
 const setupAuth = require('./setupAuth')
-const setupSass = require('./setupSass')
 
 const routes = require('./routes')
 
 const setupWebSession = require('./setupWebSession')
 const config = require('./config')
-
-const setupWebpackForDev =
-  config.app.production === false && config.app.disableWebpack === false ? require('./setupWebpackForDev') : undefined
 
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
@@ -89,7 +85,6 @@ app.use(noCache())
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-app.use(setupSass())
 app.use(setupStaticContent())
 
 app.use(setupWebSession())
@@ -103,8 +98,6 @@ app.use((req, res, next) => {
   next()
 })
 app.use(routes({ ...apis }))
-
-if (setupWebpackForDev) app.use(setupWebpackForDev())
 
 app.get('/maintain*', (req, res) => {
   res.sendFile(path.join(__dirname, '../build/index.html'))

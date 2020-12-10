@@ -1,4 +1,4 @@
-import { capitalize, getDate, getTime } from './utils'
+const { capitalize, getDate, getTime } = require('./utils')
 
 describe('capitalize()', () => {
   describe('when a string IS NOT provided', () => {

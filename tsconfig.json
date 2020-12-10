@@ -13,8 +13,7 @@
     "checkJs": true,
     "resolveJsonModule": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "jsx": "react"
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "assets", "integration-tests", "build", "dist", "static", "config"],
   "include": ["**/*.js", "**/*.ts"]

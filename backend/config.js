@@ -4,7 +4,6 @@ module.exports = {
   app: {
     port: process.env.PORT || 3001,
     production: process.env.NODE_ENV === 'production',
-    disableWebpack: process.env.DISABLE_WEBPACK === 'true',
     notmEndpointUrl: process.env.NN_ENDPOINT_URL || 'http://localhost:3000/',
     dpsEndpointUrl: process.env.DPS_ENDPOINT_URL || 'http://localhost:3002',
     supportUrl: process.env.SUPPORT_URL || 'http://localhost:3003',
