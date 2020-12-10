@@ -1,6 +1,7 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
-const { trimObjValues} = require('../utils')
+const { trimObjValues } = require('../utils')
+
 const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)

@@ -1,6 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
-const { trimObjValues} = require('../utils')
+const { trimObjValues } = require('../utils')
 
 const createUserFactory = (
   getAssignableGroupsApi,
