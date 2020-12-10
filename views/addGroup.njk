@@ -46,7 +46,7 @@
               idPrefix: 'group',
               name: 'group',
               id: 'group',
-              items: groupDropdownValues,
+              items: groupDropdownValues | addBlankOptions('Select a group'),
               errorMessage: errors | findError('group')
             }) }}
           </div>
@@ -76,7 +76,7 @@
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#group'),
       showAllValues: true,
-      defaultValue: '',
+      preserveNullOptions: true,
     })
   </script>
 {% endblock %}
