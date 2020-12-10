@@ -33,6 +33,7 @@ jobs:
           paths:
             - node_modules
             - build
+            - dist
 
   integration_tests:
     working_directory: ~/app
