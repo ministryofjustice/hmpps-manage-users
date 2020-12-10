@@ -32,6 +32,10 @@ module.exports = (on) => {
     stubAuthAssignableRoles: auth.stubAuthAssignableRoles,
     stubAuthAssignableGroups: auth.stubAuthAssignableGroups,
     stubAuthSearchableRoles: auth.stubAuthSearchableRoles,
+    stubDpsGetRoles: prisonApi.stubGetRoles,
+    stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
+    stubDpsSearch: prisonApi.stubDpsSearch,
+    verifyDpsSearch: prisonApi.verifyDpsSearch,
     verifyAddRoles: auth.verifyAddRoles,
     verifyRemoveRole: auth.verifyRemoveRole,
   })

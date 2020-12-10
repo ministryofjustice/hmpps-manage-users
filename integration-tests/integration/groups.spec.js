@@ -1,4 +1,4 @@
-const GroupsPage = require('../../pages/groupsPage')
+const GroupsPage = require('../pages/groupsPage')
 
 context('Groups', () => {
   before(() => {

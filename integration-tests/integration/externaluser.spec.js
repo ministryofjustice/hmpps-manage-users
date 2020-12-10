@@ -1,8 +1,8 @@
-const MenuPage = require('../../pages/menuPage')
-const AuthUserSearchPage = require('../../pages/authUserSearchPage')
-const AuthUserSearchResultsPage = require('../../pages/authUserSearchResultsPage')
-const AuthUserPage = require('../../pages/authUserPage')
-const AuthUserAddRolePage = require('../../pages/authUserAddRolePage')
+const MenuPage = require('../pages/menuPage')
+const AuthUserSearchPage = require('../pages/authUserSearchPage')
+const UserSearchResultsPage = require('../pages/userSearchResultsPage')
+const UserPage = require('../pages/userPage')
+const UserAddRolePage = require('../pages/userAddRolePage')
 
 const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
@@ -27,7 +27,7 @@ function searchForUser() {
   cy.task('stubAuthSearch', {})
   search.search('sometext')
 
-  const results = AuthUserSearchResultsPage.verifyOnPage()
+  const results = UserSearchResultsPage.verifyOnPage()
   results.rows().should('have.length', 1)
   return results
 }
@@ -49,7 +49,7 @@ context('External user functionality', () => {
     const search = AuthUserSearchPage.goTo()
     cy.task('stubAuthSearch', { content: [] })
     search.search('nothing doing')
-    const results = AuthUserSearchResultsPage.verifyOnPage()
+    const results = UserSearchResultsPage.verifyOnPage()
     results.noResults().should('contain.text', 'No records found')
   })
 
@@ -88,7 +88,7 @@ context('External user functionality', () => {
     const searchGroup = AuthUserSearchPage.goTo()
     cy.task('stubAuthSearch', { content: [] })
     searchGroup.searchGroup('SOCU North West')
-    AuthUserSearchResultsPage.verifyOnPage()
+    UserSearchResultsPage.verifyOnPage()
 
     cy.task('verifyAuthSearch').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -111,7 +111,7 @@ context('External user functionality', () => {
     const searchGroup = AuthUserSearchPage.goTo()
     cy.task('stubAuthSearch', { content: [] })
     searchGroup.searchRole('Global Search')
-    AuthUserSearchResultsPage.verifyOnPage()
+    UserSearchResultsPage.verifyOnPage()
 
     cy.task('verifyAuthSearch').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -140,7 +140,7 @@ context('External user functionality', () => {
 
     const search = AuthUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
-    const results = AuthUserSearchResultsPage.verifyOnPage()
+    const results = UserSearchResultsPage.verifyOnPage()
     results.rows().should('have.length', 5)
     results.rows().eq(0).should('include.text', 'Auth\u00a0Adm0')
     results.rows().eq(1).should('include.text', 'Auth\u00a0Adm1')
@@ -165,7 +165,7 @@ context('External user functionality', () => {
 
     const search = AuthUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
-    const results = AuthUserSearchResultsPage.verifyOnPage()
+    const results = UserSearchResultsPage.verifyOnPage()
     results.rows().should('have.length', 5)
 
     results.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
@@ -202,7 +202,7 @@ context('External user functionality', () => {
     cy.task('stubAuthUserGroups')
     results.edit('AUTH_ADM')
 
-    const userPage = AuthUserPage.verifyOnPage('Auth Adm')
+    const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage.userRows().eq(0).should('contain', 'AUTH_ADM')
     userPage.userRows().eq(1).should('contain', 'auth_test2@digital.justice.gov.uk')
 
@@ -211,7 +211,7 @@ context('External user functionality', () => {
 
     cy.task('stubAuthAssignableRoles')
     userPage.addRole().click()
-    const addRole = AuthUserAddRolePage.verifyOnPage()
+    const addRole = UserAddRolePage.verifyOnPage()
 
     cy.task('stubAuthAddRoles')
     addRole.choose('LICENCE_VARY')
@@ -224,7 +224,7 @@ context('External user functionality', () => {
       expect(JSON.parse(requests[0].body)).to.deep.equal(['LICENCE_RO', 'LICENCE_VARY'])
     })
 
-    AuthUserPage.verifyOnPage('Auth Adm')
+    UserPage.verifyOnPage('Auth Adm')
 
     cy.task('stubAuthRemoveRole')
     userPage.removeRole('GLOBAL_SEARCH').click()
@@ -243,7 +243,7 @@ context('External user functionality', () => {
     cy.task('stubAuthGetUsername')
     cy.task('stubAuthAssignableRoles', [])
     cy.visit('/manage-external-users/AUTH_RO_USER_TEST/select-roles')
-    const addRole = AuthUserAddRolePage.verifyOnPage()
+    const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
   })
 })
