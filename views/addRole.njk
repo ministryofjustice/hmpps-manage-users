@@ -3,11 +3,6 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% block header %}
-  {{ super() }}
-<link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
-{% endblock %}
-
 {% set title =  "Select roles" %}
 
  {% block beforeContent %}
@@ -44,7 +39,7 @@
           {{ govukCheckboxes({
             idPrefix: 'roles',
             name: 'roles',
-            items: roleDropdownValues | addBlankOptions('Select a role'),
+            items: roleDropdownValues,
             errorMessage: errors | findError('roles')
           }) }}
 
@@ -64,16 +59,4 @@
       </div>
     </div>
   </div>
-{% endblock %}
-
-{% block bodyEnd %}
-  {{ super() }}
-  <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script>
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#roles'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-  </script>
 {% endblock %}
