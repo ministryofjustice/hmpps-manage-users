@@ -1,5 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
+const { trimObjValues} = require('../utils')
 
 const createUserFactory = (
   getAssignableGroupsApi,
@@ -42,12 +43,7 @@ const createUserFactory = (
 
   const post = async (req, res) => {
     const isGroupManager = Boolean(res.locals && res.locals.user && res.locals.user.groupManager)
-    const user = req.body
-
-    user.username = user.username ? user.username.trim() : user.username
-    user.email = user.email ? user.email.trim() : user.email
-    user.firstName = user.firstName ? user.firstName.trim() : user.firstName
-    user.lastName = user.lastName ? user.lastName.trim() : user.lastName
+    const user = trimObjValues(req.body)
 
     const errors = validateCreate(user, isGroupManager)
 

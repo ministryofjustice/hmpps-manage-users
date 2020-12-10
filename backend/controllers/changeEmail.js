@@ -1,6 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
-
+const { trimObjValues} = require('../utils')
 const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
@@ -33,16 +33,16 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
 
   const post = async (req, res) => {
     const { username } = req.params
-    const { email } = req.body
+    const { email } = trimObjValues(req.body)
     const staffUrl = `${manageUrl}/${username}`
-    const trimmedEmail = email ? email.trim() : email
+   
     try {
-      const errors = validateChangeEmail(trimmedEmail)
+      const errors = validateChangeEmail(email)
 
       if (errors.length > 0) {
-        stashStateAndRedirectToIndex(req, res, errors, [trimmedEmail])
+        stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
-        await changeEmail(res.locals, username, trimmedEmail)
+        await changeEmail(res.locals, username, email)
         res.redirect(staffUrl)
       }
     } catch (err) {
@@ -52,7 +52,7 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
           error === 'email.domain' ? 'The email domain is not allowed.  Enter a work email address' : errorDescription
 
         const errors = [{ href: '#email', text: description }]
-        stashStateAndRedirectToIndex(req, res, errors, [trimmedEmail])
+        stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         logError(req.originalUrl, err, serviceUnavailableMessage)
         res.render('error.njk', { url: `${staffUrl}/change-email` })
