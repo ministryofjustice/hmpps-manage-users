@@ -53,6 +53,8 @@ COPY --from=builder --chown=appuser:appgroup \
 COPY --from=builder --chown=appuser:appgroup \
         /app/views ./views
 
+ENV PORT=3000
+
 EXPOSE 3000
 USER 2000
 CMD [ "npm", "start" ]
