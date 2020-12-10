@@ -7,13 +7,13 @@ module.exports = () => {
   router.use(express.static(path.join(process.cwd(), '/build')))
 
   const assetPaths = [
-    '../node_modules/govuk-frontend/govuk/assets',
-    '../node_modules/govuk-frontend',
-    '../node_modules/@ministryofjustice/frontend',
-    '../node_modules/accessible-autocomplete/dist',
+    '/node_modules/govuk-frontend/govuk/assets',
+    '/node_modules/govuk-frontend',
+    '/node_modules/@ministryofjustice/frontend',
+    '/node_modules/accessible-autocomplete/dist',
   ]
   assetPaths.forEach((dir) => {
-    router.use('/assets', express.static(path.join(__dirname, dir)))
+    router.use('/assets', express.static(path.join(process.cwd(), dir)))
   })
 
   return router
