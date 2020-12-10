@@ -8,17 +8,15 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY package.json package-lock.json *.js ./
-ADD ./src/ src/
-ADD ./scripts/ scripts/
-ADD ./static/ static/
-ADD ./html-template/ html-template/
+COPY . .
 
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit && \
     npm run build && \
     export BUILD_NUMBER=${BUILD_NUMBER} && \
     export GIT_REF=${GIT_REF} && \
     npm run record-build-info
+
+RUN npm prune --production
 
 FROM node:14-buster-slim
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
@@ -38,15 +36,22 @@ RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezo
 RUN mkdir /app && chown appuser:appgroup /app
 USER 2000
 WORKDIR /app
-ADD --chown=appuser:appgroup . .
 
-COPY --from=builder --chown=appuser:appgroup /app/build /app/build
-COPY --from=builder --chown=appuser:appgroup /app/node_modules /app/node_modules
-COPY --from=builder --chown=appuser:appgroup /app/build-info.json /app/build-info.json
+COPY --from=builder --chown=appuser:appgroup \
+        /app/package.json \
+        /app/package-lock.json \
+        /app/dist \
+        /app/build-info.json \
+        ./
 
-RUN npm prune --production
+COPY --from=builder --chown=appuser:appgroup \
+        /app/build ./build
 
-ENV PORT=3000
+COPY --from=builder --chown=appuser:appgroup \
+        /app/node_modules ./node_modules
+
+COPY --from=builder --chown=appuser:appgroup \
+        /app/views ./views
 
 EXPOSE 3000
 USER 2000
