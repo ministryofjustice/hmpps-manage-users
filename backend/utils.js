@@ -35,7 +35,7 @@ const hyphenatedStringToCamel = (string) =>
   })
 
 const trimObjValues = (obj) =>
- Object.keys(obj).reduce((acc, curr) => {
+  Object.keys(obj).reduce((acc, curr) => {
     acc[curr] = obj[curr].trim()
     return acc
   }, {})
