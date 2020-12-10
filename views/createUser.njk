@@ -72,7 +72,7 @@
             name: "lastName",
             errorMessage: errors | findError('lastName')
           }) }}
-
+          <div class="govuk-list">
           {{ govukSelect({label: {
             text: "Select a group"
           },
@@ -82,7 +82,7 @@
             items: groupDropdownValues | addBlankOptions('Select a group'),
             errorMessage: errors | findError('groupCode')
           }) }}
-
+          </div>
 
           {{ govukButton({
             text: "Create",
