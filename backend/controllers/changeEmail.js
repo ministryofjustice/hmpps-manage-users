@@ -36,7 +36,6 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
     const { username } = req.params
     const { email } = trimObjValues(req.body)
     const staffUrl = `${manageUrl}/${username}`
-   
     try {
       const errors = validateChangeEmail(email)
 
