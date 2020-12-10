@@ -35,14 +35,14 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
     const { username } = req.params
     const { email } = req.body
     const staffUrl = `${manageUrl}/${username}`
-
+    const trimmedEmail = email ? email.trim() : email
     try {
-      const errors = validateChangeEmail(email)
+      const errors = validateChangeEmail(trimmedEmail)
 
       if (errors.length > 0) {
-        stashStateAndRedirectToIndex(req, res, errors, [email])
+        stashStateAndRedirectToIndex(req, res, errors, [trimmedEmail])
       } else {
-        await changeEmail(res.locals, username, email)
+        await changeEmail(res.locals, username, trimmedEmail)
         res.redirect(staffUrl)
       }
     } catch (err) {
@@ -52,7 +52,7 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
           error === 'email.domain' ? 'The email domain is not allowed.  Enter a work email address' : errorDescription
 
         const errors = [{ href: '#email', text: description }]
-        stashStateAndRedirectToIndex(req, res, errors, [email])
+        stashStateAndRedirectToIndex(req, res, errors, [trimmedEmail])
       } else {
         logError(req.originalUrl, err, serviceUnavailableMessage)
         res.render('error.njk', { url: `${staffUrl}/change-email` })

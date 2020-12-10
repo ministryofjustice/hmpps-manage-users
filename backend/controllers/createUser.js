@@ -43,6 +43,12 @@ const createUserFactory = (
   const post = async (req, res) => {
     const isGroupManager = Boolean(res.locals && res.locals.user && res.locals.user.groupManager)
     const user = req.body
+
+    user.username = user.username ? user.username.trim() : user.username
+    user.email = user.email ? user.email.trim() : user.email
+    user.firstName = user.firstName ? user.firstName.trim() : user.firstName
+    user.lastName = user.lastName ? user.lastName.trim() : user.lastName
+
     const errors = validateCreate(user, isGroupManager)
 
     if (errors.length > 0) {
