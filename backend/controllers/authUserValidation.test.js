@@ -1,4 +1,4 @@
-import { validateSearch, validateCreate, validateChangeEmail } from './authUserValidation'
+const { validateSearch, validateCreate, validateChangeEmail } = require('./authUserValidation')
 
 describe('Auth search validation', () => {
   describe('missing username', () => {
