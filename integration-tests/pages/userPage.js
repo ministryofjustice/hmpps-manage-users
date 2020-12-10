@@ -1,6 +1,6 @@
 const page = require('./page')
 
-const authUserPage = (user) =>
+const userPage = (user) =>
   page(user, {
     userRows: () => cy.get('[data-qa="user-details"] tbody tr'),
     roleRows: () => cy.get('[data-qa="user-roles"] tbody tr'),
@@ -9,5 +9,5 @@ const authUserPage = (user) =>
   })
 
 export default {
-  verifyOnPage: authUserPage,
+  verifyOnPage: userPage,
 }
