@@ -37,7 +37,7 @@ const controller = ({ oauthApi, logError }) => {
   const { index: selectGroup, post: postGroup } = selectGroupFactory(
     getUserAndGroupsApi,
     saveGroupApi,
-    '/maintain-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Maintain external users',
     logError
@@ -46,7 +46,7 @@ const controller = ({ oauthApi, logError }) => {
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAndAssignableRolesApi,
     saveRolesApi,
-    '/maintain-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Maintain external users',
     logError
@@ -55,7 +55,7 @@ const controller = ({ oauthApi, logError }) => {
   const { index: getEmail, post: postEmail } = changeEmailFactory(
     getUserApi,
     changeEmailApi,
-    '/maintain-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Maintain external users',
     logError
