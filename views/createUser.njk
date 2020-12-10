@@ -79,7 +79,7 @@
             idPrefix: 'groupCode',
             name: 'groupCode',
             id: 'groupCode',
-            items: groupDropdownValues,
+            items: groupDropdownValues | addBlankOptions('Select a group'),
             errorMessage: errors | findError('groupCode')
           }) }}
 

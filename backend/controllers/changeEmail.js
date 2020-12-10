@@ -2,7 +2,7 @@ const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
-const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, maintainTitle, logError) => {
+const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
     req.flash('changeEmail', email)
@@ -20,7 +20,7 @@ const changeEmailFactory = (getUserApi, changeEmail, reactUrl, manageUrl, mainta
 
       res.render('changeEmail.njk', {
         maintainTitle,
-        maintainUrl: reactUrl,
+        maintainUrl: searchUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         currentEmail: email,

@@ -24,7 +24,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-dps-users',
       '/manage-dps-users',
-      'Maintain DPS users',
+      'Search for a DPS user',
       logError
     )
 
@@ -35,7 +35,7 @@ describe('search factory', () => {
       const render = jest.fn()
       await search.index(req, { render })
       expect(render).toBeCalledWith('search.njk', {
-        searchTitle: 'Maintain DPS users',
+        searchTitle: 'Search for a DPS user',
         searchUrl: '/search-dps-users',
         groupDropdownValues: [],
         roleDropdownValues: [{ text: 'name', value: 'code' }],
@@ -70,7 +70,7 @@ describe('search factory', () => {
       })
 
       expect(render).toBeCalledWith('dpsSearchResults.njk', {
-        searchTitle: 'Maintain DPS users',
+        searchTitle: 'Search for a DPS user',
         searchUrl: '/search-dps-users',
         maintainUrl: '/manage-dps-users',
         results: [

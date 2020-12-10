@@ -10,10 +10,9 @@ const controller = ({ prisonApi, logError }) => {
     const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })
-    if (hasAdminRole) {
-      return prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode })
-    }
-    return prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode })
+    return hasAdminRole
+      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode })
+      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode })
   }
 
   const searchableRoles = (context) => {

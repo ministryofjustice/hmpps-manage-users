@@ -34,7 +34,7 @@ const copyNamedHeaders = (headerNames, srcHeaders) =>
     if (srcHeaders[name]) {
       return {
         ...previous,
-        [name]: parseInt(srcHeaders[name], 10),
+        [name]: srcHeaders[name],
       }
     }
     return previous
@@ -46,13 +46,17 @@ const setRequestPagination = (context, { offset, size }) => {
 const getRequestPagination = (context) => context.requestHeaders || {}
 
 const setResponsePagination = (context, headers) => {
-  const headerNames = ['page-offset', 'page-limit', 'sort-fields', 'sort-order', 'total-records']
+  const headerNames = ['page-offset', 'page-limit', 'total-records']
 
   const { 'total-records': totalElements, 'page-offset': offset, 'page-limit': limit } = copyNamedHeaders(
     headerNames,
     (headers && normalizeHeaderNames(headers)) || {}
   )
-  context.offsetPageable = { totalElements, offset, limit }
+  context.offsetPageable = {
+    totalElements: totalElements ? parseInt(totalElements, 10) : undefined,
+    offset: offset ? parseInt(offset, 10) : undefined,
+    limit: limit ? parseInt(limit, 10) : undefined,
+  }
 }
 
 const getResponsePagination = (context) => context.offsetPageable || {}

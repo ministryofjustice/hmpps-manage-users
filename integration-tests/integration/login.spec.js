@@ -1,4 +1,4 @@
-const MenuPage = require('../../pages/menuPage')
+const MenuPage = require('../pages/menuPage')
 
 context('Login functionality', () => {
   before(() => {

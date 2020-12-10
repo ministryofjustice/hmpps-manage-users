@@ -1,4 +1,4 @@
-import { configure } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-16'
-
-configure({ adapter: new Adapter() })
+/* eslint-disable import/no-extraneous-dependencies */
+global.print = jest.fn()
+global.afterPrint = jest.fn()
+global.open = jest.fn()
