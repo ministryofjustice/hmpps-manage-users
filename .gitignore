@@ -85,3 +85,4 @@ manage-accounts-specs/out/
 /integration-tests/screenshots/
 build-info.json
 dist
+test-results

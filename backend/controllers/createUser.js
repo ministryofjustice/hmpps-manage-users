@@ -1,15 +1,7 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
 
-const createUserFactory = (
-  getAssignableGroupsApi,
-  createUser,
-  reactUrl,
-  createUrl,
-  manageUrl,
-  maintainTitle,
-  logError
-) => {
+const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createUserErrors', errors)
     req.flash('user', user)
@@ -29,7 +21,7 @@ const createUserFactory = (
 
       res.render('createUser.njk', {
         maintainTitle,
-        maintainUrl: reactUrl,
+        maintainUrl: createUrl,
         ...user,
         groupDropdownValues: [{ text: '', value: '' }].concat(groupDropdownValues),
         errors: req.flash('createUserErrors'),
