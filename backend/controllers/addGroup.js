@@ -22,7 +22,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, m
         maintainUrl: searchUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
-        groupDropdownValues: [{ text: '', value: '' }].concat(groupDropdownValues),
+        groupDropdownValues,
         errors: req.flash('addGroupErrors'),
       })
     } catch (error) {
