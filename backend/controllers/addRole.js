@@ -1,6 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, maintainTitle, logError) => {
+const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -19,8 +19,6 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, ma
       }))
 
       res.render('addRole.njk', {
-        maintainTitle,
-        maintainUrl: searchUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         roleDropdownValues,

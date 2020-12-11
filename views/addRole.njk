@@ -5,18 +5,6 @@
 
 {% set title =  "Select roles" %}
 
- {% block beforeContent %}
-   {{ govukBreadcrumbs({
-     items: [
-       { text: "Home", href: homeUrl },
-       { text: "Manage user accounts", href: '/' },
-       { text: maintainTitle, href: maintainUrl },
-       { text: staff.name, href: staffUrl },
-       { text: title }
-     ]
-   }) }}
- {% endblock %}
-
 {% block content %}
   {% if errors.length > 0 %}
     {{ govukErrorSummary({

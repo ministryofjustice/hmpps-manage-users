@@ -18,7 +18,6 @@ const controller = ({ prisonApi, logError }) => {
     saveRolesApi,
     '/search-dps-users',
     '/manage-dps-users',
-    'Manage user roles',
     logError
   )
 
@@ -30,7 +29,7 @@ const controller = ({ prisonApi, logError }) => {
     undefined,
     '/search-dps-users',
     '/manage-dps-users',
-    'Manage user roles',
+    'Search for a DPS user',
     false,
     logError
   )

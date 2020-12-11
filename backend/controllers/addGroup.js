@@ -1,6 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, maintainTitle, logError) => {
+const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addGroupErrors', errors)
     res.redirect(req.originalUrl)
@@ -18,8 +18,6 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, m
         .map((g) => ({ text: g.groupName, value: g.groupCode }))
 
       res.render('addGroup.njk', {
-        maintainTitle,
-        maintainUrl: searchUrl,
         staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
         staffUrl,
         groupDropdownValues,

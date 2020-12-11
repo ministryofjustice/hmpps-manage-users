@@ -28,7 +28,7 @@ const controller = ({ prisonApi, logError }) => {
     contextProperties.getResponsePagination,
     '/search-dps-users',
     '/manage-dps-users',
-    'Search DPS users',
+    'Search for a DPS user',
     logError
   )
 
