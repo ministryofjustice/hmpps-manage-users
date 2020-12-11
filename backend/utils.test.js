@@ -51,9 +51,30 @@ describe('getTime()', () => {
   it('should return Invalid message if no date time string is used', () => {
     expect(getTime()).toEqual('Invalid date or time')
   })
-  it('should trim all fields of an object', () => {
+})
+
+describe('trimObjectValues()', () => {
+  it('should trim all fields of an object with proper values', () => {
     expect(trimObjValues({ firstName: ' Andy ', lastName: ' Thomas ' })).toEqual({
       firstName: 'Andy',
+      lastName: 'Thomas',
+    })
+  })
+  it('should trim fields of an object with some undefined fields ', () => {
+    expect(trimObjValues({ firstName: ' Andy ', lastName: undefined })).toEqual({
+      firstName: 'Andy',
+      lastName: undefined,
+    })
+  })
+  it('should trim fields of an object with some null fields ', () => {
+    expect(trimObjValues({ firstName: null, lastName: ' Thomas ' })).toEqual({
+      firstName: null,
+      lastName: 'Thomas',
+    })
+  })
+  it('should trim fields of an object with some empty fields ', () => {
+    expect(trimObjValues({ firstName: '', lastName: ' Thomas ' })).toEqual({
+      firstName: '',
       lastName: 'Thomas',
     })
   })
