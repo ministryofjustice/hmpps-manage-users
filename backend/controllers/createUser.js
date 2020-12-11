@@ -1,5 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
+const { trimObjValues } = require('../utils')
 
 const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
@@ -34,7 +35,9 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manage
 
   const post = async (req, res) => {
     const isGroupManager = Boolean(res.locals && res.locals.user && res.locals.user.groupManager)
-    const user = req.body
+    const user = trimObjValues(req.body)
+
+    // @ts-ignore
     const errors = validateCreate(user, isGroupManager)
 
     if (errors.length > 0) {

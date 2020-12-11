@@ -77,6 +77,32 @@ describe('create user factory', () => {
       })
     })
 
+    it('should trim fields, create user and redirect', async () => {
+      const req = {
+        params: {},
+        body: {
+          username: ' joe_user ',
+          email: ' bob@digital.justice.gov.uk ',
+          firstName: ' bob ',
+          lastName: ' smith ',
+          groupCode: 'SITE_1_GROUP_1',
+        },
+        flash: jest.fn(),
+      }
+
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      await createUser.post(req, { redirect, locals })
+      expect(redirect).toBeCalledWith('/manage-external-users/joe_user')
+      expect(createUserApi).toBeCalledWith(locals, {
+        username: 'joe_user',
+        email: 'bob@digital.justice.gov.uk',
+        firstName: 'bob',
+        lastName: 'smith',
+        groupCode: 'SITE_1_GROUP_1',
+      })
+    })
+
     it('should create user without group and redirect', async () => {
       const req = {
         params: {},

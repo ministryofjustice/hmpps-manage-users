@@ -1,5 +1,6 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
+const { trimObjValues } = require('../utils')
 
 const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, maintainTitle, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
@@ -33,9 +34,8 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, maint
 
   const post = async (req, res) => {
     const { username } = req.params
-    const { email } = req.body
+    const { email } = trimObjValues(req.body)
     const staffUrl = `${manageUrl}/${username}`
-
     try {
       const errors = validateChangeEmail(email)
 

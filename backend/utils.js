@@ -34,10 +34,13 @@ const hyphenatedStringToCamel = (string) =>
     return char[1].toUpperCase()
   })
 
+const trimObjValues = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v.trim()]))
+
 module.exports = {
   capitalize,
   pascalToString,
   getDate,
   getTime,
   hyphenatedStringToCamel,
+  trimObjValues,
 }
