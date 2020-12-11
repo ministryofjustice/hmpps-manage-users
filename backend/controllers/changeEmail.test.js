@@ -9,7 +9,6 @@ describe('change email factory', () => {
     saveEmail,
     '/maintain-external-users',
     '/manage-external-users',
-    'Maintain external users',
     logError
   )
 
@@ -26,8 +25,6 @@ describe('change email factory', () => {
       const render = jest.fn()
       await changeEmail.index(req, { render })
       expect(render).toBeCalledWith('changeEmail.njk', {
-        maintainTitle: 'Maintain external users',
-        maintainUrl: '/maintain-external-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/joe',
         currentEmail: 'bob@digital.justice.gov.uk',
@@ -48,8 +45,6 @@ describe('change email factory', () => {
       await changeEmail.index(req, { render })
       expect(render).toBeCalledWith('changeEmail.njk', {
         errors: { error: 'some error' },
-        maintainTitle: 'Maintain external users',
-        maintainUrl: '/maintain-external-users',
         staff: { name: 'Billy Bob', username: 'BOB' },
         currentEmail: 'bob@digital.justice.gov.uk',
         staffUrl: '/manage-external-users/joe',
