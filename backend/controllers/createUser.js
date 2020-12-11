@@ -24,7 +24,7 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manage
         maintainTitle,
         maintainUrl: createUrl,
         ...user,
-        groupDropdownValues: [{ text: '', value: '' }].concat(groupDropdownValues),
+        groupDropdownValues,
         errors: req.flash('createUserErrors'),
       })
     } catch (error) {

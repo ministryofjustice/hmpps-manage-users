@@ -8,7 +8,7 @@ class AuthUserCreatePage extends Page {
 
     static at = {
         browser.currentUrl.contains(url)
-        headingText.contains('Create external users')
+        headingText.contains('Create an external user')
     }
 
     static content = {
