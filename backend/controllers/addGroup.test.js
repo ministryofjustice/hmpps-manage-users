@@ -28,10 +28,7 @@ describe('select groups factory', () => {
         errors: undefined,
         maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
-        groupDropdownValues: [
-          { text: '', value: '' },
-          { text: 'name', value: 'code' },
-        ],
+        groupDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/joe',
       })
@@ -54,7 +51,7 @@ describe('select groups factory', () => {
         errors: undefined,
         maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
-        groupDropdownValues: [{ text: '', value: '' }],
+        groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/joe',
       })
@@ -70,7 +67,7 @@ describe('select groups factory', () => {
         errors: { error: 'some error' },
         maintainTitle: 'Maintain external users',
         maintainUrl: '/maintain-external-users',
-        groupDropdownValues: [{ text: '', value: '' }],
+        groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/joe',
       })

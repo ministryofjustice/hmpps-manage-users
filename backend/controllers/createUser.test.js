@@ -23,10 +23,7 @@ describe('create user factory', () => {
       expect(render).toBeCalledWith('createUser.njk', {
         maintainTitle: 'Maintain external users',
         maintainUrl: '/create-external-users',
-        groupDropdownValues: [
-          { text: '', value: '' },
-          { selected: false, text: 'name', value: 'code' },
-        ],
+        groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
         errors: undefined,
       })
     })
@@ -41,10 +38,7 @@ describe('create user factory', () => {
         errors: { error: 'some error' },
         maintainTitle: 'Maintain external users',
         maintainUrl: '/create-external-users',
-        groupDropdownValues: [
-          { text: '', value: '' },
-          { selected: false, text: 'name', value: 'code' },
-        ],
+        groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
       })
     })
 
