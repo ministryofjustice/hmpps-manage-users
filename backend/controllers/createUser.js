@@ -45,7 +45,6 @@ const createUserFactory = (
     const isGroupManager = Boolean(res.locals && res.locals.user && res.locals.user.groupManager)
     const user = trimObjValues(req.body)
 
-    // @ts-ignore
     const errors = validateCreate(user, isGroupManager)
 
     if (errors.length > 0) {

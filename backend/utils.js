@@ -34,7 +34,7 @@ const hyphenatedStringToCamel = (string) =>
     return char[1].toUpperCase()
   })
 
-const trimObjValues = (obj) => Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, v.trim()]))
+const trimObjValues = (obj) => Object.assign({}, ...Object.entries(obj).map(([k, v]) => ({ [k]: v ? v.trim() : v })))
 
 module.exports = {
   capitalize,
