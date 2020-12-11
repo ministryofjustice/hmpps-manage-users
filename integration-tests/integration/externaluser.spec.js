@@ -246,4 +246,36 @@ context('External user functionality', () => {
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
   })
+
+  it('Should provide breadcrumb link back to search results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+    cy.task('stubAuthAssignableGroups', { content: [] })
+    cy.task('stubAuthSearchableRoles', { content: [] })
+    cy.task('stubAuthSearch', {
+      content: replicateUser(5),
+      totalElements: 21,
+      page: 0,
+      size: 5,
+    })
+
+    const search = AuthUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = UserSearchResultsPage.verifyOnPage()
+    results.nextPage()
+
+    cy.task('stubAuthGetUsername')
+    cy.task('stubAuthUserRoles')
+    cy.task('stubAuthUserGroups')
+    results.edit('AUTH_ADM4')
+
+    const userPage = UserPage.verifyOnPage('Auth Adm')
+    userPage
+      .searchResultsBreadcrumb()
+      .should(
+        'have.attr',
+        'href',
+        '/search-external-users/results?user=sometext%40somewhere.com&groupCode=&roleCode=&page=1'
+      )
+  })
 })

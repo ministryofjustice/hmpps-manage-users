@@ -35,6 +35,8 @@ module.exports = (on) => {
     stubDpsGetRoles: prisonApi.stubGetRoles,
     stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
     stubDpsSearch: prisonApi.stubDpsSearch,
+    stubDpsUserDetails: prisonApi.stubUserDetails,
+    stubDpsUserGetRoles: prisonApi.stubUserGetRoles,
     verifyDpsSearch: prisonApi.verifyDpsSearch,
     verifyAddRoles: auth.verifyAddRoles,
     verifyRemoveRole: auth.verifyRemoveRole,
