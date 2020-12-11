@@ -8,7 +8,7 @@ const userDetailsFactory = (
   disableUserApi,
   searchUrl,
   manageUrl,
-  maintainTitle,
+  searchTitle,
   showExtraUserDetails,
   logError
 ) => {
@@ -18,10 +18,13 @@ const userDetailsFactory = (
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
+    const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
+
     try {
       const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
       res.render('userDetails.njk', {
-        maintainTitle,
+        searchTitle,
+        searchResultsUrl,
         searchUrl,
         staff: { ...user, name: `${user.firstName} ${user.lastName}` },
         staffUrl,

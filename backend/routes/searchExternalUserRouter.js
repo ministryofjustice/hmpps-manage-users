@@ -17,7 +17,7 @@ const controller = ({ oauthApi, logError }) => {
     contextProperties.getPageable,
     '/search-external-users',
     '/manage-external-users',
-    'Maintain external users',
+    'Search for an external user',
     logError
   )
 

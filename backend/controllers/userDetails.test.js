@@ -15,13 +15,13 @@ describe('user detail factory', () => {
     disableUserApi,
     '/search-external-users',
     '/manage-external-users',
-    'Maintain external users',
+    'Search for an external user',
     true,
     logError
   )
 
   it('should call userDetail render', async () => {
-    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
         username: 'BOB',
@@ -38,7 +38,8 @@ describe('user detail factory', () => {
     const render = jest.fn()
     await userDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      maintainTitle: 'Maintain external users',
+      searchTitle: 'Search for an external user',
+      searchResultsUrl: '/search-external-users/results',
       searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
@@ -62,7 +63,7 @@ describe('user detail factory', () => {
   })
 
   it('should pass through hasMaintainAuthUsers to userDetail render', async () => {
-    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
         username: 'BOB',
@@ -79,7 +80,8 @@ describe('user detail factory', () => {
     const render = jest.fn()
     await userDetails.index(req, { render, locals: { user: { maintainAuthUsers: true } } })
     expect(render).toBeCalledWith('userDetails.njk', {
-      maintainTitle: 'Maintain external users',
+      searchTitle: 'Search for an external user',
+      searchResultsUrl: '/search-external-users/results',
       searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
@@ -103,7 +105,7 @@ describe('user detail factory', () => {
   })
 
   it('should pass through show fields if not set', async () => {
-    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     const dpsUserDetails = userDetailsFactory(
       getUserRolesAndGroupsApi,
       removeRoleApi,
@@ -112,7 +114,7 @@ describe('user detail factory', () => {
       undefined,
       '/search-external-users',
       '/manage-external-users',
-      'Maintain external users',
+      'Search for an external user',
       false,
       logError
     )
@@ -132,7 +134,8 @@ describe('user detail factory', () => {
     const render = jest.fn()
     await dpsUserDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      maintainTitle: 'Maintain external users',
+      searchTitle: 'Search for an external user',
+      searchResultsUrl: '/search-external-users/results',
       searchUrl: '/search-external-users',
       staff: {
         firstName: 'Billy',
@@ -155,8 +158,62 @@ describe('user detail factory', () => {
     })
   })
 
+  it('should copy the search results url through from the session', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: { searchResultsUrl: '/some-url' } }
+    const dpsUserDetails = userDetailsFactory(
+      getUserRolesAndGroupsApi,
+      removeRoleApi,
+      undefined,
+      undefined,
+      undefined,
+      '/search-external-users',
+      '/manage-external-users',
+      'Search for an external user',
+      false,
+      logError
+    )
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const render = jest.fn()
+    await dpsUserDetails.index(req, { render })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      searchTitle: 'Search for an external user',
+      searchUrl: '/search-external-users',
+      searchResultsUrl: '/some-url',
+      staff: {
+        firstName: 'Billy',
+        lastName: 'Bob',
+        name: 'Billy Bob',
+        username: 'BOB',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      staffUrl: '/manage-external-users/joe',
+      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      hasMaintainAuthUsers: false,
+      showEnableDisable: false,
+      showExtraUserDetails: false,
+      showGroups: false,
+      errors: undefined,
+    })
+  })
+
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
-    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
         username: 'BOB',
@@ -176,7 +233,7 @@ describe('user detail factory', () => {
   })
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
-    const req = { params: { username: 'joe' }, flash: jest.fn() }
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
         username: 'BOB',

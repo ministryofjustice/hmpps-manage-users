@@ -8,8 +8,9 @@ describe('create user factory', () => {
     getAssignableGroupsApi,
     createUserApi,
     '/create-external-users',
+    '/search-external-users',
     '/manage-external-users',
-    'Maintain external users',
+    'Search for an external user',
     logError
   )
 
@@ -21,7 +22,7 @@ describe('create user factory', () => {
       const render = jest.fn()
       await createUser.index(req, { render })
       expect(render).toBeCalledWith('createUser.njk', {
-        maintainTitle: 'Maintain external users',
+        maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
         groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
         errors: undefined,
@@ -36,7 +37,7 @@ describe('create user factory', () => {
       await createUser.index(req, { render })
       expect(render).toBeCalledWith('createUser.njk', {
         errors: { error: 'some error' },
-        maintainTitle: 'Maintain external users',
+        maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
         groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
       })
@@ -62,6 +63,7 @@ describe('create user factory', () => {
           groupCode: 'SITE_1_GROUP_1',
         },
         flash: jest.fn(),
+        session: {},
       }
 
       const redirect = jest.fn()
@@ -88,6 +90,7 @@ describe('create user factory', () => {
           groupCode: 'SITE_1_GROUP_1',
         },
         flash: jest.fn(),
+        session: {},
       }
 
       const redirect = jest.fn()
@@ -114,6 +117,7 @@ describe('create user factory', () => {
           groupCode: '',
         },
         flash: jest.fn(),
+        session: {},
       }
 
       const redirect = jest.fn()
@@ -127,6 +131,26 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCode: '',
       })
+    })
+
+    it('should stash away the search results url in the session', async () => {
+      const req = {
+        params: {},
+        body: {
+          username: 'joe_user',
+          email: 'bob@digital.justice.gov.uk',
+          firstName: 'bob',
+          lastName: 'smith',
+          groupCode: '',
+        },
+        flash: jest.fn(),
+        session: {},
+      }
+
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      await createUser.post(req, { redirect, locals })
+      expect(req.session).toEqual({ searchResultsUrl: '/search-external-users/results?user=joe_user' })
     })
 
     it('should stash the errors and redirect if no details entered', async () => {
