@@ -15,6 +15,19 @@ describe('search factory', () => {
     pagingApi.mockReset()
   })
 
+  const mockSearchCall = () => {
+    searchApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+      },
+    ])
+  }
+
   describe('DPS', () => {
     const search = searchFactory(
       paginationService,
@@ -50,19 +63,11 @@ describe('search factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
+        session: {},
       }
       const pagination = { offset: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
-      searchApi.mockResolvedValue([
-        {
-          username: 'BOB',
-          firstName: 'Billy',
-          lastName: 'Bob',
-          email: 'bob@digital.justice.gov.uk',
-          enabled: true,
-          verified: true,
-        },
-      ])
+      mockSearchCall()
       const render = jest.fn()
       await search.results(req, {
         render,
@@ -99,7 +104,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-external-users',
       '/manage-external-users',
-      'Maintain external users',
+      'Search for an external user',
       logError
     )
 
@@ -115,7 +120,7 @@ describe('search factory', () => {
       const render = jest.fn()
       await search.index(req, { render })
       expect(render).toBeCalledWith('search.njk', {
-        searchTitle: 'Maintain external users',
+        searchTitle: 'Search for an external user',
         searchUrl: '/search-external-users',
         groupDropdownValues: [{ text: 'name', value: 'code' }],
         roleDropdownValues: [{ text: 'name', value: 'code' }],
@@ -132,19 +137,11 @@ describe('search factory', () => {
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
           originalUrl: '/',
+          session: {},
         }
         const pagination = { page: 5 }
         paginationService.getPagination.mockReturnValue(pagination)
-        searchApi.mockResolvedValue([
-          {
-            username: 'BOB',
-            firstName: 'Billy',
-            lastName: 'Bob',
-            email: 'bob@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-        ])
+        mockSearchCall()
         const render = jest.fn()
         await search.results(req, {
           render,
@@ -152,7 +149,7 @@ describe('search factory', () => {
         })
 
         expect(render).toBeCalledWith('externalSearchResults.njk', {
-          searchTitle: 'Maintain external users',
+          searchTitle: 'Search for an external user',
           searchUrl: '/search-external-users',
           maintainUrl: '/manage-external-users',
           results: [
@@ -177,19 +174,11 @@ describe('search factory', () => {
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
           originalUrl: '/',
+          session: {},
         }
         const pagination = { page: 5 }
         paginationService.getPagination.mockReturnValue(pagination)
-        searchApi.mockResolvedValue([
-          {
-            username: 'BOB',
-            firstName: 'Billy',
-            lastName: 'Bob',
-            email: 'bob@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-        ])
+        mockSearchCall()
         const render = jest.fn()
         const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
         await search.results(req, {
@@ -207,19 +196,11 @@ describe('search factory', () => {
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
           originalUrl: '/',
+          session: {},
         }
         const pagination = { page: 5 }
         paginationService.getPagination.mockReturnValue(pagination)
-        searchApi.mockResolvedValue([
-          {
-            username: 'BOB',
-            firstName: 'Billy',
-            lastName: 'Bob',
-            email: 'bob@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-        ])
+        mockSearchCall()
         const render = jest.fn()
         const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
         await search.results(req, {
@@ -237,27 +218,37 @@ describe('search factory', () => {
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
           originalUrl: '/',
+          session: {},
         }
         const pagination = { page: 5 }
         paginationService.getPagination.mockReturnValue(pagination)
-        searchApi.mockResolvedValue([
-          {
-            username: 'BOB',
-            firstName: 'Billy',
-            lastName: 'Bob',
-            email: 'bob@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-        ])
+        mockSearchCall()
         const render = jest.fn()
         const pageable = { page: 5, size: 10, totalElements: 123 }
         pagingApi.mockReturnValue(pageable)
-        await search.results(req, {
-          render,
-        })
+        await search.results(req, { render })
 
         expect(paginationService.getPagination).toBeCalledWith(pageable, new URL('http://localhost/'))
+      })
+
+      it('should stash away the search url in the session', async () => {
+        const req = {
+          query: { user: 'joe', page: 3, size: 13 },
+          flash: jest.fn(),
+          get: jest.fn().mockReturnValue('localhost'),
+          protocol: 'http',
+          originalUrl: '/some-url',
+          session: {},
+        }
+        const pagination = { page: 5 }
+        paginationService.getPagination.mockReturnValue(pagination)
+        mockSearchCall()
+        const render = jest.fn()
+        const pageable = { page: 5, size: 10, totalElements: 123 }
+        pagingApi.mockReturnValue(pageable)
+        await search.results(req, { render })
+
+        expect(req.session).toEqual({ searchResultsUrl: '/some-url' })
       })
     })
   })

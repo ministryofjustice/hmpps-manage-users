@@ -12,6 +12,7 @@ const controller = ({ oauthApi, logError }) => {
     getAssignableGroupsApi,
     createUserApi,
     '/create-external-users',
+    '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
     logError

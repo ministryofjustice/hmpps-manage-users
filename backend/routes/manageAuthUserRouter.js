@@ -66,7 +66,7 @@ const controller = ({ oauthApi, logError }) => {
     disableUserApi,
     '/search-external-users',
     '/manage-external-users',
-    'Maintain external users',
+    'Search for an external user',
     true,
     logError
   )

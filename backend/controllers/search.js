@@ -46,6 +46,9 @@ const searchFactory = (
     const pageNumber = (page && parseInt(page, 10)) || 0
     const pageOffset = (offset && parseInt(offset, 10)) || 0
 
+    // stash away the search url in the session to provide in breadcrumbs to go back
+    req.session.searchResultsUrl = req.originalUrl
+
     try {
       const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
 

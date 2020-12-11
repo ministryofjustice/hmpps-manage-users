@@ -2,7 +2,15 @@ const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
-const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manageUrl, maintainTitle, logError) => {
+const createUserFactory = (
+  getAssignableGroupsApi,
+  createUser,
+  createUrl,
+  searchUrl,
+  manageUrl,
+  maintainTitle,
+  logError
+) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createUserErrors', errors)
     req.flash('user', user)
@@ -45,6 +53,8 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, manage
     } else {
       try {
         await createUser(res.locals, user)
+
+        req.session.searchResultsUrl = `${searchUrl}/results?user=${user.username}`
         res.redirect(`${manageUrl}/${user.username}`)
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
