@@ -1,4 +1,4 @@
-const { capitalize, getDate, getTime } = require('./utils')
+const { capitalize, getDate, getTime, trimObjValues } = require('./utils')
 
 describe('capitalize()', () => {
   describe('when a string IS NOT provided', () => {
@@ -50,5 +50,11 @@ describe('getTime()', () => {
 
   it('should return Invalid message if no date time string is used', () => {
     expect(getTime()).toEqual('Invalid date or time')
+  })
+  it('should trim all fields of an object', () => {
+    expect(trimObjValues({ firstName: ' Andy ', lastName: ' Thomas ' })).toEqual({
+      firstName: 'Andy',
+      lastName: 'Thomas',
+    })
   })
 })
