@@ -1,6 +1,7 @@
 const MenuPage = require('../pages/menuPage')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
+const UserPage = require('../pages/userPage')
 
 const searchForUser = (totalElements) => {
   cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
@@ -128,5 +129,49 @@ context('DPS user functionality', () => {
       expect(requests[1].headers).to.include({ 'page-offset': '10', 'page-limit': '20' })
       expect(requests[2].headers).to.include({ 'page-offset': '0', 'page-limit': '20' })
     })
+  })
+
+  it('Should display details for a user ', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubDpsSearch', { totalElements: 21 })
+
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = UserSearchResultsPage.verifyOnPage()
+    results.nextPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage.userRows().eq(0).should('contain', 'ITAG_USER')
+
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+    userPage.roleRows().eq(1).should('contain', 'Another general role')
+  })
+
+  it('Should provide breadcrumb link back to search results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubDpsSearch', { totalElements: 21 })
+
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = UserSearchResultsPage.verifyOnPage()
+    results.nextPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage
+      .searchResultsBreadcrumb()
+      .should('have.attr', 'href', '/search-dps-users/results?user=sometext%40somewhere.com&roleCode=&offset=10')
   })
 })

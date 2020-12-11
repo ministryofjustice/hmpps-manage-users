@@ -88,6 +88,32 @@ module.exports = {
         jsonBody: replicateUser(Math.floor(totalElements / size) === page ? totalElements % size : size),
       },
     }),
+  stubUserDetails: () =>
+    getFor({
+      urlPattern: '/api/users/.*',
+      body: {
+        staffId: '12345',
+        username: 'ITAG_USER',
+        firstName: 'Itag',
+        lastName: 'User',
+      },
+    }),
+  stubUserGetRoles: () =>
+    getFor({
+      urlPattern: '/api/users/.*/access-roles/caseload/NWEB.*',
+      body: [
+        {
+          roleCode: 'MAINTAIN_ACCESS_ROLES',
+          roleName: 'Maintain Roles',
+          roleFunction: 'GENERAL',
+        },
+        {
+          roleCode: 'ANOTHER_GENERAL_ROLE',
+          roleName: 'Another general role',
+          roleFunction: 'GENERAL',
+        },
+      ],
+    }),
   verifyDpsSearch: () =>
     getMatchingRequests({
       method: 'GET',

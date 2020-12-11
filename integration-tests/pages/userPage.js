@@ -6,6 +6,7 @@ const userPage = (user) =>
     roleRows: () => cy.get('[data-qa="user-roles"] tbody tr'),
     addRole: () => cy.get('[data-qa="add-role-button"]'),
     removeRole: (role) => cy.get(`[data-qa="remove-button-${role}"]`),
+    searchResultsBreadcrumb: () => cy.get('a[href*="results"]'),
   })
 
 export default {
