@@ -50,6 +50,15 @@
             </h3>
           </div>
         {% endif %}
+        {% if user.maintainAuthUsers %}
+          <div class="govuk-grid-column-one-third">
+            <h3 class="govuk-heading-m">
+              <a href="/manage-groups" id="maintain_auth_users_link" class="govuk-link">
+                View the groups I administer
+              </a>
+            </h3>
+          </div>
+        {% endif %}
 
       {% else %}
         <p class="govuk-body" data-qa="no-admin-functions-message">

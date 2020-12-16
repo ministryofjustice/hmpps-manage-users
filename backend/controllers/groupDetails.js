@@ -1,11 +1,13 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
-const selectGroupsFactory = (getGroups, maintainUrl, logError) => {
+const groupDetailsFactory = (getGroupDetailsApi, maintainUrl, logError) => {
   const index = async (req, res) => {
+    const { group } = req.params
     try {
-      const assignableGroups = await getGroups(res.locals)
-      res.render('groups.njk', {
-        groupValues: assignableGroups,
+      const groupDetails = await getGroupDetailsApi(res.locals, group)
+
+      res.render('groupDetails.njk', {
+        groupDetails,
         maintainUrl,
       })
     } catch (error) {
@@ -18,5 +20,5 @@ const selectGroupsFactory = (getGroups, maintainUrl, logError) => {
 }
 
 module.exports = {
-  selectGroupsFactory,
+  groupDetailsFactory,
 }
