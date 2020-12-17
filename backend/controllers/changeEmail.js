@@ -2,6 +2,17 @@ const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
+function mapDescription(error, errorDescription) {
+  switch (error) {
+    case 'email.domain':
+      return 'The email domain is not allowed.  Enter a work email address'
+    case 'email.duplicate':
+      return 'This email address is already assigned to a different user'
+    default:
+      return errorDescription
+  }
+}
+
 const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, logError) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
@@ -46,8 +57,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, logEr
     } catch (err) {
       if (err.status === 400 && err.response && err.response.body) {
         const { error, error_description: errorDescription } = err.response.body
-        const description =
-          error === 'email.domain' ? 'The email domain is not allowed.  Enter a work email address' : errorDescription
+        const description = mapDescription(error, errorDescription)
 
         const errors = [{ href: '#email', text: description }]
         stashStateAndRedirectToIndex(req, res, errors, [email])
