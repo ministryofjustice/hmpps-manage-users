@@ -1,5 +1,14 @@
 const { changeEmailFactory } = require('./changeEmail')
 
+const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => {
+  const error = new Error('This failed')
+  // @ts-ignore
+  error.status = status
+  // @ts-ignore
+  error.response = { body: { error_description: 'not valid', error: errorCode } }
+  return error
+}
+
 describe('change email factory', () => {
   const getUserApi = jest.fn()
   const saveEmail = jest.fn()
@@ -100,11 +109,7 @@ describe('change email factory', () => {
 
     it('should fail gracefully if email no valid', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 400
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = createError({})
 
       saveEmail.mockRejectedValue(error)
       const req = {
@@ -116,6 +121,66 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeEmail', ['bob@digital.justice.gov.uk'])
+    })
+
+    it('should display work email message if email domain not valid', async () => {
+      const redirect = jest.fn()
+      const error = createError({ errorCode: 'email.domain' })
+
+      saveEmail.mockRejectedValue(error)
+      const req = {
+        params: { username: 'joe' },
+        body: { email: 'bob@digital.justice.gov.uk' },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeEmail.post(req, { redirect })
+      expect(req.flash).toBeCalledWith('changeEmailErrors', [
+        {
+          href: '#email',
+          text: 'The email domain is not allowed.  Enter a work email address',
+        },
+      ])
+    })
+
+    it('should display duplicate email message if email already taken', async () => {
+      const redirect = jest.fn()
+      const error = createError({ errorCode: 'email.duplicate' })
+
+      saveEmail.mockRejectedValue(error)
+      const req = {
+        params: { username: 'joe' },
+        body: { email: 'bob@digital.justice.gov.uk' },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeEmail.post(req, { redirect })
+      expect(req.flash).toBeCalledWith('changeEmailErrors', [
+        {
+          href: '#email',
+          text: 'This email address is already assigned to a different user',
+        },
+      ])
+    })
+
+    it('should display default error message on client error', async () => {
+      const redirect = jest.fn()
+      const error = createError({})
+
+      saveEmail.mockRejectedValue(error)
+      const req = {
+        params: { username: 'joe' },
+        body: { email: 'bob@digital.justice.gov.uk' },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeEmail.post(req, { redirect })
+      expect(req.flash).toBeCalledWith('changeEmailErrors', [
+        {
+          href: '#email',
+          text: 'not valid',
+        },
+      ])
     })
 
     it('should call error on failure', async () => {

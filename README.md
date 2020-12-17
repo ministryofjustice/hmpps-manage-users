@@ -36,7 +36,7 @@ The application can be built & run with the following bash commands :
 
 ```
 npm install
-npm start
+npm start:dev
 ```
 
 This will start the service and use the default dependent services as above.
@@ -44,8 +44,7 @@ This will start the service and use the default dependent services as above.
 The UI will be available on http://localhost:3001
 
 NPM will use the package.json file in the root of the project to download any required dependencies.
-You will need to re-run these commands each time you make a change to ensure that the react application is updated.
-
+The application will listen for any changes and restart as necessary.
 
 # Overriding the Default Environment Settings
 
@@ -113,7 +112,7 @@ A choice of web browsers can be configured, though Chrome or Chrome headless are
 
    - In one terminal session, from the project root : 
 
-       ```npm run start-feature --env=feature.env```
+       ```npm run start-feature:dev --env=feature.env```
 
    - In another terminal, from the project root :
 
@@ -156,7 +155,7 @@ the reqest log at `localhost:9191/__admin/requests/` and a JSON representation o
 A separate node instance needs to be started for the feature tests. This will run on port 3008 and won't conflict
 with any of the api services, e.g. prison-api or oauth. It will also not conflict with the Groovy integration tests.
 
-```npm run start-feature --env=cypress.env```
+```npm run start-feature:dev --env=cypress.env```
 
 Note that the circleci will run `start-feature-no-webpack` instead, which will rely on a production webpack build
 rather than using the dev webpack against the assets.
