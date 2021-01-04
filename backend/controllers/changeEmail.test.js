@@ -107,7 +107,7 @@ describe('change email factory', () => {
       expect(req.flash).toBeCalledWith('changeEmail', [undefined])
     })
 
-    it('should fail gracefully if email no valid', async () => {
+    it('should fail gracefully if email not valid', async () => {
       const redirect = jest.fn()
       const error = createError({})
 

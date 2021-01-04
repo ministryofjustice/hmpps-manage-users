@@ -3,7 +3,7 @@ const { selectGroupsFactory } = require('./getGroups')
 describe('select groups factory', () => {
   const getGroups = jest.fn()
   const logError = jest.fn()
-  const groups = selectGroupsFactory(getGroups, logError)
+  const groups = selectGroupsFactory(getGroups, '/manage-groups', logError)
 
   describe('index', () => {
     it('should call groups render', async () => {
@@ -13,6 +13,7 @@ describe('select groups factory', () => {
       await groups.index(jest.fn(), { render })
       expect(render).toBeCalledWith('groups.njk', {
         groupValues: [{ groupName: 'name', groupCode: 'code' }],
+        maintainUrl: '/manage-groups',
       })
     })
   })

@@ -18,9 +18,9 @@ context('Groups', () => {
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
 
-    groups.rows().should('have.length', 3)
-    groups.rows().eq(0).should('contain.text', 'SOCU North West')
-    groups.rows().eq(1).should('contain.text', 'PECS Police Force Thames Valley')
+    groups.groupRows().should('have.length', 3)
+    groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
+    groups.groupRows().eq(1).should('contain.text', 'PECS Police Force Thames Valley')
   })
 
   it('Should display message if no groups available', () => {

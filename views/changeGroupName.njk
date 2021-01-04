@@ -1,0 +1,44 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set title =  title %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="POST">
+          {{ govukInput({
+            value: currentGroupName,
+            id: "groupName",
+            name: "groupName",
+            errorMessage: errors | findError('groupName')
+          }) }}
+
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            attributes: { "data-qa": "confirm-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: groupUrl,
+            classes: "govuk-button--secondary"
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -2,7 +2,7 @@ const page = require('./page')
 
 const groupsPage = () =>
   page('Manage groups', {
-    rows: () => cy.get('.govuk-list li'),
+    groupRows: () => cy.get('[data-qa="groups"] tbody tr'),
     noGroups: () => cy.get('[data-qa="no-groups"]'),
   })
 

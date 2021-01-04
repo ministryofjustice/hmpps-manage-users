@@ -60,6 +60,10 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const disableUser = (context, { username }) => put(context, `/api/authuser/${username}/disable`)
   const assignableRoles = (context, { username }) => get(context, `/api/authuser/${username}/assignable-roles`)
   const amendUser = (context, username, email) => post(context, `/api/authuser/${username}`, email)
+  const groupDetails = (context, { group }) => get(context, `/api/groups/${group}`)
+  const changeGroupName = (context, group, groupName) => put(context, `/api/groups/${group}`, groupName)
+  const childGroupDetails = (context, { group }) => get(context, `/api/groups/child/${group}`)
+  const changeChildGroupName = (context, group, groupName) => put(context, `/api/groups/child/${group}`, groupName)
 
   const oauthAxios = axios.create({
     baseURL: url,
@@ -140,6 +144,10 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     amendUser,
     assignableGroups,
     searchableRoles,
+    groupDetails,
+    changeGroupName,
+    childGroupDetails,
+    changeChildGroupName,
   }
 }
 
