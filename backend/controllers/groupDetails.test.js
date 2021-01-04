@@ -29,7 +29,7 @@ describe('Group details factory', () => {
           },
         ],
         maintainUrl: '/manage-groups',
-        errors: undefined,
+        hasMaintainAuthUsers: false,
       })
     })
   })

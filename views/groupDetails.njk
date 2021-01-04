@@ -1,7 +1,7 @@
 {% extends "./partials/layout.njk" %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
 
-{% set title =  "Group details" %}
+{% set title =  groupDetails.groupName %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({
@@ -18,41 +18,96 @@
 {% block content %}
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">{{ title }}</h1>
+      {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
+
+      {% if hasMaintainAuthUsers %}
+        {{ govukTable({
+          rows: [
+            [
+              {html: heading},
+              {text: ''},
+              {
+                html: '<a href="' + maintainUrl + '/' + groupDetails.groupCode  + '/change-group-name" class="govuk-link" data-qa="amend-link">Change <span class="govuk-visually-hidden"> group name</span> </a>',
+                classes: 'govuk-!-width-one-quarter',
+                format: "numeric"
+              }
+            ],
+            [
+              {text: "Group code"},
+              {text: ''},
+              {text: groupDetails.groupCode }
+            ]
+          ]
+        }) }}
+      {% else %}
+        {{ govukTable({
+          rows: [
+            [
+              {html: heading},
+              {text: ''},
+              {text: ''}
+            ],
+            [
+              {text: "Group code"},
+              {text: ''},
+              {text: groupDetails.groupCode }
+            ]
+          ]
+        }) }}
+
+      {% endif %}
+
+      {% set rows = [] %}
+      {% for role in groupDetails.assignableRoles %}
+        {% if role.automatic %}
+          {% set auto = '<strong class="govuk-tag govuk-tag--turquoise"> Automatic </strong>' %}
+        {% else %}
+          {% set auto = '<strong class="govuk-tag govuk-tag--blue"> Manual </strong>' %}
+        {% endif %}
+
+        {% set rows = (rows.push([
+          { text: role.roleName },
+          { html: auto }
+        ]), rows) %}
+      {% endfor %}
 
       {{ govukTable({
-        rows: [
-          [
-            {text: "Group Name"},
-            {text: groupDetails.groupName },
-            {text: ''}
-          ],
-          [
-            {text: "Group code"},
-            {text: groupDetails.groupCode },
-            {text: ''}
-          ]
-        ]
+        caption: "Assignable roles",
+        rows: rows,
+        attributes: { "data-qa": "user-details" }
       }) }}
 
-      <p class="govuk-heading-s">Assignable roles</p>
-      <ul class="govuk-list">
-        {% for role in groupDetails.assignableRoles %}
-          <li>
-            {{ role.roleName }}
-          </li>
-        {% endfor %}
-      </ul>
+      {%  if groupDetails.children.length > 0 %}
+      {% set rows = [] %}
+      {% for cg in groupDetails.children %}
+        {% set changeChildGroupLink = '<a href="' + maintainUrl + '/' + groupDetails.groupCode + '/change-child-group-name/' + cg.groupCode + '" class="govuk-link" data-qa="edit-button-'
+          + cg.groupName +'">Change <span class="govuk-visually-hidden"> child group name</span> </a>' %}
+        {% if hasMaintainAuthUsers %}
+        {% set rows = (rows.push([
+          { text: cg.groupName },
+          { text: cg.groupCode },
+          { html: changeChildGroupLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
+        ]), rows) %}
+      {% else %}
+        {% set rows = (rows.push([
+          { text: cg.groupName },
+          { text: cg.groupCode },
+          { text: ''}
+        ]), rows) %}
+        {% endif %}
+      {% endfor %}
+      {{ govukTable({
+        caption: "Child groups",
+        rows: rows,
+        attributes: { "data-qa": "child-groups" }
+      }) }}
+      {% endif %}
 
-      <p class="govuk-heading-s">Child groups</p>
-      <ul class="govuk-list">
-        {% for children in groupDetails.children %}
-          <li>
-            {{ children.groupName }}
-          </li>
-        {% endfor %}
-      </ul>
+      {% set searchUrl = '/search-external-users/results?groupCode='+ groupDetails.groupCode %}
 
+      <p class="govuk-body">
+        <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for members of this group</a>
+      </p>
 
     </div>
   </div>
