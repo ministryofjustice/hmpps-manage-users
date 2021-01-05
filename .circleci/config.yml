@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@1.1.0
+  hmpps: ministryofjustice/hmpps@2.2
 
 jobs:
   build:
@@ -130,6 +130,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          context:
+            - hmpps-common-vars
           filters:
             branches:
               only:
@@ -146,7 +148,9 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
-          context: manage-hmpps-auth-accounts-preprod
+          context:
+            - hmpps-common-vars
+            - manage-hmpps-auth-accounts-preprod
           requires:
             - request-preprod-approval
       - request-prod-approval:
@@ -156,8 +160,10 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          context:
+            - hmpps-common-vars
+            - manage-hmpps-auth-accounts-prod
           slack_notification: true
-          context: manage-hmpps-auth-accounts-prod
           requires:
             - request-prod-approval
 
