@@ -39,9 +39,8 @@ describe('Auth search validation', () => {
 
 describe('Auth create validation', () => {
   it('should return errors if no fields specified', () => {
-    expect(validateCreate({ username: null, email: null, firstName: null, lastName: null, groupCode: null })).toEqual(
+    expect(validateCreate({ email: null, firstName: null, lastName: null, groupCode: null })).toEqual(
       expect.arrayContaining([
-        { href: '#username', text: 'Enter a username' },
         { href: '#email', text: 'Enter an email address' },
         { href: '#firstName', text: 'Enter a first name' },
         { href: '#lastName', text: 'Enter a last name' },
@@ -49,9 +48,8 @@ describe('Auth create validation', () => {
     )
   })
   it('should disallow fields that are too short', () => {
-    expect(validateCreate({ username: 'a', email: 'b', firstName: 'c', lastName: 'd', groupCode: null })).toEqual(
+    expect(validateCreate({ email: 'b', firstName: 'c', lastName: 'd', groupCode: null })).toEqual(
       expect.arrayContaining([
-        { href: '#username', text: 'Username must be 6 characters or more' },
         { href: '#email', text: 'Enter an email address in the correct format, like first.last@justice.gov.uk' },
         { href: '#firstName', text: 'First name must be 2 characters or more' },
         { href: '#lastName', text: 'Last name must be 2 characters or more' },
@@ -61,7 +59,6 @@ describe('Auth create validation', () => {
   it('should disallow fields that are too long', () => {
     expect(
       validateCreate({
-        username: 'A12345678901234567890123456789012345678901234567890',
         email: 'joe@bloggs.com',
         firstName: 'ccccccccccccccccccccccccccccccccccccccccccccccccccc',
         lastName: 'dddddddddddddddddddddddddddddddddddddddddddddddddddd',
@@ -69,19 +66,14 @@ describe('Auth create validation', () => {
       })
     ).toEqual(
       expect.arrayContaining([
-        { href: '#username', text: 'Username must be 30 characters or less' },
         { href: '#firstName', text: 'First name must be 50 characters or less' },
         { href: '#lastName', text: 'Last name must be 50 characters or less' },
       ])
     )
   })
   it('should validate specific characters allowed', () => {
-    expect(
-      validateCreate({ username: '"', email: 'b@c,d.com', firstName: 'ca', lastName: 'de', groupCode: null })
-    ).toEqual(
+    expect(validateCreate({ email: 'b@c,d.com', firstName: 'ca', lastName: 'de', groupCode: null })).toEqual(
       expect.arrayContaining([
-        { href: '#username', text: 'Username must be 6 characters or more' },
-        { href: '#username', text: 'Username can only contain A-Z, 0-9 and _ characters' },
         { href: '#email', text: "Email address can only contain 0-9, a-z, @, ', _, ., - and + characters" },
       ])
     )
@@ -89,7 +81,6 @@ describe('Auth create validation', () => {
   it('should pass validation', () => {
     expect(
       validateCreate({
-        username: 'joejoe',
         email: 'joe+bloggs@joe.com',
         firstName: 'joe',
         lastName: 'joe',
@@ -100,7 +91,6 @@ describe('Auth create validation', () => {
   it('should pass validation with microsoft special quote', () => {
     expect(
       validateCreate({
-        username: 'joejoe',
         email: 'joe.b’loggs@joe.com',
         firstName: 'joe',
         lastName: 'joe',

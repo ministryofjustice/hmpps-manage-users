@@ -23,8 +23,7 @@ class AuthUserCreatePage extends Page {
         selectOption << Keys.ENTER
     }
 
-    void createUser(String username, String email, String firstName, String lastName, String groupCode) {
-        $('form').username = username
+    void createUser(String email, String firstName, String lastName, String groupCode) {
         $('form').email = email
         $('form').firstName = firstName
         $('form').lastName = lastName

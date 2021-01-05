@@ -296,7 +296,7 @@ class OauthApi extends WireMockRule {
 
     void stubAuthCreateUser() {
         this.stubFor(
-                put(urlPathMatching("/auth/api/authuser/.*"))
+                post(urlPathMatching("/auth/api/authuser/create"))
                         .willReturn(
                         aResponse()
                                 .withStatus(200)
