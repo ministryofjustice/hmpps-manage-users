@@ -1,5 +1,10 @@
 const { serviceUnavailableMessage } = require('../common-messages')
 
+const mapUsernameAndEmail = (u) => {
+  if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`
+  return u.username
+}
+
 const searchFactory = (
   paginationService,
   getAssignableGroupsApi,
@@ -53,7 +58,7 @@ const searchFactory = (
       const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
 
       const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
-        usernameAndEmail: u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`,
+        usernameAndEmail: mapUsernameAndEmail(u),
         ...u,
       }))
 
