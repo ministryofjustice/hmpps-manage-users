@@ -29,8 +29,7 @@
             + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
           {% set rows = (rows.push([
             { html: userLink },
-            { text: u.username },
-            { text: u.email },
+            { text: u.usernameAndEmail },
             { text: u.locked | formatYesNo()},
             { text: u.enabled | formatYesNo() }
           ]), rows) %}
@@ -39,8 +38,7 @@
         {{ govukTable({
           head: [
             { text: "Name" },
-            { text: "Username" },
-            { text: "Email" },
+            { text: "Username / email" },
             { text: "Locked" },
             { text: "Enabled" }
           ],
