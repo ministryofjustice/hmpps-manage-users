@@ -267,17 +267,17 @@ describe('oauthApi tests', () => {
   })
 
   describe('createUser', () => {
-    const user = { user: { firstName: 'joe', lastName: 'smith' } }
+    const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
 
     beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
+      client.post = jest.fn().mockReturnValue({
         then: () => {},
       })
-      oauthApi.createUser(context, 'joe', user)
+      oauthApi.createUser(context, user)
     })
 
     it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/authuser/joe', user)
+      expect(client.post).toBeCalledWith(context, '/api/authuser/create', user)
     })
   })
 

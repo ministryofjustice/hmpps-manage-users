@@ -35,7 +35,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const currentUser = (context) => get(context, '/api/user/me')
   const currentRoles = (context) => get(context, '/api/user/me/roles')
   const getUser = (context, { username }) => get(context, `/api/authuser/${username}`)
-  const createUser = (context, username, user) => put(context, `/api/authuser/${username}`, user)
+  const createUser = (context, user) => post(context, `/api/authuser/create`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
   const userGroups = (context, { username }) => get(context, `/api/authuser/${username}/groups?children=false`)
   const userSearch = (context, { nameFilter, role, group }, page, size) => {
