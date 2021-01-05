@@ -52,11 +52,16 @@ const searchFactory = (
     try {
       const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
 
+      const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
+        usernameAndEmail: u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`,
+        ...u,
+      }))
+
       res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
         searchTitle,
         searchUrl,
         maintainUrl,
-        results: searchResults,
+        results: searchResultsWithUsernameEmailCombined,
         pagination: paginationService.getPagination(
           pagingApi(res.locals),
           new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)

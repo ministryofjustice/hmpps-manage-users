@@ -64,9 +64,9 @@ context('External user functionality', () => {
         // \u00a0 is a non breaking space, won't match on ' ' though
         expect($tableCells.get(0)).to.contain.text('Auth\u00a0Adm')
         expect($tableCells.get(1)).to.contain.text('AUTH_ADM')
-        expect($tableCells.get(2)).to.contain.text('auth_test2@digital.justice.gov.uk')
-        expect($tableCells.get(3)).to.contain.text('No')
-        expect($tableCells.get(4)).to.contain.text('Yes')
+        expect($tableCells.get(1)).to.contain.text('auth_test2@digital.justice.gov.uk')
+        expect($tableCells.get(2)).to.contain.text('No')
+        expect($tableCells.get(3)).to.contain.text('Yes')
       })
 
     cy.task('stubAuthEmailSearch')
