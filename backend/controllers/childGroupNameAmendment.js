@@ -16,8 +16,9 @@ const childGroupAmendmentFactory = (
   }
 
   const index = async (req, res) => {
-    const { group } = req.params
-    const groupUrl = `${manageGroupUrl}/${group}`
+    const { pgroup, group } = req.params
+    const groupUrl = `${manageGroupUrl}/${pgroup}`
+    const childGroupUrl = `${manageGroupUrl}/${group}`
 
     try {
       const groupDetails = await getChildGroupDetailsApi(res.locals, group)
@@ -32,7 +33,7 @@ const childGroupAmendmentFactory = (
       })
     } catch (error) {
       logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: groupUrl })
+      res.render('error.njk', { url: childGroupUrl })
     }
   }
 
