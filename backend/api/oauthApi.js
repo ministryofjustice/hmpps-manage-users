@@ -66,8 +66,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const changeChildGroupName = (context, group, groupName) => put(context, `/api/groups/child/${group}`, groupName)
 
   const oauthAxios = axios.create({
-    baseURL: url,
-    url: '/oauth/token',
+    baseURL: `${url}/oauth/token`,
     method: 'post',
     timeout: 30000,
     headers: {
