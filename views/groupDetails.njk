@@ -27,7 +27,7 @@
               {html: heading},
               {text: ''},
               {
-                html: '<a href="' + maintainUrl + '/' + groupDetails.groupCode  + '/change-group-name" class="govuk-link" data-qa="amend-link">Change <span class="govuk-visually-hidden"> group name</span> </a>',
+                html: '<a href="' + maintainUrl + '/' + groupDetails.groupCode  + '/change-group-name" class="govuk-link" data-qa="change-group-name-link">Change <span class="govuk-visually-hidden"> group name</span> </a>',
                 classes: 'govuk-!-width-one-quarter',
                 format: "numeric"
               }
@@ -74,7 +74,7 @@
       {{ govukTable({
         caption: "Assignable roles",
         rows: rows,
-        attributes: { "data-qa": "user-details" }
+        attributes: { "data-qa": "assignable-roles" }
       }) }}
 
       {%  if groupDetails.children.length > 0 %}
