@@ -1,9 +1,9 @@
 const validateGroupNameFormat = (groupName) => {
   const errors = []
-  if (!groupName.match(/^[0-9A-Za-z- ]*$/)) {
+  if (!groupName.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
     errors.push({
       href: '#groupName',
-      text: 'Group name can only contain 0-9, a-z and - characters',
+      text: "Group name can only contain 0-9, a-z and ( ) & , - . '  characters",
     })
   }
   if (groupName.length < 4) {

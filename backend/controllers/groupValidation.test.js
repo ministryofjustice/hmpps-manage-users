@@ -23,10 +23,12 @@ describe('Auth change email validation', () => {
   })
   it('should validate specific characters allowed', () => {
     expect(validateGroupName('b@c,d.com')).toEqual(
-      expect.arrayContaining([{ href: '#groupName', text: 'Group name can only contain 0-9, a-z and - characters' }])
+      expect.arrayContaining([
+        { href: '#groupName', text: "Group name can only contain 0-9, a-z and ( ) & , - . '  characters" },
+      ])
     )
   })
   it('should pass validation', () => {
-    expect(validateGroupName('goodGroop')).toEqual([])
+    expect(validateGroupName("good's & Groop(),.-")).toEqual([])
   })
 })
