@@ -256,6 +256,45 @@ const stubAuthAssignableGroups = ({
     body: content,
   })
 
+const stubAuthAssignableGroupDetails = ({
+  content = {
+    groupCode: 'SITE_1_GROUP_2',
+    groupName: 'Site 1 - Group 2',
+    assignableRoles: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
+    ],
+    children: [{ groupCode: 'CHILD_1', groupName: 'Child - Site 1 - Group 2' }],
+  },
+}) =>
+  getFor({
+    urlPattern: '/auth/api/groups/.*',
+    body: content,
+  })
+
+const stubAuthChangeGroupName = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/auth/api/groups/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+const stubAuthChangeChildGroupName = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/auth/api/groups/child/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 const stubAuthSearchableRoles = ({
   content = [
     { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
@@ -324,6 +363,9 @@ module.exports = {
   stubAuthRemoveRole,
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
+  stubAuthAssignableGroupDetails,
+  stubAuthChangeGroupName,
+  stubAuthChangeChildGroupName,
   stubAuthSearchableRoles,
   verifyAddRoles,
   verifyRemoveRole,

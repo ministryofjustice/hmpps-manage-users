@@ -1,4 +1,7 @@
 const GroupsPage = require('../pages/groupsPage')
+const GroupDetailsPage = require('../pages/groupDetailsPage')
+const GroupNameChangePage = require('../pages/groupNameChangePage')
+const ChildGroupNameChangePage = require('../pages/childGroupNameChangePage')
 
 context('Groups', () => {
   before(() => {
@@ -32,5 +35,66 @@ context('Groups', () => {
 
     const groups = GroupsPage.verifyOnPage()
     groups.noGroups().should('contain', 'a member of any groups.')
+  })
+
+  it(' should display group details', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage()
+    groupDetails.assignableRoles().should('have.length', 2)
+    groupDetails.childGroups().should('have.length', 1)
+  })
+
+  it(' should allow change group name', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage()
+    groupDetails.changeGroupName()
+
+    cy.task('stubAuthChangeGroupName')
+    const groupNameChange = GroupNameChangePage.verifyOnPage()
+    groupNameChange.changeName('a')
+
+    GroupDetailsPage.verifyOnPage()
+  })
+
+  it(' should allow change child group name', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage()
+    groupDetails.changeChildGroupName()
+
+    cy.task('stubAuthChangeChildGroupName')
+    const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
+    childGroupNameChange.changeName('a')
+
+    GroupDetailsPage.verifyOnPage()
+  })
+
+  it('should return user to previous page if user cancels action', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage()
+    groupDetails.changeChildGroupName()
+
+    const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
+    childGroupNameChange.cancel()
+    GroupDetailsPage.verifyOnPage()
   })
 })
