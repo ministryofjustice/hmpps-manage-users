@@ -28,12 +28,9 @@ const validateEmailFormat = (email) => {
   return errors
 }
 
-const validateCreate = ({ username, email, firstName, lastName, groupCode }, groupManager) => {
+const validateCreate = ({ email, firstName, lastName, groupCode }, groupManager) => {
   const errors = []
 
-  if (!username) {
-    errors.push({ href: '#username', text: 'Enter a username' })
-  }
   if (!email) {
     errors.push({ href: '#email', text: 'Enter an email address' })
   }
@@ -49,16 +46,6 @@ const validateCreate = ({ username, email, firstName, lastName, groupCode }, gro
   }
 
   if (errors.length) return errors
-
-  if (username.length < 6) {
-    errors.push({ href: '#username', text: 'Username must be 6 characters or more' })
-  }
-  if (username.length > 30) {
-    errors.push({ href: '#username', text: 'Username must be 30 characters or less' })
-  }
-  if (!username.match(/^[a-zA-Z0-9_]*$/)) {
-    errors.push({ href: '#username', text: 'Username can only contain A-Z, 0-9 and _ characters' })
-  }
 
   errors.push(...validateEmailFormat(email))
 

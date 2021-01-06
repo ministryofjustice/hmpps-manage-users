@@ -56,7 +56,6 @@ describe('create user factory', () => {
       const req = {
         params: {},
         body: {
-          username: 'joe_user',
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
           lastName: 'smith',
@@ -69,9 +68,8 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe_user')
+      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk')
       expect(createUserApi).toBeCalledWith(locals, {
-        username: 'joe_user',
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -83,7 +81,6 @@ describe('create user factory', () => {
       const req = {
         params: {},
         body: {
-          username: ' joe_user ',
           email: ' bob@digital.justice.gov.uk ',
           firstName: ' bob ',
           lastName: ' smith ',
@@ -96,9 +93,8 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe_user')
+      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk')
       expect(createUserApi).toBeCalledWith(locals, {
-        username: 'joe_user',
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -110,7 +106,6 @@ describe('create user factory', () => {
       const req = {
         params: {},
         body: {
-          username: 'joe_user',
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
           lastName: 'smith',
@@ -123,9 +118,8 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe_user')
+      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk')
       expect(createUserApi).toBeCalledWith(locals, {
-        username: 'joe_user',
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -137,7 +131,6 @@ describe('create user factory', () => {
       const req = {
         params: {},
         body: {
-          username: 'joe_user',
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
           lastName: 'smith',
@@ -150,7 +143,9 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { redirect, locals })
-      expect(req.session).toEqual({ searchResultsUrl: '/search-external-users/results?user=joe_user' })
+      expect(req.session).toEqual({
+        searchResultsUrl: '/search-external-users/results?user=bob@digital.justice.gov.uk',
+      })
     })
 
     it('should stash the errors and redirect if no details entered', async () => {
@@ -160,10 +155,6 @@ describe('create user factory', () => {
       await createUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('createUserErrors', [
-        {
-          href: '#username',
-          text: 'Enter a username',
-        },
         {
           href: '#email',
           text: 'Enter an email address',
@@ -189,7 +180,6 @@ describe('create user factory', () => {
 
       createUserApi.mockRejectedValue(error)
       const req = {
-        params: { username: 'joe' },
         body: { email: 'bob@digital.justice.gov.uk' },
         flash: jest.fn(),
         originalUrl: '/some-location',
@@ -197,10 +187,6 @@ describe('create user factory', () => {
       await createUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('createUserErrors', [
-        {
-          href: '#username',
-          text: 'Enter a username',
-        },
         {
           href: '#firstName',
           text: 'Enter a first name',
@@ -212,19 +198,18 @@ describe('create user factory', () => {
       ])
     })
 
-    it('should fail gracefully if username already exists', async () => {
+    it('should fail gracefully if email already exists', async () => {
       const redirect = jest.fn()
       const error = new Error('This failed')
       // @ts-ignore
       error.status = 409
       // @ts-ignore
-      error.response = { body: { error_description: 'username already exists' } }
+      error.response = { body: { error_description: 'Email already exists' } }
 
       createUserApi.mockRejectedValue(error)
       const req = {
         params: {},
         body: {
-          username: 'joe_user',
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
           lastName: 'smith',
@@ -237,8 +222,8 @@ describe('create user factory', () => {
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('createUserErrors', [
         {
-          href: '#username',
-          text: 'Username already exists',
+          href: '#email',
+          text: 'Email already exists',
         },
       ])
     })
@@ -250,7 +235,6 @@ describe('create user factory', () => {
         {
           params: {},
           body: {
-            username: 'joe_user',
             email: 'bob@digital.justice.gov.uk',
             firstName: 'bob',
             lastName: 'smith',

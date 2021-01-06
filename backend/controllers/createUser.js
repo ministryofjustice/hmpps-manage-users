@@ -53,8 +53,8 @@ const createUserFactory = (
       try {
         await createUser(res.locals, user)
 
-        req.session.searchResultsUrl = `${searchUrl}/results?user=${user.username}`
-        res.redirect(`${manageUrl}/${user.username}`)
+        req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
+        res.redirect(`${manageUrl}/${user.email}`)
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
           const { emailError: error, error_description: errorDescription, field } = err.response.body
@@ -64,9 +64,9 @@ const createUserFactory = (
           const errorDetails = [{ href: `#${field}`, text: description }]
           stashStateAndRedirectToIndex(req, res, errorDetails, [user])
         } else if (err.status === 409 && err.response && err.response.body) {
-          // username already exists
-          const usernameError = [{ href: '#username', text: 'Username already exists' }]
-          stashStateAndRedirectToIndex(req, res, usernameError, [user])
+          // email already exists
+          const emailError = [{ href: '#email', text: 'Email already exists' }]
+          stashStateAndRedirectToIndex(req, res, emailError, [user])
         } else {
           logError(req.originalUrl, err, serviceUnavailableMessage)
           res.render('error.njk', { url: createUrl })

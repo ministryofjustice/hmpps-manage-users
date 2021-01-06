@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true })
 const controller = ({ oauthApi, logError }) => {
   const getAssignableGroupsApi = oauthApi.assignableGroups
 
-  const createUserApi = (context, user) => oauthApi.createUser(context, user.username, user)
+  const createUserApi = (context, user) => oauthApi.createUser(context, user)
 
   const { index: createUser, post: postUser } = createUserFactory(
     getAssignableGroupsApi,
