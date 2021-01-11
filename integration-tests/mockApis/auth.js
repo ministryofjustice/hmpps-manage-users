@@ -283,10 +283,35 @@ const stubAuthChangeGroupName = () =>
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     },
   })
+
 const stubAuthChangeChildGroupName = () =>
   stubFor({
     request: {
       method: 'PUT',
+      urlPattern: '/auth/api/groups/child/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubAuthCreateChildGroup = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/auth/api/groups/child',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubAuthDeleteChildGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
       urlPattern: '/auth/api/groups/child/.*',
     },
     response: {
@@ -366,6 +391,8 @@ module.exports = {
   stubAuthAssignableGroupDetails,
   stubAuthChangeGroupName,
   stubAuthChangeChildGroupName,
+  stubAuthCreateChildGroup,
+  stubAuthDeleteChildGroup,
   stubAuthSearchableRoles,
   verifyAddRoles,
   verifyRemoveRole,

@@ -64,6 +64,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const changeGroupName = (context, group, groupName) => put(context, `/api/groups/${group}`, groupName)
   const childGroupDetails = (context, { group }) => get(context, `/api/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/api/groups/child/${group}`, groupName)
+  const createChildGroup = (context, group) => post(context, '/api/groups/child', group)
+  const deleteChildGroup = (context, group) => del(context, `/api/groups/child/${group}`)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -147,6 +149,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     changeGroupName,
     childGroupDetails,
     changeChildGroupName,
+    createChildGroup,
+    deleteChildGroup,
   }
 }
 

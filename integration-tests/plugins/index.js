@@ -32,6 +32,8 @@ module.exports = (on) => {
     stubAuthAssignableRoles: auth.stubAuthAssignableRoles,
     stubAuthAssignableGroups: auth.stubAuthAssignableGroups,
     stubAuthAssignableGroupDetails: auth.stubAuthAssignableGroupDetails,
+    stubAuthCreateChildGroup: auth.stubAuthCreateChildGroup,
+    stubAuthDeleteChildGroup: auth.stubAuthDeleteChildGroup,
     stubAuthSearchableRoles: auth.stubAuthSearchableRoles,
     stubAuthChangeGroupName: auth.stubAuthChangeGroupName,
     stubAuthChangeChildGroupName: auth.stubAuthChangeChildGroupName,

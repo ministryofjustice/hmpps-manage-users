@@ -1,0 +1,88 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% set title =  "Create child group" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="POST">
+
+          {{ govukInput({label: {
+            text: "Child group code"
+          },
+            classes: "govuk-input--width-30",
+            value: groupCode,
+            id: "groupCode",
+            name: "groupCode",
+            errorMessage: errors | findError('groupCode')
+          }) }}
+
+          {{ govukInput({label: {
+            text: "Child group name"
+          },
+            classes: "govuk-input--width-30",
+            value: groupName,
+            id: "groupName",
+            name: "groupName",
+            errorMessage: errors | findError('groupName')
+          }) }}
+
+          {{ govukButton({
+            text: "Create",
+            type: "submit",
+            attributes: { "data-qa": "create-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: groupUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "id": "cancel-button" }
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script>
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#groupCode'),
+      showAllValues: true,
+      preserveNullOptions: true,
+    })
+  </script>
+{% endblock %}
