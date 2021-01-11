@@ -23,47 +23,54 @@
   <div class="govuk-grid-row">
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
-    <div class="govuk-grid-row">
+    <div class="govuk-grid-row card-group">
       {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers %}
         {% if hasMaintainNomisRolesAccess %}
           <div class="govuk-grid-column-one-third">
-            <h3 class="govuk-heading-m">
-              <a href="/search-dps-users" id="maintain_roles_link" class="govuk-link">
-                Search for a DPS user
-              </a>
-            </h3>
+            <div class="card card--clickable" data-qa="maintain_roles_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
+              </h1>
+              <p class="govuk-body card__description">&nbsp</p>
+            </div>
           </div>
         {% endif %}
         {% if hasMaintainAuthUsers %}
           <div class="govuk-grid-column-one-third">
-            <h3 class="govuk-heading-m">
-              <a href="/search-external-users" id="maintain_auth_users_link" class="govuk-link">
-                Search for an external user
-              </a>
-            </h3>
+            <div class="card card--clickable" data-qa="maintain_auth_users_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/search-external-users">Search for an external user</a>
+              </h1>
+              <p class="govuk-body card__description">&nbsp</p>
+            </div>
           </div>
           <div class="govuk-grid-column-one-third">
-            <h3 class="govuk-heading-m">
-              <a href="/create-external-user" id="create_auth_user_link" class="govuk-link">
-                Create an external user
-              </a>
-            </h3>
+            <div class="card card--clickable" data-qa="create_auth_user_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/create-external-user">Create an external user</a>
+              </h1>
+              <p class="govuk-body card__description">&nbsp</p>
+            </div>
           </div>
 
           <div class="govuk-grid-column-one-third">
-            <h3 class="govuk-heading-m">
-              <a href="/manage-groups" id="manage_groups_link" class="govuk-link">
-                View the groups I administer
-              </a>
-            </h3>
+            <div class="card card--clickable" data-qa="manage_groups_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-groups">View the groups I administer</a>
+              </h1>
+              <p class="govuk-body card__description">&nbsp</p>
+            </div>
           </div>
         {% endif %}
-
-      {% else %}
-        <p class="govuk-body" data-qa="no-admin-functions-message">
-          There are no admin functions associated with your account.
-        </p>
-      {% endif %}
     </div>
+      {% else %}
+          <p class="govuk-body" data-qa="no-admin-functions-message">
+            There are no admin functions associated with your account.
+          </p>
+      {% endif %}
   </div>
+{% endblock %}
+
+{% block pageScripts %}
+  <script src="/js/card.js"></script>
 {% endblock %}
