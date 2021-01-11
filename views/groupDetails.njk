@@ -1,4 +1,5 @@
 {% extends "./partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
 
 {% set title =  groupDetails.groupName %}
@@ -82,16 +83,20 @@
       {% for cg in groupDetails.children %}
         {% set changeChildGroupLink = '<a href="' + maintainUrl + '/' + groupDetails.groupCode + '/change-child-group-name/' + cg.groupCode + '" class="govuk-link" data-qa="edit-button-'
           + cg.groupName +'">Change <span class="govuk-visually-hidden"> child group name</span> </a>' %}
+        {% set deleteChildGroupLink = '<a href="' + maintainUrl + '/' + groupDetails.groupCode + '/delete-child-group/' + cg.groupCode + '" class="govuk-link" data-qa="delete-button-'
+          + cg.groupName +'">Delete <span class="govuk-visually-hidden"> child group name</span> </a>' %}
         {% if hasMaintainAuthUsers %}
         {% set rows = (rows.push([
           { text: cg.groupName },
           { text: cg.groupCode },
-          { html: changeChildGroupLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
+          { html: changeChildGroupLink, format: "numeric"},
+          { html: deleteChildGroupLink, format: "numeric"}
         ]), rows) %}
       {% else %}
         {% set rows = (rows.push([
           { text: cg.groupName },
           { text: cg.groupCode },
+          { text: ''},
           { text: ''}
         ]), rows) %}
         {% endif %}
@@ -101,6 +106,16 @@
         rows: rows,
         attributes: { "data-qa": "child-groups" }
       }) }}
+      {% endif %}
+
+      {% if hasMaintainAuthUsers %}
+        {{ govukButton({
+          text: "Create child group",
+          element: 'a',
+          href: maintainUrl + '/' + groupDetails.groupCode + '/create-child-group',
+          classes: "govuk-button",
+          attributes: { "data-qa": "create-child-group-button" }
+        }) }}
       {% endif %}
 
       {% set searchUrl = '/search-external-users/results?groupCode='+ groupDetails.groupCode %}
