@@ -3,14 +3,7 @@ const { selectRolesFactory } = require('./addRole')
 describe('select roles factory', () => {
   const getUserAndRoles = jest.fn()
   const saveRoles = jest.fn()
-  const logError = jest.fn()
-  const addRole = selectRolesFactory(
-    getUserAndRoles,
-    saveRoles,
-    '/maintain-external-users',
-    '/manage-external-users',
-    logError
-  )
+  const addRole = selectRolesFactory(getUserAndRoles, saveRoles, '/maintain-external-users', '/manage-external-users')
 
   describe('index', () => {
     it('should call addRole render', async () => {
@@ -43,13 +36,6 @@ describe('select roles factory', () => {
         staffUrl: '/manage-external-users/joe',
       })
     })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      getUserAndRoles.mockRejectedValue(new Error('This failed'))
-      await addRole.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
-    })
   })
 
   describe('post', () => {
@@ -80,13 +66,6 @@ describe('select roles factory', () => {
       await addRole.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      saveRoles.mockRejectedValue(new Error('This failed'))
-      await addRole.post({ params: { username: 'joe' }, body: { roles: 'GLOBAL_SEARCH' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe/select-roles' })
     })
   })
 })

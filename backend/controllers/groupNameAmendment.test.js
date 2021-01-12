@@ -3,13 +3,11 @@ const { groupAmendmentFactory } = require('./groupNameAmendment')
 describe('group amendment factory', () => {
   const getGroupDetailsApi = jest.fn()
   const changeGroupNameApi = jest.fn()
-  const logError = jest.fn()
   const changeGroupName = groupAmendmentFactory(
     getGroupDetailsApi,
     changeGroupNameApi,
     'Change group name',
-    '/manage-groups',
-    logError
+    '/manage-groups'
   )
 
   describe('index', () => {
@@ -43,13 +41,6 @@ describe('group amendment factory', () => {
         title: 'Change group name',
         groupUrl: '/manage-groups/group1',
       })
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      getGroupDetailsApi.mockRejectedValue(new Error('This failed'))
-      await changeGroupName.index({ params: { group: 'group1' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-groups/group1' })
     })
   })
 
@@ -128,13 +119,6 @@ describe('group amendment factory', () => {
       await changeGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeGroupName', ['GroupA'])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      changeGroupNameApi.mockRejectedValue(new Error('This failed'))
-      await changeGroupName.post({ params: { group: 'group1' }, body: { groupName: 'GroupA' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-groups/group1/change-group-name' })
     })
   })
 })

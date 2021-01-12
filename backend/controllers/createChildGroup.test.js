@@ -1,18 +1,8 @@
 const { createChildGroupFactory } = require('./createChildGroup')
 
-const createError = ({ status = 400, errorCode = 'groupCode.somethingelse' }) => {
-  const error = new Error('This failed')
-  // @ts-ignore
-  error.status = status
-  // @ts-ignore
-  error.response = { body: { error_description: 'not valid', error: errorCode } }
-  return error
-}
-
 describe('create child group factory', () => {
   const createChildGroupApi = jest.fn()
-  const logError = jest.fn()
-  const createChildGroup = createChildGroupFactory(createChildGroupApi, '/manage-groups', logError)
+  const createChildGroup = createChildGroupFactory(createChildGroupApi, '/manage-groups')
 
   describe('index', () => {
     it('should call create child group render', async () => {
@@ -147,23 +137,6 @@ describe('create child group factory', () => {
           text: 'Group code already exists',
         },
       ])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      createChildGroupApi.mockRejectedValue(new Error('This failed'))
-      await createChildGroup.post(
-        {
-          params: { pgroup: 'P-GROUP' },
-          body: {
-            groupCode: 'BOB1',
-            groupName: 'group name',
-            parentGroupCode: 'P-GROUP',
-          },
-        },
-        { render }
-      )
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-groups/P-GROUP' })
     })
   })
 })

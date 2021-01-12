@@ -1,5 +1,4 @@
 const express = require('express')
-const { logError } = require('./logError')
 
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')
@@ -15,13 +14,13 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
 
   router.use(currentUser({ prisonApi, oauthApi }))
 
-  router.use('/', menuRouter({ logError }))
-  router.use('/create-external-user', createAuthUserRouter({ oauthApi, logError }))
-  router.use('/search-external-users', searchExternalUserRouter({ oauthApi, logError }))
-  router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, logError }))
-  router.use('/manage-external-users/:username', manageAuthUserRouter({ oauthApi, logError }))
-  router.use('/manage-dps-users/:username', manageDpsUserRouter({ prisonApi, logError }))
-  router.use('/manage-groups', manageGroupsRouter({ oauthApi, logError }))
+  router.use('/', menuRouter())
+  router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
+  router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
+  router.use('/search-dps-users', searchDpsUserRouter({ prisonApi }))
+  router.use('/manage-external-users/:username', manageAuthUserRouter({ oauthApi }))
+  router.use('/manage-dps-users/:username', manageDpsUserRouter({ prisonApi }))
+  router.use('/manage-groups', manageGroupsRouter({ oauthApi }))
 
   return router
 }

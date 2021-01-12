@@ -1,8 +1,7 @@
-const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils')
 
-const createChildGroupFactory = (createChildGroup, manageGroupUrl, logError) => {
+const createChildGroupFactory = (createChildGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
     req.flash('createChildGroupErrors', errors)
     req.flash('group', group)
@@ -14,16 +13,11 @@ const createChildGroupFactory = (createChildGroup, manageGroupUrl, logError) => 
     const flashGroup = req.flash('group')
     const group = flashGroup != null && flashGroup.length > 0 ? flashGroup[0] : ''
     const groupUrl = `${manageGroupUrl}/${pgroup}`
-    try {
-      res.render('createChildGroup.njk', {
-        groupUrl,
-        ...group,
-        errors: req.flash('createChildGroupErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: groupUrl })
-    }
+    res.render('createChildGroup.njk', {
+      groupUrl,
+      ...group,
+      errors: req.flash('createChildGroupErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -32,7 +26,6 @@ const createChildGroupFactory = (createChildGroup, manageGroupUrl, logError) => 
     group.groupCode = group.groupCode.toUpperCase()
     group.parentGroupCode = pgroup
     const errors = validateCreateGroup(group)
-    const groupUrl = `${manageGroupUrl}/${pgroup}`
 
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [group])
@@ -47,8 +40,7 @@ const createChildGroupFactory = (createChildGroup, manageGroupUrl, logError) => 
           const emailError = [{ href: '#groupCode', text: 'Group code already exists' }]
           stashStateAndRedirectToIndex(req, res, emailError, [group])
         } else {
-          logError(req.originalUrl, err, serviceUnavailableMessage)
-          res.render('error.njk', { url: groupUrl })
+          throw err
         }
       }
     }

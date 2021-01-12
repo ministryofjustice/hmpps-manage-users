@@ -5,7 +5,7 @@ const contextProperties = require('../contextProperties')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, logError }) => {
+const controller = ({ oauthApi }) => {
   const searchApi = (context, nameFilter, groupCode, roleCode, page, size) =>
     oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode }, page, size)
 
@@ -17,8 +17,7 @@ const controller = ({ oauthApi, logError }) => {
     contextProperties.getPageable,
     '/search-external-users',
     '/manage-external-users',
-    'Search for an external user',
-    logError
+    'Search for an external user'
   )
 
   router.get('/', index)

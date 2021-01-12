@@ -4,14 +4,12 @@ describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
   const getSearchableRolesApi = jest.fn()
   const searchApi = jest.fn()
-  const logError = jest.fn()
   const pagingApi = jest.fn()
 
   beforeEach(() => {
     paginationService.getPagination.mockReset()
     getSearchableRolesApi.mockReset()
     searchApi.mockReset()
-    logError.mockReset()
     pagingApi.mockReset()
   })
 
@@ -60,8 +58,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-dps-users',
       '/manage-dps-users',
-      'Search for a DPS user',
-      logError
+      'Search for a DPS user'
     )
 
     it('should call search user render', async () => {
@@ -154,8 +151,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-external-users',
       '/manage-external-users',
-      'Search for an external user',
-      logError
+      'Search for an external user'
     )
 
     beforeEach(() => {

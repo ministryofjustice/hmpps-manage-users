@@ -6,7 +6,7 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, logError }) => {
+const controller = ({ oauthApi }) => {
   const getUserAndAssignableRolesApi = (context, username) =>
     Promise.all([oauthApi.getUser(context, { username }), oauthApi.assignableRoles(context, { username })])
 
@@ -38,24 +38,21 @@ const controller = ({ oauthApi, logError }) => {
     getUserAndGroupsApi,
     saveGroupApi,
     '/search-external-users',
-    '/manage-external-users',
-    logError
+    '/manage-external-users'
   )
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAndAssignableRolesApi,
     saveRolesApi,
     '/search-external-users',
-    '/manage-external-users',
-    logError
+    '/manage-external-users'
   )
 
   const { index: getEmail, post: postEmail } = changeEmailFactory(
     getUserApi,
     changeEmailApi,
     '/search-external-users',
-    '/manage-external-users',
-    logError
+    '/manage-external-users'
   )
 
   const { index: userDetails, removeRole, removeGroup, enableUser, disableUser } = userDetailsFactory(
@@ -67,8 +64,7 @@ const controller = ({ oauthApi, logError }) => {
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
-    true,
-    logError
+    true
   )
 
   router.get('/select-roles', selectRoles)
