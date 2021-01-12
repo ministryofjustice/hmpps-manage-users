@@ -40,12 +40,12 @@ describe('create child group validation', () => {
     ])
   })
   it('should return errors if no groupName specified', () => {
-    expect(validateCreateGroup({ groupCode: 'GROUP-CODE', groupName: '' })).toEqual([
+    expect(validateCreateGroup({ groupCode: 'GROUP_CODE', groupName: '' })).toEqual([
       { href: '#groupName', text: 'Enter a group name' },
     ])
   })
   it('should disallow group name that are too short', () => {
-    expect(validateCreateGroup({ groupCode: 'GROUP-CODE', groupName: 'b'.repeat(3) })).toEqual([
+    expect(validateCreateGroup({ groupCode: 'GROUP_CODE', groupName: 'b'.repeat(3) })).toEqual([
       {
         href: '#groupName',
         text: 'Group name must be 4 characters or more',
@@ -54,7 +54,7 @@ describe('create child group validation', () => {
   })
 
   it('should disallow group name that are too long', () => {
-    expect(validateCreateGroup({ groupCode: 'GROUP-CODE', groupName: 'b'.repeat(101) })).toEqual([
+    expect(validateCreateGroup({ groupCode: 'GROUP_CODE', groupName: 'b'.repeat(101) })).toEqual([
       {
         href: '#groupName',
         text: 'Group name must be 100 characters or less',
@@ -62,7 +62,7 @@ describe('create child group validation', () => {
     ])
   })
   it('should validate specific characters allowed for group name', () => {
-    expect(validateCreateGroup({ groupCode: 'GROUP-CODE', groupName: 'b@c,d.com' })).toEqual(
+    expect(validateCreateGroup({ groupCode: 'GROUP_CODE', groupName: 'b@c,d.com' })).toEqual(
       expect.arrayContaining([
         { href: '#groupName', text: "Group name can only contain 0-9, a-z and ( ) & , - . '  characters" },
       ])
@@ -70,8 +70,8 @@ describe('create child group validation', () => {
   })
 
   it('should validate specific characters allowed for group code', () => {
-    expect(validateCreateGroup({ groupCode: 'GROUP-CODE@', groupName: 'group name' })).toEqual(
-      expect.arrayContaining([{ href: '#groupCode', text: 'Group code can only contain 0-9, A-Z and - characters' }])
+    expect(validateCreateGroup({ groupCode: 'GROUP_CODE@', groupName: 'group name' })).toEqual(
+      expect.arrayContaining([{ href: '#groupCode', text: 'Group code can only contain 0-9, A-Z and _ characters' }])
     )
   })
 
