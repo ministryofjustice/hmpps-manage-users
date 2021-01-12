@@ -17,10 +17,10 @@ const validateGroupNameFormat = (groupName) => {
 
 const validateGroupCodeFormat = (groupCode) => {
   const errors = []
-  if (!groupCode.match(/^[0-9A-Z-]*$/)) {
+  if (!groupCode.match(/^[0-9A-Z_]*$/)) {
     errors.push({
       href: '#groupCode',
-      text: 'Group code can only contain 0-9, A-Z and - characters',
+      text: 'Group code can only contain 0-9, A-Z and _ characters',
     })
   }
 
