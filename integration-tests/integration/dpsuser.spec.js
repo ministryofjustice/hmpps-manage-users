@@ -8,7 +8,7 @@ const searchForUser = (totalElements) => {
   cy.login()
   const menuPage = MenuPage.verifyOnPage()
   cy.task('stubDpsGetRoles', { content: [] })
-  menuPage.manageDpsUsers().click()
+  menuPage.searchDpsUsers()
   const search = DpsUserSearchPage.verifyOnPage()
 
   cy.task('stubDpsSearch', { totalElements })

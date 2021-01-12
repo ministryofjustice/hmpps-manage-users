@@ -21,7 +21,7 @@ function searchForUser() {
   const menuPage = MenuPage.verifyOnPage()
   cy.task('stubAuthAssignableGroups', { content: [] })
   cy.task('stubAuthSearchableRoles', { content: [] })
-  menuPage.manageAuthUsers().click()
+  menuPage.manageAuthUsers()
   const search = AuthUserSearchPage.verifyOnPage()
 
   cy.task('stubAuthSearch', {})
