@@ -7,7 +7,7 @@ const { childGroupAmendmentFactory } = require('../controllers/childGroupNameAme
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, logError }) => {
+const controller = ({ oauthApi }) => {
   const getGroupDetailsApi = (context, group) => oauthApi.groupDetails(context, { group })
   const getGroups = (context) => oauthApi.assignableGroups(context)
   const changeGroupNameApi = (context, group, groupName) => oauthApi.changeGroupName(context, group, { groupName })
@@ -17,34 +17,30 @@ const controller = ({ oauthApi, logError }) => {
   const createChildGroupApi = (context, group) => oauthApi.createChildGroup(context, group)
   const deleteChildGroupApi = (context, group) => oauthApi.deleteChildGroup(context, group)
 
-  const { index } = selectGroupsFactory(getGroups, '/manage-groups', logError)
+  const { index } = selectGroupsFactory(getGroups, '/manage-groups')
 
   const { index: getGroupAmendment, post: postGroupAmendment } = groupAmendmentFactory(
     getGroupDetailsApi,
     changeGroupNameApi,
     'Change group name',
-    '/manage-groups',
-    logError
+    '/manage-groups'
   )
   const { index: getChildGroupAmendment, post: postChildGroupAmendment } = childGroupAmendmentFactory(
     getChildGroupDetailsApi,
     changeChildGroupNameApi,
     'Change child group name',
-    '/manage-groups',
-    logError
+    '/manage-groups'
   )
 
   const { index: getGroupDetails, deleteChildGroup } = groupDetailsFactory(
     getGroupDetailsApi,
     deleteChildGroupApi,
-    '/manage-groups',
-    logError
+    '/manage-groups'
   )
 
   const { index: getChildGroupCreate, post: postChildGroupCreate } = createChildGroupFactory(
     createChildGroupApi,
-    '/manage-groups',
-    logError
+    '/manage-groups'
   )
 
   router.get('/', index)

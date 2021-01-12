@@ -4,7 +4,7 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ prisonApi, logError }) => {
+const controller = ({ prisonApi }) => {
   const getUserAndAssignableRolesApi = (context, username, hasAdminRole) =>
     Promise.all([prisonApi.getUser(context, username), prisonApi.assignableRoles(context, username, hasAdminRole)])
   const getUserAndRolesApi = (context, username, hasAdminRole) =>
@@ -17,8 +17,7 @@ const controller = ({ prisonApi, logError }) => {
     getUserAndAssignableRolesApi,
     saveRolesApi,
     '/search-dps-users',
-    '/manage-dps-users',
-    logError
+    '/manage-dps-users'
   )
 
   const { index: userDetails, removeRole } = userDetailsFactory(
@@ -30,8 +29,7 @@ const controller = ({ prisonApi, logError }) => {
     '/search-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
-    false,
-    logError
+    false
   )
 
   router.get('/select-roles', selectRoles)

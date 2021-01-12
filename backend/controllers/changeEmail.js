@@ -1,4 +1,3 @@
-const { serviceUnavailableMessage } = require('../common-messages')
 const { validateChangeEmail } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
@@ -13,7 +12,7 @@ function mapDescription(error, errorDescription) {
   }
 }
 
-const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, logError) => {
+const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
     req.flash('changeEmail', email)
@@ -24,21 +23,16 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, logEr
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
 
-    try {
-      const user = await getUserApi(res.locals, username)
-      const flashEmail = req.flash('changeEmail')
-      const email = flashEmail != null && flashEmail.length > 0 ? flashEmail[0] : user.email
+    const user = await getUserApi(res.locals, username)
+    const flashEmail = req.flash('changeEmail')
+    const email = flashEmail != null && flashEmail.length > 0 ? flashEmail[0] : user.email
 
-      res.render('changeEmail.njk', {
-        staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
-        staffUrl,
-        currentEmail: email,
-        errors: req.flash('changeEmailErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    res.render('changeEmail.njk', {
+      staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
+      staffUrl,
+      currentEmail: email,
+      errors: req.flash('changeEmailErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -62,8 +56,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl, logEr
         const errors = [{ href: '#email', text: description }]
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
-        logError(req.originalUrl, err, serviceUnavailableMessage)
-        res.render('error.njk', { url: `${staffUrl}/change-email` })
+        throw err
       }
     }
   }

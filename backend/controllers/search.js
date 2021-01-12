@@ -1,5 +1,3 @@
-const { serviceUnavailableMessage } = require('../common-messages')
-
 const mapUsernameAndEmail = (u) => {
   if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`
   return u.username
@@ -13,35 +11,29 @@ const searchFactory = (
   pagingApi,
   searchUrl,
   maintainUrl,
-  searchTitle,
-  logError
+  searchTitle
 ) => {
   const dpsSearch = getAssignableGroupsApi === undefined
 
   const index = async (req, res) => {
-    try {
-      const assignableGroups = (!dpsSearch && (await getAssignableGroupsApi(res.locals))) || []
-      const groupDropdownValues = assignableGroups.map((g) => ({
-        text: g.groupName,
-        value: g.groupCode,
-      }))
-      const searchableRoles = await getSearchableRolesApi(res.locals)
-      const roleDropdownValues = searchableRoles.map((r) => ({
-        text: r.roleName,
-        value: r.roleCode,
-      }))
+    const assignableGroups = (!dpsSearch && (await getAssignableGroupsApi(res.locals))) || []
+    const groupDropdownValues = assignableGroups.map((g) => ({
+      text: g.groupName,
+      value: g.groupCode,
+    }))
+    const searchableRoles = await getSearchableRolesApi(res.locals)
+    const roleDropdownValues = searchableRoles.map((r) => ({
+      text: r.roleName,
+      value: r.roleCode,
+    }))
 
-      res.render('search.njk', {
-        searchTitle,
-        searchUrl,
-        groupDropdownValues,
-        roleDropdownValues,
-        dpsSearch,
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: searchUrl })
-    }
+    res.render('search.njk', {
+      searchTitle,
+      searchUrl,
+      groupDropdownValues,
+      roleDropdownValues,
+      dpsSearch,
+    })
   }
 
   const results = async (req, res) => {
@@ -54,29 +46,24 @@ const searchFactory = (
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
 
-    try {
-      const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
+    const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
 
-      const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
-        usernameAndEmail: mapUsernameAndEmail(u),
-        ...u,
-      }))
+    const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
+      usernameAndEmail: mapUsernameAndEmail(u),
+      ...u,
+    }))
 
-      res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
-        searchTitle,
-        searchUrl,
-        maintainUrl,
-        results: searchResultsWithUsernameEmailCombined,
-        pagination: paginationService.getPagination(
-          pagingApi(res.locals),
-          new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
-        ),
-        errors: req.flash('errors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: searchUrl })
-    }
+    res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
+      searchTitle,
+      searchUrl,
+      maintainUrl,
+      results: searchResultsWithUsernameEmailCombined,
+      pagination: paginationService.getPagination(
+        pagingApi(res.locals),
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
+      ),
+      errors: req.flash('errors'),
+    })
   }
 
   return { index, results }

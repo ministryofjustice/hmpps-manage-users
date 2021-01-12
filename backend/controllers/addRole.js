@@ -1,6 +1,4 @@
-const { serviceUnavailableMessage } = require('../common-messages')
-
-const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, logError) => {
+const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -11,23 +9,18 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, lo
     const staffUrl = `${manageUrl}/${username}`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
-    try {
-      const [user, assignableRoles] = await getUserAndRoles(res.locals, username, hasAdminRole)
-      const roleDropdownValues = assignableRoles.map((r) => ({
-        text: r.roleName,
-        value: r.roleCode,
-      }))
+    const [user, assignableRoles] = await getUserAndRoles(res.locals, username, hasAdminRole)
+    const roleDropdownValues = assignableRoles.map((r) => ({
+      text: r.roleName,
+      value: r.roleCode,
+    }))
 
-      res.render('addRole.njk', {
-        staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
-        staffUrl,
-        roleDropdownValues,
-        errors: req.flash('addRoleErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    res.render('addRole.njk', {
+      staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
+      staffUrl,
+      roleDropdownValues,
+      errors: req.flash('addRoleErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -35,18 +28,13 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl, lo
     const { roles } = req.body
     const staffUrl = `${manageUrl}/${username}`
 
-    try {
-      if (!roles) {
-        const errors = [{ href: '#roles', text: 'Select at least one role' }]
-        stashStateAndRedirectToIndex(req, res, errors)
-      } else {
-        const roleArray = Array.isArray(roles) ? roles : [roles]
-        await saveRoles(res.locals, username, roleArray)
-        res.redirect(staffUrl)
-      }
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: `${staffUrl}/select-roles` })
+    if (!roles) {
+      const errors = [{ href: '#roles', text: 'Select at least one role' }]
+      stashStateAndRedirectToIndex(req, res, errors)
+    } else {
+      const roleArray = Array.isArray(roles) ? roles : [roles]
+      await saveRoles(res.locals, username, roleArray)
+      res.redirect(staffUrl)
     }
   }
 

@@ -1,6 +1,4 @@
-const { serviceUnavailableMessage } = require('../common-messages')
-
-const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, logError) => {
+const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addGroupErrors', errors)
     res.redirect(req.originalUrl)
@@ -10,23 +8,18 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, l
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
 
-    try {
-      const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username)
-      const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
-      const groupDropdownValues = assignableGroups
-        .filter((g) => !userGroupsCodes.has(g.groupCode))
-        .map((g) => ({ text: g.groupName, value: g.groupCode }))
+    const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username)
+    const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
+    const groupDropdownValues = assignableGroups
+      .filter((g) => !userGroupsCodes.has(g.groupCode))
+      .map((g) => ({ text: g.groupName, value: g.groupCode }))
 
-      res.render('addGroup.njk', {
-        staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
-        staffUrl,
-        groupDropdownValues,
-        errors: req.flash('addGroupErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    res.render('addGroup.njk', {
+      staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
+      staffUrl,
+      groupDropdownValues,
+      errors: req.flash('addGroupErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -47,8 +40,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl, l
           const errors = [{ href: '#group', text: 'User already belongs to that group' }]
           stashStateAndRedirectToIndex(req, res, errors)
         } else {
-          logError(req.originalUrl, error, serviceUnavailableMessage)
-          res.render('error.njk', { url: `${staffUrl}/select-group` })
+          throw error
         }
       }
     }

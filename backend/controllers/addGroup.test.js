@@ -3,14 +3,7 @@ const { selectGroupFactory } = require('./addGroup')
 describe('select groups factory', () => {
   const getUserAndGroups = jest.fn()
   const saveGroup = jest.fn()
-  const logError = jest.fn()
-  const addGroup = selectGroupFactory(
-    getUserAndGroups,
-    saveGroup,
-    '/maintain-external-users',
-    '/manage-external-users',
-    logError
-  )
+  const addGroup = selectGroupFactory(getUserAndGroups, saveGroup, '/maintain-external-users', '/manage-external-users')
 
   describe('index', () => {
     it('should call addGroup render', async () => {
@@ -65,13 +58,6 @@ describe('select groups factory', () => {
         staffUrl: '/manage-external-users/joe',
       })
     })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      getUserAndGroups.mockRejectedValue(new Error('This failed'))
-      await addGroup.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
-    })
   })
 
   describe('post', () => {
@@ -92,16 +78,6 @@ describe('select groups factory', () => {
       await addGroup.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addGroupErrors', [{ href: '#group', text: 'Select a group' }])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      saveGroup.mockRejectedValue(new Error('This failed'))
-      await addGroup.post(
-        { params: { username: 'joe' }, body: { group: 'GLOBAL_SEARCH' }, flash: jest.fn() },
-        { render }
-      )
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe/select-group' })
     })
 
     it('should fail gracefully if group already on user', async () => {

@@ -1,5 +1,3 @@
-const { serviceUnavailableMessage } = require('../common-messages')
-
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
   removeRoleApi,
@@ -9,8 +7,7 @@ const userDetailsFactory = (
   searchUrl,
   manageUrl,
   searchTitle,
-  showExtraUserDetails,
-  logError
+  showExtraUserDetails
 ) => {
   const index = async (req, res) => {
     const { username } = req.params
@@ -20,26 +17,21 @@ const userDetailsFactory = (
 
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
 
-    try {
-      const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
-      res.render('userDetails.njk', {
-        searchTitle,
-        searchResultsUrl,
-        searchUrl,
-        staff: { ...user, name: `${user.firstName} ${user.lastName}` },
-        staffUrl,
-        roles,
-        groups,
-        hasMaintainAuthUsers,
-        errors: req.flash('errors'),
-        showEnableDisable: Boolean(enableUserApi && disableUserApi),
-        showGroups: Boolean(removeGroupApi),
-        showExtraUserDetails,
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
+    res.render('userDetails.njk', {
+      searchTitle,
+      searchResultsUrl,
+      searchUrl,
+      staff: { ...user, name: `${user.firstName} ${user.lastName}` },
+      staffUrl,
+      roles,
+      groups,
+      hasMaintainAuthUsers,
+      errors: req.flash('errors'),
+      showEnableDisable: Boolean(enableUserApi && disableUserApi),
+      showGroups: Boolean(removeGroupApi),
+      showExtraUserDetails,
+    })
   }
 
   const removeRole = async (req, res) => {
@@ -54,8 +46,7 @@ const userDetailsFactory = (
         // role already removed from group
         res.redirect(req.originalUrl)
       } else {
-        logError(req.originalUrl, error, serviceUnavailableMessage)
-        res.render('error.njk', { url: staffUrl })
+        throw error
       }
     }
   }
@@ -72,8 +63,7 @@ const userDetailsFactory = (
         // user already removed from group
         res.redirect(req.originalUrl)
       } else {
-        logError(req.originalUrl, error, serviceUnavailableMessage)
-        res.render('error.njk', { url: staffUrl })
+        throw error
       }
     }
   }
@@ -82,26 +72,16 @@ const userDetailsFactory = (
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
 
-    try {
-      await enableUserApi(res.locals, username)
-      res.redirect(staffUrl)
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    await enableUserApi(res.locals, username)
+    res.redirect(staffUrl)
   }
 
   const disableUser = async (req, res) => {
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
 
-    try {
-      await disableUserApi(res.locals, username)
-      res.redirect(staffUrl)
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: staffUrl })
-    }
+    await disableUserApi(res.locals, username)
+    res.redirect(staffUrl)
   }
 
   return { index, removeRole, removeGroup, enableUser, disableUser }

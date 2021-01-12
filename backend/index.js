@@ -26,6 +26,8 @@ const config = require('./config')
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
 
+const errorHandler = require('./middleware/errorHandler')
+
 const log = require('./log')
 
 const app = express()
@@ -99,12 +101,7 @@ app.use((req, res, next) => {
 })
 app.use(routes({ ...apis }))
 
-app.get('/maintain*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'))
-})
-app.get('/create*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../build/index.html'))
-})
+app.use(errorHandler)
 
 app.listen(config.app.port, () => {
   // eslint-disable-next-line no-console

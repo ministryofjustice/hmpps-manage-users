@@ -2,8 +2,7 @@ const { selectGroupsFactory } = require('./getGroups')
 
 describe('select groups factory', () => {
   const getGroups = jest.fn()
-  const logError = jest.fn()
-  const groups = selectGroupsFactory(getGroups, '/manage-groups', logError)
+  const groups = selectGroupsFactory(getGroups, '/manage-groups')
 
   describe('index', () => {
     it('should call groups render', async () => {

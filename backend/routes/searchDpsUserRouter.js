@@ -5,7 +5,7 @@ const contextProperties = require('../contextProperties')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ prisonApi, logError }) => {
+const controller = ({ prisonApi }) => {
   const searchApi = (context, nameFilter, groupCode, roleCode, page, size, offset) => {
     const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
 
@@ -28,8 +28,7 @@ const controller = ({ prisonApi, logError }) => {
     contextProperties.getResponsePagination,
     '/search-dps-users',
     '/manage-dps-users',
-    'Search for a DPS user',
-    logError
+    'Search for a DPS user'
   )
 
   router.get('/', index)

@@ -12,14 +12,7 @@ const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => {
 describe('change email factory', () => {
   const getUserApi = jest.fn()
   const saveEmail = jest.fn()
-  const logError = jest.fn()
-  const changeEmail = changeEmailFactory(
-    getUserApi,
-    saveEmail,
-    '/maintain-external-users',
-    '/manage-external-users',
-    logError
-  )
+  const changeEmail = changeEmailFactory(getUserApi, saveEmail, '/maintain-external-users', '/manage-external-users')
 
   describe('index', () => {
     it('should call changeEmail render', async () => {
@@ -58,13 +51,6 @@ describe('change email factory', () => {
         currentEmail: 'bob@digital.justice.gov.uk',
         staffUrl: '/manage-external-users/joe',
       })
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      getUserApi.mockRejectedValue(new Error('This failed'))
-      await changeEmail.index({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
     })
   })
 
@@ -181,13 +167,6 @@ describe('change email factory', () => {
           text: 'not valid',
         },
       ])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      saveEmail.mockRejectedValue(new Error('This failed'))
-      await changeEmail.post({ params: { username: 'joe' }, body: { email: 'bob@digital.justice.gov.uk' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe/change-email' })
     })
   })
 })

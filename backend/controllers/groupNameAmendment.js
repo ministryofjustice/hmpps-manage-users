@@ -1,8 +1,7 @@
 const { validateGroupName } = require('./groupValidation')
-const { serviceUnavailableMessage } = require('../common-messages')
 const { trimObjValues } = require('../utils')
 
-const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl, logError) => {
+const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {
     req.flash('changeGroupErrors', errors)
     req.flash('changeGroupName', groupName)
@@ -13,21 +12,16 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
     const { group } = req.params
     const groupUrl = `${manageGroupUrl}/${group}`
 
-    try {
-      const groupDetails = await getGroupDetailsApi(res.locals, group)
-      const flashGroup = req.flash('changeGroupName')
-      const groupName = flashGroup != null && flashGroup.length > 0 ? flashGroup[0] : groupDetails.groupName
+    const groupDetails = await getGroupDetailsApi(res.locals, group)
+    const flashGroup = req.flash('changeGroupName')
+    const groupName = flashGroup != null && flashGroup.length > 0 ? flashGroup[0] : groupDetails.groupName
 
-      res.render('changeGroupName.njk', {
-        title,
-        groupUrl,
-        currentGroupName: groupName,
-        errors: req.flash('changeGroupErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: groupUrl })
-    }
+    res.render('changeGroupName.njk', {
+      title,
+      groupUrl,
+      currentGroupName: groupName,
+      errors: req.flash('changeGroupErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -44,13 +38,12 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
       }
     } catch (err) {
       if (err.status === 400 && err.response && err.response.body) {
-        const { error, error_description: errorDescription } = err.response.body
+        const { error } = err.response.body
 
         const errors = [{ href: '#groupName', text: error }]
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
-        logError(req.originalUrl, err, serviceUnavailableMessage)
-        res.render('error.njk', { url: `${groupUrl}/change-group-name` })
+        throw err
       }
     }
   }

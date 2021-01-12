@@ -3,15 +3,13 @@ const { createUserFactory } = require('./createUser')
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()
   const createUserApi = jest.fn()
-  const logError = jest.fn()
   const createUser = createUserFactory(
     getAssignableGroupsApi,
     createUserApi,
     '/create-external-users',
     '/search-external-users',
     '/manage-external-users',
-    'Search for an external user',
-    logError
+    'Search for an external user'
   )
 
   describe('index', () => {
@@ -41,13 +39,6 @@ describe('create user factory', () => {
         maintainUrl: '/create-external-users',
         groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
       })
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      getAssignableGroupsApi.mockRejectedValue(new Error('This failed'))
-      await createUser.index({ params: {} }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/create-external-users' })
     })
   })
 
@@ -226,24 +217,6 @@ describe('create user factory', () => {
           text: 'Email already exists',
         },
       ])
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      createUserApi.mockRejectedValue(new Error('This failed'))
-      await createUser.post(
-        {
-          params: {},
-          body: {
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            lastName: 'smith',
-            groupCode: 'SITE_1_GROUP_1',
-          },
-        },
-        { render }
-      )
-      expect(render).toBeCalledWith('error.njk', { url: '/create-external-users' })
     })
   })
 })

@@ -6,7 +6,6 @@ describe('user detail factory', () => {
   const removeGroupApi = jest.fn()
   const enableUserApi = jest.fn()
   const disableUserApi = jest.fn()
-  const logError = jest.fn()
   const userDetails = userDetailsFactory(
     getUserRolesAndGroupsApi,
     removeRoleApi,
@@ -16,8 +15,7 @@ describe('user detail factory', () => {
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
-    true,
-    logError
+    true
   )
 
   it('should call userDetail render', async () => {
@@ -115,8 +113,7 @@ describe('user detail factory', () => {
       '/search-external-users',
       '/manage-external-users',
       'Search for an external user',
-      false,
-      logError
+      false
     )
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -169,8 +166,7 @@ describe('user detail factory', () => {
       '/search-external-users',
       '/manage-external-users',
       'Search for an external user',
-      false,
-      logError
+      false
     )
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -263,13 +259,6 @@ describe('user detail factory', () => {
       expect(removeRoleApi).toBeCalledWith(locals, 'joe', 'role1')
     })
 
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      removeRoleApi.mockRejectedValue(new Error('This failed'))
-      await userDetails.removeRole({ params: { username: 'joe', role: 'role19' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
-    })
-
     it('should ignore if user does not have role', async () => {
       const redirect = jest.fn()
       const error = new Error('This failed')
@@ -296,13 +285,6 @@ describe('user detail factory', () => {
       await userDetails.removeGroup(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe')
       expect(removeGroupApi).toBeCalledWith(locals, 'joe', 'group1')
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      removeGroupApi.mockRejectedValue(new Error('This failed'))
-      await userDetails.removeGroup({ params: { username: 'joe', role: 'group19' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
     })
 
     it('should ignore if user does not have group', async () => {
@@ -332,13 +314,6 @@ describe('user detail factory', () => {
       expect(redirect).toBeCalledWith('/manage-external-users/joe')
       expect(enableUserApi).toBeCalledWith(locals, 'joe')
     })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      enableUserApi.mockRejectedValue(new Error('This failed'))
-      await userDetails.enableUser({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
-    })
   })
 
   describe('disable user', () => {
@@ -350,13 +325,6 @@ describe('user detail factory', () => {
       await userDetails.disableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe')
       expect(disableUserApi).toBeCalledWith(locals, 'joe')
-    })
-
-    it('should call error on failure', async () => {
-      const render = jest.fn()
-      removeGroupApi.mockRejectedValue(new Error('This failed'))
-      await userDetails.disableUser({ params: { username: 'joe' } }, { render })
-      expect(render).toBeCalledWith('error.njk', { url: '/manage-external-users/joe' })
     })
   })
 })

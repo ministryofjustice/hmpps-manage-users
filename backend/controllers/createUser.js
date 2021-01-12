@@ -1,16 +1,7 @@
-const { serviceUnavailableMessage } = require('../common-messages')
 const { validateCreate } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
-const createUserFactory = (
-  getAssignableGroupsApi,
-  createUser,
-  createUrl,
-  searchUrl,
-  manageUrl,
-  maintainTitle,
-  logError
-) => {
+const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, searchUrl, manageUrl, maintainTitle) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createUserErrors', errors)
     req.flash('user', user)
@@ -18,27 +9,22 @@ const createUserFactory = (
   }
 
   const index = async (req, res) => {
-    try {
-      const assignableGroups = await getAssignableGroupsApi(res.locals)
-      const flashUser = req.flash('user')
-      const user = flashUser != null && flashUser.length > 0 ? flashUser[0] : ''
-      const groupDropdownValues = assignableGroups.map((g) => ({
-        text: g.groupName,
-        value: g.groupCode,
-        selected: g.groupCode === user.groupCode,
-      }))
+    const assignableGroups = await getAssignableGroupsApi(res.locals)
+    const flashUser = req.flash('user')
+    const user = flashUser != null && flashUser.length > 0 ? flashUser[0] : ''
+    const groupDropdownValues = assignableGroups.map((g) => ({
+      text: g.groupName,
+      value: g.groupCode,
+      selected: g.groupCode === user.groupCode,
+    }))
 
-      res.render('createUser.njk', {
-        maintainTitle,
-        maintainUrl: createUrl,
-        ...user,
-        groupDropdownValues,
-        errors: req.flash('createUserErrors'),
-      })
-    } catch (error) {
-      logError(req.originalUrl, error, serviceUnavailableMessage)
-      res.render('error.njk', { url: createUrl })
-    }
+    res.render('createUser.njk', {
+      maintainTitle,
+      maintainUrl: createUrl,
+      ...user,
+      groupDropdownValues,
+      errors: req.flash('createUserErrors'),
+    })
   }
 
   const post = async (req, res) => {
@@ -68,8 +54,7 @@ const createUserFactory = (
           const emailError = [{ href: '#email', text: 'Email already exists' }]
           stashStateAndRedirectToIndex(req, res, emailError, [user])
         } else {
-          logError(req.originalUrl, err, serviceUnavailableMessage)
-          res.render('error.njk', { url: createUrl })
+          throw err
         }
       }
     }
