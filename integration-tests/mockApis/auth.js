@@ -148,6 +148,20 @@ const stubAuthGetUsername = (enabled = true) =>
     },
   })
 
+const stubAuthGetUserWithEmail = (enabled = true) =>
+  getFor({
+    urlPattern: '/auth/api/authuser/[^/]*',
+    body: {
+      username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
+      email: 'auth_test2@digital.justice.gov.uk',
+      enabled,
+      locked: false,
+      verified: false,
+      firstName: 'Auth',
+      lastName: 'Adm',
+    },
+  })
+
 const stubAuthSearch = ({
   content = [
     {
@@ -379,6 +393,7 @@ module.exports = {
   stubEmail,
   redirect,
   stubAuthGetUsername,
+  stubAuthGetUserWithEmail,
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
