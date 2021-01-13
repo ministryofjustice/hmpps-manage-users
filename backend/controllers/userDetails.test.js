@@ -15,7 +15,7 @@ describe('user detail factory', () => {
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
-    true
+    true,
   )
 
   it('should call userDetail render', async () => {
@@ -113,7 +113,7 @@ describe('user detail factory', () => {
       '/search-external-users',
       '/manage-external-users',
       'Search for an external user',
-      false
+      false,
     )
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -166,7 +166,7 @@ describe('user detail factory', () => {
       '/search-external-users',
       '/manage-external-users',
       'Search for an external user',
-      false
+      false,
     )
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -270,7 +270,7 @@ describe('user detail factory', () => {
           params: { username: 'joe', role: 'role99' },
           originalUrl: '/some-location',
         },
-        { redirect }
+        { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
     })
@@ -298,7 +298,7 @@ describe('user detail factory', () => {
           params: { username: 'joe', role: 'group99' },
           originalUrl: '/some-location',
         },
-        { redirect }
+        { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
     })

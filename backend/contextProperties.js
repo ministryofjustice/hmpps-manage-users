@@ -26,7 +26,7 @@ const normalizeHeaderNames = (srcHeaders) =>
       ...previous,
       [headerName.toLowerCase()]: srcHeaders[headerName],
     }),
-    {}
+    {},
   )
 
 const copyNamedHeaders = (headerNames, srcHeaders) =>
@@ -50,7 +50,7 @@ const setResponsePagination = (context, headers) => {
 
   const { 'total-records': totalElements, 'page-offset': offset, 'page-limit': limit } = copyNamedHeaders(
     headerNames,
-    (headers && normalizeHeaderNames(headers)) || {}
+    (headers && normalizeHeaderNames(headers)) || {},
   )
   context.offsetPageable = {
     totalElements: totalElements ? parseInt(totalElements, 10) : undefined,

@@ -25,7 +25,7 @@ describe('group name change validation', () => {
     expect(validateGroupName('b@c,d.com')).toEqual(
       expect.arrayContaining([
         { href: '#groupName', text: "Group name can only contain 0-9, a-z and ( ) & , - . '  characters" },
-      ])
+      ]),
     )
   })
   it('should pass group name validation', () => {
@@ -65,13 +65,13 @@ describe('create child group validation', () => {
     expect(validateCreateGroup({ groupCode: 'GROUP_CODE', groupName: 'b@c,d.com' })).toEqual(
       expect.arrayContaining([
         { href: '#groupName', text: "Group name can only contain 0-9, a-z and ( ) & , - . '  characters" },
-      ])
+      ]),
     )
   })
 
   it('should validate specific characters allowed for group code', () => {
     expect(validateCreateGroup({ groupCode: 'GROUP_CODE@', groupName: 'group name' })).toEqual(
-      expect.arrayContaining([{ href: '#groupCode', text: 'Group code can only contain 0-9, A-Z and _ characters' }])
+      expect.arrayContaining([{ href: '#groupCode', text: 'Group code can only contain 0-9, A-Z and _ characters' }]),
     )
   })
 

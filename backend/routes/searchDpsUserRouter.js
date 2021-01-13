@@ -28,7 +28,7 @@ const controller = ({ prisonApi }) => {
     contextProperties.getResponsePagination,
     '/search-dps-users',
     '/manage-dps-users',
-    'Search for a DPS user'
+    'Search for a DPS user',
   )
 
   router.get('/', index)

@@ -99,7 +99,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     oauthAxios({ data })
       .then((response) => {
         logger.debug(
-          `${msg} ${response.config.method} ${response.config.url} ${response.status} ${response.statusText}`
+          `${msg} ${response.config.method} ${response.config.url} ${response.status} ${response.statusText}`,
         )
         return parseOauthTokens(response.data)
       })

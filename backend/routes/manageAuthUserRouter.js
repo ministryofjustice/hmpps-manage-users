@@ -38,21 +38,21 @@ const controller = ({ oauthApi }) => {
     getUserAndGroupsApi,
     saveGroupApi,
     '/search-external-users',
-    '/manage-external-users'
+    '/manage-external-users',
   )
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAndAssignableRolesApi,
     saveRolesApi,
     '/search-external-users',
-    '/manage-external-users'
+    '/manage-external-users',
   )
 
   const { index: getEmail, post: postEmail } = changeEmailFactory(
     getUserApi,
     changeEmailApi,
     '/search-external-users',
-    '/manage-external-users'
+    '/manage-external-users',
   )
 
   const { index: userDetails, removeRole, removeGroup, enableUser, disableUser } = userDetailsFactory(
@@ -64,7 +64,7 @@ const controller = ({ oauthApi }) => {
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
-    true
+    true,
   )
 
   router.get('/select-roles', selectRoles)

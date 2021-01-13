@@ -7,7 +7,7 @@ const userDetailsFactory = (
   searchUrl,
   manageUrl,
   searchTitle,
-  showExtraUserDetails
+  showExtraUserDetails,
 ) => {
   const index = async (req, res) => {
     const { username } = req.params

@@ -58,7 +58,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-dps-users',
       '/manage-dps-users',
-      'Search for a DPS user'
+      'Search for a DPS user',
     )
 
     it('should call search user render', async () => {
@@ -151,7 +151,7 @@ describe('search factory', () => {
       pagingApi,
       '/search-external-users',
       '/manage-external-users',
-      'Search for an external user'
+      'Search for an external user',
     )
 
     beforeEach(() => {

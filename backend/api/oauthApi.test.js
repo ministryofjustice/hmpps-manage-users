@@ -147,7 +147,7 @@ describe('oauthApi tests', () => {
     it('should call user endpoint', () => {
       expect(client.get).toBeCalledWith(
         context,
-        "/api/authuser/search?name=joe'fred%40bananas%25.com&groups=&roles=&page=&size="
+        "/api/authuser/search?name=joe'fred%40bananas%25.com&groups=&roles=&page=&size=",
       )
     })
   })

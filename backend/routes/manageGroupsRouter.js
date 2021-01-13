@@ -23,24 +23,24 @@ const controller = ({ oauthApi }) => {
     getGroupDetailsApi,
     changeGroupNameApi,
     'Change group name',
-    '/manage-groups'
+    '/manage-groups',
   )
   const { index: getChildGroupAmendment, post: postChildGroupAmendment } = childGroupAmendmentFactory(
     getChildGroupDetailsApi,
     changeChildGroupNameApi,
     'Change child group name',
-    '/manage-groups'
+    '/manage-groups',
   )
 
   const { index: getGroupDetails, deleteChildGroup } = groupDetailsFactory(
     getGroupDetailsApi,
     deleteChildGroupApi,
-    '/manage-groups'
+    '/manage-groups',
   )
 
   const { index: getChildGroupCreate, post: postChildGroupCreate } = createChildGroupFactory(
     createChildGroupApi,
-    '/manage-groups'
+    '/manage-groups',
   )
 
   router.get('/', index)

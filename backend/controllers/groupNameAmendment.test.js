@@ -7,7 +7,7 @@ describe('group amendment factory', () => {
     getGroupDetailsApi,
     changeGroupNameApi,
     'Change group name',
-    '/manage-groups'
+    '/manage-groups',
   )
 
   describe('index', () => {

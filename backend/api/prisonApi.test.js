@@ -23,7 +23,7 @@ describe('prisonApi tests', () => {
       expect(client.get).toBeCalledWith(
         context,
         '/api/users/joe/access-roles/caseload/NWEB?includeAdmin=true',
-        undefined
+        undefined,
       )
     })
   })
@@ -48,7 +48,7 @@ describe('prisonApi tests', () => {
       expect(client.get).toBeCalledWith(
         context,
         '/api/users/joe/access-roles/caseload/NWEB?includeAdmin=true',
-        undefined
+        undefined,
       )
     })
   })

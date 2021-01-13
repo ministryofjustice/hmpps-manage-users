@@ -19,7 +19,7 @@ const prisonApiFactory = (client) => {
   const userSearch = (context, { nameFilter, roleFilter }) =>
     get(
       context,
-      `/api/users/local-administrator/available?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`
+      `/api/users/local-administrator/available?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`,
     )
   const userSearchAdmin = (context, { nameFilter, roleFilter }) =>
     get(context, `/api/users?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`)
@@ -28,7 +28,7 @@ const prisonApiFactory = (client) => {
   const contextUserRoles = (context, username, hasAdminRole) =>
     get(
       context,
-      `/api/users/${username}/access-roles/caseload/${config.app.applicationCaseload}?includeAdmin=${hasAdminRole}`
+      `/api/users/${username}/access-roles/caseload/${config.app.applicationCaseload}?includeAdmin=${hasAdminRole}`,
     )
   const removeRole = (context, username, roleCode) =>
     del(context, `/api/users/${username}/caseload/${config.app.applicationCaseload}/access-role/${roleCode}`)

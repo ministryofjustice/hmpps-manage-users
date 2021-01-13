@@ -93,7 +93,7 @@ describe('select groups factory', () => {
           flash: jest.fn(),
           originalUrl: '/some-location',
         },
-        { redirect }
+        { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
     })

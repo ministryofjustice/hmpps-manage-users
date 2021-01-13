@@ -8,7 +8,7 @@ const prisonApi = prisonApiFactory(
   clientFactory({
     baseUrl: config.apis.prison.url,
     timeout: config.apis.prison.timeoutSeconds * 1000,
-  })
+  }),
 )
 
 const oauthApi = oauthApiFactory(
@@ -16,14 +16,14 @@ const oauthApi = oauthApiFactory(
     baseUrl: config.apis.oauth2.url,
     timeout: config.apis.oauth2.timeoutSeconds * 1000,
   }),
-  { ...config.apis.oauth2 }
+  { ...config.apis.oauth2 },
 )
 
 const tokenVerificationApi = tokenVerificationApiFactory(
   clientFactory({
     baseUrl: config.apis.tokenverification.url,
     timeout: config.apis.tokenverification.timeoutSeconds * 1000,
-  })
+  }),
 )
 
 module.exports = {

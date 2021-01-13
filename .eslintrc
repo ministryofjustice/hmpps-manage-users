@@ -77,16 +77,8 @@
         "tsx": "never"
       }
     ],
-    "comma-dangle": [
-      "error",
-      {
-        "arrays": "always-multiline",
-        "objects": "always-multiline",
-        "imports": "always-multiline",
-        "exports": "always-multiline",
-        "functions": "never"
-      }
-    ],
+    "comma-dangle": ["error", "always-multiline"],
+
     "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.js", "**/*.test.ts"] }],
     "no-param-reassign": [1, { "props": true, "ignorePropertyModificationsFor": ["req", "res", "context"] }],
     "prettier/prettier": ["error"]

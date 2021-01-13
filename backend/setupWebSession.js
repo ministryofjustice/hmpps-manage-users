@@ -38,7 +38,7 @@ module.exports = () => {
         secure: config.app.production,
         signed: true,
       },
-    })
+    }),
   )
   return router
 }
