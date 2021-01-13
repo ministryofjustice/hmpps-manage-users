@@ -44,7 +44,7 @@ describe('Auth create validation', () => {
         { href: '#email', text: 'Enter an email address' },
         { href: '#firstName', text: 'Enter a first name' },
         { href: '#lastName', text: 'Enter a last name' },
-      ])
+      ]),
     )
   })
   it('should disallow fields that are too short', () => {
@@ -53,7 +53,7 @@ describe('Auth create validation', () => {
         { href: '#email', text: 'Enter an email address in the correct format, like first.last@justice.gov.uk' },
         { href: '#firstName', text: 'First name must be 2 characters or more' },
         { href: '#lastName', text: 'Last name must be 2 characters or more' },
-      ])
+      ]),
     )
   })
   it('should disallow fields that are too long', () => {
@@ -63,19 +63,19 @@ describe('Auth create validation', () => {
         firstName: 'ccccccccccccccccccccccccccccccccccccccccccccccccccc',
         lastName: 'dddddddddddddddddddddddddddddddddddddddddddddddddddd',
         groupCode: null,
-      })
+      }),
     ).toEqual(
       expect.arrayContaining([
         { href: '#firstName', text: 'First name must be 50 characters or less' },
         { href: '#lastName', text: 'Last name must be 50 characters or less' },
-      ])
+      ]),
     )
   })
   it('should validate specific characters allowed', () => {
     expect(validateCreate({ email: 'b@c,d.com', firstName: 'ca', lastName: 'de', groupCode: null })).toEqual(
       expect.arrayContaining([
         { href: '#email', text: "Email address can only contain 0-9, a-z, @, ', _, ., - and + characters" },
-      ])
+      ]),
     )
   })
   it('should pass validation', () => {
@@ -85,7 +85,7 @@ describe('Auth create validation', () => {
         firstName: 'joe',
         lastName: 'joe',
         groupCode: null,
-      })
+      }),
     ).toEqual([])
   })
   it('should pass validation with microsoft special quote', () => {
@@ -95,7 +95,7 @@ describe('Auth create validation', () => {
         firstName: 'joe',
         lastName: 'joe',
         groupCode: null,
-      })
+      }),
     ).toEqual([])
   })
 })
@@ -114,14 +114,14 @@ describe('Auth change email validation', () => {
       expect.arrayContaining([
         { href: '#email', text: 'Enter an email address in the correct format, like first.last@justice.gov.uk' },
         { href: '#email', text: 'Email address must be 240 characters or less' },
-      ])
+      ]),
     )
   })
   it('should validate specific characters allowed', () => {
     expect(validateChangeEmail('b@c,d.com')).toEqual(
       expect.arrayContaining([
         { href: '#email', text: "Email address can only contain 0-9, a-z, @, ', _, ., - and + characters" },
-      ])
+      ]),
     )
   })
   it('should pass validation', () => {

@@ -121,7 +121,7 @@ describe('Test clients built by oauthEnabledClient', () => {
           .reply(200, { failure: 'three' })
 
         await expect(client.getWithCustomTimeout({}, '/api/users/me', { customTimeout: 100 })).rejects.toThrow(
-          'Timeout of 100ms exceeded'
+          'Timeout of 100ms exceeded',
         )
       })
     })
@@ -236,7 +236,7 @@ describe('Test clients built by oauthEnabledClient', () => {
                 resolve()
               },
             },
-            { retry: 5 }
+            { retry: 5 },
           )
         })
 

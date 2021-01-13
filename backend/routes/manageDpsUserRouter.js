@@ -17,7 +17,7 @@ const controller = ({ prisonApi }) => {
     getUserAndAssignableRolesApi,
     saveRolesApi,
     '/search-dps-users',
-    '/manage-dps-users'
+    '/manage-dps-users',
   )
 
   const { index: userDetails, removeRole } = userDetailsFactory(
@@ -29,7 +29,7 @@ const controller = ({ prisonApi }) => {
     '/search-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
-    false
+    false,
   )
 
   router.get('/select-roles', selectRoles)

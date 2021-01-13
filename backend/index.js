@@ -42,7 +42,7 @@ nunjucksSetup(app, path)
 app.use(
   helmet({
     contentSecurityPolicy: false,
-  })
+  }),
 )
 
 app.use(
@@ -50,14 +50,14 @@ app.use(
     maxAge: sixtyDaysInSeconds,
     includeSubDomains: true,
     preload: true,
-  })
+  }),
 )
 
 app.use(
   bunyanMiddleware({
     logger: log,
     obscureHeaders: ['Authorization'],
-  })
+  }),
 )
 
 const health = healthFactory(config.apis.oauth2.url, config.apis.prison.url, config.apis.tokenverification.url)

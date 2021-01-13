@@ -14,7 +14,7 @@ const controller = ({ oauthApi }) => {
     '/create-external-users',
     '/search-external-users',
     '/manage-external-users',
-    'Search for an external user'
+    'Search for an external user',
   )
 
   router.get('/', createUser)

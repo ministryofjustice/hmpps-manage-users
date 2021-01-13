@@ -17,7 +17,7 @@ const controller = ({ oauthApi }) => {
     contextProperties.getPageable,
     '/search-external-users',
     '/manage-external-users',
-    'Search for an external user'
+    'Search for an external user',
   )
 
   router.get('/', index)

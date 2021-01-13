@@ -11,7 +11,7 @@ const searchFactory = (
   pagingApi,
   searchUrl,
   maintainUrl,
-  searchTitle
+  searchTitle,
 ) => {
   const dpsSearch = getAssignableGroupsApi === undefined
 
@@ -60,7 +60,7 @@ const searchFactory = (
       results: searchResultsWithUsernameEmailCombined,
       pagination: paginationService.getPagination(
         pagingApi(res.locals),
-        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`)
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
       errors: req.flash('errors'),
     })

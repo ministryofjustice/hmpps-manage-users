@@ -28,8 +28,8 @@ const init = () => {
         },
       },
       (accessToken, refreshToken, params, profile, done) =>
-        done(null, { access_token: accessToken, refresh_token: refreshToken, authSource: params.auth_source })
-    )
+        done(null, { access_token: accessToken, refresh_token: refreshToken, authSource: params.auth_source }),
+    ),
   )
 }
 

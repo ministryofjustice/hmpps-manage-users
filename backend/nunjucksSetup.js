@@ -9,7 +9,7 @@ module.exports = (app, path) => {
     {
       autoescape: true,
       express: app,
-    }
+    },
   )
 
   njkEnv.addFilter('findError', (array, formFieldId) => {
@@ -27,7 +27,7 @@ module.exports = (app, path) => {
     [
       { text: '', value: '' },
       { text, value: '' },
-    ].concat(values)
+    ].concat(values),
   )
 
   njkEnv.addFilter('findErrors', (errors, formFieldIds) => {
@@ -94,7 +94,7 @@ module.exports = (app, path) => {
       items.map((entry) => ({
         ...entry,
         selected: entry && entry.value === selected,
-      }))
+      })),
   )
 
   njkEnv.addFilter('toSummaryViewModel', (model) =>
@@ -103,7 +103,7 @@ module.exports = (app, path) => {
       .map((key) => ({
         key: { text: capitalize(pascalToString(key)) },
         value: { text: model[key], classes: `qa-${hyphenatedStringToCamel(key)}-value` },
-      }))
+      })),
   )
 
   njkEnv.addFilter(
@@ -119,7 +119,7 @@ module.exports = (app, path) => {
           ...entry.value,
           classes: `${entry.value.classes} govuk-!-padding-bottom-0`,
         },
-      }))
+      })),
   )
 
   njkEnv.addFilter(
@@ -135,7 +135,7 @@ module.exports = (app, path) => {
           ...entry.value,
           classes: `${entry.value.classes} govuk-!-width-one-half`,
         },
-      }))
+      })),
   )
 
   njkEnv.addFilter('showDefault', (value, specifiedText) => {

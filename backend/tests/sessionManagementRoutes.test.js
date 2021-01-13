@@ -34,7 +34,7 @@ describe('Test the routes and middleware installed by sessionManagementRoutes', 
         secure: false,
         signed: true,
       },
-    })
+    }),
   )
 
   app.use(passport.initialize())
@@ -81,7 +81,7 @@ describe('Test the routes and middleware installed by sessionManagementRoutes', 
       .expect(302)
       .expect(
         'location',
-        'http://localhost:9090/auth/logout?client_id=elite2apiclient&redirect_uri=http://localhost:3001/'
+        'http://localhost:9090/auth/logout?client_id=elite2apiclient&redirect_uri=http://localhost:3001/',
       ))
 
   it('After logout get "/" should redirect to "/login"', () =>

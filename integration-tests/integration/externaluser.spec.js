@@ -302,7 +302,7 @@ context('External user functionality', () => {
       .should(
         'have.attr',
         'href',
-        '/search-external-users/results?user=sometext%40somewhere.com&groupCode=&roleCode=&page=1'
+        '/search-external-users/results?user=sometext%40somewhere.com&groupCode=&roleCode=&page=1',
       )
   })
 })
