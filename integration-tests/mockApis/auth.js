@@ -20,7 +20,7 @@ const getLoginUrl = () =>
     urlPath: '/auth/oauth/authorize',
   }).then((data) => {
     const { requests } = data.body
-    const stateValue = requests[0].queryParams.state.values[0]
+    const stateValue = requests[requests.length - 1].queryParams.state.values[0]
     return `/login/callback?code=codexxxx&state=${stateValue}`
   })
 
@@ -96,16 +96,16 @@ const stubUser = (username) => {
   })
 }
 
-const stubUserMe = (username = 'ITAG_USER') =>
+const stubUserMe = ({
+  username = 'ITAG_USER',
+  firstName = 'JAMES',
+  lastName = 'STUART',
+  name = 'James Stuart',
+  activeCaseLoadId = 'MDI',
+}) =>
   getFor({
     urlPattern: '/auth/api/user/me',
-    body: {
-      firstName: 'JAMES',
-      lastName: 'STUART',
-      name: 'James Stuart',
-      username,
-      activeCaseLoadId: 'MDI',
-    },
+    body: { username, firstName, lastName, name, activeCaseLoadId },
   })
 
 const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
@@ -385,7 +385,7 @@ const verifyRemoveRole = () =>
 module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
-    Promise.all([favicon(), redirect(), logout(), token(), stubUserMe(), stubUserMeRoles(roles), stubUser(username)]),
+    Promise.all([favicon(), redirect(), logout(), token(), stubUserMe({}), stubUserMeRoles(roles), stubUser(username)]),
   stubUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubEmail(username)]),
   stubUnverifiedUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
   stubUserMe,

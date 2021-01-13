@@ -10,14 +10,6 @@ const replicateUser = (times) =>
   }))
 
 module.exports = {
-  stubUserMe: () =>
-    getFor({
-      urlPath: '/api/users/me',
-      body: {
-        firstName: 'JAMES',
-        lastName: 'STUART',
-      },
-    }),
   stubUserCaseloads: (caseloads) =>
     getFor({
       urlPath: '/api/users/me/caseLoads',

@@ -39,7 +39,7 @@ context('Login functionality', () => {
     cy.request('/auth/logout').its('body').should('contain', 'Sign in')
   })
 
-  it('Token verification failure clears user session', () => {
+  it('Token verification failure takes user to sign in page', () => {
     cy.task('stubLogin', {})
     cy.login()
     MenuPage.verifyOnPage()
@@ -47,6 +47,22 @@ context('Login functionality', () => {
 
     // can't do a visit here as cypress requires only one domain
     cy.request('/').its('body').should('contain', 'Sign in')
+  })
+
+  it('Token verification failure clears user session', () => {
+    cy.task('stubLogin', {})
+    cy.login()
+    const menuPage = MenuPage.verifyOnPage()
+    cy.task('stubVerifyToken', false)
+
+    // can't do a visit here as cypress requires only one domain
+    cy.request('/').its('body').should('contain', 'Sign in')
+
+    cy.task('stubVerifyToken', true)
+    cy.task('stubUserMe', { name: 'Bobby Brown' })
+    cy.login()
+
+    menuPage.headerUsername().contains('Bobby Brown')
   })
 
   it('Log in as ordinary user receives unauthorised', () => {

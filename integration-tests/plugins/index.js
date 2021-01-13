@@ -15,7 +15,7 @@ module.exports = (on) => {
     stubLogin: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
       Promise.all([
         auth.stubLogin(username, roles),
-        prisonApi.stubUserMe(),
+        auth.stubUserMe({}),
         prisonApi.stubUserCaseloads(),
         tokenverification.stubVerifyToken(true),
       ]),
@@ -27,6 +27,7 @@ module.exports = (on) => {
     stubAuthGetUserWithEmail: auth.stubAuthGetUserWithEmail,
     stubAuthEmailSearch: auth.stubAuthEmailSearch,
     stubAuthUserGroups: auth.stubAuthUserGroups,
+    stubUserMe: auth.stubUserMe,
     stubAuthUserRoles: auth.stubAuthUserRoles,
     stubAuthAddRoles: auth.stubAuthAddRoles,
     stubAuthRemoveRole: auth.stubAuthRemoveRole,
