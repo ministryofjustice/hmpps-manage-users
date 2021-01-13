@@ -64,11 +64,14 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
         res.status(401)
         res.json({ reason: 'session-expired' })
         next(error)
+        req.session.destroy()
         return
       }
 
-      const query = querystring.stringify({ returnTo: req.originalUrl })
-      res.redirect(`/login?${query}`)
+      req.session.destroy(() => {
+        const query = querystring.stringify({ returnTo: req.originalUrl })
+        res.redirect(`/login?${query}`)
+      })
     }
   }
 
@@ -86,11 +89,14 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
     if (isXHRRequest(req)) {
       res.status(401)
       res.json({ reason: 'session-expired' })
+      req.session.destroy()
       return
     }
 
-    const query = querystring.stringify({ returnTo: req.originalUrl })
-    res.redirect(`/login?${query}`)
+    req.session.destroy(() => {
+      const query = querystring.stringify({ returnTo: req.originalUrl })
+      res.redirect(`/login?${query}`)
+    })
   }
 
   app.get('/login', loginMiddleware, remoteLoginIndex)
