@@ -56,6 +56,50 @@ describe('user detail factory', () => {
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
+      showUsername: true,
+      errors: undefined,
+    })
+  })
+
+  it('should set showUsername to false if email same as username', async () => {
+    const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+    ])
+    const render = jest.fn()
+    await userDetails.index(req, { render })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      searchTitle: 'Search for an external user',
+      searchResultsUrl: '/search-external-users/results',
+      searchUrl: '/search-external-users',
+      staff: {
+        firstName: 'Billy',
+        lastName: 'Bob',
+        name: 'Billy Bob',
+        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
+        email: 'bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: true,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      staffUrl: '/manage-external-users/joe',
+      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      hasMaintainAuthUsers: false,
+      showEnableDisable: true,
+      showExtraUserDetails: true,
+      showGroups: true,
+      showUsername: false,
       errors: undefined,
     })
   })
@@ -98,6 +142,7 @@ describe('user detail factory', () => {
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
+      showUsername: true,
       errors: undefined,
     })
   })
@@ -151,6 +196,7 @@ describe('user detail factory', () => {
       showEnableDisable: false,
       showExtraUserDetails: false,
       showGroups: false,
+      showUsername: true,
       errors: undefined,
     })
   })
@@ -204,6 +250,7 @@ describe('user detail factory', () => {
       showEnableDisable: false,
       showExtraUserDetails: false,
       showGroups: false,
+      showUsername: true,
       errors: undefined,
     })
   })

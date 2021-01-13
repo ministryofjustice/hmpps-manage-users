@@ -194,7 +194,7 @@ context('External user functionality', () => {
     })
   })
 
-  it('Should add and remove a role from a user', () => {
+  it('Should view a user', () => {
     const results = searchForUser()
 
     cy.task('stubAuthGetUsername')
@@ -205,6 +205,33 @@ context('External user functionality', () => {
     const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage.userRows().eq(0).should('contain', 'AUTH_ADM')
     userPage.userRows().eq(1).should('contain', 'auth_test2@digital.justice.gov.uk')
+    userPage.userRows().eq(0).should('contain', 'Username')
+    userPage.userRows().eq(1).should('contain', 'Email')
+    userPage.userRows().eq(0).should('not.contain', 'Username / email')
+  })
+
+  it('Should view a user with username as email address', () => {
+    const results = searchForUser()
+
+    cy.task('stubAuthGetUserWithEmail')
+    cy.task('stubAuthUserRoles')
+    cy.task('stubAuthUserGroups')
+    results.edit('AUTH_ADM')
+
+    const userPage = UserPage.verifyOnPage('Auth Adm')
+    userPage.userRows().eq(0).should('contain', 'auth_test2@digital.justice.gov.uk')
+    userPage.userRows().eq(0).should('contain', 'Username / email')
+  })
+
+  it('Should add and remove a role from a user', () => {
+    const results = searchForUser()
+
+    cy.task('stubAuthGetUsername')
+    cy.task('stubAuthUserRoles')
+    cy.task('stubAuthUserGroups')
+    results.edit('AUTH_ADM')
+
+    const userPage = UserPage.verifyOnPage('Auth Adm')
 
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Global Search')

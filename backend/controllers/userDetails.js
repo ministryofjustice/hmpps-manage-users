@@ -31,6 +31,7 @@ const userDetailsFactory = (
       showEnableDisable: Boolean(enableUserApi && disableUserApi),
       showGroups: Boolean(removeGroupApi),
       showExtraUserDetails,
+      showUsername: user.email !== user.username.toLowerCase(),
     })
   }
 
