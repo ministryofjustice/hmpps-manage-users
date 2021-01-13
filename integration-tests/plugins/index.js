@@ -24,6 +24,7 @@ module.exports = (on) => {
     stubAuthSearch: auth.stubAuthSearch,
     verifyAuthSearch: auth.verifyAuthSearch,
     stubAuthGetUsername: auth.stubAuthGetUsername,
+    stubAuthGetUserWithEmail: auth.stubAuthGetUserWithEmail,
     stubAuthEmailSearch: auth.stubAuthEmailSearch,
     stubAuthUserGroups: auth.stubAuthUserGroups,
     stubAuthUserRoles: auth.stubAuthUserRoles,

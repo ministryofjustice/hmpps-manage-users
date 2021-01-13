@@ -55,40 +55,43 @@
         </table>
 
         {% if showExtraUserDetails %}
+          {% set userDetails = [] %}
+          {% if showUsername %}
+            {% set userDetails = (userDetails.push([
+              {text: "Username"},
+              {text: staff.username},
+              {text: ''}
+            ]), userDetails) %}
+          {% endif %}
+          {% set userDetails = userDetails.concat([
+            [
+              {text: ("Email" if showUsername else "Username / email")},
+              {text: staff.email},
+              {
+                html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+                classes: 'govuk-!-width-one-quarter',
+                format: "numeric"
+              }
+            ],
+            [
+              {text: "Verified"},
+              {text: staff.verified | formatYesNo()},
+              {text: ''}
+            ],
+            [
+              {text: "Locked"},
+              {text: staff.locked | formatYesNo()},
+              {text: ''}
+            ],
+            [
+              {text: "Last logged in"},
+              {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
+              {text: ''}
+            ]]) %}
+
           {{ govukTable({
             caption: "Account details",
-            rows: [
-              [
-                {text: "Username"},
-                {text: staff.username},
-                {text: ''}
-              ],
-              [
-                {text: "Email"},
-                {text: staff.email},
-                {
-                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-                  classes: 'govuk-!-width-one-quarter',
-                  format: "numeric"
-                }
-              ],
-              [
-                {text: "Verified"},
-                {text: staff.verified | formatYesNo()},
-                {text: ''}
-              ],
-              [
-                {text: "Locked"},
-                {text: staff.locked | formatYesNo()},
-                {text: ''}
-              ],
-
-              [
-                {text: "Last logged in"},
-                {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
-                {text: ''}
-              ]
-            ],
+            rows: userDetails,
             attributes: { "data-qa": "user-details" }
           }) }}
         {% else %}
