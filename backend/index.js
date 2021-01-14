@@ -27,6 +27,7 @@ const config = require('./config')
 
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
+const phaseNameSetup = require('./phaseNameSetup')
 
 const errorHandler = require('./middleware/errorHandler')
 
@@ -40,6 +41,7 @@ app.set('trust proxy', 1) // trust first proxy
 app.set('view engine', 'njk')
 
 nunjucksSetup(app, path)
+phaseNameSetup(app, config)
 
 app.use(
   helmet({

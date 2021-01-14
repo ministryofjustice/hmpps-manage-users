@@ -1,3 +1,5 @@
+const { forenameToInitial } = require('../utils')
+
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 
 module.exports = ({ prisonApi, oauthApi }) => async (req, res, next) => {
@@ -21,7 +23,7 @@ module.exports = ({ prisonApi, oauthApi }) => async (req, res, next) => {
     res.locals.user = {
       ...res.locals.user,
       allCaseloads: caseloads,
-      displayName: name,
+      displayName: forenameToInitial(name),
       activeCaseLoad: caseloads.find((cl) => cl.caseLoadId === activeCaseLoadId),
       ...req.session.userRoles,
     }
