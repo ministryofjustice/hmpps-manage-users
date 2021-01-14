@@ -11,10 +11,7 @@ WORKDIR /app
 COPY . .
 
 RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit && \
-    npm run build && \
-    export BUILD_NUMBER=${BUILD_NUMBER} && \
-    export GIT_REF=${GIT_REF} && \
-    npm run record-build-info
+    npm run build
 
 RUN npm prune --production
 
@@ -41,7 +38,6 @@ COPY --from=builder --chown=appuser:appgroup \
         /app/package.json \
         /app/package-lock.json \
         /app/dist \
-        /app/build-info.json \
         ./
 
 COPY --from=builder --chown=appuser:appgroup \
