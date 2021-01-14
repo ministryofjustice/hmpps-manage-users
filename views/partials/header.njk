@@ -18,7 +18,7 @@
       <ul class="dps-header__navigation">
         <li class="dps-header__navigation__item">
           <a class="dps-header__link" href="{{ homeUrl + '/account-details' }}" data-test="manage-account-link">
-            <span data-test="logged-in-name">{{ user.displayName }}</span>
+            <span data-qa="logged-in-name">{{ user.displayName }}</span>
             <span class="dps-header__link__sub-text">Manage account details</span>
           </a>
         </li>
@@ -31,7 +31,7 @@
   </div>
 </header>
 <div class="location-bar">
-  <span class="location-bar__location" data-test="active-location">
+  <span class="location-bar__location" data-qa="active-location">
     {% if phaseName %}
       {{ govukTag({
         text: phaseName,
@@ -41,6 +41,6 @@
     {{ user.activeCaseLoad.description }}
   </span>
   {% if user.allCaseloads.length > 1 %}
-    <a class="location-bar__link" href="{{ dpsUrl }}/change-caseload" data-test="change-location-link">Change location</a>
+    <a class="location-bar__link" href="{{ dpsUrl }}/change-caseload" data-qa="change-location-link">Change location</a>
   {% endif %}
 </div>

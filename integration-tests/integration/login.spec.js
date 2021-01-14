@@ -62,7 +62,7 @@ context('Login functionality', () => {
     cy.task('stubUserMe', { name: 'Bobby Brown' })
     cy.login()
 
-    menuPage.headerUsername().contains('Bobby Brown')
+    menuPage.headerUsername().contains('B. Brown')
   })
 
   it('Log in as ordinary user receives unauthorised', () => {
@@ -82,7 +82,7 @@ context('Login functionality', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.login()
     const menuPage = MenuPage.verifyOnPage()
-    menuPage.headerUsername().contains('James Stuart')
+    menuPage.headerUsername().contains('J. Stuart')
     menuPage.headerCaseload().contains('Moorland')
   })
 })

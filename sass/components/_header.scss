@@ -112,7 +112,6 @@
   @include govuk-responsive-margin(3, 'bottom');
   @include govuk-responsive-padding(3, 'top');
   @include govuk-responsive-padding(3, 'bottom');
-  display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   border-bottom: 1px solid $govuk-border-colour;
