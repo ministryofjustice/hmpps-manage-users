@@ -10,6 +10,8 @@ const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
 const helmet = require('helmet')
 const noCache = require('nocache')
+require('express-async-errors')
+
 const apis = require('./apis')
 
 const ensureHttps = require('./middleware/ensureHttps')
