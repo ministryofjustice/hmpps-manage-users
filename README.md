@@ -183,6 +183,9 @@ to run linting:
 to run jest unit tests:
 ```npm test```
 
+#### Phase Name Banner
+To show the phase name banner add the environment variable ``` SYSTEM_PHASE=ENV_NAME ```.
+This will trigger the banner to become visible showing the given name.
 
 ### Useful links
 

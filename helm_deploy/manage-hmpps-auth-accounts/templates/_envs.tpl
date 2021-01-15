@@ -73,6 +73,11 @@ env:
   - name: MANAGE_HMPPS_USERS_URL
     value: "https://{{ .Values.ingress.host }}/"
 
+  {{- if .Values.env.SYSTEM_PHASE }}
+  - name: SYSTEM_PHASE
+    value: {{ .Values.env.SYSTEM_PHASE | quote }}
+  {{- end }}
+
   - name: HMPPS_COOKIE_NAME
     value: {{ .Values.env.HMPPS_COOKIE_NAME | quote }}
 
