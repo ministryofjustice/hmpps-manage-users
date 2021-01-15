@@ -36,6 +36,11 @@ const hyphenatedStringToCamel = (string) =>
 
 const trimObjValues = (obj) => Object.assign({}, ...Object.entries(obj).map(([k, v]) => ({ [k]: v ? v.trim() : v })))
 
+const forenameToInitial = (name) => {
+  if (!name) return null
+  return `${name.charAt()}. ${name.split(' ').pop()}`
+}
+
 module.exports = {
   capitalize,
   pascalToString,
@@ -43,4 +48,5 @@ module.exports = {
   getTime,
   hyphenatedStringToCamel,
   trimObjValues,
+  forenameToInitial,
 }

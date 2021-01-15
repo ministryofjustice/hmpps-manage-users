@@ -1,4 +1,4 @@
-const { capitalize, getDate, getTime, trimObjValues } = require('./utils')
+const { capitalize, getDate, getTime, trimObjValues, forenameToInitial } = require('./utils')
 
 describe('capitalize()', () => {
   describe('when a string IS NOT provided', () => {
@@ -22,6 +22,15 @@ describe('capitalize()', () => {
     it('should handle multiple word strings', () => {
       expect(capitalize('Segregation Unit')).toEqual('Segregation unit')
     })
+  })
+})
+
+describe('Forename to initial', () => {
+  it('should change forename to initial', () => {
+    expect(forenameToInitial('Robert Smith')).toEqual('R. Smith')
+  })
+  it('should change forename to initial hypenated last name', () => {
+    expect(forenameToInitial('Robert Smith-Jones')).toEqual('R. Smith-Jones')
   })
 })
 

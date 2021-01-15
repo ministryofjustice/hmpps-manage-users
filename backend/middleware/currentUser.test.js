@@ -51,7 +51,7 @@ describe('Current user', () => {
         caseLoadId: 'MDI',
         description: 'Moorland',
       },
-      displayName: 'Bob Smith',
+      displayName: 'B. Smith',
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: false,
