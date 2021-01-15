@@ -79,7 +79,7 @@ class OauthApi extends WireMockRule {
     void stubLogout() {
         this.stubFor(
                 get(urlPathEqualTo('/auth/logout'))
-                        .willReturn(aResponse().withBody('<head><title>Digital Prison Services</title></head>' +
+                        .willReturn(aResponse().withBody('<head><title>Digital Services</title></head>' +
                         '<body><h1>Sign in</h1>This is a stubbed logout page</body>')
                 ))
     }
