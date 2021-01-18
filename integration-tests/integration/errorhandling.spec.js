@@ -13,7 +13,7 @@ context('Login functionality', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
-    cy.visit('/manage-external-users/USER_NOT_FOUND', { failOnStatusCode: false })
+    cy.visit('/manage-external-users/USER_NOT_FOUND/details', { failOnStatusCode: false })
 
     ErrorPage.verifyOnPage()
   })

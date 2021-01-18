@@ -45,7 +45,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
       expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH', 'BOB'])
     })
 
@@ -55,7 +55,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
       expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH'])
     })
 

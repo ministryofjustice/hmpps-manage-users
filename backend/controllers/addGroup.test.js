@@ -67,7 +67,7 @@ describe('select groups factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
       expect(saveGroup).toBeCalledWith(locals, 'joe', 'GLOBAL_SEARCH')
     })
 
