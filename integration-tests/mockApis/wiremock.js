@@ -10,10 +10,10 @@ const getMatchingRequests = (body) => superagent.post(`${url}/requests/find`).se
 
 const resetStubs = () => Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
 
-const getFor = ({ body, urlPattern, urlPath }) =>
+const stubJson = ({ body, urlPattern, urlPath, method = 'GET' }) =>
   stubFor({
     request: {
-      method: 'GET',
+      method,
       urlPattern,
       urlPath,
     },
@@ -31,5 +31,6 @@ module.exports = {
   getRequests,
   getMatchingRequests,
   resetStubs,
-  getFor,
+  getFor: stubJson,
+  stubJson,
 }

@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
+const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
 
 const createToken = () => {
   const payload = {
@@ -287,15 +287,9 @@ const stubAuthAssignableGroupDetails = ({
   })
 
 const stubAuthChangeGroupName = () =>
-  stubFor({
-    request: {
-      method: 'PUT',
-      urlPattern: '/auth/api/groups/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/groups/.*',
   })
 
 const stubAuthChangeChildGroupName = () =>
@@ -358,6 +352,18 @@ const stubAuthAddRoles = () =>
     },
   })
 
+const stubAuthAddGroup = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/auth/api/authuser/.*/groups/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 const stubAuthRemoveRole = () =>
   stubFor({
     request: {
@@ -370,6 +376,36 @@ const stubAuthRemoveRole = () =>
     },
   })
 
+const stubAuthRemoveGroup = () =>
+  stubJson({
+    method: 'DELETE',
+    urlPattern: '/auth/api/authuser/.*/groups/.*',
+  })
+
+const stubAuthUserDisable = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/authuser/.*/disable',
+  })
+
+const stubAuthUserEnable = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/authuser/.*/enable',
+  })
+
+const stubAuthUserChangeEmail = () =>
+  stubJson({
+    method: 'POST',
+    urlPattern: '/auth/api/authuser/.*',
+  })
+
+const stubAuthCreateUser = () =>
+  stubJson({
+    method: 'POST',
+    urlPattern: '/auth/api/authuser/create',
+  })
+
 const verifyAddRoles = () =>
   getMatchingRequests({
     method: 'POST',
@@ -380,6 +416,42 @@ const verifyRemoveRole = () =>
   getMatchingRequests({
     method: 'DELETE',
     urlPathPattern: '/auth/api/authuser/.*/roles/.*',
+  }).then((data) => data.body.requests)
+
+const verifyAddGroup = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/authuser/.*/groups/.*',
+  }).then((data) => data.body.requests)
+
+const verifyRemoveGroup = () =>
+  getMatchingRequests({
+    method: 'DELETE',
+    urlPathPattern: '/auth/api/authuser/.*/groups/.*',
+  }).then((data) => data.body.requests)
+
+const verifyUserEnable = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/authuser/.*/enable',
+  }).then((data) => data.body.requests)
+
+const verifyUserDisable = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/authuser/.*/disable',
+  }).then((data) => data.body.requests)
+
+const verifyAuthUserChangeEmail = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/authuser/.*',
+  }).then((data) => data.body.requests)
+
+const verifyAuthCreateUser = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/authuser/create',
   }).then((data) => data.body.requests)
 
 module.exports = {
@@ -400,7 +472,9 @@ module.exports = {
   stubAuthUserRoles,
   stubAuthUserGroups,
   stubAuthAddRoles,
+  stubAuthAddGroup,
   stubAuthRemoveRole,
+  stubAuthRemoveGroup,
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
@@ -409,6 +483,16 @@ module.exports = {
   stubAuthCreateChildGroup,
   stubAuthDeleteChildGroup,
   stubAuthSearchableRoles,
+  stubAuthUserDisable,
+  stubAuthUserEnable,
+  stubAuthUserChangeEmail,
+  stubAuthCreateUser,
   verifyAddRoles,
   verifyRemoveRole,
+  verifyAddGroup,
+  verifyRemoveGroup,
+  verifyUserEnable,
+  verifyUserDisable,
+  verifyAuthUserChangeEmail,
+  verifyAuthCreateUser,
 }
