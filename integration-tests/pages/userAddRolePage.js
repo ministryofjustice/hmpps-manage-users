@@ -5,6 +5,7 @@ const userAddRolePage = () =>
     addRoleButton: () => cy.get('[data-qa="add-button"]'),
     choose: (role) => cy.get('[type="checkbox"]').check(role),
     noRoles: () => cy.get('[data-qa="no-roles"]'),
+    cancel: () => cy.get('[data-qa="cancel-link"]').click(),
   })
 
 export default {

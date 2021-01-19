@@ -20,7 +20,7 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
 
@@ -41,7 +41,7 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
 
@@ -55,7 +55,7 @@ describe('select groups factory', () => {
         errors: { error: 'some error' },
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
   })

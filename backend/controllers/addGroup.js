@@ -6,7 +6,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
 
     const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username)
     const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
@@ -25,7 +25,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
   const post = async (req, res) => {
     const { username } = req.params
     const { group } = req.body
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
 
     if (!group) {
       const errors = [{ href: '#group', text: 'Select a group' }]
@@ -33,7 +33,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
     } else {
       try {
         await saveGroup(res.locals, username, group)
-        res.redirect(`${staffUrl}/details`)
+        res.redirect(`${staffUrl}`)
       } catch (error) {
         if (error.status === 409) {
           // user is already in the group

@@ -21,7 +21,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
 
     const user = await getUserApi(res.locals, username)
     const flashEmail = req.flash('changeEmail')
@@ -38,7 +38,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
   const post = async (req, res) => {
     const { username } = req.params
     const { email } = trimObjValues(req.body)
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
     try {
       const errors = validateChangeEmail(email)
 
@@ -46,7 +46,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         await changeEmail(res.locals, username, email)
-        res.redirect(`${staffUrl}/details`)
+        res.redirect(`${staffUrl}`)
       }
     } catch (err) {
       if (err.status === 400 && err.response && err.response.body) {

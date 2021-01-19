@@ -6,7 +6,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
 
   const index = async (req, res) => {
     const { username } = req.params
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
     const [user, assignableRoles] = await getUserAndRoles(res.locals, username, hasAdminRole)
@@ -26,7 +26,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
   const post = async (req, res) => {
     const { username } = req.params
     const { roles } = req.body
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/details`
 
     if (!roles) {
       const errors = [{ href: '#roles', text: 'Select at least one role' }]
@@ -34,7 +34,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, username, roleArray)
-      res.redirect(`${staffUrl}/details`)
+      res.redirect(`${staffUrl}`)
     }
   }
 
