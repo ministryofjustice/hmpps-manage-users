@@ -33,7 +33,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
     } else {
       try {
         await saveGroup(res.locals, username, group)
-        res.redirect(staffUrl)
+        res.redirect(`${staffUrl}/details`)
       } catch (error) {
         if (error.status === 409) {
           // user is already in the group

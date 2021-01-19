@@ -35,7 +35,7 @@ const controller = ({ prisonApi }) => {
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
   router.get('/roles/:role/remove', removeRole)
-  router.get('/', userDetails)
+  router.get('/details', userDetails)
 
   return router
 }

@@ -46,7 +46,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         await changeEmail(res.locals, username, email)
-        res.redirect(staffUrl)
+        res.redirect(`${staffUrl}/details`)
       }
     } catch (err) {
       if (err.status === 400 && err.response && err.response.body) {

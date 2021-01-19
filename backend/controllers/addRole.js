@@ -34,7 +34,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, username, roleArray)
-      res.redirect(staffUrl)
+      res.redirect(`${staffUrl}/details`)
     }
   }
 

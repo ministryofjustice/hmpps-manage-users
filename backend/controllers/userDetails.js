@@ -41,7 +41,7 @@ const userDetailsFactory = (
 
     try {
       await removeRoleApi(res.locals, username, role)
-      res.redirect(staffUrl)
+      res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
         // role already removed from group
@@ -58,7 +58,7 @@ const userDetailsFactory = (
 
     try {
       await removeGroupApi(res.locals, username, group)
-      res.redirect(staffUrl)
+      res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
         // user already removed from group
@@ -74,7 +74,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${username}`
 
     await enableUserApi(res.locals, username)
-    res.redirect(staffUrl)
+    res.redirect(`${staffUrl}/details`)
   }
 
   const disableUser = async (req, res) => {
@@ -82,7 +82,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${username}`
 
     await disableUserApi(res.locals, username)
-    res.redirect(staffUrl)
+    res.redirect(`${staffUrl}/details`)
   }
 
   return { index, removeRole, removeGroup, enableUser, disableUser }

@@ -77,7 +77,7 @@ const controller = ({ oauthApi }) => {
   router.post('/change-email', postEmail)
   router.get('/activate', enableUser)
   router.get('/deactivate', disableUser)
-  router.get('/', userDetails)
+  router.get('/details', userDetails)
   return router
 }
 

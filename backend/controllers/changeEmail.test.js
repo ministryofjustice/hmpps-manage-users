@@ -61,7 +61,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
@@ -71,7 +71,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
