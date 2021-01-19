@@ -5,6 +5,7 @@ const authUserChangeEmailPage = () =>
     amendButton: () => cy.get('[data-qa="confirm-button"]'),
     email: () => cy.get('#email'),
     errorSummary: () => cy.get('[data-qa-errors]'),
+    cancel: () => cy.get('[data-qa="cancel-link"]').click(),
   })
 
 export default {

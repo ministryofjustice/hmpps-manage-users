@@ -19,7 +19,7 @@ describe('select roles factory', () => {
         errors: undefined,
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
 
@@ -33,7 +33,7 @@ describe('select roles factory', () => {
         errors: { error: 'some error' },
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
   })

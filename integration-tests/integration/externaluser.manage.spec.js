@@ -34,6 +34,17 @@ const searchForUser = (roleCode = 'MAINTAIN_OAUTH_USERS') => {
   return results
 }
 
+const editUser = (roleCode) => {
+  const results = searchForUser(roleCode)
+
+  cy.task('stubAuthGetUsername')
+  cy.task('stubAuthUserRoles')
+  cy.task('stubAuthUserGroups')
+  results.edit('AUTH_ADM')
+
+  return UserPage.verifyOnPage('Auth Adm')
+}
+
 context('External user manage functionality', () => {
   before(() => {
     cy.clearCookies()
@@ -199,14 +210,8 @@ context('External user manage functionality', () => {
   })
 
   it('Should view a user', () => {
-    const results = searchForUser()
+    const userPage = editUser()
 
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage.userRows().eq(0).should('contain', 'AUTH_ADM')
     userPage.userRows().eq(1).should('contain', 'auth_test2@digital.justice.gov.uk')
     userPage.userRows().eq(0).should('contain', 'Username')
@@ -215,14 +220,8 @@ context('External user manage functionality', () => {
   })
 
   it('Should be able to return to search page', () => {
-    const results = searchForUser()
+    const userPage = editUser()
 
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage.searchLink().click()
     AuthUserSearchPage.verifyOnPage()
   })
@@ -241,14 +240,7 @@ context('External user manage functionality', () => {
   })
 
   it('Should add and remove a role from a user', () => {
-    const results = searchForUser()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
+    const userPage = editUser()
 
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Global Search')
@@ -280,15 +272,19 @@ context('External user manage functionality', () => {
     })
   })
 
+  it('Should cancel an add role', () => {
+    const userPage = editUser()
+
+    cy.task('stubAuthAssignableRoles')
+    userPage.addRole().click()
+    const addRole = UserAddRolePage.verifyOnPage()
+
+    addRole.cancel()
+    UserPage.verifyOnPage('Auth Adm')
+  })
+
   it('Should add and remove a group from a user', () => {
-    const results = searchForUser()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
+    const userPage = editUser()
 
     userPage.groupRows().should('have.length', 2)
     userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
@@ -319,15 +315,19 @@ context('External user manage functionality', () => {
     })
   })
 
+  it('Should cancel an add group', () => {
+    const userPage = editUser()
+
+    cy.task('stubAuthAssignableGroups', {})
+    userPage.addGroup().click()
+    const addGroup = UserAddGroupPage.verifyOnPage()
+
+    addGroup.cancel()
+    UserPage.verifyOnPage('Auth Adm')
+  })
+
   it('Add and remove a group from a user not available for group managers', () => {
-    const results = searchForUser('AUTH_GROUP_MANAGER')
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
+    const userPage = editUser('AUTH_GROUP_MANAGER')
 
     userPage.groupRows().should('have.length', 2)
     userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
@@ -380,14 +380,7 @@ context('External user manage functionality', () => {
   })
 
   it('Should enable and disable a user', () => {
-    const results = searchForUser()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
+    const userPage = editUser()
 
     userPage.enabled().should('contain.text', ' Active')
     cy.task('stubAuthUserDisable')
@@ -411,14 +404,7 @@ context('External user manage functionality', () => {
   })
 
   it('Should change a user email address', () => {
-    const results = searchForUser()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
-    results.edit('AUTH_ADM')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
+    const userPage = editUser()
 
     userPage.changeEmailLink().click()
     const changeEmailPage = AuthUserChangeEmailPage.verifyOnPage()
@@ -436,6 +422,15 @@ context('External user manage functionality', () => {
       expect(JSON.parse(requests[0].body)).to.deep.equal({ email: 'someone@somewhere.com' })
     })
 
+    UserPage.verifyOnPage('Auth Adm')
+  })
+
+  it('Should cancel a change user email address', () => {
+    const userPage = editUser()
+
+    userPage.changeEmailLink().click()
+    const changeEmailPage = AuthUserChangeEmailPage.verifyOnPage()
+    changeEmailPage.cancel()
     UserPage.verifyOnPage('Auth Adm')
   })
 })

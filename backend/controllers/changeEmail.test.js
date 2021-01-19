@@ -28,7 +28,7 @@ describe('change email factory', () => {
       await changeEmail.index(req, { render })
       expect(render).toBeCalledWith('changeEmail.njk', {
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
         currentEmail: 'bob@digital.justice.gov.uk',
         errors: undefined,
       })
@@ -49,7 +49,7 @@ describe('change email factory', () => {
         errors: { error: 'some error' },
         staff: { name: 'Billy Bob', username: 'BOB' },
         currentEmail: 'bob@digital.justice.gov.uk',
-        staffUrl: '/manage-external-users/joe',
+        staffUrl: '/manage-external-users/joe/details',
       })
     })
   })
