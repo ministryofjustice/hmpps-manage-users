@@ -19,8 +19,10 @@ module.exports = ({ prisonApi, oauthApi }) => async (req, res, next) => {
 
     const caseloads = req.session.allCaseloads
     const { name, activeCaseLoadId } = req.session.userDetails
+    const returnUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
 
     res.locals.user = {
+      returnUrl,
       ...res.locals.user,
       allCaseloads: caseloads,
       displayName: forenameToInitial(name),

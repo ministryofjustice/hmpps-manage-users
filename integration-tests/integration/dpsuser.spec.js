@@ -174,4 +174,16 @@ context('DPS user functionality', () => {
       .searchResultsBreadcrumb()
       .should('have.attr', 'href', '/search-dps-users/results?user=sometext%40somewhere.com&roleCode=&offset=10')
   })
+
+  it('Manage your details contain returnTo url for current dps search page', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', { content: [] })
+    const search = DpsUserSearchPage.goTo()
+    search
+      .manageYourDetails()
+      .should('contain', 'Manage your details')
+      .and('have.attr', 'href')
+      .and('contains', '%2Fsearch-dps-users')
+  })
 })

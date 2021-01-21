@@ -15,6 +15,7 @@ const groupDetailsPage = (groupName) =>
     createChildGroup: () => createChild().click(),
     deleteChildGroup: () => deleteChild().click(),
     childGroupNotThere: () => cy.get('Child - Site 1 - Group 2').should('not.exist'),
+    manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
   })
 
 export default {
