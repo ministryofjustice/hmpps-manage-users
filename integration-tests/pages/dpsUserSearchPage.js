@@ -16,6 +16,7 @@ const dpsUserSearchPage = () =>
       else user().clear()
       submit().click()
     },
+    manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
   })
 
 export default {

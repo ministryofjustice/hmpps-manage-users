@@ -153,6 +153,21 @@ context('Groups', () => {
     GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
   })
 
+  it('Manage your details contain returnTo url for current group detail page', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+
+    groupDetails
+      .manageYourDetails()
+      .should('contain', 'Manage your details')
+      .and('have.attr', 'href')
+      .and('contains', '%2Fmanage-groups%2FSITE_1_GROUP_2')
+  })
+
   const groupDetailsAfterDeleteChild = {
     content: {
       groupCode: 'SITE_1_GROUP_2',
