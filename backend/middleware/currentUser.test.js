@@ -15,13 +15,12 @@ describe('Current user', () => {
     oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }])
     prisonApi.userCaseLoads.mockReturnValue([{ caseLoadId: 'MDI', description: 'Moorland' }])
 
-    req = { session: {} }
+    req = { session: {}, protocol: 'http', originalUrl: '/somethingelse', get: jest.fn() }
     res = { locals: {} }
   })
 
   it('should request and store user details', async () => {
     const controller = currentUser({ prisonApi, oauthApi })
-
     await controller(req, res, () => {})
 
     expect(oauthApi.currentUser).toHaveBeenCalled()
@@ -36,6 +35,7 @@ describe('Current user', () => {
   })
 
   it('should stash data into res.locals', async () => {
+    req.get.mockReturnValue('host')
     const controller = currentUser({ prisonApi, oauthApi })
 
     await controller(req, res, () => {})
@@ -56,6 +56,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      returnUrl: 'http://host/somethingelse',
     })
   })
 
