@@ -56,6 +56,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      clientID: 'elite2apiclient',
       returnUrl: 'http://host/somethingelse',
     })
   })
