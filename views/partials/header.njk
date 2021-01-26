@@ -17,7 +17,7 @@
     <nav aria-label="Account navigation">
       <ul class="dps-header__navigation">
         <li class="dps-header__navigation__item">
-          <a class="dps-header__link" href="{{homeUrl or notmUrl}}/account-details?returnTo={{ user.returnUrl | urlencode }}" data-qa="manage-account-link">
+          <a class="dps-header__link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" data-qa="manage-account-link">
             <span data-qa="logged-in-name">{{ user.displayName }}</span>
             <span class="dps-header__link__sub-text">Manage your details</span>
           </a>
