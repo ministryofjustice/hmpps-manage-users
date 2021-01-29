@@ -137,6 +137,10 @@ describe('search factory', () => {
         ],
         errors: undefined,
         pagination,
+        groupCode: undefined,
+        roleCode: undefined,
+        user: 'joe',
+        status: undefined,
       })
     })
   })
@@ -237,12 +241,16 @@ describe('search factory', () => {
           ],
           errors: undefined,
           pagination,
+          groupCode: undefined,
+          roleCode: undefined,
+          user: 'joe',
+          status: undefined,
         })
       })
 
       it('should call external search api', async () => {
         const req = {
-          query: { user: 'joe', groupCode: '', roleCode: '' },
+          query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
           flash: jest.fn(),
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
@@ -259,12 +267,70 @@ describe('search factory', () => {
           locals,
         })
 
-        expect(searchApi).toBeCalledWith(locals, 'joe', '', '', 0, 20, 0)
+        expect(searchApi).toBeCalledWith({
+          locals,
+          user: 'joe',
+          roleCode: '',
+          groupCode: '',
+          status: 'ACTIVE',
+          pageNumber: 0,
+          pageSize: 20,
+          pageOffset: 0,
+        })
+      })
+
+      it('should call with all status if no results found', async () => {
+        const req = {
+          query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
+          flash: jest.fn(),
+          get: jest.fn().mockReturnValue('localhost'),
+          protocol: 'http',
+          originalUrl: '/',
+          session: {},
+        }
+        const pagination = { page: 5 }
+        paginationService.getPagination.mockReturnValue(pagination)
+        searchApi.mockResolvedValue([])
+        const render = jest.fn()
+        const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
+        await search.results(req, {
+          render,
+          locals,
+        })
+
+        expect(searchApi).toBeCalledWith({
+          locals,
+          user: 'joe',
+          roleCode: '',
+          groupCode: '',
+          status: 'ACTIVE',
+          pageNumber: 0,
+          pageSize: 20,
+          pageOffset: 0,
+        })
+        expect(searchApi).toBeCalledWith({
+          locals,
+          user: 'joe',
+          roleCode: '',
+          groupCode: '',
+          status: 'ALL',
+          pageNumber: 0,
+          pageSize: 20,
+          pageOffset: 0,
+        })
+
+        // since we didn't get an ACTIVE match, expect the status to now be passed back with ALL
+        expect(render).toHaveBeenCalledWith(
+          'externalSearchResults.njk',
+          expect.objectContaining({
+            status: 'ALL',
+          }),
+        )
       })
 
       it('should call external search api with page and size', async () => {
         const req = {
-          query: { user: 'joe', groupCode: '', roleCode: '', page: 3, size: 13 },
+          query: { user: 'joe', groupCode: '', roleCode: '', status: 'INACTIVE', page: 3, size: 13 },
           flash: jest.fn(),
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
@@ -281,7 +347,16 @@ describe('search factory', () => {
           locals,
         })
 
-        expect(searchApi).toBeCalledWith(locals, 'joe', '', '', 3, 13, 0)
+        expect(searchApi).toBeCalledWith({
+          locals,
+          user: 'joe',
+          roleCode: '',
+          groupCode: '',
+          status: 'INACTIVE',
+          pageNumber: 3,
+          pageSize: 13,
+          pageOffset: 0,
+        })
       })
 
       it('should call getPagination with total elements, page, size and url', async () => {

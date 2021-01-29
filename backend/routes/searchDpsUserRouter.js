@@ -6,7 +6,7 @@ const contextProperties = require('../contextProperties')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi }) => {
-  const searchApi = (context, nameFilter, groupCode, roleCode, page, size, offset) => {
+  const searchApi = ({ locals: context, user: nameFilter, roleCode, pageSize: size, pageOffset: offset }) => {
     const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })

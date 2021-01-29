@@ -13,6 +13,37 @@ const searchFactory = (
   maintainUrl,
   searchTitle,
 ) => {
+  const searchWithStatus = async ({ locals, user, groupCode, roleCode, status, pageNumber, pageSize, pageOffset }) => {
+    const statusSearchResults = await searchApi({
+      locals,
+      user,
+      groupCode,
+      roleCode,
+      status,
+      pageNumber,
+      pageSize,
+      pageOffset,
+    })
+
+    // found some results or searched everywhere, so give up
+    if (statusSearchResults.length > 0 || status === 'ALL') return { statusSearchResults, status }
+
+    // try to improve search
+    return {
+      statusSearchResults: await searchApi({
+        locals,
+        user,
+        groupCode,
+        roleCode,
+        status: 'ALL',
+        pageNumber,
+        pageSize,
+        pageOffset,
+      }),
+      status: 'ALL',
+    }
+  }
+
   const dpsSearch = getAssignableGroupsApi === undefined
 
   const index = async (req, res) => {
@@ -37,7 +68,7 @@ const searchFactory = (
   }
 
   const results = async (req, res) => {
-    const { user, groupCode, roleCode, size, page, offset } = req.query
+    const { user, groupCode, roleCode, size, status, page, offset } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
@@ -46,7 +77,16 @@ const searchFactory = (
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
 
-    const searchResults = await searchApi(res.locals, user, groupCode, roleCode, pageNumber, pageSize, pageOffset)
+    const { statusSearchResults: searchResults, status: searchedStatus } = await searchWithStatus({
+      locals: res.locals,
+      user,
+      groupCode,
+      roleCode,
+      status,
+      pageNumber,
+      pageSize,
+      pageOffset,
+    })
 
     const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
       usernameAndEmail: mapUsernameAndEmail(u),
@@ -62,6 +102,10 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
+      status: searchedStatus,
+      groupCode,
+      roleCode,
+      user,
       errors: req.flash('errors'),
     })
   }

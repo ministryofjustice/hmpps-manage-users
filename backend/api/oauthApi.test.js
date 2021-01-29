@@ -138,7 +138,7 @@ describe('oauthApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => userDetails,
       })
-      actual = oauthApi.userSearch(context, { nameFilter: "joe'fred@bananas%.com", role: '', group: '' })
+      actual = oauthApi.userSearch(context, { nameFilter: "joe'fred@bananas%.com", role: '', group: '', status: 'ALL' })
     })
 
     it('should return roles from endpoint', () => {
@@ -147,7 +147,7 @@ describe('oauthApi tests', () => {
     it('should call user endpoint', () => {
       expect(client.get).toBeCalledWith(
         context,
-        "/api/authuser/search?name=joe'fred%40bananas%25.com&groups=&roles=&page=&size=",
+        "/api/authuser/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
       )
     })
   })

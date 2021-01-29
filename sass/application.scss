@@ -71,25 +71,6 @@ $govuk-page-width: 1170px;
   }
 }
 
-.horizontal-links {
-  > a {
-    margin-right: govuk-spacing(2);
-  }
-
-  @include govuk-media-query($from: desktop) {
-    display: flex;
-
-    * {
-      width: auto;
-      margin-bottom: 0;
-    }
-
-    > a {
-      margin-right: govuk-spacing(3);
-    }
-  }
-}
-
 .word-break {
   word-break: break-word;
 }
@@ -147,6 +128,7 @@ $govuk-page-width: 1170px;
     }
   }
 }
+
 .govuk-blue-background-confirm-override {
   .govuk-panel--confirmation {
     background-color: govuk-colour('blue') !important;
@@ -168,10 +150,12 @@ $govuk-page-width: 1170px;
       white-space: nowrap;
       padding-right: 40px;
     }
+
     tr td {
       padding-right: 40px;
       white-space: nowrap;
     }
+
     tr td:last-child {
       width: 100%;
     }
@@ -185,8 +169,17 @@ $govuk-page-width: 1170px;
 .bottom-line {
   border-bottom: 1px solid $govuk-border-colour;
 }
+
 pre {
-  white-space: pre-wrap;       /* css-3 */
-  white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-  word-wrap: break-word;       /* Internet Explorer 5.5+ */
- }
+  white-space: pre-wrap; /* css-3 */
+  white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+  word-wrap: break-word; /* Internet Explorer 5.5+ */
+}
+
+.external-search {
+  &__form {
+    margin-bottom: govuk-spacing(6);
+    padding: govuk-spacing(3);
+    background-color: govuk-colour('light-grey');
+  }
+}

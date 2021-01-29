@@ -9,6 +9,8 @@ const authUserSearchPage = () =>
     previousPage: () => cy.get('.moj-pagination__item--prev').first().click(),
     getPaginationList: () => cy.get('.moj-pagination__list'),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
+    filter: () => cy.get('[name="status"]'),
+    submitFilter: () => cy.get('button[type="submit"]'),
   })
 
 export default {
