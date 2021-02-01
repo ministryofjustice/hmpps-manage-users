@@ -36,8 +36,8 @@ context('External user search functionality', () => {
           expect($tableCells.get(0)).to.contain.text('Auth\u00a0Adm')
           expect($tableCells.get(1)).to.contain.text('AUTH_ADM')
           expect($tableCells.get(1)).to.contain.text('auth_test2@digital.justice.gov.uk')
-          expect($tableCells.get(2)).to.contain.text('No')
-          expect($tableCells.get(3)).to.contain.text('Yes')
+          expect($tableCells.get(2)).not.to.contain.text('Locked')
+          expect($tableCells.get(2)).not.to.contain.text('Inactive')
         })
 
       cy.task('stubAuthEmailSearch')
@@ -49,6 +49,19 @@ context('External user search functionality', () => {
       results.rows().eq(1).should('include.text', 'Auth\u00a0Expired')
 
       results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
+    })
+
+    it('Should display locked and enabled tags', () => {
+      const results = searchForUser('MAINTAIN_OAUTH_USERS', replicateUser(5))
+
+      results.rows().eq(0).should('include.text', 'Locked')
+      results.rows().eq(0).should('not.include.text', 'Inactive')
+      results.rows().eq(1).should('not.include.text', 'Locked')
+      results.rows().eq(1).should('include.text', 'Inactive')
+      results.rows().eq(2).should('not.include.text', 'Locked')
+      results.rows().eq(2).should('not.include.text', 'Inactive')
+      results.rows().eq(3).should('include.text', 'Locked')
+      results.rows().eq(3).should('include.text', 'Inactive')
     })
 
     it('Should allow a user search by group and display results', () => {
