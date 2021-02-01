@@ -3,6 +3,7 @@
 {%- from "govuk/components/select/macro.njk" import govukSelect -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set title =  "Search results" %}
 
@@ -55,11 +56,22 @@
         {% for u in results %}
           {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/details" class="govuk-link" data-qa="edit-button-'
             + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
+          {% set tags %}
+            {{ govukTag({
+              text: "Locked",
+              classes: "govuk-tag--yellow",
+              attributes: { "data-qa": "locked" }
+            }) if u.locked }}
+            {{ govukTag({
+              text: "Inactive",
+              classes: "govuk-tag--pink",
+              attributes: { "data-qa": "enabled" }
+            }) if not u.enabled }}
+          {% endset %}
           {% set rows = (rows.push([
             { html: userLink },
             { text: u.usernameAndEmail },
-            { text: u.locked | formatYesNo()},
-            { text: u.enabled | formatYesNo() }
+            { html: tags }
           ]), rows) %}
         {% endfor %}
 
@@ -67,8 +79,7 @@
           head: [
             { text: "Name" },
             { text: "Username / email" },
-            { text: "Locked" },
-            { text: "Enabled" }
+            { text: "Status" }
           ],
           rows: rows
         }) }}
