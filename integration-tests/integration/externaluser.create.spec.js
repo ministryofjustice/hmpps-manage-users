@@ -1,9 +1,5 @@
 const MenuPage = require('../pages/menuPage')
-const AuthUserSearchPage = require('../pages/authUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
-const UserAddRolePage = require('../pages/userAddRolePage')
-const UserAddGroupPage = require('../pages/userAddGroupPage')
 const AuthUserCreatePage = require('../pages/authUserCreatePage')
 
 function createUser() {

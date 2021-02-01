@@ -1,6 +1,8 @@
 {% extends "./partials/layout.njk" %}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
+{%- from "govuk/components/select/macro.njk" import govukSelect -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
 
 {% set title =  "Search results" %}
 
@@ -20,6 +22,32 @@
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
     {% if results.length %}
+      <form method="GET" action="{{ searchUrl }}/results" class='external-search__form'>
+        <input type='hidden' name='roleCode' value='{{ roleCode }}'/>
+        <input type='hidden' name='groupCode' value='{{ groupCode }}'/>
+        <input type='hidden' name='user' value='{{ user }}'/>
+        <div class='horizontal-form'>
+          {{ govukSelect({label: {
+            text: "Filter by status"
+          },
+            idPrefix: 'status',
+            name: 'status',
+            id: 'status',
+            items: [
+              {text: 'Active', value:'ACTIVE'},
+              {text: 'Inactive', value:'INACTIVE'},
+              {text: 'All', value:'ALL'}
+            ] | setSelected(status)
+          }) }}
+          {{ govukButton({
+            text: "Filter",
+            type: "submit",
+            attributes: { "data-qa": "filter-button" }
+          }) }}
+        </div>
+      </form>
+      <p class='govuk-body'></p>
+
       {{ mojPagination(pagination) }}
 
       <div class="govuk-grid-row">

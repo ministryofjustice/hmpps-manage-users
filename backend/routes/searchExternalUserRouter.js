@@ -6,8 +6,15 @@ const contextProperties = require('../contextProperties')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
-  const searchApi = (context, nameFilter, groupCode, roleCode, page, size) =>
-    oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode }, page, size)
+  const searchApi = ({
+    locals: context,
+    user: nameFilter,
+    groupCode,
+    roleCode,
+    status,
+    pageNumber: page,
+    pageSize: size,
+  }) => oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
 
   const { index, results } = searchFactory(
     paginationService,
