@@ -4,11 +4,13 @@ const { groupDetailsFactory } = require('../controllers/groupDetails')
 const { groupAmendmentFactory } = require('../controllers/groupNameAmendment')
 const { createChildGroupFactory } = require('../controllers/createChildGroup')
 const { childGroupAmendmentFactory } = require('../controllers/childGroupNameAmendment')
+const { groupDeleteFactory } = require('../controllers/groupDelete')
 
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
   const getGroupDetailsApi = (context, group) => oauthApi.groupDetails(context, { group })
+  const deleteGroupApi = (context, group) => oauthApi.deleteGroup(context, group)
   const getGroups = (context) => oauthApi.assignableGroups(context)
   const changeGroupNameApi = (context, group, groupName) => oauthApi.changeGroupName(context, group, { groupName })
   const getChildGroupDetailsApi = (context, group) => oauthApi.childGroupDetails(context, { group })
@@ -32,7 +34,7 @@ const controller = ({ oauthApi }) => {
     '/manage-groups',
   )
 
-  const { index: getGroupDetails, deleteChildGroup } = groupDetailsFactory(
+  const { index: getGroupDetails, deleteChildGroup, getGroupDeleteWarn } = groupDetailsFactory(
     getGroupDetailsApi,
     deleteChildGroupApi,
     '/manage-groups',
@@ -40,6 +42,12 @@ const controller = ({ oauthApi }) => {
 
   const { index: getChildGroupCreate, post: postChildGroupCreate } = createChildGroupFactory(
     createChildGroupApi,
+    '/manage-groups',
+  )
+
+  const { index: getGroupDelete, deleteGroup } = groupDeleteFactory(
+    getGroupDetailsApi,
+    deleteGroupApi,
     '/manage-groups',
   )
 
@@ -52,6 +60,9 @@ const controller = ({ oauthApi }) => {
   router.get('/:pgroup/change-child-group-name/:group', getChildGroupAmendment)
   router.post('/:pgroup/change-child-group-name/:group', postChildGroupAmendment)
   router.get('/:pgroup/delete-child-group/:group', deleteChildGroup)
+  router.get('/:group/delete/children/some', getGroupDeleteWarn)
+  router.get('/:group/delete/children/none', getGroupDelete)
+  router.get('/:group/delete', deleteGroup)
   return router
 }
 

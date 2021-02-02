@@ -3,6 +3,7 @@ const GroupDetailsPage = require('../pages/groupDetailsPage')
 const GroupNameChangePage = require('../pages/groupNameChangePage')
 const ChildGroupNameChangePage = require('../pages/childGroupNameChangePage')
 const CreateChildGroupPage = require('../pages/createChildGroupPage')
+const GroupDeletePage = require('../pages/groupDeletePage')
 
 context('Groups', () => {
   before(() => {
@@ -66,6 +67,38 @@ context('Groups', () => {
     groupNameChange.changeName('Name Change')
 
     GroupDetailsPage.verifyOnPage('New Group Name')
+  })
+
+  it(' should display error when delete group if child groups exist', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+    groupDetails.deleteGroupChildLink()
+    groupDetails
+      .errorSummary()
+      .should('contain.text', 'you must delete all child groups before you can delete the group')
+  })
+
+  it(' should allow delete group if no child groups', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthGroupDetailsNoChildren', {})
+    cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+    groupDetails.deleteGroupNoChildLink()
+
+    cy.task('stubAuthDeleteGroup')
+    cy.task('stubAuthAssignableGroups', {})
+    const groupDelete = GroupDeletePage.verifyOnPage()
+    groupDelete.groupDelete()
+
+    GroupsPage.verifyOnPage()
   })
 
   it(' should allow change child group name', () => {
