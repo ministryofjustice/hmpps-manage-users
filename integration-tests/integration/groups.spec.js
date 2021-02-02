@@ -80,7 +80,7 @@ context('Groups', () => {
     groupDetails.deleteGroupChildLink()
     groupDetails
       .errorSummary()
-      .should('contain.text', 'you must delete all child groups before you can delete the group')
+      .should('contain.text', 'You must delete all child groups before you can delete the group')
   })
 
   it(' should allow delete group if no child groups', () => {

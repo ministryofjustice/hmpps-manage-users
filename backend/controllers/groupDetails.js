@@ -22,7 +22,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
     const { group } = req.params
     const groupUrl = `${maintainUrl}/${group}`
     const groupChildError = [
-      { href: '#groupCode', text: 'you must delete all child groups before you can delete the group' },
+      { href: '#groupCode', text: 'You must delete all child groups before you can delete the group' },
     ]
     stashStateAndRedirectToIndex(req, res, groupChildError, [group], groupUrl)
   }
