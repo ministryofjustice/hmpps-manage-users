@@ -91,7 +91,7 @@ context('Groups', () => {
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.deleteGroupLink()
+    groupDetails.deleteGroupNoChildLink()
 
     cy.task('stubAuthDeleteGroup')
     cy.task('stubAuthAssignableGroups', {})
