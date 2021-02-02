@@ -286,6 +286,34 @@ const stubAuthAssignableGroupDetails = ({
     body: content,
   })
 
+const stubAuthGroupDetailsNoChildren = ({
+  content = {
+    groupCode: 'SITE_1_GROUP_2',
+    groupName: 'Site 1 - Group 2',
+    assignableRoles: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
+    ],
+    children: [],
+  },
+}) =>
+  getFor({
+    urlPattern: '/auth/api/groups/.*',
+    body: content,
+  })
+
+const stubAuthDeleteGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/auth/api/groups/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 const stubAuthChangeGroupName = () =>
   stubJson({
     method: 'PUT',
@@ -482,6 +510,8 @@ module.exports = {
   stubAuthChangeChildGroupName,
   stubAuthCreateChildGroup,
   stubAuthDeleteChildGroup,
+  stubAuthDeleteGroup,
+  stubAuthGroupDetailsNoChildren,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
   stubAuthUserEnable,

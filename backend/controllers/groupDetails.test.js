@@ -6,8 +6,8 @@ describe('Group details factory', () => {
   const groupDetails = groupDetailsFactory(getGroupDetailsApi, deleteChildGroupApi, '/manage-groups')
 
   describe('index', () => {
-    it('should call group detials render', async () => {
-      const req = { params: { group: 'G1' } }
+    it('should call group details render', async () => {
+      const req = { params: { group: 'G1' }, flash: jest.fn() }
       getGroupDetailsApi.mockResolvedValue([
         {
           groupName: 'name',

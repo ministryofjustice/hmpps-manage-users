@@ -1,4 +1,10 @@
 const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUrl) => {
+  const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
+    req.flash('deleteGroupErrors', errors)
+    req.flash('group', group)
+    res.redirect(url)
+  }
+
   const index = async (req, res) => {
     const { group } = req.params
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
@@ -8,7 +14,17 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
       groupDetails,
       hasMaintainAuthUsers,
       maintainUrl,
+      errors: req.flash('deleteGroupErrors'),
     })
+  }
+
+  const getGroupDeleteWarn = async (req, res) => {
+    const { group } = req.params
+    const groupUrl = `${maintainUrl}/${group}`
+    const groupChildError = [
+      { href: '#groupCode', text: 'you must delete all child groups before you can delete the group' },
+    ]
+    stashStateAndRedirectToIndex(req, res, groupChildError, [group], groupUrl)
   }
 
   const deleteChildGroup = async (req, res) => {
@@ -19,7 +35,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
       res.redirect(groupUrl)
     } catch (error) {
       if (error.status === 400) {
-        // user already removed from group
+        // child already removed from group
         res.redirect(req.originalUrl)
       } else {
         throw error
@@ -27,7 +43,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
     }
   }
 
-  return { index, deleteChildGroup }
+  return { index, deleteChildGroup, getGroupDeleteWarn }
 }
 
 module.exports = {
