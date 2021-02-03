@@ -26,7 +26,7 @@
       <form method="GET" action="{{ searchUrl }}/results" class='external-search__form'>
         <input type='hidden' name='roleCode' value='{{ roleCode }}'/>
         <input type='hidden' name='groupCode' value='{{ groupCode }}'/>
-        <input type='hidden' name='user' value='{{ user }}'/>
+        <input type='hidden' name='user' value='{{ username }}'/>
         <div class='horizontal-form'>
           {{ govukSelect({label: {
             text: "Filter by status"

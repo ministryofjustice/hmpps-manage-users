@@ -139,7 +139,7 @@ describe('search factory', () => {
         pagination,
         groupCode: undefined,
         roleCode: undefined,
-        user: 'joe',
+        username: 'joe',
         status: undefined,
       })
     })
@@ -243,7 +243,7 @@ describe('search factory', () => {
           pagination,
           groupCode: undefined,
           roleCode: undefined,
-          user: 'joe',
+          username: 'joe',
           status: undefined,
         })
       })

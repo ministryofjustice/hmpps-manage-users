@@ -74,7 +74,7 @@ const searchFactory = (
       status,
       groupCode,
       roleCode,
-      user,
+      username: user,
       errors: req.flash('errors'),
     })
   }
