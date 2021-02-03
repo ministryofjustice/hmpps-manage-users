@@ -192,7 +192,7 @@ context('External user manage functionality', () => {
       .should(
         'have.attr',
         'href',
-        '/search-external-users/results?user=sometext%40somewhere.com&status=ACTIVE&groupCode=&roleCode=&page=1',
+        '/search-external-users/results?user=sometext%40somewhere.com&status=ALL&groupCode=&roleCode=&page=1',
       )
   })
 

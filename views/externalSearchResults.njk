@@ -59,14 +59,16 @@
           {% set tags %}
             {{ govukTag({
               text: "Locked",
-              classes: "govuk-tag--yellow",
-              attributes: { "data-qa": "locked" }
+              classes: "govuk-tag--yellow"
             }) if u.locked }}
             {{ govukTag({
               text: "Inactive",
-              classes: "govuk-tag--pink",
-              attributes: { "data-qa": "enabled" }
+              classes: "govuk-tag--pink"
             }) if not u.enabled }}
+            {{ govukTag({
+              text: "Active",
+              classes: "govuk-tag--green"
+            }) if u.enabled }}
           {% endset %}
           {% set rows = (rows.push([
             { html: userLink },

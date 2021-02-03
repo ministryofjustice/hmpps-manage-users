@@ -13,37 +13,6 @@ const searchFactory = (
   maintainUrl,
   searchTitle,
 ) => {
-  const searchWithStatus = async ({ locals, user, groupCode, roleCode, status, pageNumber, pageSize, pageOffset }) => {
-    const statusSearchResults = await searchApi({
-      locals,
-      user,
-      groupCode,
-      roleCode,
-      status,
-      pageNumber,
-      pageSize,
-      pageOffset,
-    })
-
-    // found some results or searched everywhere, so give up
-    if (statusSearchResults.length > 0 || status === 'ALL') return { statusSearchResults, status }
-
-    // try to improve search
-    return {
-      statusSearchResults: await searchApi({
-        locals,
-        user,
-        groupCode,
-        roleCode,
-        status: 'ALL',
-        pageNumber,
-        pageSize,
-        pageOffset,
-      }),
-      status: 'ALL',
-    }
-  }
-
   const dpsSearch = getAssignableGroupsApi === undefined
 
   const index = async (req, res) => {
@@ -77,7 +46,7 @@ const searchFactory = (
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
 
-    const { statusSearchResults: searchResults, status: searchedStatus } = await searchWithStatus({
+    const searchResults = await searchApi({
       locals: res.locals,
       user,
       groupCode,
@@ -102,7 +71,7 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
-      status: searchedStatus,
+      status,
       groupCode,
       roleCode,
       user,

@@ -279,55 +279,6 @@ describe('search factory', () => {
         })
       })
 
-      it('should call with all status if no results found', async () => {
-        const req = {
-          query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
-          flash: jest.fn(),
-          get: jest.fn().mockReturnValue('localhost'),
-          protocol: 'http',
-          originalUrl: '/',
-          session: {},
-        }
-        const pagination = { page: 5 }
-        paginationService.getPagination.mockReturnValue(pagination)
-        searchApi.mockResolvedValue([])
-        const render = jest.fn()
-        const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
-        await search.results(req, {
-          render,
-          locals,
-        })
-
-        expect(searchApi).toBeCalledWith({
-          locals,
-          user: 'joe',
-          roleCode: '',
-          groupCode: '',
-          status: 'ACTIVE',
-          pageNumber: 0,
-          pageSize: 20,
-          pageOffset: 0,
-        })
-        expect(searchApi).toBeCalledWith({
-          locals,
-          user: 'joe',
-          roleCode: '',
-          groupCode: '',
-          status: 'ALL',
-          pageNumber: 0,
-          pageSize: 20,
-          pageOffset: 0,
-        })
-
-        // since we didn't get an ACTIVE match, expect the status to now be passed back with ALL
-        expect(render).toHaveBeenCalledWith(
-          'externalSearchResults.njk',
-          expect.objectContaining({
-            status: 'ALL',
-          }),
-        )
-      })
-
       it('should call external search api with page and size', async () => {
         const req = {
           query: { user: 'joe', groupCode: '', roleCode: '', status: 'INACTIVE', page: 3, size: 13 },

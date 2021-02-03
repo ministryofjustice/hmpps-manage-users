@@ -36,6 +36,7 @@ context('External user search functionality', () => {
           expect($tableCells.get(0)).to.contain.text('Auth\u00a0Adm')
           expect($tableCells.get(1)).to.contain.text('AUTH_ADM')
           expect($tableCells.get(1)).to.contain.text('auth_test2@digital.justice.gov.uk')
+          expect($tableCells.get(2)).to.contain.text('Active')
           expect($tableCells.get(2)).not.to.contain.text('Locked')
           expect($tableCells.get(2)).not.to.contain.text('Inactive')
         })
@@ -55,11 +56,15 @@ context('External user search functionality', () => {
       const results = searchForUser('MAINTAIN_OAUTH_USERS', replicateUser(5))
 
       results.rows().eq(0).should('include.text', 'Locked')
+      results.rows().eq(0).should('include.text', 'Active')
       results.rows().eq(0).should('not.include.text', 'Inactive')
       results.rows().eq(1).should('not.include.text', 'Locked')
       results.rows().eq(1).should('include.text', 'Inactive')
+      results.rows().eq(1).should('not.include.text', 'Active')
+      results.rows().eq(2).should('include.text', 'Active')
       results.rows().eq(2).should('not.include.text', 'Locked')
       results.rows().eq(2).should('not.include.text', 'Inactive')
+      results.rows().eq(3).should('not.include.text', 'Active')
       results.rows().eq(3).should('include.text', 'Locked')
       results.rows().eq(3).should('include.text', 'Inactive')
     })
@@ -75,17 +80,9 @@ context('External user search functionality', () => {
       UserSearchResultsPage.verifyOnPage()
 
       cy.task('verifyAuthSearch').should((requests) => {
-        expect(requests).to.have.lengthOf(2)
+        expect(requests).to.have.lengthOf(1)
 
         expect(requests[0].queryParams).to.deep.equal({
-          groups: { key: 'groups', values: ['SOC_NORTH_WEST'] },
-          name: { key: 'name', values: [''] },
-          page: { key: 'page', values: ['0'] },
-          roles: { key: 'roles', values: [''] },
-          status: { key: 'status', values: ['ACTIVE'] },
-          size: { key: 'size', values: ['20'] },
-        })
-        expect(requests[1].queryParams).to.deep.equal({
           groups: { key: 'groups', values: ['SOC_NORTH_WEST'] },
           name: { key: 'name', values: [''] },
           page: { key: 'page', values: ['0'] },
@@ -118,7 +115,7 @@ context('External user search functionality', () => {
           groups: { key: 'groups', values: [''] },
           name: { key: 'name', values: [''] },
           page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ACTIVE'] },
+          status: { key: 'status', values: ['ALL'] },
           roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
           size: { key: 'size', values: ['20'] },
         })
@@ -139,7 +136,7 @@ context('External user search functionality', () => {
       })
       searchGroup.searchRole('Global Search')
       const userSearchResults = UserSearchResultsPage.verifyOnPage()
-      userSearchResults.filter().should('have.value', 'ACTIVE').select('INACTIVE')
+      userSearchResults.filter().should('have.value', 'ALL').select('INACTIVE')
       userSearchResults.submitFilter().click()
       userSearchResults.checkStillOnPage()
       cy.task('verifyAuthSearch').should((requests) => {
@@ -149,7 +146,7 @@ context('External user search functionality', () => {
           groups: { key: 'groups', values: [''] },
           name: { key: 'name', values: [''] },
           page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ACTIVE'] },
+          status: { key: 'status', values: ['ALL'] },
           roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
           size: { key: 'size', values: ['20'] },
         })
@@ -216,7 +213,7 @@ context('External user search functionality', () => {
           groups: { key: 'groups', values: [''] },
           name: { key: 'name', values: ['sometext@somewhere.com'] },
           page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ACTIVE'] },
+          status: { key: 'status', values: ['ALL'] },
           roles: { key: 'roles', values: [''] },
           size: { key: 'size', values: ['20'] },
         })
