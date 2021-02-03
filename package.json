@@ -45,7 +45,7 @@
     "prop-types": "^15.7.2",
     "qs": "^6.9.6",
     "redis": "^3.0.2",
-    "sass": "^1.32.5",
+    "sass": "^1.32.6",
     "spin.js": "^4.1.0",
     "superagent": "^6.1.0",
     "whatwg-fetch": "^3.5.0"
@@ -53,10 +53,10 @@
   "devDependencies": {
     "@types/jest": "^26.0.20",
     "@types/node": "^14.14.22",
-    "@typescript-eslint/eslint-plugin": "^4.14.1",
-    "@typescript-eslint/parser": "^4.14.1",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
     "audit-ci": "^3.1.1",
-    "cypress": "^6.3.0",
+    "cypress": "^6.4.0",
     "cypress-multi-reporters": "^1.4.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^7.19.0",
