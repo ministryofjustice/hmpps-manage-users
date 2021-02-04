@@ -65,6 +65,20 @@ describe('change email factory', () => {
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
+    it('should change the email and redirect to new email address', async () => {
+      const req = {
+        params: { username: 'joe@digital.justice.gov.uk' },
+        body: { email: 'bob@digital.justice.gov.uk' },
+        flash: jest.fn(),
+      }
+
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      await changeEmail.post(req, { redirect, locals })
+      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/details')
+      expect(saveEmail).toBeCalledWith(locals, 'joe@digital.justice.gov.uk', 'bob@digital.justice.gov.uk')
+    })
+
     it('should trim, change the email and redirect', async () => {
       const req = { params: { username: 'joe' }, body: { email: ' bob@digital.justice.gov.uk ' }, flash: jest.fn() }
 
