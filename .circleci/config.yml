@@ -36,9 +36,9 @@ jobs:
             - dist
 
   integration_tests:
-    working_directory: ~/app
-    docker:
-      - image: cimg/node:14.15.3-browsers
+    executor:
+      name: hmpps/node
+      tag: 14.15.3-browsers
     steps:
       - checkout
       - attach_workspace:
