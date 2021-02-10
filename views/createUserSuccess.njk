@@ -1,0 +1,33 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% set title =  "Create an external user success" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: "Create an external user", href: '/create-external-user' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ govukPanel({
+          titleText: "External user created",
+          html: "An email has been sent to " + email,
+          attributes: { "data-qa": "email" }
+        }) }}
+        <div class="govuk-body">
+          <a data-qa="user-details" href="{{detailsLink}}" class="govuk-link">View new user details</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

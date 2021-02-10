@@ -1,6 +1,7 @@
 const MenuPage = require('../pages/menuPage')
 const UserPage = require('../pages/userPage')
 const AuthUserCreatePage = require('../pages/authUserCreatePage')
+const AuthUserCreateSuccessPage = require('../pages/authUserCreateSuccessPage')
 
 function createUser() {
   const createPage = AuthUserCreatePage.verifyOnPage()
@@ -21,6 +22,9 @@ function createUser() {
       groupCode: 'SOC_NORTH_WEST',
     })
   })
+  const successPage = AuthUserCreateSuccessPage.verifyOnPage()
+  successPage.email().should('contain.text', 'emailnoone@justice.gov.uk')
+  successPage.userDetailsLink().click()
   UserPage.verifyOnPage('Auth Adm')
 }
 
