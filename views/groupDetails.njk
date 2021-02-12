@@ -85,9 +85,10 @@
           ]
         ]
       }) }}
-
+    {% endif %}
 
     {{ govukTable({
+      caption: "Group details",
       rows: [
         [
           {text: "Group code"},
@@ -96,7 +97,6 @@
         ]
       ]
     }) }}
-    {% endif %}
 
     {% set rows = [] %}
     {% for role in groupDetails.assignableRoles %}
