@@ -56,10 +56,13 @@ describe('create user factory', () => {
         session: {},
       }
 
-      const redirect = jest.fn()
+      const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/details')
+      await createUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createUserSuccess.njk', {
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        email: 'bob@digital.justice.gov.uk',
+      })
       expect(createUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
@@ -81,10 +84,13 @@ describe('create user factory', () => {
         session: {},
       }
 
-      const redirect = jest.fn()
+      const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/details')
+      await createUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createUserSuccess.njk', {
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        email: 'bob@digital.justice.gov.uk',
+      })
       expect(createUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
@@ -106,10 +112,13 @@ describe('create user factory', () => {
         session: {},
       }
 
-      const redirect = jest.fn()
+      const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/details')
+      await createUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createUserSuccess.njk', {
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        email: 'bob@digital.justice.gov.uk',
+      })
       expect(createUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
@@ -131,9 +140,9 @@ describe('create user factory', () => {
         session: {},
       }
 
-      const redirect = jest.fn()
+      const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { redirect, locals })
+      await createUser.post(req, { render, locals })
       expect(req.session).toEqual({
         searchResultsUrl: '/search-external-users/results?user=bob@digital.justice.gov.uk',
       })
