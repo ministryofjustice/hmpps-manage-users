@@ -83,6 +83,30 @@ context('Groups', () => {
       .should('contain.text', 'You must delete all child groups before you can delete the group')
   })
 
+  it(' should display error when attempt to view group that does not exist', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroups', {})
+    cy.visit('/manage-groups')
+
+    cy.visit('/manage-groups/DOES_NOT_EXIST')
+    const groups = GroupsPage.verifyOnPage()
+    groups.errorSummary().should('contain.text', 'Group does not exist')
+  })
+
+  it(' should display error when attempt to delete group that does not exist', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroups', {})
+    cy.visit('/manage-groups')
+
+    cy.visit('/manage-groups/DOES_NOT_EXIST/delete/children/none')
+    const groups = GroupsPage.verifyOnPage()
+    groups.errorSummary().should('contain.text', 'Group does not exist')
+  })
+
   it(' should allow delete group if no child groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()

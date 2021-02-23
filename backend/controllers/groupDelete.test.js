@@ -37,5 +37,20 @@ describe('group delete factory', () => {
       expect(redirect).toBeCalledWith('/manage-groups')
       expect(deleteGroupApi).toBeCalledWith(locals, 'group1')
     })
+
+    it('should redirect if group to delete does not exist', async () => {
+      const error = new Error('Does not exist error')
+      // @ts-ignore
+      error.status = 404
+      // @ts-ignore
+      error.response = { body: { error_description: 'not valid' } }
+
+      const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }
+      const render = getGroupDetailsApi.mockRejectedValue(error)
+      const redirect = jest.fn()
+
+      await groupDelete.deleteGroup(req, { redirect, render })
+      expect(redirect).toBeCalledWith('/manage-groups')
+    })
   })
 })

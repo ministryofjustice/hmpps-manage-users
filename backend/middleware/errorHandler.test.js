@@ -15,6 +15,10 @@ describe('Error handling middleware', () => {
     render: jest.fn(),
   }
   const error = new Error('error message')
+  // @ts-ignore
+  error.status = 500
+  // @ts-ignore
+  error.response = { body: { error_description: 'not valid' } }
 
   const handleErrorWhenRetryLinkIs = (redirectUrl) => errorHandler(error, req, { ...res, locals: { redirectUrl } })
 

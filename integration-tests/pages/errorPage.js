@@ -1,6 +1,6 @@
 const page = require('./page')
 
-const errorPage = () => page('Sorry, there is a problem with the service', {})
+const errorPage = () => page('Page not found', {})
 
 export default {
   verifyOnPage: errorPage,

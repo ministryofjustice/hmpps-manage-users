@@ -4,6 +4,7 @@ const selectGroupsFactory = (getGroups, maintainUrl) => {
     res.render('groups.njk', {
       groupValues: assignableGroups,
       maintainUrl,
+      errors: req.flash('groupError'),
     })
   }
 

@@ -8,8 +8,9 @@ describe('select groups factory', () => {
     it('should call groups render', async () => {
       getGroups.mockResolvedValue([{ groupName: 'name', groupCode: 'code' }])
 
+      const req = { flash: jest.fn() }
       const render = jest.fn()
-      await groups.index(jest.fn(), { render })
+      await groups.index(req, { render })
       expect(render).toBeCalledWith('groups.njk', {
         groupValues: [{ groupName: 'name', groupCode: 'code' }],
         maintainUrl: '/manage-groups',
