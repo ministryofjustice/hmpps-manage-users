@@ -57,6 +57,21 @@ const logout = () =>
     },
   })
 
+const stubError = () =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPattern: '/auth/api/authuser/[^/]*',
+    },
+    response: {
+      status: 500,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      body: '<html><body>Error page<h1>Error</h1></body></html>',
+    },
+  })
+
 const token = () =>
   stubFor({
     request: {
@@ -517,6 +532,7 @@ module.exports = {
   stubAuthUserEnable,
   stubAuthUserChangeEmail,
   stubAuthCreateUser,
+  stubError,
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,

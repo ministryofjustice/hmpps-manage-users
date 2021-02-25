@@ -82,5 +82,8 @@
     "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.js", "**/*.test.ts"] }],
     "no-param-reassign": [1, { "props": true, "ignorePropertyModificationsFor": ["req", "res", "context"] }],
     "prettier/prettier": ["error"]
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
   }
 }
