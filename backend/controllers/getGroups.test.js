@@ -14,6 +14,7 @@ describe('select groups factory', () => {
       expect(render).toBeCalledWith('groups.njk', {
         groupValues: [{ groupName: 'name', groupCode: 'code' }],
         maintainUrl: '/manage-groups',
+        errors: undefined,
       })
     })
   })

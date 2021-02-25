@@ -20,8 +20,8 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
       })
     } catch (error) {
       if (error.status === 404) {
-        const groupChildError = [{ href: '#groupCode', text: 'Group does not exist' }]
-        req.flash('groupError', groupChildError)
+        const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
+        req.flash('groupError', groupError)
         res.redirect(maintainUrl)
       } else {
         throw error

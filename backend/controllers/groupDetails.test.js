@@ -41,10 +41,11 @@ describe('Group details factory', () => {
       error.response = { body: { error_description: 'not valid' } }
 
       const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }
-      const render = getGroupDetailsApi.mockRejectedValue(error)
       const redirect = jest.fn()
+      getGroupDetailsApi.mockRejectedValue(error)
 
-      await groupDetails.index(req, { redirect, render })
+      await groupDetails.index(req, { redirect })
+      expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
       expect(redirect).toBeCalledWith('/manage-groups')
     })
   })
