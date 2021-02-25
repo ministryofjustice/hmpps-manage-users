@@ -12,7 +12,7 @@ describe('Group details factory', () => {
         {
           groupName: 'name',
           groupCode: 'code',
-          assignableRolls: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+          assignableRoles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
           children: [{ groupName: 'groupName4', groupCode: 'groupCode4' }],
         },
       ])
@@ -24,13 +24,29 @@ describe('Group details factory', () => {
           {
             groupName: 'name',
             groupCode: 'code',
-            assignableRolls: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+            assignableRoles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
             children: [{ groupName: 'groupName4', groupCode: 'groupCode4' }],
           },
         ],
         maintainUrl: '/manage-groups',
         hasMaintainAuthUsers: false,
       })
+    })
+
+    it('should redirect to manage groups if group does not exist', async () => {
+      const error = new Error('Does not exist error')
+      // @ts-ignore
+      error.status = 404
+      // @ts-ignore
+      error.response = { body: { error_description: 'not valid' } }
+
+      const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }
+      const redirect = jest.fn()
+      getGroupDetailsApi.mockRejectedValue(error)
+
+      await groupDetails.index(req, { redirect })
+      expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
+      expect(redirect).toBeCalledWith('/manage-groups')
     })
   })
 

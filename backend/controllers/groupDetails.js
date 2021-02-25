@@ -8,14 +8,25 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
   const index = async (req, res) => {
     const { group } = req.params
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
-    const groupDetails = await getGroupDetailsApi(res.locals, group)
 
-    res.render('groupDetails.njk', {
-      groupDetails,
-      hasMaintainAuthUsers,
-      maintainUrl,
-      errors: req.flash('deleteGroupErrors'),
-    })
+    try {
+      const groupDetails = await getGroupDetailsApi(res.locals, group)
+
+      res.render('groupDetails.njk', {
+        groupDetails,
+        hasMaintainAuthUsers,
+        maintainUrl,
+        errors: req.flash('deleteGroupErrors'),
+      })
+    } catch (error) {
+      if (error.status === 404) {
+        const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
+        req.flash('groupError', groupError)
+        res.redirect(maintainUrl)
+      } else {
+        throw error
+      }
+    }
   }
 
   const getGroupDeleteWarn = async (req, res) => {
