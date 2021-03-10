@@ -19,6 +19,19 @@ const searchForUser = (totalElements) => {
   return results
 }
 
+function goToResultsPage() {
+  cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+  cy.login()
+  cy.task('stubDpsGetRoles', { content: [] })
+  cy.task('stubDpsSearch', { totalElements: 21 })
+
+  const search = DpsUserSearchPage.goTo()
+  search.search('sometext@somewhere.com')
+  const results = UserSearchResultsPage.verifyOnPage()
+  results.nextPage()
+  return results
+}
+
 context('DPS user functionality', () => {
   before(() => {
     cy.clearCookies()
@@ -85,14 +98,8 @@ context('DPS user functionality', () => {
   })
 
   it('Should allow a user search and display paged results', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
-    cy.task('stubDpsSearch', { totalElements: 21 })
+    const results = goToResultsPage()
 
-    const search = DpsUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
     results.rows().should('have.length', 10)
     results.rows().eq(0).should('include.text', 'Itag\u00a0User0')
     results.rows().eq(1).should('include.text', 'Itag\u00a0User1')
@@ -132,41 +139,45 @@ context('DPS user functionality', () => {
   })
 
   it('Should display details for a user ', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
-    cy.task('stubDpsSearch', { totalElements: 21 })
-
-    const search = DpsUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-    results.nextPage()
+    const results = goToResultsPage()
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { username: 'ITAG_USER' })
 
     results.edit('ITAG_USER5')
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
-
+    userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
   })
 
-  it('Should provide breadcrumb link back to search results', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
-    cy.task('stubDpsSearch', { totalElements: 21 })
-
-    const search = DpsUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-    results.nextPage()
+  it('Should leave email blank if no verified email for user ', () => {
+    const results = goToResultsPage()
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
+    cy.task('stubMissingEmail')
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage.userRows().eq(0).should('contain', 'ITAG_USER')
+    userPage
+      .userRows()
+      .eq(1)
+      .then(($cell) => {
+        expect($cell.text().trim()).to.equal('Verified email')
+      })
+  })
+
+  it('Should provide breadcrumb link back to search results', () => {
+    const results = goToResultsPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { username: 'ITAG_USER' })
 
     results.edit('ITAG_USER5')
     const userPage = UserPage.verifyOnPage('Itag User')

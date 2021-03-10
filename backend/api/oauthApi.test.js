@@ -93,6 +93,25 @@ describe('oauthApi tests', () => {
     })
   })
 
+  describe('getUserEmail', () => {
+    const emailDetails = { email: 'hello@there', username: 'someuser' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => emailDetails,
+      })
+      actual = oauthApi.getUserEmail(context, { username: 'joe' })
+    })
+
+    it('should return email from endpoint', () => {
+      expect(actual).toEqual(emailDetails)
+    })
+    it('should call user email endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/api/user/joe/email')
+    })
+  })
+
   describe('currentUser', () => {
     const userDetails = { bob: 'hello there' }
     let actual
