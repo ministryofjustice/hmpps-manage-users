@@ -6,8 +6,8 @@ const UserAddGroupPage = require('../pages/userAddGroupPage')
 const AuthUserChangeEmailPage = require('../pages/authUserChangeEmailPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
 
-const editUser = (roleCode) => {
-  const results = searchForUser(roleCode)
+const editUser = (roleCode, assignableGroups = []) => {
+  const results = searchForUser(roleCode, undefined, assignableGroups)
 
   cy.task('stubAuthGetUsername')
   cy.task('stubAuthUserRoles')
@@ -143,14 +143,44 @@ context('External user manage functionality', () => {
     UserPage.verifyOnPage('Auth Adm')
   })
 
-  it('Add and remove a group from a user not available for group managers', () => {
+  it('Remove a group from a user not available for group managers if not a member of group', () => {
     const userPage = editUser('AUTH_GROUP_MANAGER')
 
     userPage.groupRows().should('have.length', 2)
     userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-    userPage.addGroup().should('not.exist')
     userPage.removeGroup('SITE_1_GROUP_1').should('not.exist')
+  })
+
+  it('Remove a group from a user available for group managers when member of group', () => {
+    const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
+    userPage.groupRows().should('have.length', 2)
+    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+    cy.task('stubAuthRemoveGroup')
+    userPage.removeGroup('SITE_1_GROUP_1').click()
+    userPage.removeGroup('SITE_1_GROUP_2').should('not.exist')
+  })
+
+  it('Add a group to a user available for group managers', () => {
+    const userPage = editUser('AUTH_GROUP_MANAGER')
+
+    userPage.groupRows().should('have.length', 2)
+    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+    cy.task('stubAuthAssignableGroups', {})
+    userPage.addGroup().click()
+    const addGroup = UserAddGroupPage.verifyOnPage()
+
+    cy.task('stubAuthAddGroup')
+    addGroup.type('SOCU North West')
+    addGroup.addGroupButton().click()
+
+    cy.task('verifyAddGroup').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/groups/SOC_NORTH_WEST')
+    })
   })
 
   it('Should display message if no roles to add', () => {

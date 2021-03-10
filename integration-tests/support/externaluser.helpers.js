@@ -13,11 +13,11 @@ export const replicateUser = (times) =>
     lastName: `Adm${i}`,
   }))
 
-export const searchForUser = (roleCode = 'MAINTAIN_OAUTH_USERS', searchContent = undefined) => {
+export const searchForUser = (roleCode = 'MAINTAIN_OAUTH_USERS', searchContent = undefined, assignableGroups = []) => {
   cy.task('stubLogin', { roles: [{ roleCode }] })
   cy.login()
   const menuPage = MenuPage.verifyOnPage()
-  cy.task('stubAuthAssignableGroups', { content: [] })
+  cy.task('stubAuthAssignableGroups', { content: assignableGroups })
   cy.task('stubAuthSearchableRoles', { content: [] })
   menuPage.manageAuthUsers()
   const search = AuthUserSearchPage.verifyOnPage()

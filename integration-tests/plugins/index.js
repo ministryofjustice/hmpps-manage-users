@@ -19,6 +19,9 @@ module.exports = (on) => {
         prisonApi.stubUserCaseloads(),
         tokenverification.stubVerifyToken(true),
       ]),
+    stubPrisonApiHealth: (status) => prisonApi.stubHealth(status),
+    stubHealthAllHealthy: () =>
+      Promise.all([auth.stubHealth(), prisonApi.stubHealth(), tokenverification.stubHealth()]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
     stubDpsGetRoles: prisonApi.stubGetRoles,

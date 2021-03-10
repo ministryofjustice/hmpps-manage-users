@@ -17,7 +17,22 @@ const userDetailsFactory = (
 
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
 
-    const [user, roles, groups] = await getUserRolesAndGroupsApi(res.locals, username, hasMaintainDpsUsersAdmin)
+    const [user, roles, groups, assignableGroups] = await getUserRolesAndGroupsApi(
+      res.locals,
+      username,
+      hasMaintainDpsUsersAdmin,
+    )
+    let groupsMaintainGroupManager = []
+    let groupsNotGroupManager = []
+
+    if (removeGroupApi && !hasMaintainAuthUsers) {
+      const userGroupsCodes = new Set(groups.map((g) => g.groupCode))
+      groupsMaintainGroupManager = assignableGroups.filter((g) => userGroupsCodes.has(g.groupCode))
+
+      const assignableGroupsCodes = new Set(assignableGroups.map((g) => g.groupCode))
+      groupsNotGroupManager = groups.filter((g) => !assignableGroupsCodes.has(g.groupCode))
+    }
+
     res.render('userDetails.njk', {
       searchTitle,
       searchResultsUrl,
@@ -26,6 +41,8 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
+      groupsMaintainGroupManager,
+      groupsNotGroupManager,
       hasMaintainAuthUsers,
       errors: req.flash('errors'),
       showEnableDisable: Boolean(enableUserApi && disableUserApi),
