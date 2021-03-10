@@ -333,4 +333,12 @@ class OauthApi extends WireMockRule {
                                         .withBody("pong")))
     }
 
+    void stubGetEmail() {
+        this.stubFor(
+                get(urlPathMatching("/auth/api/user/.*/email"))
+                        .willReturn(aResponse().withStatus(200)
+                            .withHeader('Content-Type', 'application/json')
+                            .withBody("{ \"username\": \"ITAG_USER\", \"email\": \"ITAG_USER@gov.uk\" }")))
+    }
+
 }
