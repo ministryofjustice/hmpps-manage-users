@@ -34,6 +34,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const del = (context, path) => client.del(context, path).then((response) => response.body)
   const currentUser = (context) => get(context, '/api/user/me')
   const currentRoles = (context) => get(context, '/api/user/me/roles')
+  const getUserEmail = (context, { username }) => get(context, `/api/user/${username}/email`)
   const getUser = (context, { username }) => get(context, `/api/authuser/${username}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
@@ -129,6 +130,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   return {
     currentUser,
     currentRoles,
+    getUserEmail,
     getUser,
     createUser,
     userSearch,

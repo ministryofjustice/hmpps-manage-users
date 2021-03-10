@@ -19,7 +19,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
   router.use('/search-dps-users', searchDpsUserRouter({ prisonApi }))
   router.use('/manage-external-users/:username', manageAuthUserRouter({ oauthApi }))
-  router.use('/manage-dps-users/:username', manageDpsUserRouter({ prisonApi }))
+  router.use('/manage-dps-users/:username', manageDpsUserRouter({ prisonApi, oauthApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))
 
   return router

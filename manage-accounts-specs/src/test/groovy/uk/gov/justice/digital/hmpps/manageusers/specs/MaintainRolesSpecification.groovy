@@ -77,6 +77,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
         prisonApi.stubGetAgencyDetailsMultipleAgencies(Caseload.LEI)
         prisonApi.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
+        oauthApi.stubGetEmail()
         editButtonAPI_TEST_USER.click()
 
         then: "i am presented with the Staff profile page"
@@ -110,6 +111,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
         prisonApi.stubGetAgencyDetailsEmptyResult(Caseload.LEI)
         prisonApi.stubGetNWEBAccessRolesForUserAndCaseloadForAdminUser(UserAccount.API_TEST_USER.username, true)
+        oauthApi.stubGetEmail()
         editButtonAPI_TEST_USER.click()
 
         then: "i am presented with the Staff profile page without a caseload description"
@@ -137,6 +139,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
         prisonApi.stubGetAgencyDetails(Caseload.LEI)
         prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
+        oauthApi.stubGetEmail()
         editButtonAPI_TEST_USER.click()
         at StaffRoleProfilePage
 
@@ -171,6 +174,7 @@ class MaintainRolesSpecification extends BrowserReportingSpec {
         prisonApi.stubGetUserDetails(UserAccount.API_TEST_USER)
         prisonApi.stubGetAgencyDetails(Caseload.LEI)
         prisonApi.stubGetNWEBAccessRolesForUserAndCaseload(UserAccount.API_TEST_USER.username, true)
+        oauthApi.stubGetEmail()
         editButtonAPI_TEST_USER.click()
         at StaffRoleProfilePage
 

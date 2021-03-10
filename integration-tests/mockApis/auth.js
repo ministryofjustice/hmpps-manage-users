@@ -125,30 +125,25 @@ const stubUserMe = ({
 
 const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
 
-const stubEmail = (username) =>
+const stubEmail = ({ username }) =>
   getFor({
-    urlPath: `/auth/api/user/${encodeURI(username)}/email`,
+    urlPattern: `/auth/api/user/[^/]*/email`,
     body: {
       username,
       email: `${username}@gov.uk`,
     },
   })
-
-const stubUnverifiedEmail = (username) =>
+const stubMissingEmail = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: `/auth/api/user/${encodeURI(username)}/email`,
+      urlPattern: `/auth/api/user/[^/]*/email`,
     },
     response: {
       status: 204,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      jsonBody: {},
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     },
   })
-
 const stubAuthGetUsername = (enabled = true) =>
   getFor({
     urlPattern: '/auth/api/authuser/[^/]*',
@@ -501,11 +496,10 @@ module.exports = {
   getLoginUrl,
   stubLogin: (username, roles) =>
     Promise.all([favicon(), redirect(), logout(), token(), stubUserMe({}), stubUserMeRoles(roles), stubUser(username)]),
-  stubUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubEmail(username)]),
-  stubUnverifiedUserDetailsRetrieval: (username) => Promise.all([stubUser(username), stubUnverifiedEmail(username)]),
   stubUserMe,
   stubUserMeRoles,
   stubEmail,
+  stubMissingEmail,
   redirect,
   stubAuthGetUsername,
   stubAuthGetUserWithEmail,
