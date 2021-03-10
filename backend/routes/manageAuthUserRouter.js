@@ -22,10 +22,10 @@ const controller = ({ oauthApi }) => {
       oauthApi.getUser(context, { username }),
       oauthApi.userRoles(context, { username }),
       oauthApi.userGroups(context, { username }),
+      oauthApi.assignableGroups(context),
     ])
 
   const getUserApi = (context, username) => oauthApi.getUser(context, { username })
-
   const saveGroupApi = (context, username, group) => oauthApi.addUserGroup(context, { username, group })
   const removeGroupApi = (context, username, group) => oauthApi.removeUserGroup(context, { username, group })
   const saveRolesApi = (context, username, roles) => oauthApi.addUserRoles(context, { username, roles })

@@ -444,6 +444,21 @@ const stubAuthCreateUser = () =>
     urlPattern: '/auth/api/authuser/create',
   })
 
+const stubHealth = (status = 200) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      url: '/auth/health/ping',
+    },
+    response: {
+      status,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      fixedDelayMilliseconds: status === 500 ? 3000 : '',
+    },
+  })
+
 const verifyAddRoles = () =>
   getMatchingRequests({
     method: 'POST',
@@ -527,6 +542,7 @@ module.exports = {
   stubAuthUserChangeEmail,
   stubAuthCreateUser,
   stubError,
+  stubHealth,
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,
