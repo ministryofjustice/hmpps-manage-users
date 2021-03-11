@@ -17,13 +17,25 @@ const controller = ({ oauthApi }) => {
       oauthApi.userGroups(context, { username }),
     ])
 
-  const getUserRolesAndGroupsApi = (context, username) =>
-    Promise.all([
+  const getUserRolesAndGroupsApi = async (context, username, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
+    const [user, roles, groups, assignableGroups] = await Promise.all([
       oauthApi.getUser(context, { username }),
       oauthApi.userRoles(context, { username }),
       oauthApi.userGroups(context, { username }),
-      oauthApi.assignableGroups(context),
+      hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
     ])
+
+    const assignableGroupsCodes = new Set(assignableGroups.map((g) => g.groupCode))
+    return [
+      user,
+      roles,
+      groups.map((g) => ({
+        groupName: g.groupName,
+        groupCode: g.groupCode,
+        showRemove: hasMaintainAuthUsers || assignableGroupsCodes.has(g.groupCode),
+      })),
+    ]
+  }
 
   const getUserApi = (context, username) => oauthApi.getUser(context, { username })
   const saveGroupApi = (context, username, group) => oauthApi.addUserGroup(context, { username, group })

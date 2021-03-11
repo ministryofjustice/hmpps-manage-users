@@ -138,29 +138,20 @@
 
         {% if showGroups %}
           {% set rows = [] %}
-          {% if hasMaintainAuthUsers %}
             {% for userGroup in groups %}
-              {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
-              {% set rows = (rows.push([
-                { text: userGroup.groupName },
-                { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-              ]), rows) %}
+              {% if userGroup.showRemove %}
+                {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
+                {% set rows = (rows.push([
+                  { text: userGroup.groupName },
+                  { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+                ]), rows) %}
+              {% else %}
+                {% set rows = (rows.push([
+                  { text: userGroup.groupName },
+                  { text: "" }
+                ]), rows) %}
+              {% endif %}
             {% endfor %}
-          {% else %}
-            {% for userGroup in groupsMaintainGroupManager %}
-            {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
-            {% set rows = (rows.push([
-              { text: userGroup.groupName },
-              { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-            ]), rows) %}
-            {% endfor %}
-            {% for userGroup2 in groupsNotGroupManager %}
-            {% set rows = (rows.push([
-              { text: userGroup2.groupName },
-              { text: "" }
-            ]), rows) %}
-            {% endfor %}
-          {% endif %}
 
           {{ govukTable({
             caption: "Groups",
@@ -168,15 +159,13 @@
             attributes: { "data-qa": "user-groups" }
           }) }}
 
-{#          {% if addMoreGroups => 1 %}#}
-            {{ govukButton({
-              text: "Add another group",
-              element: 'a',
-              href: staffUrl + '/select-group',
-              classes: "govuk-button",
-              attributes: { "data-qa": "add-group-button" }
-            }) }}
-{#          {% endif %}#}
+          {{ govukButton({
+            text: "Add another group",
+            element: 'a',
+            href: staffUrl + '/select-group',
+            classes: "govuk-button",
+            attributes: { "data-qa": "add-group-button" }
+          }) }}
         {% endif %}
         <p class="govuk-body">
           <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
