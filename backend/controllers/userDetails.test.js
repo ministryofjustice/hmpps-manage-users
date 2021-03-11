@@ -31,8 +31,7 @@ describe('user detail factory', () => {
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const render = jest.fn()
     await userDetails.index(req, { render })
@@ -52,9 +51,7 @@ describe('user detail factory', () => {
       },
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      groupsMaintainGroupManager: [{ groupCode: 'groupCode2', groupName: 'groupName2' }],
-      groupsNotGroupManager: [],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainAuthUsers: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
@@ -77,8 +74,7 @@ describe('user detail factory', () => {
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const render = jest.fn()
     await userDetails.index(req, { render })
@@ -98,9 +94,7 @@ describe('user detail factory', () => {
       },
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      groupsMaintainGroupManager: [{ groupCode: 'groupCode2', groupName: 'groupName2' }],
-      groupsNotGroupManager: [],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainAuthUsers: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
@@ -110,7 +104,7 @@ describe('user detail factory', () => {
     })
   })
 
-  it('should set groupsNotGroupManager when group manager not member of group', async () => {
+  it('should only have groups set to showRemove when group manager is member of group', async () => {
     const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -124,10 +118,9 @@ describe('user detail factory', () => {
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       [
-        { groupName: 'groupName2', groupCode: 'groupCode2' },
-        { groupName: 'groupName3', groupCode: 'groupCode3' },
+        { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
+        { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
       ],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
     ])
     const render = jest.fn()
     await userDetails.index(req, { render })
@@ -148,11 +141,9 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [
-        { groupName: 'groupName2', groupCode: 'groupCode2' },
-        { groupName: 'groupName3', groupCode: 'groupCode3' },
+        { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
+        { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
       ],
-      groupsMaintainGroupManager: [{ groupCode: 'groupCode2', groupName: 'groupName2' }],
-      groupsNotGroupManager: [{ groupCode: 'groupCode3', groupName: 'groupName3' }],
       hasMaintainAuthUsers: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
@@ -175,8 +166,7 @@ describe('user detail factory', () => {
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const render = jest.fn()
     await userDetails.index(req, { render, locals: { user: { maintainAuthUsers: true } } })
@@ -196,9 +186,7 @@ describe('user detail factory', () => {
       },
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      groupsMaintainGroupManager: [],
-      groupsNotGroupManager: [],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainAuthUsers: true,
       showEnableDisable: true,
       showExtraUserDetails: true,
@@ -253,8 +241,6 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      groupsMaintainGroupManager: [],
-      groupsNotGroupManager: [],
       hasMaintainAuthUsers: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
@@ -309,8 +295,6 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      groupsMaintainGroupManager: [],
-      groupsNotGroupManager: [],
       hasMaintainAuthUsers: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
@@ -333,12 +317,11 @@ describe('user detail factory', () => {
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const locals = { user: { maintainAuthUsers: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', false)
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', false, true)
   })
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
@@ -354,12 +337,11 @@ describe('user detail factory', () => {
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
       [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const locals = { user: { maintainAccessAdmin: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', true)
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', true, false)
   })
 
   describe('remove role', () => {
