@@ -24,11 +24,10 @@ module.exports = (on) => {
       Promise.all([auth.stubHealth(), prisonApi.stubHealth(), tokenverification.stubHealth()]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubLoginPage: auth.redirect,
+    ...prisonApi,
     stubDpsGetRoles: prisonApi.stubGetRoles,
     stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
-    stubDpsSearch: prisonApi.stubDpsSearch,
     stubDpsUserDetails: prisonApi.stubUserDetails,
     stubDpsUserGetRoles: prisonApi.stubUserGetRoles,
-    verifyDpsSearch: prisonApi.verifyDpsSearch,
   })
 }

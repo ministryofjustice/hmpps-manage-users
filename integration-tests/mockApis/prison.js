@@ -55,7 +55,7 @@ module.exports = {
     }),
   stubGetRolesIncludingAdminRoles: () =>
     getFor({
-      urlPath: '/api/access-roles\\?includeAdmin=true',
+      urlPattern: '/api/access-roles\\?includeAdmin=true',
       body: [
         {
           roleCode: 'MAINTAIN_ACCESS_ROLES',
@@ -96,6 +96,23 @@ module.exports = {
         jsonBody: replicateUser(Math.floor(totalElements / size) === page ? totalElements % size : size),
       },
     }),
+  stubDpsAdminSearch: ({ totalElements = 1, page = 0, size = 10 }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/api/users',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'total-records': `${totalElements}`,
+          'page-offset': `${page * size}`,
+          'page-limit': `${size}`,
+        },
+        jsonBody: replicateUser(Math.floor(totalElements / size) === page ? totalElements % size : size),
+      },
+    }),
   stubUserDetails: () =>
     getFor({
       urlPattern: '/api/users/.*',
@@ -122,9 +139,35 @@ module.exports = {
         },
       ],
     }),
+  stubDpsAddRoles: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/api/users/.*/access-role',
+      },
+      response: { status: 200 },
+    }),
+  stubDpsRemoveRole: () =>
+    stubFor({
+      request: {
+        method: 'DELETE',
+        urlPattern: '/api/users/.*/caseload/NWEB/access-role/.*',
+      },
+      response: { status: 200 },
+    }),
   verifyDpsSearch: () =>
     getMatchingRequests({
       method: 'GET',
       urlPathPattern: '/api/users/local-administrator/available',
+    }).then((data) => data.body.requests),
+  verifyDpsAddRoles: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/api/users/.*/access-role',
+    }).then((data) => data.body.requests),
+  verifyDpsRemoveRole: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/api/users/.*/caseload/NWEB/access-role/.*',
     }).then((data) => data.body.requests),
 }
