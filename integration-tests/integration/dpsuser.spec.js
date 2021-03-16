@@ -1,6 +1,7 @@
 const MenuPage = require('../pages/menuPage')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
+const UserAddRolePage = require('../pages/userAddRolePage')
 const UserPage = require('../pages/userPage')
 
 const searchForUser = (totalElements) => {
@@ -152,6 +153,114 @@ context('DPS user functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
+  })
+
+  it('As an ADMIN user should display details for a user', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = UserSearchResultsPage.verifyOnPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { username: 'ITAG_USER' })
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage.userRows().eq(0).should('contain', 'ITAG_USER')
+    userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+    userPage.roleRows().eq(1).should('contain', 'Another general role')
+  })
+
+  it('Should add and remove a role from a user', () => {
+    const results = goToResultsPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { username: 'ITAG_USER' })
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+    userPage.roleRows().eq(1).should('contain', 'Another general role')
+
+    cy.task('stubDpsGetRoles', {})
+    userPage.addRole().click()
+    const addRole = UserAddRolePage.verifyOnPage()
+
+    cy.task('stubDpsAddRoles')
+    addRole.choose('USER_ADMIN')
+    addRole.addRoleButton().click()
+
+    cy.task('verifyDpsAddRoles').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
+    })
+
+    UserPage.verifyOnPage('Itag User')
+
+    cy.task('stubDpsRemoveRole')
+    userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
+
+    cy.task('verifyDpsRemoveRole').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
+    })
+  })
+
+  it('As an admin user should add and remove a role from a user', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    const results = UserSearchResultsPage.verifyOnPage()
+
+    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { username: 'ITAG_USER' })
+
+    results.edit('ITAG_USER5')
+    const userPage = UserPage.verifyOnPage('Itag User')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+    userPage.roleRows().eq(1).should('contain', 'Another general role')
+
+    cy.task('stubDpsGetAdminRoles', {})
+    userPage.addRole().click()
+    const addRole = UserAddRolePage.verifyOnPage()
+
+    cy.task('stubDpsAddRoles')
+    addRole.choose('USER_ADMIN')
+    addRole.addRoleButton().click()
+
+    cy.task('verifyDpsAddRoles').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
+    })
+
+    UserPage.verifyOnPage('Itag User')
+
+    cy.task('stubDpsRemoveRole')
+    userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
+
+    cy.task('verifyDpsRemoveRole').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
+    })
   })
 
   it('Should leave email blank if no verified email for user ', () => {
