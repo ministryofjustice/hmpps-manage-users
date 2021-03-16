@@ -162,6 +162,21 @@ context('External user manage functionality', () => {
     userPage.removeGroup('SITE_1_GROUP_2').should('not.exist')
   })
 
+  it('Remove last group, group manager receive error when trying to remove users last group', () => {
+    const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
+    userPage.groupRows().should('have.length', 2)
+    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+    cy.task('stubAuthGroupManagerRemoveLastGroup')
+    userPage.removeGroup('SITE_1_GROUP_1').click()
+    userPage
+      .errorSummary()
+      .should(
+        'contain.text',
+        'You are not allowed to remove the last group from this user, please deactivate their account instead',
+      )
+  })
+
   it('Add a group to a user available for group managers', () => {
     const userPage = editUser('AUTH_GROUP_MANAGER')
 

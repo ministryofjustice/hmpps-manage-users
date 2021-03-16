@@ -9,6 +9,11 @@ const userDetailsFactory = (
   searchTitle,
   showExtraUserDetails,
 ) => {
+  const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
+    req.flash('deleteGroupErrors', errors)
+    res.redirect(url)
+  }
+
   const index = async (req, res) => {
     const { username } = req.params
     const staffUrl = `${manageUrl}/${username}`
@@ -33,7 +38,7 @@ const userDetailsFactory = (
       roles,
       groups,
       hasMaintainAuthUsers,
-      errors: req.flash('errors'),
+      errors: req.flash('deleteGroupErrors'),
       showEnableDisable: Boolean(enableUserApi && disableUserApi),
       showGroups: Boolean(removeGroupApi),
       showExtraUserDetails,
@@ -69,6 +74,15 @@ const userDetailsFactory = (
       if (error.status === 400) {
         // user already removed from group
         res.redirect(req.originalUrl)
+      } else if (error.status === 403 && error.response && error.response.body) {
+        const groupError = [
+          {
+            href: '#groupCode',
+            text:
+              'You are not allowed to remove the last group from this user, please deactivate their account instead',
+          },
+        ]
+        stashStateAndRedirectToIndex(req, res, groupError, [group], `${staffUrl}/details`)
       } else {
         throw error
       }
