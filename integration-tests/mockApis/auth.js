@@ -437,6 +437,23 @@ const stubAuthRemoveGroup = () =>
     urlPattern: '/auth/api/authuser/.*/groups/.*',
   })
 
+const stubAuthGroupManagerRemoveLastGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/auth/api/authuser/.*/groups/.*',
+    },
+    response: {
+      status: 403,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        error: 'group.lastGroupRestriction',
+        error_description: 'Last group restriction, Group Manager not allowed to remove group: SITE_1_GROUP_1',
+        field: 'group',
+      },
+    },
+  })
+
 const stubAuthUserDisable = () =>
   stubJson({
     method: 'PUT',
@@ -545,6 +562,7 @@ module.exports = {
   stubAuthAddGroupGroupManagerCannotMaintainUser,
   stubAuthRemoveRole,
   stubAuthRemoveGroup,
+  stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,

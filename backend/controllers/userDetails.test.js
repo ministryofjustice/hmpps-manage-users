@@ -398,6 +398,70 @@ describe('user detail factory', () => {
       )
       expect(redirect).toBeCalledWith('/some-location')
     })
+
+    it('should if group Manager tries to delete users last group', async () => {
+      const redirect = jest.fn()
+      const error = new Error('This failed')
+      // @ts-ignore
+      error.status = 403
+      removeGroupApi.mockRejectedValue(error)
+      await userDetails.removeRole(
+        {
+          params: { username: 'joe', role: 'group99' },
+          originalUrl: '/some-location',
+        },
+        { redirect },
+      )
+      expect(redirect).toBeCalledWith('/some-location')
+    })
+
+    it('should copy any flash errors over', async () => {
+      const req = {
+        params: { username: 'joe' },
+        flash: jest.fn().mockReturnValue({ error: 'some error' }),
+        session: {},
+      }
+      getUserRolesAndGroupsApi.mockResolvedValue([
+        {
+          username: 'BOB',
+          firstName: 'Billy',
+          lastName: 'Bob',
+          email: 'bob@digital.justice.gov.uk',
+          enabled: true,
+          verified: true,
+          lastLoggedIn: '2020-11-23T11:13:08.387065',
+        },
+        [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+        [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+      ])
+
+      const render = jest.fn()
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        searchTitle: 'Search for an external user',
+        searchResultsUrl: '/search-external-users/results',
+        searchUrl: '/search-external-users',
+        staff: {
+          firstName: 'Billy',
+          lastName: 'Bob',
+          name: 'Billy Bob',
+          username: 'BOB',
+          email: 'bob@digital.justice.gov.uk',
+          enabled: true,
+          verified: true,
+          lastLoggedIn: '2020-11-23T11:13:08.387065',
+        },
+        staffUrl: '/manage-external-users/joe',
+        roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+        groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+        hasMaintainAuthUsers: false,
+        showEnableDisable: true,
+        showExtraUserDetails: true,
+        showGroups: true,
+        showUsername: true,
+        errors: { error: 'some error' },
+      })
+    })
   })
 
   describe('enable user', () => {
