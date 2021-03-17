@@ -402,6 +402,23 @@ const stubAuthAddGroup = () =>
     },
   })
 
+const stubAuthAddGroupGroupManagerCannotMaintainUser = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/auth/api/authuser/.*/groups/.*',
+    },
+    response: {
+      status: 403,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        error: 'unable to maintain user',
+        error_description: 'Unable to enable user, the user is not within one of your groups',
+        field: 'groups',
+      },
+    },
+  })
+
 const stubAuthRemoveRole = () =>
   stubFor({
     request: {
@@ -542,6 +559,7 @@ module.exports = {
   stubAuthUserGroups,
   stubAuthAddRoles,
   stubAuthAddGroup,
+  stubAuthAddGroupGroupManagerCannotMaintainUser,
   stubAuthRemoveRole,
   stubAuthRemoveGroup,
   stubAuthGroupManagerRemoveLastGroup,

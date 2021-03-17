@@ -6,6 +6,7 @@ const userAddGroupPage = () =>
     type: (group) => cy.get('#group').type(group),
     noGroups: () => cy.get('[data-qa="no-groups"]'),
     cancel: () => cy.get('[data-qa="cancel-link"]').click(),
+    errorSummary: () => cy.get('[data-qa-errors]'),
   })
 
 export default {

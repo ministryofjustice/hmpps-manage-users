@@ -97,5 +97,23 @@ describe('select groups factory', () => {
       )
       expect(redirect).toBeCalledWith('/some-location')
     })
+
+    it('should fail gracefully if group managernot allowed to maintain user', async () => {
+      const redirect = jest.fn()
+      const error = new Error('This failed')
+      // @ts-ignore
+      error.status = 403
+      saveGroup.mockRejectedValue(error)
+      await addGroup.post(
+        {
+          params: { username: 'joe' },
+          body: { group: 'GLOBAL_SEARCH' },
+          flash: jest.fn(),
+          originalUrl: '/some-location',
+        },
+        { redirect },
+      )
+      expect(redirect).toBeCalledWith('/some-location')
+    })
   })
 })
