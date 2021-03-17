@@ -35,7 +35,16 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
         await saveGroup(res.locals, username, group)
         res.redirect(`${staffUrl}`)
       } catch (error) {
-        if (error.status === 409) {
+        if (error.status === 403) {
+          // user is already in the group
+          const errors = [
+            {
+              href: '#group',
+              text: 'You are not able to maintain this user anymore, user does not belong to any groups you manage',
+            },
+          ]
+          stashStateAndRedirectToIndex(req, res, errors)
+        } else if (error.status === 409) {
           // user is already in the group
           const errors = [{ href: '#group', text: 'User already belongs to that group' }]
           stashStateAndRedirectToIndex(req, res, errors)

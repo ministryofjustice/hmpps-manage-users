@@ -183,6 +183,27 @@ context('External user manage functionality', () => {
     })
   })
 
+  it('Add a group to a user not in group managers groups displays error', () => {
+    const userPage = editUser('AUTH_GROUP_MANAGER')
+
+    userPage.groupRows().should('have.length', 2)
+    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+    cy.task('stubAuthAssignableGroups', {})
+    userPage.addGroup().click()
+    const addGroup = UserAddGroupPage.verifyOnPage()
+
+    cy.task('stubAuthAddGroupGroupManagerCannotMaintainUser')
+    addGroup.type('SOCU North West')
+    addGroup.addGroupButton().click()
+    addGroup
+      .errorSummary()
+      .should(
+        'contain.text',
+        'You are not able to maintain this user anymore, user does not belong to any groups you manage',
+      )
+  })
+
   it('Should display message if no roles to add', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
