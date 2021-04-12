@@ -454,6 +454,13 @@ const stubAuthGroupManagerRemoveLastGroup = () =>
     },
   })
 
+const stubAuthUserEmails = () =>
+  stubJson({
+    method: 'POST',
+    urlPattern: '/auth/api/user/email',
+    body: [{ username: 'ITAG_USER0', email: 'dps-user@justice.gov.uk' }],
+  })
+
 const stubAuthUserDisable = () =>
   stubJson({
     method: 'PUT',
@@ -552,6 +559,7 @@ module.exports = {
   redirect,
   stubAuthGetUsername,
   stubAuthGetUserWithEmail,
+  stubAuthUserEmails,
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,

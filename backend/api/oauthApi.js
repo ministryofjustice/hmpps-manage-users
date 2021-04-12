@@ -35,6 +35,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const currentUser = (context) => get(context, '/api/user/me')
   const currentRoles = (context) => get(context, '/api/user/me/roles')
   const getUserEmail = (context, { username }) => get(context, `/api/user/${username}/email`)
+  const userEmails = (context, usernames) => post(context, `/api/user/email`, usernames)
   const getUser = (context, { username }) => get(context, `/api/authuser/${username}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
   const userRoles = (context, { username }) => get(context, `/api/authuser/${username}/roles`)
@@ -131,6 +132,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     currentUser,
     currentRoles,
     getUserEmail,
+    userEmails,
     getUser,
     createUser,
     userSearch,

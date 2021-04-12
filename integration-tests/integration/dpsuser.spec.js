@@ -13,6 +13,7 @@ const searchForUser = (totalElements) => {
   const search = DpsUserSearchPage.verifyOnPage()
 
   cy.task('stubDpsSearch', { totalElements })
+  cy.task('stubAuthUserEmails')
   search.search('sometext')
 
   const results = UserSearchResultsPage.verifyOnPage()
@@ -25,6 +26,7 @@ function goToResultsPage() {
   cy.login()
   cy.task('stubDpsGetRoles', { content: [] })
   cy.task('stubDpsSearch', { totalElements: 21 })
+  cy.task('stubAuthUserEmails')
 
   const search = DpsUserSearchPage.goTo()
   search.search('sometext@somewhere.com')
@@ -48,6 +50,7 @@ context('DPS user functionality', () => {
     cy.task('stubDpsGetRoles', { content: [] })
     const search = DpsUserSearchPage.goTo()
     cy.task('stubDpsSearch', { totalElements: 0 })
+    cy.task('stubAuthUserEmails')
     search.search('nothing doing')
     const results = UserSearchResultsPage.verifyOnPage()
     results.noResults().should('contain.text', 'No records found')
@@ -64,11 +67,13 @@ context('DPS user functionality', () => {
         // \u00a0 is a non breaking space, won't match on ' ' though
         expect($tableCells.get(0)).to.contain.text('Itag\u00a0User0')
         expect($tableCells.get(1)).to.contain.text('ITAG_USER0')
-        expect($tableCells.get(2)).to.contain.text('BXI')
-        expect($tableCells.get(3)).to.contain.text('Yes')
+        expect($tableCells.get(2)).to.contain.text('dps-user@justice.gov.uk')
+        expect($tableCells.get(3)).to.contain.text('BXI')
+        expect($tableCells.get(4)).to.contain.text('Yes')
       })
 
     cy.task('stubDpsSearch', { totalElements: 5 })
+    cy.task('stubAuthUserEmails')
     const search = DpsUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
 
@@ -85,6 +90,7 @@ context('DPS user functionality', () => {
     cy.task('stubDpsGetRoles', {})
     const searchRole = DpsUserSearchPage.goTo()
     cy.task('stubDpsSearch', {})
+    cy.task('stubAuthUserEmails')
     searchRole.searchRole('Maintain Roles')
     UserSearchResultsPage.verifyOnPage()
 
@@ -116,6 +122,7 @@ context('DPS user functionality', () => {
     cy.login()
     cy.task('stubDpsGetRoles', {})
     cy.task('stubDpsSearch', { totalElements: 21, page: 1, size: 5 })
+    cy.task('stubAuthUserEmails')
 
     const search = DpsUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
@@ -160,6 +167,7 @@ context('DPS user functionality', () => {
     cy.login()
     cy.task('stubDpsGetRoles', { content: [] })
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    cy.task('stubAuthUserEmails')
 
     const search = DpsUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
@@ -222,6 +230,7 @@ context('DPS user functionality', () => {
     cy.login()
     cy.task('stubDpsGetRoles', { content: [] })
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    cy.task('stubAuthUserEmails')
 
     const search = DpsUserSearchPage.goTo()
     search.search('sometext@somewhere.com')
