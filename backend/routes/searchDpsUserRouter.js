@@ -5,14 +5,20 @@ const contextProperties = require('../contextProperties')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ prisonApi }) => {
-  const searchApi = ({ locals: context, user: nameFilter, roleCode, pageSize: size, pageOffset: offset }) => {
+const controller = ({ prisonApi, oauthApi }) => {
+  const searchApi = async ({ locals: context, user: nameFilter, roleCode, pageSize: size, pageOffset: offset }) => {
     const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })
-    return hasAdminRole
+    const searchResults = await (hasAdminRole
       ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode })
-      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode })
+      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode }))
+
+    // now augment with auth email addresses
+    const emails = await oauthApi.userEmails(searchResults.map((user) => user.username))
+    const emailMap = new Map(emails.map((obj) => [obj.username, obj.email]))
+
+    return searchResults.map((user) => ({ ...user, email: emailMap.get(user.username) }))
   }
 
   const searchableRoles = (context) => {
