@@ -14,8 +14,13 @@ const controller = ({ prisonApi, oauthApi }) => {
       ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode })
       : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode }))
 
+    if (searchResults.length === 0) return searchResults
+
     // now augment with auth email addresses
-    const emails = await oauthApi.userEmails(searchResults.map((user) => user.username))
+    const emails = await oauthApi.userEmails(
+      context,
+      searchResults.map((user) => user.username),
+    )
     const emailMap = new Map(emails.map((obj) => [obj.username, obj.email]))
 
     return searchResults.map((user) => ({ ...user, email: emailMap.get(user.username) }))
