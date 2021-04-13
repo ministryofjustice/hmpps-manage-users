@@ -34,7 +34,14 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const del = (context, path) => client.del(context, path).then((response) => response.body)
   const currentUser = (context) => get(context, '/api/user/me')
   const currentRoles = (context) => get(context, '/api/user/me/roles')
-  const getUserEmail = (context, { username }) => get(context, `/api/user/${username}/email`)
+  const getUserEmail = async (context, { username }) => {
+    try {
+      return await get(context, `/api/user/${username}/email`)
+    } catch (error) {
+      if (error?.status === 404) return {}
+      throw error
+    }
+  }
   const userEmails = (context, usernames) => post(context, `/api/user/email`, usernames)
   const getUser = (context, { username }) => get(context, `/api/authuser/${username}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)

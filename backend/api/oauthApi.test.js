@@ -95,20 +95,33 @@ describe('oauthApi tests', () => {
 
   describe('getUserEmail', () => {
     const emailDetails = { email: 'hello@there', username: 'someuser' }
-    let actual
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
         then: () => emailDetails,
       })
-      actual = oauthApi.getUserEmail(context, { username: 'joe' })
     })
 
-    it('should return email from endpoint', () => {
+    it('should return email from endpoint', async () => {
+      const actual = await oauthApi.getUserEmail(context, { username: 'joe' })
       expect(actual).toEqual(emailDetails)
     })
     it('should call user email endpoint', () => {
+      oauthApi.getUserEmail(context, { username: 'joe' })
       expect(client.get).toBeCalledWith(context, '/api/user/joe/email')
+    })
+    it('should cope with not found from endpoint', async () => {
+      const error = new Error('User not found')
+      // @ts-ignore
+      error.status = 404
+      client.get.mockRejectedValue(error)
+      const actual = await oauthApi.getUserEmail(context, { username: 'joe' })
+      expect(actual).toEqual({})
+    })
+    it('should rethrow other errors', async () => {
+      const error = new Error('User not found')
+      client.get.mockRejectedValue(error)
+      expect(async () => oauthApi.getUserEmail(context, { username: 'joe' })).rejects.toThrow(error)
     })
   })
 
