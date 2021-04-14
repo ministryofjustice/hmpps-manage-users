@@ -357,9 +357,7 @@ describe('user detail factory', () => {
 
     it('should ignore if user does not have role', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 400
+      const error = { ...new Error('This failed'), status: 400 }
       removeRoleApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
@@ -385,9 +383,7 @@ describe('user detail factory', () => {
 
     it('should ignore if user does not have group', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 400
+      const error = { ...new Error('This failed'), status: 400 }
       removeGroupApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
@@ -401,9 +397,7 @@ describe('user detail factory', () => {
 
     it('should if group Manager tries to delete users last group', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 403
+      const error = { ...new Error('This failed'), status: 403 }
       removeGroupApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {

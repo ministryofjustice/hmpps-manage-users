@@ -172,11 +172,7 @@ describe('create user factory', () => {
 
     it('should fail gracefully if email no valid', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 400
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
 
       createUserApi.mockRejectedValue(error)
       const req = {
@@ -200,11 +196,11 @@ describe('create user factory', () => {
 
     it('should fail gracefully if email already exists', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 409
-      // @ts-ignore
-      error.response = { body: { error_description: 'Email already exists' } }
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: { body: { error_description: 'Email already exists' } },
+      }
 
       createUserApi.mockRejectedValue(error)
       const req = {

@@ -29,11 +29,11 @@ describe('group delete factory', () => {
     })
 
     it('should redirect if group does not exist', async () => {
-      const error = new Error('Does not exist error')
-      // @ts-ignore
-      error.status = 404
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = {
+        ...new Error('Does not exist error'),
+        status: 404,
+        response: { body: { error_description: 'not valid' } },
+      }
 
       const locals = jest.fn()
       const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }
@@ -59,11 +59,11 @@ describe('group delete factory', () => {
     })
 
     it('should redirect if group to delete does not exist', async () => {
-      const error = new Error('Does not exist error')
-      // @ts-ignore
-      error.status = 404
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = {
+        ...new Error('Does not exist error'),
+        status: 404,
+        response: { body: { error_description: 'not valid' } },
+      }
 
       const locals = jest.fn()
       const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }

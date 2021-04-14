@@ -1,13 +1,10 @@
 const { changeEmailFactory } = require('./changeEmail')
 
-const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => {
-  const error = new Error('This failed')
-  // @ts-ignore
-  error.status = status
-  // @ts-ignore
-  error.response = { body: { error_description: 'not valid', error: errorCode } }
-  return error
-}
+const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => ({
+  ...new Error('This failed'),
+  status,
+  response: { body: { error_description: 'not valid', error: errorCode } },
+})
 
 describe('change email factory', () => {
   const getUserApi = jest.fn()
