@@ -4,7 +4,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% set title =  "Create child group" %}
+{% set title =  "Create group" %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({
@@ -32,7 +32,7 @@
         <form method="POST">
 
           {{ govukInput({label: {
-            text: "Child group code"
+            text: "Group code"
           },
             classes: "govuk-input--width-30",
             value: groupCode,
@@ -42,7 +42,7 @@
           }) }}
 
           {{ govukInput({label: {
-            text: "Child group name"
+            text: "Group name"
           },
             classes: "govuk-input--width-30",
             value: groupName,

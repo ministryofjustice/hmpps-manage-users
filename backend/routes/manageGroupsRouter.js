@@ -3,6 +3,7 @@ const { selectGroupsFactory } = require('../controllers/getGroups')
 const { groupDetailsFactory } = require('../controllers/groupDetails')
 const { groupAmendmentFactory } = require('../controllers/groupNameAmendment')
 const { createChildGroupFactory } = require('../controllers/createChildGroup')
+const { createGroupFactory } = require('../controllers/createGroup')
 const { childGroupAmendmentFactory } = require('../controllers/childGroupNameAmendment')
 const { groupDeleteFactory } = require('../controllers/groupDelete')
 
@@ -17,6 +18,7 @@ const controller = ({ oauthApi }) => {
   const changeChildGroupNameApi = (context, group, groupName) =>
     oauthApi.changeChildGroupName(context, group, { groupName })
   const createChildGroupApi = (context, group) => oauthApi.createChildGroup(context, group)
+  const createGroupApi = (context, group) => oauthApi.createGroup(context, group)
   const deleteChildGroupApi = (context, group) => oauthApi.deleteChildGroup(context, group)
 
   const { index } = selectGroupsFactory(getGroups, '/manage-groups')
@@ -45,6 +47,8 @@ const controller = ({ oauthApi }) => {
     '/manage-groups',
   )
 
+  const { index: getGroupCreate, post: postGroupCreate } = createGroupFactory(createGroupApi, '/manage-groups')
+
   const { index: getGroupDelete, deleteGroup } = groupDeleteFactory(
     getGroupDetailsApi,
     deleteGroupApi,
@@ -52,6 +56,8 @@ const controller = ({ oauthApi }) => {
   )
 
   router.get('/', index)
+  router.get('/create-group', getGroupCreate)
+  router.post('/create-group', postGroupCreate)
   router.get('/:group', getGroupDetails)
   router.get('/:group/change-group-name', getGroupAmendment)
   router.post('/:group/change-group-name', postGroupAmendment)

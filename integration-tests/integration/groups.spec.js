@@ -3,6 +3,7 @@ const GroupDetailsPage = require('../pages/groupDetailsPage')
 const GroupNameChangePage = require('../pages/groupNameChangePage')
 const ChildGroupNameChangePage = require('../pages/childGroupNameChangePage')
 const CreateChildGroupPage = require('../pages/createChildGroupPage')
+const CreateGroupPage = require('../pages/createGroupPage')
 const GroupDeletePage = require('../pages/groupDeletePage')
 
 context('Groups', () => {
@@ -39,7 +40,7 @@ context('Groups', () => {
     groups.noGroups().should('contain', 'a member of any groups.')
   })
 
-  it(' should display group details', () => {
+  it('should display group details', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -51,7 +52,7 @@ context('Groups', () => {
     groupDetails.childGroups().should('have.length', 1)
   })
 
-  it(' should allow change group name', () => {
+  it('should allow change group name', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -69,7 +70,7 @@ context('Groups', () => {
     GroupDetailsPage.verifyOnPage('New Group Name')
   })
 
-  it(' should display error when delete group if child groups exist', () => {
+  it('should display error when delete group if child groups exist', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -83,7 +84,7 @@ context('Groups', () => {
       .should('contain.text', 'You must delete all child groups before you can delete the group')
   })
 
-  it(' should display error when attempt to view group that does not exist', () => {
+  it('should display error when attempt to view group that does not exist', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -95,7 +96,7 @@ context('Groups', () => {
     groups.errorSummary().should('contain.text', 'Group does not exist')
   })
 
-  it(' should display error when attempt to delete group that does not exist', () => {
+  it('should display error when attempt to delete group that does not exist', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -107,7 +108,7 @@ context('Groups', () => {
     groups.errorSummary().should('contain.text', 'Group does not exist')
   })
 
-  it(' should allow delete group if no child groups', () => {
+  it('should allow delete group if no child groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -125,7 +126,7 @@ context('Groups', () => {
     GroupsPage.verifyOnPage()
   })
 
-  it(' should allow change child group name', () => {
+  it('should allow change child group name', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -144,7 +145,7 @@ context('Groups', () => {
     groupDetailsPage.childGroups().eq(0).should('contain.text', 'New group name')
   })
 
-  it(' should allow create child group', () => {
+  it('should allow create child group', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -162,9 +163,50 @@ context('Groups', () => {
 
     const groupDetailsPage = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     groupDetailsPage.childGroups().should('have.length', 2)
+
+    cy.task('verifyCreateChildGroup').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        groupCode: 'BOB',
+        groupName: 'Bob Group',
+        parentGroupCode: 'SITE_1_GROUP_2',
+      })
+    })
   })
 
-  it(' should allow delete child group', () => {
+  it('should allow create group', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.visit('/manage-groups/create-group')
+
+    cy.task('stubAuthCreateGroup')
+    CreateGroupPage.verifyOnPage()
+    cy.task('stubAuthAssignableGroupDetails', {})
+    const createGroup = CreateGroupPage.verifyOnPage()
+    createGroup.createGroup('BO$', '')
+    createGroup.errorSummary().should('contain.text', 'Enter a group name')
+
+    createGroup.createGroup('BO$', 'Bob Group')
+    createGroup.errorSummary().should('contain.text', 'Group code can only contain 0-9, A-Z and _ characters')
+
+    createGroup.createGroup('', '')
+    createGroup.createGroup('BOB', 'Bob Group')
+    GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+
+    cy.task('verifyCreateGroup').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        groupCode: 'BOB',
+        groupName: 'Bob Group',
+      })
+    })
+  })
+
+  it('should allow delete child group', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
@@ -249,6 +291,14 @@ context('Groups', () => {
         { groupCode: 'CHILD_1', groupName: 'Child - Site 1 - Group 2' },
         { groupCode: 'BOB', groupName: 'Bob Group' },
       ],
+    },
+  }
+  const groupDetailsAfterCreateGroup = {
+    content: {
+      groupCode: 'SITE_1_GROUP_2',
+      groupName: 'Site 1 - Group 2',
+      assignableRoles: [],
+      children: [],
     },
   }
 
