@@ -354,6 +354,18 @@ const stubAuthCreateChildGroup = () =>
     },
   })
 
+const stubAuthCreateGroup = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/auth/api/groups',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 const stubAuthDeleteChildGroup = () =>
   stubFor({
     request: {
@@ -518,6 +530,18 @@ const verifyAddGroup = () =>
     urlPathPattern: '/auth/api/authuser/.*/groups/.*',
   }).then((data) => data.body.requests)
 
+const verifyCreateGroup = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/groups',
+  }).then((data) => data.body.requests)
+
+const verifyCreateChildGroup = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/groups/child',
+  }).then((data) => data.body.requests)
+
 const verifyRemoveGroup = () =>
   getMatchingRequests({
     method: 'DELETE',
@@ -577,6 +601,7 @@ module.exports = {
   stubAuthChangeGroupName,
   stubAuthChangeChildGroupName,
   stubAuthCreateChildGroup,
+  stubAuthCreateGroup,
   stubAuthDeleteChildGroup,
   stubAuthDeleteGroup,
   stubAuthGroupDetailsNoChildren,
@@ -590,6 +615,8 @@ module.exports = {
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,
+  verifyCreateGroup,
+  verifyCreateChildGroup,
   verifyRemoveGroup,
   verifyUserEnable,
   verifyUserDisable,
