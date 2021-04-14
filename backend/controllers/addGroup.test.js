@@ -82,9 +82,7 @@ describe('select groups factory', () => {
 
     it('should fail gracefully if group already on user', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 409
+      const error = { ...new Error('This failed'), status: 409 }
       saveGroup.mockRejectedValue(error)
       await addGroup.post(
         {
@@ -100,9 +98,7 @@ describe('select groups factory', () => {
 
     it('should fail gracefully if group managernot allowed to maintain user', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 403
+      const error = { ...new Error('This failed'), status: 403 }
       saveGroup.mockRejectedValue(error)
       await addGroup.post(
         {

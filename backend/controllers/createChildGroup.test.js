@@ -116,11 +116,11 @@ describe('create child group factory', () => {
 
     it('should fail gracefully if child group already exists', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 409
-      // @ts-ignore
-      error.response = { body: { error_description: 'Group code already exists' } }
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: { body: { error_description: 'Group code already exists' } },
+      }
 
       createChildGroupApi.mockRejectedValue(error)
       const req = {

@@ -103,11 +103,7 @@ describe('group amendment factory', () => {
 
     it('should fail gracefully if group name not valid', async () => {
       const redirect = jest.fn()
-      const error = new Error('This failed')
-      // @ts-ignore
-      error.status = 400
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
 
       changeGroupNameApi.mockRejectedValue(error)
       const req = {

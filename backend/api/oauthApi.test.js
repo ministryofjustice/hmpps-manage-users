@@ -111,9 +111,7 @@ describe('oauthApi tests', () => {
       expect(client.get).toBeCalledWith(context, '/api/user/joe/email')
     })
     it('should cope with not found from endpoint', async () => {
-      const error = new Error('User not found')
-      // @ts-ignore
-      error.status = 404
+      const error = { ...new Error('User not found'), status: 404 }
       client.get.mockRejectedValue(error)
       const actual = await oauthApi.getUserEmail(context, { username: 'joe' })
       expect(actual).toEqual({})

@@ -34,11 +34,11 @@ describe('Group details factory', () => {
     })
 
     it('should redirect to manage groups if group does not exist', async () => {
-      const error = new Error('Does not exist error')
-      // @ts-ignore
-      error.status = 404
-      // @ts-ignore
-      error.response = { body: { error_description: 'not valid' } }
+      const error = {
+        ...new Error('Does not exist error'),
+        status: 404,
+        response: { body: { error_description: 'not valid' } },
+      }
 
       const req = { params: { group: 'DOES_NOT_EXIST' }, flash: jest.fn() }
       const redirect = jest.fn()
