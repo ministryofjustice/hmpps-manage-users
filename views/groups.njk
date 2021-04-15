@@ -1,6 +1,7 @@
 {% extends "./partials/layout.njk" %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% block header %}
@@ -39,25 +40,40 @@
             You are not a member of any groups.
           </p>
         {% else %}
-          <form method="POST" action="{{ maintainUrl }}">
-            <div class="govuk-list">
-              <input type='hidden' name='status' value='ALL' />
-              {{ govukSelect({label: {
-                text: "Select a group"
-              },
-                idPrefix: 'groupCode',
-                name: 'groupCode',
-                id: 'groupCode',
-                items: groupValues | addBlankOptions('Select a group'),
-                errorMessage: errors | findError('groupCode')
+          {% if groupValues.length > 10 %}
+            <form method="POST" action="{{ maintainUrl }}">
+              <div class="govuk-list">
+                <input type='hidden' name='status' value='ALL' />
+                {{ govukSelect({label: {
+                  text: "Select a group"
+                },
+                  idPrefix: 'groupCode',
+                  name: 'groupCode',
+                  id: 'groupCode',
+                  items: groupValues | addBlankOptions('Select a group'),
+                  errorMessage: errors | findError('groupCode')
+                }) }}
+              </div>
+              {{ govukButton({
+                text: "Manage",
+                type: "submit",
+                attributes: { "data-qa": "manage-button" }
               }) }}
-            </div>
-            {{ govukButton({
-              text: "Manage",
-              type: "submit",
-              attributes: { "data-qa": "manage-button" }
+            </form>
+          {% else %}
+            {% set rows = [] %}
+            {% for g in groupValues %}
+              {% set groupLink = '<a href="' + maintainUrl + '/' + g.value + '" class="govuk-link" data-qa="edit-button-'
+                + g.text +'">' + g.text + '</a>' %}
+              {% set rows = (rows.push([
+                { html: groupLink }
+              ]), rows) %}
+            {% endfor %}
+            {{ govukTable({
+              rows: rows,
+              attributes: { "data-qa": "groups" }
             }) }}
-          </form>
+          {% endif %}
         {% endif %}
       </div>
     </div>
