@@ -45,10 +45,12 @@ context('Groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
+    cy.task('stubAuthAssignableGroups', {})
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
-    groups.searchGroup('SOCU').click()
+    groups.searchGroup('SOCU')
+    groups.submit().click()
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     groupDetails.assignableRoles().should('have.length', 2)

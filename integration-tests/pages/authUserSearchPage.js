@@ -15,6 +15,7 @@ const authUserSearchPage = () =>
     searchGroup: (text) => {
       if (text) group().type(text)
       else user().clear()
+      submit().click()
     },
     searchRole: (text) => {
       if (text) role().type(text)

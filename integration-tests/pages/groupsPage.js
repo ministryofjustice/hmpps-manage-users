@@ -9,10 +9,13 @@ const groupsPage = () =>
     noGroups: () => cy.get('[data-qa="no-groups"]'),
     errorSummary: () => cy.get('[data-qa-errors]'),
     searchGroup: (text) => {
-      if (text) group().type(`${text}{enter}`)
-      else group().clear()
+      const groupInput = group()
+      if (text) groupInput.type(`${text}{enter}`)
+      else groupInput.clear()
+      return groupInput
     },
     group,
+    submit,
   })
 
 export default {
