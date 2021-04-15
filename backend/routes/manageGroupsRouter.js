@@ -21,7 +21,7 @@ const controller = ({ oauthApi }) => {
   const createGroupApi = (context, group) => oauthApi.createGroup(context, group)
   const deleteChildGroupApi = (context, group) => oauthApi.deleteChildGroup(context, group)
 
-  const { index } = selectGroupsFactory(getGroups, '/manage-groups')
+  const { index, search } = selectGroupsFactory(getGroups, '/manage-groups')
 
   const { index: getGroupAmendment, post: postGroupAmendment } = groupAmendmentFactory(
     getGroupDetailsApi,
@@ -56,6 +56,7 @@ const controller = ({ oauthApi }) => {
   )
 
   router.get('/', index)
+  router.post('/', search)
   router.get('/create-group', getGroupCreate)
   router.post('/create-group', postGroupCreate)
   router.get('/:group', getGroupDetails)

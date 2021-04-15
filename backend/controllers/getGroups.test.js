@@ -13,7 +13,7 @@ describe('select groups factory', () => {
       await groups.index(req, { render })
       expect(req.flash).toBeCalledWith('groupError')
       expect(render).toBeCalledWith('groups.njk', {
-        groupValues: [{ groupName: 'name', groupCode: 'code' }],
+        groupValues: [{ text: 'name', value: 'code' }],
         maintainUrl: '/manage-groups',
         errors: undefined,
       })
@@ -27,10 +27,25 @@ describe('select groups factory', () => {
       await groups.index(req, { render })
       expect(req.flash).toBeCalledWith('groupError')
       expect(render).toBeCalledWith('groups.njk', {
-        groupValues: [{ groupName: 'name', groupCode: 'code' }],
+        groupValues: [{ text: 'name', value: 'code' }],
         maintainUrl: '/manage-groups',
         errors: { error: 'some error' },
       })
+    })
+  })
+
+  describe('search', () => {
+    it('should redirect if group code valid', async () => {
+      const redirect = jest.fn()
+      await groups.search({ body: { groupCode: 'abcde' } }, { redirect })
+      expect(redirect).toBeCalledWith('/manage-groups/abcde')
+    })
+    it('should flash and redirect if group code invalid', async () => {
+      const redirect = jest.fn()
+      const flash = jest.fn()
+      await groups.search({ body: { groupCode: '' }, flash }, { redirect })
+      expect(flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Enter a group code' }])
+      expect(redirect).toBeCalledWith('/manage-groups/')
     })
   })
 })

@@ -1,8 +1,14 @@
 {% extends "./partials/layout.njk" %}
-{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
-{% set title =  "Manage groups" %}
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% set title = "Manage groups" %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({
@@ -26,27 +32,46 @@
   <div class="govuk-grid-row">
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
+    <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         {% if groupValues.length == 0 %}
           <p class="govuk-body" data-qa="no-groups">
-            You aren't a member of any groups.
+            You are not a member of any groups.
           </p>
+        {% else %}
+          <form method="POST" action="{{ maintainUrl }}">
+            <div class="govuk-list">
+              <input type='hidden' name='status' value='ALL' />
+              {{ govukSelect({label: {
+                text: "Select a group"
+              },
+                idPrefix: 'groupCode',
+                name: 'groupCode',
+                id: 'groupCode',
+                items: groupValues | addBlankOptions('Select a group'),
+                errorMessage: errors | findError('groupCode')
+              }) }}
+            </div>
+            {{ govukButton({
+              text: "Manage",
+              type: "submit",
+              attributes: { "data-qa": "manage-button" }
+            }) }}
+          </form>
         {% endif %}
-        <div class="govuk-grid-row">
-          {% set rows = [] %}
-          {% for g in groupValues %}
-            {% set groupLink = '<a href="' + maintainUrl + '/' + g.groupCode + '" class="govuk-link" data-qa="edit-button-'
-              + g.groupName +'">' + g.groupName + '</a>' %}
-            {% set rows = (rows.push([
-              { html: groupLink }
-            ]), rows) %}
-          {% endfor %}
-          {{ govukTable({
-            rows: rows,
-            attributes: { "data-qa": "groups" }
-          }) }}
-        </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script>
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#groupCode'),
+      showAllValues: true,
+      preserveNullOptions: true,
+    })
+  </script>
 {% endblock %}

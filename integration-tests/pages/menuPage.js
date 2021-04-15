@@ -3,6 +3,7 @@ const page = require('./page')
 const dpsUsers = () => cy.get('[data-qa="maintain_roles_link"]')
 const authUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
+const manageGroups = () => cy.get('[data-qa="manage_groups_link"]')
 const createGroup = () => cy.get('[data-qa="create_groups_link"]')
 
 const menuPage = () =>
@@ -14,6 +15,7 @@ const menuPage = () =>
     createAuthUser: () => createUser().click(),
     searchDpsUsers: () => dpsUsers().click(),
     createGroup: () => createGroup().click(),
+    manageGroups: () => manageGroups().click(),
   })
 
 export default {
