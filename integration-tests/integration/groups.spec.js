@@ -21,13 +21,13 @@ context('Groups', () => {
     cy.login()
 
     cy.task('stubAuthAssignableGroups', {})
-
-    cy.visit('/manage-groups')
+    MenuPage.verifyOnPage().manageGroups()
     const groups = GroupsPage.verifyOnPage()
 
-    groups.groupRows().should('have.length', 3)
-    groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
-    groups.groupRows().eq(1).should('contain.text', 'PECS Police Force Thames Valley')
+    groups.searchGroup('SOCU')
+    groups.group().should('have.value', 'SOCU North West').clear()
+    groups.searchGroup('PECS')
+    groups.group().should('have.value', 'PECS Police Force Thames Valley')
   })
 
   it('Should display message if no groups available', () => {
@@ -45,8 +45,12 @@ context('Groups', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
+    cy.task('stubAuthAssignableGroups', {})
     cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
+    cy.visit('/manage-groups')
+    const groups = GroupsPage.verifyOnPage()
+    groups.searchGroup('SOCU')
+    groups.submit().click()
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     groupDetails.assignableRoles().should('have.length', 2)
