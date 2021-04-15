@@ -62,6 +62,17 @@
             </div>
           </div>
         {% endif %}
+
+        {% if user and user.maintainAuthUsers %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="create_groups_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-groups/create-group">Create a group</a>
+              </h1>
+              <p class="govuk-body card__description">&nbsp</p>
+            </div>
+          </div>
+        {% endif %}
     </div>
       {% else %}
           <p class="govuk-body" data-qa="no-admin-functions-message">

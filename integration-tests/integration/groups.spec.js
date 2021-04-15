@@ -1,4 +1,5 @@
 const GroupsPage = require('../pages/groupsPage')
+const MenuPage = require('../pages/menuPage')
 const GroupDetailsPage = require('../pages/groupDetailsPage')
 const GroupNameChangePage = require('../pages/groupNameChangePage')
 const ChildGroupNameChangePage = require('../pages/childGroupNameChangePage')
@@ -178,9 +179,10 @@ context('Groups', () => {
   it('should allow create group', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
+    const menuPage = MenuPage.verifyOnPage()
 
     cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/create-group')
+    menuPage.createGroup()
 
     cy.task('stubAuthCreateGroup')
     CreateGroupPage.verifyOnPage()
