@@ -16,18 +16,32 @@ context('Groups', () => {
     cy.task('reset')
   })
 
-  it('Should display all groups', () => {
+  it('Should display all groups with hyperlinks if 10 or less', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.login()
 
     cy.task('stubAuthAssignableGroups', {})
     MenuPage.verifyOnPage().manageGroups()
+
+    const groups = GroupsPage.verifyOnPage()
+
+    groups.groupRows().should('have.length', 3)
+    groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
+    groups.groupRows().eq(1).should('contain.text', 'PECS Police Force Thames Valley')
+  })
+
+  it('Should display filter for groups if more than 10', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.login()
+
+    cy.task('stubAuthAssignableGroups', { content: duplicateGroup(11) })
+    MenuPage.verifyOnPage().manageGroups()
     const groups = GroupsPage.verifyOnPage()
 
     groups.searchGroup('SOCU')
-    groups.group().should('have.value', 'SOCU North West').clear()
-    groups.searchGroup('PECS')
-    groups.group().should('have.value', 'PECS Police Force Thames Valley')
+    groups.group().should('have.value', 'SOCU North West 0').clear()
+    groups.searchGroup('10')
+    groups.group().should('have.value', 'SOCU North West 10')
   })
 
   it('Should display message if no groups available', () => {
@@ -49,8 +63,10 @@ context('Groups', () => {
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
-    groups.searchGroup('SOCU')
-    groups.submit().click()
+
+    groups.groupRows().should('have.length', 3)
+    groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
+    groups.groupRows().get('[data-qa="edit-button-SOCU North West"]').click()
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     groupDetails.assignableRoles().should('have.length', 2)
@@ -331,4 +347,10 @@ context('Groups', () => {
       children: [{ groupCode: 'CHILD_1', groupName: 'New group name' }],
     },
   }
+
+  const duplicateGroup = (times) =>
+    [...Array(times).keys()].map((i) => ({
+      groupCode: `SOC_NORTH_WEST_${i}`,
+      groupName: `SOCU North West ${i}`,
+    }))
 })
