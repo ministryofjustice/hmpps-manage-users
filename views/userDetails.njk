@@ -112,8 +112,17 @@
                 {text: ''}
               ],
               [
-                {text: "Verified email"},
+                {text: "Email"},
                 {text: staff.email},
+                {
+                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+                  classes: 'govuk-!-width-one-quarter',
+                  format: "numeric"
+                }
+              ],
+              [
+                {text: "Verified"},
+                {text: staff.verified | formatYesNo()},
                 {text: ''}
               ]
             ],

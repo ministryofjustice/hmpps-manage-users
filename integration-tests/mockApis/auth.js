@@ -125,25 +125,16 @@ const stubUserMe = ({
 
 const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
 
-const stubEmail = ({ username }) =>
+const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
   getFor({
-    urlPattern: `/auth/api/user/[^/]*/email`,
+    urlPattern: `/auth/api/user/[^/]*/email\\?unverified=true`,
     body: {
       username,
-      email: `${username}@gov.uk`,
+      email,
+      verified,
     },
   })
-const stubMissingEmail = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: `/auth/api/user/[^/]*/email`,
-    },
-    response: {
-      status: 204,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
+
 const stubAuthGetUsername = (enabled = true) =>
   getFor({
     urlPattern: '/auth/api/authuser/[^/]*',
@@ -491,6 +482,12 @@ const stubAuthUserChangeEmail = () =>
     urlPattern: '/auth/api/authuser/.*',
   })
 
+const stubDpsUserChangeEmail = () =>
+  stubJson({
+    method: 'POST',
+    urlPattern: '/auth/api/prisonuser/[^/]*/email',
+  })
+
 const stubAuthCreateUser = () =>
   stubJson({
     method: 'POST',
@@ -566,6 +563,12 @@ const verifyAuthUserChangeEmail = () =>
     urlPathPattern: '/auth/api/authuser/.*',
   }).then((data) => data.body.requests)
 
+const verifyDpsUserChangeEmail = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/prisonuser/[^/]*/email',
+  }).then((data) => data.body.requests)
+
 const verifyAuthCreateUser = () =>
   getMatchingRequests({
     method: 'POST',
@@ -579,7 +582,6 @@ module.exports = {
   stubUserMe,
   stubUserMeRoles,
   stubEmail,
-  stubMissingEmail,
   redirect,
   stubAuthGetUsername,
   stubAuthGetUserWithEmail,
@@ -609,6 +611,7 @@ module.exports = {
   stubAuthUserDisable,
   stubAuthUserEnable,
   stubAuthUserChangeEmail,
+  stubDpsUserChangeEmail,
   stubAuthCreateUser,
   stubError,
   stubHealth,
@@ -621,5 +624,6 @@ module.exports = {
   verifyUserEnable,
   verifyUserDisable,
   verifyAuthUserChangeEmail,
+  verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
 }

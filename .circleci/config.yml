@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.0
+  hmpps: ministryofjustice/hmpps@3.1
   browser-tools: circleci/browser-tools@1.1.1
 
 jobs:
   build:
     executor:
       name: hmpps/node
-      tag: 14.15-browsers
+      tag: 14.16-browsers
     steps:
       - checkout
       - restore_cache:
@@ -39,7 +39,7 @@ jobs:
   integration_tests:
     working_directory: ~/app
     docker:
-      - image: cimg/node:14.15-browsers
+      - image: cimg/node:14.16-browsers
     steps:
       - checkout
       - attach_workspace:
@@ -58,7 +58,7 @@ jobs:
           command: npx cypress install
       - run:
           name: Run the node app.
-          command: npm run start-feature --env=cypress.env
+          command: npm run start-feature
           background: true
       - run:
           name: integration tests

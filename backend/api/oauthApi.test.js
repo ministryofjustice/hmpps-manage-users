@@ -108,7 +108,7 @@ describe('oauthApi tests', () => {
     })
     it('should call user email endpoint', () => {
       oauthApi.getUserEmail(context, { username: 'joe' })
-      expect(client.get).toBeCalledWith(context, '/api/user/joe/email')
+      expect(client.get).toBeCalledWith(context, '/api/user/joe/email?unverified=true')
     })
     it('should cope with not found from endpoint', async () => {
       const error = { ...new Error('User not found'), status: 404 }

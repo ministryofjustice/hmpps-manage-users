@@ -36,7 +36,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const currentRoles = (context) => get(context, '/api/user/me/roles')
   const getUserEmail = async (context, { username }) => {
     try {
-      return await get(context, `/api/user/${username}/email`)
+      return await get(context, `/api/user/${username}/email?unverified=true`)
     } catch (error) {
       if (error?.status === 404) return {}
       throw error
@@ -78,6 +78,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const createChildGroup = (context, group) => post(context, '/api/groups/child', group)
   const createGroup = (context, group) => post(context, '/api/groups', group)
   const deleteChildGroup = (context, group) => del(context, `/api/groups/child/${group}`)
+  const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -167,6 +168,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     createChildGroup,
     createGroup,
     deleteChildGroup,
+    changeDpsEmail,
   }
 }
 

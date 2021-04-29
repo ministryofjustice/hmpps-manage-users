@@ -3,7 +3,7 @@ const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddGroupPage = require('../pages/userAddGroupPage')
-const AuthUserChangeEmailPage = require('../pages/authUserChangeEmailPage')
+const AuthUserChangeEmailPage = require('../pages/userChangeEmailPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
 
 const editUser = (roleCode, assignableGroups = []) => {
