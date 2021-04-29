@@ -1,6 +1,6 @@
 const page = require('./page')
 
-const authUserChangeEmailPage = () =>
+const userChangeEmailPage = () =>
   page(`Change email`, {
     amendButton: () => cy.get('[data-qa="confirm-button"]'),
     email: () => cy.get('#email'),
@@ -9,5 +9,5 @@ const authUserChangeEmailPage = () =>
   })
 
 export default {
-  verifyOnPage: authUserChangeEmailPage,
+  verifyOnPage: userChangeEmailPage,
 }
