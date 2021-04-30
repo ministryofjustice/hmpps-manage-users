@@ -60,7 +60,7 @@ const controller = ({ oauthApi }) => {
     '/manage-external-users',
   )
 
-  const { index: getEmail, post: postEmail } = changeEmailFactory(
+  const { index: getEmail, post: postEmail, success: emailSuccess } = changeEmailFactory(
     getUserApi,
     changeEmailApi,
     '/search-external-users',
@@ -86,6 +86,7 @@ const controller = ({ oauthApi }) => {
   router.post('/select-group', postGroup)
   router.get('/groups/:group/remove', removeGroup)
   router.get('/change-email', getEmail)
+  router.get('/change-email-success', emailSuccess)
   router.post('/change-email', postEmail)
   router.get('/activate', enableUser)
   router.get('/deactivate', disableUser)

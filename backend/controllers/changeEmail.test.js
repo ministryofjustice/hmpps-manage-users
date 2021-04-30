@@ -58,7 +58,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/change-email-success')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
     })
 
@@ -72,7 +72,7 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/bob@digital.justice.gov.uk/change-email-success')
       expect(saveEmail).toBeCalledWith(locals, 'joe@digital.justice.gov.uk', 'bob@digital.justice.gov.uk')
     })
 
@@ -82,8 +82,9 @@ describe('change email factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/change-email-success')
       expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
+      expect(req.flash).toBeCalledWith('changeEmail', 'bob@digital.justice.gov.uk')
     })
 
     it('should stash the errors and redirect if no email entered', async () => {
@@ -178,6 +179,32 @@ describe('change email factory', () => {
           text: 'not valid',
         },
       ])
+    })
+  })
+
+  describe('success', () => {
+    it('should call changeEmailSuccess render', async () => {
+      const req = { params: { username: 'joe' }, flash: jest.fn() }
+      const render = jest.fn()
+      req.flash.mockReturnValue('bob@digital.justice.gov.uk')
+      await changeEmail.success(req, { render })
+      expect(render).toBeCalledWith('changeEmailSuccess.njk', {
+        detailsLink: '/manage-external-users/joe/details',
+        email: 'bob@digital.justice.gov.uk',
+        usernameChanged: false,
+      })
+    })
+
+    it('should call changeEmailSuccess render for username change', async () => {
+      const req = { params: { username: 'bob@digital.justice.gov.uk' }, flash: jest.fn() }
+      const render = jest.fn()
+      req.flash.mockReturnValue('bob@digital.justice.gov.uk')
+      await changeEmail.success(req, { render })
+      expect(render).toBeCalledWith('changeEmailSuccess.njk', {
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        email: 'bob@digital.justice.gov.uk',
+        usernameChanged: true,
+      })
     })
   })
 })

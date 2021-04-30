@@ -4,6 +4,8 @@ const UserPage = require('../pages/userPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddGroupPage = require('../pages/userAddGroupPage')
 const AuthUserChangeEmailPage = require('../pages/userChangeEmailPage')
+const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
+const ChangeUsernameSuccessPage = require('../pages/changeUsernameSuccessPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
 
 const editUser = (roleCode, assignableGroups = []) => {
@@ -305,6 +307,45 @@ context('External user manage functionality', () => {
       expect(JSON.parse(requests[0].body)).to.deep.equal({ email: 'someone@somewhere.com' })
     })
 
+    const successPage = ChangeEmailSuccessPage.verifyOnPage()
+    successPage.email().should('contain.text', 'someone@somewhere.com')
+    successPage.userDetailsLink().click()
+    UserPage.verifyOnPage('Auth Adm')
+  })
+
+  it('Should change a user email address when username same as email address', () => {
+    const results = searchForUser(undefined, [
+      {
+        username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled: true,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+      },
+    ])
+
+    cy.task('stubAuthGetUserWithEmail')
+    cy.task('stubAuthUserRoles')
+    cy.task('stubAuthUserGroups')
+    results.edit('AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK')
+    const userPage = UserPage.verifyOnPage('Auth Adm')
+    userPage.changeEmailLink().click()
+    const changeEmailPage = AuthUserChangeEmailPage.verifyOnPage()
+
+    cy.task('stubAuthUserChangeEmail')
+    changeEmailPage.email().clear().type('someone@somewhere.com')
+    changeEmailPage.amendButton().click()
+
+    cy.task('verifyAuthUserChangeEmail').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.equal({ email: 'someone@somewhere.com' })
+    })
+
+    const successPage = ChangeUsernameSuccessPage.verifyOnPage()
+    successPage.email().should('contain.text', 'someone@somewhere.com')
+    successPage.userDetailsLink().click()
     UserPage.verifyOnPage('Auth Adm')
   })
 
