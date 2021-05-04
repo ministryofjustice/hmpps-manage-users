@@ -48,7 +48,7 @@ const controller = ({ prisonApi, oauthApi }) => {
     false,
   )
 
-  const { index: getEmail, post: postEmail } = changeEmailFactory(
+  const { index: getEmail, post: postEmail, success: emailSuccess } = changeEmailFactory(
     getUserApi,
     changeEmailApi,
     '/search-dps-users',
@@ -61,6 +61,7 @@ const controller = ({ prisonApi, oauthApi }) => {
   router.get('/details', userDetails)
   router.get('/change-email', getEmail)
   router.post('/change-email', postEmail)
+  router.get('/change-email-success', emailSuccess)
 
   return router
 }

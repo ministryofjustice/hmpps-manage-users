@@ -2,6 +2,7 @@ const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 const UserChangeEmailPage = require('../pages/userChangeEmailPage')
+const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 
 const { goToResultsPage, editUser } = require('../support/dpsuser.helpers')
 
@@ -105,6 +106,9 @@ context('DPS user manage functionality', () => {
       expect(JSON.parse(requests[0].body)).to.deep.equal({ email: 'someone@somewhere.com' })
     })
 
+    const successPage = ChangeEmailSuccessPage.verifyOnPage()
+    successPage.email().should('contain.text', 'someone@somewhere.com')
+    successPage.userDetailsLink().click()
     UserPage.verifyOnPage('Itag User')
   })
 

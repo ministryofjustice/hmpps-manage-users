@@ -45,8 +45,9 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         await changeEmail(res.locals, username, email)
-        const staffUrl = `${manageUrl}/${username.includes('@') ? email : username}/details`
-        res.redirect(staffUrl)
+        const successUrl = `${manageUrl}/${username.includes('@') ? email : username}/change-email-success`
+        req.flash('changeEmail', email)
+        res.redirect(successUrl)
       }
     } catch (err) {
       if (err.status === 400 && err.response && err.response.body) {
@@ -61,7 +62,17 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
     }
   }
 
-  return { index, post }
+  const success = async (req, res) => {
+    const { username } = req.params
+    const staffUrl = `${manageUrl}/${username}/details`
+
+    const email = req.flash('changeEmail')
+    const usernameChanged = username.includes('@')
+
+    res.render('changeEmailSuccess.njk', { email, detailsLink: staffUrl, usernameChanged })
+  }
+
+  return { index, post, success }
 }
 
 module.exports = {
