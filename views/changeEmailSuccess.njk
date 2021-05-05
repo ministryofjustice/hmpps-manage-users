@@ -1,17 +1,18 @@
 {% extends "./partials/layout.njk" %}
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 {% set title =  ("Username" if usernameChanged else "Email address") + " changed" %}
 
    {% block beforeContent %}
-   {{ govukBreadcrumbs({
-     items: [
-       { text: "Home", href: homeUrl },
-       { text: "Manage user accounts", href: '/' },
-       { text: title }
-     ]
-   }) }}
- {% endblock %}
+     {{ govukBreadcrumbs({
+       items: [
+         { text: "Home", href: homeUrl },
+         { text: "Manage user accounts", href: '/' },
+         { text: title }
+       ]
+     }) }}
+   {% endblock %}
 
 {% block content %}
   <div class="govuk-grid-row">
@@ -25,9 +26,13 @@
           html: message,
           attributes: { "data-qa": "email" }
         }) }}
-        <div class="govuk-body">
-          <a data-qa="user-details" href="{{detailsLink}}" class="govuk-link">View user details</a>
-        </div>
+        <p class="govuk-body">
+          {{ govukButton({
+            text: "Continue",
+            href: detailsLink,
+            attributes: { "data-qa": "user-details" }
+          }) }}
+        </p>
       </div>
     </div>
   </div>
