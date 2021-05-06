@@ -6,13 +6,20 @@ const contextProperties = require('../contextProperties')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi, oauthApi }) => {
-  const searchApi = async ({ locals: context, user: nameFilter, roleCode, pageSize: size, pageOffset: offset }) => {
+  const searchApi = async ({
+    locals: context,
+    user: nameFilter,
+    roleCode,
+    status,
+    pageSize: size,
+    pageOffset: offset,
+  }) => {
     const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })
     const searchResults = await (hasAdminRole
-      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode })
-      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode }))
+      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode, status })
+      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode, status }))
 
     if (searchResults.length === 0) return searchResults
 

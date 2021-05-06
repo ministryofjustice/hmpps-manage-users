@@ -1,0 +1,27 @@
+
+
+<form method="GET" action="{{ searchUrl }}/results" class='external-search__form'>
+  <input type='hidden' name='roleCode' value='{{ roleCode }}'/>
+  <input type='hidden' name='groupCode' value='{{ groupCode }}'/>
+  <input type='hidden' name='user' value='{{ username }}'/>
+  <div class='horizontal-form'>
+    {{ govukSelect({label: {
+      text: "Filter by status"
+    },
+      idPrefix: 'status',
+      name: 'status',
+      id: 'status',
+      items: [
+        {text: 'Active', value:'ACTIVE'},
+        {text: 'Inactive', value:'INACTIVE'},
+        {text: 'All', value:'ALL'}
+      ] | setSelected(status)
+    }) }}
+    {{ govukButton({
+      text: "Filter",
+      type: "submit",
+      attributes: { "data-qa": "filter-button" }
+    }) }}
+  </div>
+</form>
+<p class='govuk-body'></p>

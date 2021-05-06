@@ -134,6 +134,40 @@ context('DPS user functionality', () => {
     })
   })
 
+  it('Should filter results by status', () => {
+    const results = searchForUser(2)
+
+    results
+      .rows()
+      .eq(0)
+      .find('td')
+      .then(($tableCells) => {
+        // \u00a0 is a non breaking space, won't match on ' ' though
+        expect($tableCells.get(0)).to.contain.text('Itag\u00a0User0')
+        expect($tableCells.get(1)).to.contain.text('ITAG_USER0')
+        expect($tableCells.get(2)).to.contain.text('dps-user@justice.gov.uk')
+        expect($tableCells.get(3)).to.contain.text('BXI')
+        expect($tableCells.get(4)).to.contain.text('Yes')
+      })
+
+    cy.task('stubDpsSearch', { totalElements: 5 })
+    cy.task('stubAuthUserEmails')
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+
+    results.rows().should('have.length', 5)
+    results.rows().eq(0).should('include.text', 'Itag\u00a0User0')
+    results.rows().eq(1).should('include.text', 'Itag\u00a0User1')
+
+    results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
+    cy.task('stubDpsSearchInactive', { totalElements: 2 })
+    results.filter().should('have.value', 'ALL').select('INACTIVE')
+    results.submitFilter().click()
+    results.checkStillOnPage()
+
+    results.rows().should('have.length', 2)
+  })
+
   it('Should add and remove a role from a user', () => {
     const userPage = editUser()
 
