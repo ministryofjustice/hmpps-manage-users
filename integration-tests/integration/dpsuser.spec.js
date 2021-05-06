@@ -88,6 +88,7 @@ context('DPS user functionality', () => {
       expect(requests[0].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: [''] },
         accessRole: { key: 'accessRole', values: ['MAINTAIN_ACCESS_ROLES'] },
+        status: { key: 'status', values: ['ALL'] },
       })
     })
   })
@@ -126,6 +127,7 @@ context('DPS user functionality', () => {
       expect(requests[0].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['sometext@somewhere.com'] },
         accessRole: { key: 'accessRole', values: [''] },
+        status: { key: 'status', values: ['ALL'] },
       })
 
       expect(requests[0].headers).to.include({ 'page-offset': '0', 'page-limit': '20' })
@@ -253,7 +255,11 @@ context('DPS user functionality', () => {
 
     userPage
       .searchResultsBreadcrumb()
-      .should('have.attr', 'href', '/search-dps-users/results?user=sometext%40somewhere.com&roleCode=&offset=10')
+      .should(
+        'have.attr',
+        'href',
+        '/search-dps-users/results?user=sometext%40somewhere.com&status=ALL&roleCode=&offset=10',
+      )
   })
 
   it('Manage your details contain returnTo url for current dps search page', () => {
