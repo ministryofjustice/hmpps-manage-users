@@ -37,7 +37,7 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
-      hasMaintainAuthUsers,
+      hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
       showEnableDisable: Boolean(enableUserApi && disableUserApi),
       showGroups: Boolean(removeGroupApi),

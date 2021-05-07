@@ -40,29 +40,21 @@ context('DPS user manage functionality', () => {
       .userRows()
       .eq(1)
       .then(($cell) => {
-        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email Change email')
+        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email')
       })
   })
 
   it('As an ADMIN user should display details for a user', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
-    cy.task('stubAuthUserEmails')
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
 
-    const search = DpsUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-
-    cy.task('stubDpsUserDetails')
-    cy.task('stubDpsUserGetRoles')
-    cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
-
-    results.edit('ITAG_USER5')
-    const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
-    userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
+    userPage
+      .userRows()
+      .eq(1)
+      .then(($cell) => {
+        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk Change email')
+      })
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
@@ -83,12 +75,13 @@ context('DPS user manage functionality', () => {
       .userRows()
       .eq(1)
       .then(($cell) => {
-        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk Change email')
+        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk')
       })
   })
 
   it('Should change a user email address', () => {
-    const userPage = editUser()
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
 
     userPage.changeEmailLink().click()
     const changeEmailPage = UserChangeEmailPage.verifyOnPage()
@@ -113,7 +106,8 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should cancel a change user email address', () => {
-    const userPage = editUser()
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
 
     userPage.changeEmailLink().click()
     const changeEmailPage = UserChangeEmailPage.verifyOnPage()

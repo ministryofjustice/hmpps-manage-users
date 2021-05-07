@@ -2,8 +2,8 @@ const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 
-export const goToResultsPage = () => {
-  cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+export const goToResultsPage = (roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]) => {
+  cy.task('stubLogin', { roles })
   cy.login()
   cy.task('stubDpsGetRoles', { content: [] })
   cy.task('stubDpsSearch', { totalElements: 21 })
@@ -16,8 +16,8 @@ export const goToResultsPage = () => {
   return results
 }
 
-export const editUser = () => {
-  const results = goToResultsPage()
+export const editUser = (roles) => {
+  const results = goToResultsPage(roles)
 
   cy.task('stubDpsUserDetails')
   cy.task('stubDpsUserGetRoles')

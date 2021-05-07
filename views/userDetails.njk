@@ -103,6 +103,11 @@
             attributes: { "data-qa": "user-details" }
           }) }}
         {% else %}
+            {% set staffEmail = {
+                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+                  classes: 'govuk-!-width-one-quarter',
+                  format: "numeric"
+              } if hasMaintainDpsUsersAdmin else {} %}
           {{ govukTable({
             caption: "Account details",
             rows: [
@@ -114,11 +119,7 @@
               [
                 {text: "Email"},
                 {text: staff.email},
-                {
-                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-                  classes: 'govuk-!-width-one-quarter',
-                  format: "numeric"
-                }
+                staffEmail
               ],
               [
                 {text: "Verified"},
