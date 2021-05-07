@@ -9,6 +9,15 @@ const replicateUser = (times) =>
     activeCaseLoadId: 'BXI',
   }))
 
+const replicateInactiveUser = (times) =>
+  [...Array(times).keys()].map((i) => ({
+    username: `ITAG_USER${i}`,
+    active: 0,
+    firstName: 'Itag',
+    lastName: `User${i}`,
+    activeCaseLoadId: 'BXI',
+  }))
+
 module.exports = {
   stubHealth: (status = 200) => {
     return stubFor({
@@ -94,6 +103,23 @@ module.exports = {
           'page-limit': `${size}`,
         },
         jsonBody: replicateUser(Math.floor(totalElements / size) === page ? totalElements % size : size),
+      },
+    }),
+  stubDpsSearchInactive: ({ totalElements = 1, page = 0, size = 10 }) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/api/users/local-administrator/available',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+          'total-records': `${totalElements}`,
+          'page-offset': `${page * size}`,
+          'page-limit': `${size}`,
+        },
+        jsonBody: replicateInactiveUser(Math.floor(totalElements / size) === page ? totalElements % size : size),
       },
     }),
   stubDpsAdminSearch: ({ totalElements = 1, page = 0, size = 10 }) =>

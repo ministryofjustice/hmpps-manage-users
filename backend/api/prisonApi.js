@@ -16,13 +16,15 @@ const prisonApiFactory = (client) => {
 
   const userCaseLoads = (context) => (context.authSource !== 'auth' ? get(context, '/api/users/me/caseLoads') : [])
   const getAgencyDetails = (context, caseloadId) => get(context, `/api/agencies/caseload/${caseloadId}`)
-  const userSearch = (context, { nameFilter, roleFilter }) =>
+  const userSearch = (context, { nameFilter, roleFilter, status }) =>
     get(
       context,
-      `/api/users/local-administrator/available?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`,
+      `/api/users/local-administrator/available?nameFilter=${encodeQueryString(
+        nameFilter,
+      )}&accessRole=${roleFilter}&status=${status}`,
     )
-  const userSearchAdmin = (context, { nameFilter, roleFilter }) =>
-    get(context, `/api/users?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}`)
+  const userSearchAdmin = (context, { nameFilter, roleFilter, status }) =>
+    get(context, `/api/users?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}&status=${status}`)
   const getRoles = (context) => get(context, '/api/access-roles')
   const getRolesAdmin = (context) => get(context, '/api/access-roles?includeAdmin=true')
   const contextUserRoles = (context, username, hasAdminRole) =>
