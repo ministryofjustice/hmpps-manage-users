@@ -3,6 +3,7 @@
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set title =  "Search results" %}
 
@@ -32,12 +33,22 @@
         {% for u in results %}
           {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/details" class="govuk-link" data-qa="edit-button-'
             + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
+      {% set tags %}
+      {{ govukTag({
+        text: "Inactive",
+        classes: "govuk-tag--pink"
+      }) if not u.active }}
+      {{ govukTag({
+        text: "Active",
+        classes: "govuk-tag--green"
+      }) if u.active }}
+      {% endset %}
           {% set rows = (rows.push([
             { html: userLink },
             { text: u.username },
             { text: u.email },
             { text: u.activeCaseLoadId },
-            { text: u.active | formatYesNo() }
+            { html: tags }
           ]), rows) %}
         {% endfor %}
 
@@ -47,7 +58,7 @@
             { text: "Username" },
             { text: "Verified email" },
             { text: "Active caseload" },
-            { text: "Active" }
+            { text: "Status" }
           ],
           rows: rows
         }) }}
