@@ -52,7 +52,7 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      hasMaintainAuthUsers: false,
+      hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
@@ -95,7 +95,7 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      hasMaintainAuthUsers: false,
+      hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
@@ -144,7 +144,7 @@ describe('user detail factory', () => {
         { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
         { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
       ],
-      hasMaintainAuthUsers: false,
+      hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
@@ -153,7 +153,7 @@ describe('user detail factory', () => {
     })
   })
 
-  it('should pass through hasMaintainAuthUsers to userDetail render', async () => {
+  it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
     const req = { params: { username: 'joe' }, flash: jest.fn(), session: {} }
     getUserRolesAndGroupsApi.mockResolvedValue([
       {
@@ -169,7 +169,7 @@ describe('user detail factory', () => {
       [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     ])
     const render = jest.fn()
-    await userDetails.index(req, { render, locals: { user: { maintainAuthUsers: true } } })
+    await userDetails.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
     expect(render).toBeCalledWith('userDetails.njk', {
       searchTitle: 'Search for an external user',
       searchResultsUrl: '/search-external-users/results',
@@ -187,7 +187,7 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      hasMaintainAuthUsers: true,
+      hasMaintainDpsUsersAdmin: true,
       showEnableDisable: true,
       showExtraUserDetails: true,
       showGroups: true,
@@ -241,7 +241,7 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      hasMaintainAuthUsers: false,
+      hasMaintainDpsUsersAdmin: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
       showGroups: false,
@@ -295,7 +295,7 @@ describe('user detail factory', () => {
       staffUrl: '/manage-external-users/joe',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      hasMaintainAuthUsers: false,
+      hasMaintainDpsUsersAdmin: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
       showGroups: false,
@@ -448,7 +448,7 @@ describe('user detail factory', () => {
         staffUrl: '/manage-external-users/joe',
         roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
         groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-        hasMaintainAuthUsers: false,
+        hasMaintainDpsUsersAdmin: false,
         showEnableDisable: true,
         showExtraUserDetails: true,
         showGroups: true,
