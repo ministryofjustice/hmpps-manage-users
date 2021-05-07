@@ -57,7 +57,7 @@ context('DPS user functionality', () => {
         expect($tableCells.get(1)).to.contain.text('ITAG_USER0')
         expect($tableCells.get(2)).to.contain.text('dps-user@justice.gov.uk')
         expect($tableCells.get(3)).to.contain.text('BXI')
-        expect($tableCells.get(4)).to.contain.text('Yes')
+        expect($tableCells.get(4)).to.contain.text('Active')
       })
 
     cy.task('stubDpsSearch', { totalElements: 5 })
@@ -149,7 +149,7 @@ context('DPS user functionality', () => {
         expect($tableCells.get(1)).to.contain.text('ITAG_USER0')
         expect($tableCells.get(2)).to.contain.text('dps-user@justice.gov.uk')
         expect($tableCells.get(3)).to.contain.text('BXI')
-        expect($tableCells.get(4)).to.contain.text('Yes')
+        expect($tableCells.get(4)).to.contain.text('Active')
       })
 
     cy.task('stubDpsSearch', { totalElements: 5 })
