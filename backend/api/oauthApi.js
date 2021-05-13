@@ -68,6 +68,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
   const enableUser = (context, { username }) => put(context, `/api/authuser/${username}/enable`)
   const disableUser = (context, { username }) => put(context, `/api/authuser/${username}/disable`)
+  const deactivateUser = (context, { username, reason }) =>
+    put(context, `/api/authuser/${username}/disable`, { reason })
   const assignableRoles = (context, { username }) => get(context, `/api/authuser/${username}/assignable-roles`)
   const amendUser = (context, username, email) => post(context, `/api/authuser/${username}`, email)
   const groupDetails = (context, { group }) => get(context, `/api/groups/${group}`)
@@ -157,6 +159,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     oauthAxios,
     enableUser,
     disableUser,
+    deactivateUser,
     amendUser,
     assignableGroups,
     searchableRoles,

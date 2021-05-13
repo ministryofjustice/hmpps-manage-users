@@ -3,6 +3,7 @@ const { changeEmailFactory } = require('../controllers/changeEmail')
 const { selectRolesFactory } = require('../controllers/addRole')
 const { selectGroupFactory } = require('../controllers/addGroup')
 const { userDetailsFactory } = require('../controllers/userDetails')
+const { deactivateUserReasonFactory } = require('../controllers/deactivateUserReason')
 
 const router = express.Router({ mergeParams: true })
 
@@ -45,6 +46,7 @@ const controller = ({ oauthApi }) => {
   const changeEmailApi = (context, username, email) => oauthApi.amendUser(context, username, { email })
   const enableUserApi = (context, username) => oauthApi.enableUser(context, { username })
   const disableUserApi = (context, username) => oauthApi.disableUser(context, { username })
+  const deactivateUserApi = (context, username, reason) => oauthApi.deactivateUser(context, { username, reason })
 
   const { index: selectGroup, post: postGroup } = selectGroupFactory(
     getUserAndGroupsApi,
@@ -79,6 +81,12 @@ const controller = ({ oauthApi }) => {
     true,
   )
 
+  const { index: deactivateUser, post: postDeactivateUser } = deactivateUserReasonFactory(
+    deactivateUserApi,
+    '/manage-external-users',
+    'Deactivate user reason',
+  )
+
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
   router.get('/roles/:role/remove', removeRole)
@@ -90,6 +98,8 @@ const controller = ({ oauthApi }) => {
   router.post('/change-email', postEmail)
   router.get('/activate', enableUser)
   router.get('/deactivate', disableUser)
+  router.get('/deactivate/reason', deactivateUser)
+  router.post('/deactivate/reason', postDeactivateUser)
   router.get('/details', userDetails)
   return router
 }
