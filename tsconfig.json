@@ -10,7 +10,7 @@
     "skipLibCheck": true,
     "noEmit": false,
     "allowJs": true,
-    "checkJs": true,
+    "checkJs": false,
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
@@ -19,5 +19,5 @@
     "strictNullChecks": true
   },
   "exclude": ["node_modules", "assets", "integration-tests", "build", "dist", "static", "config", "manage-accounts-specs"],
-  "include": ["**/*.ts"]
+  "include": ["**/*.js", "**/*.ts"]
 }
