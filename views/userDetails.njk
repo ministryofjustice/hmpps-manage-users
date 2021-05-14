@@ -103,11 +103,11 @@
             attributes: { "data-qa": "user-details" }
           }) }}
         {% else %}
-            {% set staffEmail = {
-                  html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-                  classes: 'govuk-!-width-one-quarter',
-                  format: "numeric"
-              } if hasMaintainDpsUsersAdmin else {} %}
+          {% set staffEmail = {
+            html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+            classes: 'govuk-!-width-one-quarter',
+            format: "numeric"
+          } if hasMaintainDpsUsersAdmin else {} %}
           {{ govukTable({
             caption: "Account details",
             rows: [
@@ -136,8 +136,7 @@
             rows: [
               [
                 {text: "Inactive reason"},
-                {text: staff.inactiveReason},
-                {text: ''}
+                {text: staff.inactiveReason}
               ]
             ],
             attributes: { "data-qa": "inactive-reason" }
@@ -169,20 +168,20 @@
 
         {% if showGroups %}
           {% set rows = [] %}
-            {% for userGroup in groups %}
-              {% if userGroup.showRemove %}
-                {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
-                {% set rows = (rows.push([
-                  { text: userGroup.groupName },
-                  { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-                ]), rows) %}
-              {% else %}
-                {% set rows = (rows.push([
-                  { text: userGroup.groupName },
-                  { text: "" }
-                ]), rows) %}
-              {% endif %}
-            {% endfor %}
+          {% for userGroup in groups %}
+            {% if userGroup.showRemove %}
+              {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
+              {% set rows = (rows.push([
+                { text: userGroup.groupName },
+                { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+              ]), rows) %}
+            {% else %}
+              {% set rows = (rows.push([
+                { text: userGroup.groupName },
+                { text: "" }
+              ]), rows) %}
+            {% endif %}
+          {% endfor %}
 
           {{ govukTable({
             caption: "Groups",

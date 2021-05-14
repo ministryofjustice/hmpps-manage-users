@@ -14,6 +14,7 @@ const userPage = (user) =>
     changeEmailLink: () => cy.get('[data-qa="amend-link"]'),
     searchLink: () => cy.get('[data-qa="search-link"]'),
     enabled: () => cy.get('[data-qa="enabled"]'),
+    inactiveReason: () => cy.get('[data-qa="reason"]'),
     errorSummary: () => cy.get('[data-qa-errors]'),
   })
 

@@ -6,6 +6,7 @@ const UserAddGroupPage = require('../pages/userAddGroupPage')
 const AuthUserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const ChangeUsernameSuccessPage = require('../pages/changeUsernameSuccessPage')
+const deactivateUserReasonPage = require('../pages/deactivateUserReasonPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
 
 const editUser = (roleCode, assignableGroups = []) => {
@@ -271,6 +272,41 @@ context('External user manage functionality', () => {
     cy.task('stubAuthUserDisable')
     cy.task('stubAuthGetUsername', false)
     userPage.enableLink().should('have.text', 'Deactivate account').click()
+
+    const deactivatePage = deactivateUserReasonPage.verifyOnPage()
+    deactivatePage.deactivateUser('Left')
+
+    cy.task('verifyUserDisable').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/disable')
+    })
+
+    userPage.enabled().should('contain.text', ' Inactive')
+    userPage.inactiveReason().should('contain.text', ' left')
+    cy.task('stubAuthUserEnable')
+    userPage.enableLink().should('have.text', 'Activate account').click()
+
+    cy.task('verifyUserEnable').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/enable')
+    })
+  })
+
+  it.only('Should throw error when reason fails validation when disable a user', () => {
+    const userPage = editUser()
+
+    userPage.enabled().should('contain.text', ' Active')
+    cy.task('stubAuthUserDisable')
+    cy.task('stubAuthGetUsername', false)
+    userPage.enableLink().should('have.text', 'Deactivate account').click()
+
+    const deactivatePage = deactivateUserReasonPage.verifyOnPage()
+    deactivatePage.deactivateUser()
+    deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
+    deactivatePage.deactivateUser('a')
+    deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
+    deactivatePage.deactivateUser('Left')
 
     cy.task('verifyUserDisable').should((requests) => {
       expect(requests).to.have.lengthOf(1)

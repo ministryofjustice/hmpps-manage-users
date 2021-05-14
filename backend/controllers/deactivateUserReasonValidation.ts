@@ -9,7 +9,7 @@ export default function validate(form: DeactivateUserReasonForm): Array<{ text: 
     },
     {
       'required.reason': 'Enter the reason',
-      'between.reason': 'Enter the reason not greater than 100 characters',
+      'between.reason': 'Enter the reason greater than 2 character but not greater than 100 characters',
     },
   )
 }
