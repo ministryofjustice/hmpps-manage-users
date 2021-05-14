@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import validate from './deactivateUserReasonValidation'
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, title: string) => {
   const stashStateAndRedirectToIndex = (
     req: Request,
