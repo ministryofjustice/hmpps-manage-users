@@ -136,7 +136,8 @@
       "js",
       "json",
       "node",
-      "mjs"
+      "mjs",
+      "ts"
     ]
   },
   "lint-staged": {

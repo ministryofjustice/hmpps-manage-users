@@ -17,17 +17,22 @@ describe('deactivate user reason factory', () => {
         title: 'Deactivate user reason',
         username: 'bob',
         staffUrl: '/manage-external-users/bob/details',
+        reason: null,
         errors: undefined,
       })
     })
     it('should copy any flash errors over', async () => {
-      const req = { params: { username: 'bob' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
+      const req = {
+        params: { username: 'bob' },
+        flash: jest.fn().mockReturnValue({ error: 'some error' }),
+      }
       const render = jest.fn()
       await deactivateUser.index(req, { render })
       expect(render).toBeCalledWith('userDeactivate.njk', {
         errors: { error: 'some error' },
         title: 'Deactivate user reason',
         username: 'bob',
+        reason: 'something',
         staffUrl: '/manage-external-users/bob/details',
       })
     })
@@ -45,31 +50,23 @@ describe('deactivate user reason factory', () => {
       const locals = jest.fn()
       await deactivateUser.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/bob/details')
-      expect(deactivateUserApi).toBeCalledWith(locals, 'bob', { reason: 'Left' })
+      expect(deactivateUserApi).toBeCalledWith(locals, 'bob', 'Left')
     })
   })
 
-  it('should fail gracefully if group name not valid', async () => {
+  it('should fail gracefully if group manager not allowed to maintain user', async () => {
     const redirect = jest.fn()
-    const error = {
-      ...new Error('This failed'),
-      status: 403,
-      response: {
-        body: {
-          error_description: 'You are not able to maintain this user, user does not belong to any groups you manage',
-        },
-      },
-    }
-
+    const error = { ...new Error('This failed'), status: 403 }
     deactivateUserApi.mockRejectedValue(error)
-    const req = {
-      params: { group: 'group1' },
-      body: { groupName: 'GroupA' },
-      flash: jest.fn(),
-      originalUrl: '/some-location',
-    }
-    await deactivateUser.post(req, { redirect })
+    await deactivateUser.post(
+      {
+        params: { username: 'joe' },
+        body: { group: 'GLOBAL_SEARCH' },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      },
+      { redirect },
+    )
     expect(redirect).toBeCalledWith('/some-location')
-    expect(req.flash).toBeCalledWith('deactivatedUserReasonErrors', [{ href: '#reason', text: 'Enter a reason' }])
   })
 })
