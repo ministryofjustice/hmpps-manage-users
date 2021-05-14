@@ -293,7 +293,7 @@ context('External user manage functionality', () => {
     })
   })
 
-  it.only('Should throw error when reason fails validation when disable a user', () => {
+  it('Should throw error when reason fails validation when disable a user', () => {
     const userPage = editUser()
 
     userPage.enabled().should('contain.text', ' Active')
