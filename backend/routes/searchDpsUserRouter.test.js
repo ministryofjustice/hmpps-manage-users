@@ -1,11 +1,10 @@
-const searchDpsUserRouter = require('./searchDpsUserRouter')
-
 jest.mock('express', () => ({
   Router: () => ({ get: jest.fn(), post: jest.fn() }),
 }))
 jest.mock('../controllers/search', () => ({
   searchFactory: jest.fn((a, b, c, searchApi) => ({ index: searchApi })),
 }))
+const searchDpsUserRouter = require('./searchDpsUserRouter')
 
 describe('Search DPS user router', () => {
   const apis = { prisonApi: { userSearch: jest.fn(), userSearchAdmin: jest.fn() }, oauthApi: { userEmails: jest.fn() } }

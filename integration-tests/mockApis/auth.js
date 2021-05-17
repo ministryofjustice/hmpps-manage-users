@@ -146,6 +146,7 @@ const stubAuthGetUsername = (enabled = true) =>
       verified: false,
       firstName: 'Auth',
       lastName: 'Adm',
+      inactiveReason: 'Left',
     },
   })
 
@@ -160,6 +161,7 @@ const stubAuthGetUserWithEmail = (enabled = true) =>
       verified: false,
       firstName: 'Auth',
       lastName: 'Adm',
+      reason: 'Left',
     },
   })
 

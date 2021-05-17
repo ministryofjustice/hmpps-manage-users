@@ -16,7 +16,8 @@
         "alwaysTryTypes": true
       },
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".json"]
+        "extensions": [".js", ".jsx", ".d.ts", ".ts", ".tsx", ".json"],
+        "moduleDirectory": ["node_modules", "./backend/@types"]
       }
     }
   },

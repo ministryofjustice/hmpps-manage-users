@@ -1,5 +1,3 @@
-const manageDpsUserRouter = require('./manageDpsUserRouter')
-
 jest.mock('express', () => ({
   Router: () => ({ get: jest.fn(), post: jest.fn() }),
 }))
@@ -9,6 +7,7 @@ jest.mock('../controllers/changeEmail', () => ({
 jest.mock('../controllers/userDetails', () => ({
   userDetailsFactory: jest.fn((getUserAndRolesApi) => ({ index: getUserAndRolesApi })),
 }))
+const manageDpsUserRouter = require('./manageDpsUserRouter')
 
 describe('Manage DPS user router', () => {
   const apis = { prisonApi: { getUser: jest.fn(), contextUserRoles: jest.fn() }, oauthApi: { getUserEmail: jest.fn() } }

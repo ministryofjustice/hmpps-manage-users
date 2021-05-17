@@ -1,0 +1,48 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set title =  "Enter the reason for deactivating" %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="POST">
+          {{ govukInput({
+            classes: "govuk-input--width-25",
+            id: "reason",
+            name: "reason",
+            value: reason.text,
+            errorMessage: errors | findError('reason')
+          }) }}
+
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            classes: "govuk-!-margin-right-1",
+            attributes: { "data-qa": "add-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: staffUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "data-qa": "cancel-link" }
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
