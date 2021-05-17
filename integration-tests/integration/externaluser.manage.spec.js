@@ -283,7 +283,7 @@ context('External user manage functionality', () => {
     })
 
     userPage.enabled().should('contain.text', ' Inactive')
-    userPage.inactiveReason().should('contain.text', ' left')
+    userPage.inactiveReason().eq(0).should('contain', 'Left')
     cy.task('stubAuthUserEnable')
     userPage.enableLink().should('have.text', 'Activate account').click()
 
