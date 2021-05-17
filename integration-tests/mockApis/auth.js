@@ -146,7 +146,7 @@ const stubAuthGetUsername = (enabled = true) =>
       verified: false,
       firstName: 'Auth',
       lastName: 'Adm',
-      reason: 'Left',
+      inactiveReason: 'Left',
     },
   })
 
