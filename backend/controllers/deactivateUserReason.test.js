@@ -32,7 +32,7 @@ describe('deactivate user reason factory', () => {
         errors: { error: 'some error' },
         title: 'Deactivate user reason',
         username: 'bob',
-        reason: 'something',
+        reason: null,
         staffUrl: '/manage-external-users/bob/details',
       })
     })
