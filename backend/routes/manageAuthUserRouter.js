@@ -62,14 +62,19 @@ const controller = ({ oauthApi }) => {
     '/manage-external-users',
   )
 
-  const { index: getEmail, post: postEmail, success: emailSuccess } = changeEmailFactory(
-    getUserApi,
-    changeEmailApi,
-    '/search-external-users',
-    '/manage-external-users',
-  )
+  const {
+    index: getEmail,
+    post: postEmail,
+    success: emailSuccess,
+  } = changeEmailFactory(getUserApi, changeEmailApi, '/search-external-users', '/manage-external-users')
 
-  const { index: userDetails, removeRole, removeGroup, enableUser, disableUser } = userDetailsFactory(
+  const {
+    index: userDetails,
+    removeRole,
+    removeGroup,
+    enableUser,
+    disableUser,
+  } = userDetailsFactory(
     getUserRolesAndGroupsApi,
     removeRoleApi,
     removeGroupApi,

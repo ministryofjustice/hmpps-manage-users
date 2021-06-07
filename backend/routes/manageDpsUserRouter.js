@@ -48,12 +48,11 @@ const controller = ({ prisonApi, oauthApi }) => {
     false,
   )
 
-  const { index: getEmail, post: postEmail, success: emailSuccess } = changeEmailFactory(
-    getUserApi,
-    changeEmailApi,
-    '/search-dps-users',
-    '/manage-dps-users',
-  )
+  const {
+    index: getEmail,
+    post: postEmail,
+    success: emailSuccess,
+  } = changeEmailFactory(getUserApi, changeEmailApi, '/search-dps-users', '/manage-dps-users')
 
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)

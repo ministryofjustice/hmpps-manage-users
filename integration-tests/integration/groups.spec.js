@@ -315,14 +315,6 @@ context('Groups', () => {
       ],
     },
   }
-  const groupDetailsAfterCreateGroup = {
-    content: {
-      groupCode: 'SITE_1_GROUP_2',
-      groupName: 'Site 1 - Group 2',
-      assignableRoles: [],
-      children: [],
-    },
-  }
 
   const groupDetailsAfterGroupNameChange = {
     content: {

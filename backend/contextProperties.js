@@ -48,10 +48,11 @@ const getRequestPagination = (context) => context.requestHeaders || {}
 const setResponsePagination = (context, headers) => {
   const headerNames = ['page-offset', 'page-limit', 'total-records']
 
-  const { 'total-records': totalElements, 'page-offset': offset, 'page-limit': limit } = copyNamedHeaders(
-    headerNames,
-    (headers && normalizeHeaderNames(headers)) || {},
-  )
+  const {
+    'total-records': totalElements,
+    'page-offset': offset,
+    'page-limit': limit,
+  } = copyNamedHeaders(headerNames, (headers && normalizeHeaderNames(headers)) || {})
   context.offsetPageable = {
     totalElements: totalElements ? parseInt(totalElements, 10) : undefined,
     offset: offset ? parseInt(offset, 10) : undefined,

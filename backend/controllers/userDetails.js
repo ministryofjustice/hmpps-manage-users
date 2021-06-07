@@ -78,8 +78,7 @@ const userDetailsFactory = (
         const groupError = [
           {
             href: '#groupCode',
-            text:
-              'You are not allowed to remove the last group from this user, please deactivate their account instead',
+            text: 'You are not allowed to remove the last group from this user, please deactivate their account instead',
           },
         ]
         stashStateAndRedirectToIndex(req, res, groupError, [group], `${staffUrl}/details`)
