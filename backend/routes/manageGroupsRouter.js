@@ -36,11 +36,11 @@ const controller = ({ oauthApi }) => {
     '/manage-groups',
   )
 
-  const { index: getGroupDetails, deleteChildGroup, getGroupDeleteWarn } = groupDetailsFactory(
-    getGroupDetailsApi,
-    deleteChildGroupApi,
-    '/manage-groups',
-  )
+  const {
+    index: getGroupDetails,
+    deleteChildGroup,
+    getGroupDeleteWarn,
+  } = groupDetailsFactory(getGroupDetailsApi, deleteChildGroupApi, '/manage-groups')
 
   const { index: getChildGroupCreate, post: postChildGroupCreate } = createChildGroupFactory(
     createChildGroupApi,

@@ -1,5 +1,3 @@
-const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
