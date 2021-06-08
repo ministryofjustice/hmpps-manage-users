@@ -31,3 +31,7 @@ env:
   SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
   SYSTEM_PHASE: DEV
 
+
+# CloudPlatform AlertManager receiver to route promethues alerts to slack
+generic-prometheus-alerts:
+  alertSeverity: hmpps_tech_non_prod
