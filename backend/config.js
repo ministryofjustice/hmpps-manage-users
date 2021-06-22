@@ -4,8 +4,7 @@ module.exports = {
   app: {
     port: process.env.PORT || 3001,
     production: process.env.NODE_ENV === 'production',
-    notmEndpointUrl: process.env.NN_ENDPOINT_URL || 'http://localhost:3000/',
-    dpsEndpointUrl: process.env.DPS_ENDPOINT_URL || 'http://localhost:3002',
+    dpsEndpointUrl: process.env.DPS_ENDPOINT_URL || 'http://localhost:3000',
     supportUrl: process.env.SUPPORT_URL || 'http://localhost:3003',
     tokenRefreshThresholdSeconds: toInt(process.env.TOKEN_REFRESH_THRESHOLD_SECONDS, 60),
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
@@ -13,7 +12,7 @@ module.exports = {
   },
 
   analytics: {
-    googleAnalyticsId: process.env.GOOGLE_ANALYTICS_ID,
+    googleTagManagerId: process.env.GOOGLE_TAG_MANAGER_ID,
   },
 
   hmppsCookie: {

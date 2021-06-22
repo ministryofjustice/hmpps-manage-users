@@ -20,7 +20,6 @@ ingress:
 env:
   API_ENDPOINT_URL: https://api-preprod.prison.service.justice.gov.uk
   OAUTH_ENDPOINT_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
-  NN_ENDPOINT_URL: https://digital-preprod.prison.service.justice.gov.uk/
   DPS_ENDPOINT_URL: https://digital-preprod.prison.service.justice.gov.uk
   HMPPS_COOKIE_NAME: hmpps-session-preprod
   NODE_ENV: production
