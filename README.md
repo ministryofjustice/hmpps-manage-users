@@ -75,7 +75,7 @@ node-env mode=PRODUCTION npm start
 # Running in Docker locally
 
 ```
-docker run -p 3000:3000 -d \
+docker run -p 3001:3000 -d \
      --name manage-hmpps-auth-accounts \
      -e USE_API_GATEWAY_AUTH=no \
      quay.io/hmpps/manage-hmpps-auth-accounts:latest
