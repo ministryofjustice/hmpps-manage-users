@@ -22,12 +22,6 @@ env:
         name: {{ template "app.name" . }}
         key: APPINSIGHTS_INSTRUMENTATIONKEY
 
-  - name: GOOGLE_ANALYTICS_ID
-    valueFrom:
-      secretKeyRef:
-        name: {{ template "app.name" . }}
-        key: GOOGLE_ANALYTICS_ID
-
   - name: GOOGLE_TAG_MANAGER_ID
     valueFrom:
       secretKeyRef:
@@ -57,9 +51,6 @@ env:
 
   - name: OAUTH_ENDPOINT_URL
     value: {{ .Values.env.OAUTH_ENDPOINT_URL | quote }}
-
-  - name: NN_ENDPOINT_URL
-    value: {{ .Values.env.NN_ENDPOINT_URL | quote }}
 
   - name: DPS_ENDPOINT_URL
     value: {{ .Values.env.DPS_ENDPOINT_URL | quote }}

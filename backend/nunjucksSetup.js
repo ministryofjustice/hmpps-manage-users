@@ -149,7 +149,7 @@ module.exports = (app, path) => {
   njkEnv.addGlobal('homeUrl', config.apis.oauth2.ui_url)
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
   njkEnv.addGlobal('supportUrl', config.app.supportUrl)
-  njkEnv.addGlobal('googleAnalyticsId', config.analytics.googleAnalyticsId)
+  njkEnv.addGlobal('googleTagManagerId', config.analytics.googleTagManagerId)
 
   return njkEnv
 }

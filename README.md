@@ -36,7 +36,7 @@ The application can be built & run with the following bash commands :
 
 ```
 npm install
-npm start:dev
+npm run start:dev
 ```
 
 This will start the service and use the default dependent services as above.
@@ -59,7 +59,7 @@ The following environment variables supply these values:
 | API_CLIENT_SECRET       | Client secret for accessing prison-api        |
 | API_ENDPOINT_URL        | URL to the prison-api                         |
 | OAUTH_ENDPOINT_URL      | URL to the Oauth2 server                     |
-| NN_ENDPOINT_URL         | New Nomis UI                                 |
+| DPS_ENDPOINT_URL        | DPS Core UI                                  |
 | SESSION_COOKIE_SECRET   | Session cookie secret                        | 
 
 
@@ -75,7 +75,7 @@ node-env mode=PRODUCTION npm start
 # Running in Docker locally
 
 ```
-docker run -p 3000:3000 -d \
+docker run -p 3001:3000 -d \
      --name manage-hmpps-auth-accounts \
      -e USE_API_GATEWAY_AUTH=no \
      quay.io/hmpps/manage-hmpps-auth-accounts:latest
