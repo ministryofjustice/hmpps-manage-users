@@ -14,9 +14,9 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
   }
 
   const index = async (req: Request, res: Response) => {
-    const { username } = req.params
+    const { username, userId } = req.params
 
-    const staffUrl = `${manageUrl}/${username}/details`
+    const staffUrl = `${manageUrl}/${username}/${userId}/details`
 
     const flashReason = req.flash('deactivatedUserReason')
     const reason = flashReason != null && flashReason.length > 0 ? flashReason[0] : null
@@ -31,9 +31,9 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
   }
 
   const post = async (req: Request, res: Response) => {
-    const { username } = req.params
+    const { username, userId } = req.params
     const { reason } = req.body
-    const staffUrl = `${manageUrl}/${username}`
+    const staffUrl = `${manageUrl}/${username}/${userId}`
     const errors = validate({ username, reason })
     const reasonText = [{ text: reason, href: '#reason' }]
 

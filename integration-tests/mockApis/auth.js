@@ -61,7 +61,7 @@ const stubError = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPattern: '/auth/api/authuser/[^/]*',
+      urlPattern: '/auth/api/authuser/id/[^/]*',
     },
     response: {
       status: 500,
@@ -137,8 +137,9 @@ const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
 
 const stubAuthGetUsername = (enabled = true) =>
   getFor({
-    urlPattern: '/auth/api/authuser/[^/]*',
+    urlPattern: '/auth/api/authuser/id/[^/]*',
     body: {
+      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
       username: 'AUTH_ADM',
       email: 'auth_test2@digital.justice.gov.uk',
       enabled,
@@ -152,8 +153,9 @@ const stubAuthGetUsername = (enabled = true) =>
 
 const stubAuthGetUserWithEmail = (enabled = true) =>
   getFor({
-    urlPattern: '/auth/api/authuser/[^/]*',
+    urlPattern: '/auth/api/authuser/id/[^/]*',
     body: {
+      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
       username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
       email: 'auth_test2@digital.justice.gov.uk',
       enabled,
@@ -494,6 +496,7 @@ const stubAuthCreateUser = () =>
   stubJson({
     method: 'POST',
     urlPattern: '/auth/api/authuser/create',
+    body: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
   })
 
 const stubHealth = (status = 200) =>

@@ -32,7 +32,7 @@
       <div class="govuk-grid-row">
         {% set rows = [] %}
         {% for u in results %}
-          {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/details" class="govuk-link" data-qa="edit-button-'
+          {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/' + u.userId + '/details" class="govuk-link" data-qa="edit-button-'
             + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
           {% set tags %}
             {{ govukTag({

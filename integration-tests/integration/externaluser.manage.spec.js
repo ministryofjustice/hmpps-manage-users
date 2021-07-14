@@ -228,7 +228,7 @@ context('External user manage functionality', () => {
 
     cy.task('stubAuthGetUsername')
     cy.task('stubAuthAssignableRoles', [])
-    cy.visit('/manage-external-users/AUTH_RO_USER_TEST/select-roles')
+    cy.visit('/manage-external-users/AUTH_RO_USER_TEST/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-roles')
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
   })

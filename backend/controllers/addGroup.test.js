@@ -7,7 +7,7 @@ describe('select groups factory', () => {
 
   describe('index', () => {
     it('should call addGroup render', async () => {
-      const req = { params: { username: 'joe' }, flash: jest.fn() }
+      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ groupName: 'name', groupCode: 'code' }],
@@ -20,12 +20,12 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/details',
+        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
 
     it('should filter out existing groups', async () => {
-      const req = { params: { username: 'joe' }, flash: jest.fn() }
+      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ groupName: 'name', groupCode: 'code' }],
@@ -41,12 +41,15 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/details',
+        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
 
     it('should copy any flash errors over', async () => {
-      const req = { params: { username: 'joe' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
+      const req = {
+        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn().mockReturnValue({ error: 'some error' }),
+      }
       getUserAndGroups.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, [], []])
 
       const render = jest.fn()
@@ -55,24 +58,33 @@ describe('select groups factory', () => {
         errors: { error: 'some error' },
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/details',
+        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
   })
 
   describe('post', () => {
     it('should add the group and redirect', async () => {
-      const req = { params: { username: 'joe' }, body: { group: 'GLOBAL_SEARCH' }, flash: jest.fn() }
+      const req = {
+        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        body: { group: 'GLOBAL_SEARCH' },
+        flash: jest.fn(),
+      }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveGroup).toBeCalledWith(locals, 'joe', 'GLOBAL_SEARCH')
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
-      const req = { params: { username: 'joe' }, body: {}, flash: jest.fn(), originalUrl: '/original' }
+      const req = {
+        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        body: {},
+        flash: jest.fn(),
+        originalUrl: '/original',
+      }
 
       const redirect = jest.fn()
       await addGroup.post(req, { redirect })

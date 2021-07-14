@@ -5,10 +5,10 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
   }
 
   const index = async (req, res) => {
-    const { username } = req.params
-    const staffUrl = `${manageUrl}/${username}/details`
+    const { username, userId } = req.params
+    const staffUrl = `${manageUrl}/${username}/${userId}/details`
 
-    const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username)
+    const [user, assignableGroups, userGroups] = await getUserAndGroups(res.locals, username, userId)
     const userGroupsCodes = new Set(userGroups.map((g) => g.groupCode))
     const groupDropdownValues = assignableGroups
       .filter((g) => !userGroupsCodes.has(g.groupCode))
@@ -23,9 +23,9 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
   }
 
   const post = async (req, res) => {
-    const { username } = req.params
+    const { username, userId } = req.params
     const { group } = req.body
-    const staffUrl = `${manageUrl}/${username}/details`
+    const staffUrl = `${manageUrl}/${username}/${userId}/details`
 
     if (!group) {
       const errors = [{ href: '#group', text: 'Select a group' }]

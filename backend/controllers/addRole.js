@@ -5,11 +5,11 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
   }
 
   const index = async (req, res) => {
-    const { username } = req.params
-    const staffUrl = `${manageUrl}/${username}/details`
+    const { username, userId } = req.params
+    const staffUrl = `${manageUrl}/${username}/${userId}/details`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
-    const [user, assignableRoles] = await getUserAndRoles(res.locals, username, hasAdminRole)
+    const [user, assignableRoles] = await getUserAndRoles(res.locals, username, userId, hasAdminRole)
     const roleDropdownValues = assignableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
@@ -24,9 +24,9 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
   }
 
   const post = async (req, res) => {
-    const { username } = req.params
+    const { username, userId } = req.params
     const { roles } = req.body
-    const staffUrl = `${manageUrl}/${username}/details`
+    const staffUrl = `${manageUrl}/${username}/${userId}/details`
 
     if (!roles) {
       const errors = [{ href: '#roles', text: 'Select at least one role' }]

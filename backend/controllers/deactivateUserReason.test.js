@@ -10,20 +10,20 @@ describe('deactivate user reason factory', () => {
 
   describe('index', () => {
     it('should call deactivateUserReason render', async () => {
-      const req = { params: { username: 'bob' }, flash: jest.fn() }
+      const req = { params: { username: 'bob', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       const render = jest.fn()
       await deactivateUser.index(req, { render })
       expect(render).toBeCalledWith('userDeactivate.njk', {
         title: 'Deactivate user reason',
         username: 'bob',
-        staffUrl: '/manage-external-users/bob/details',
+        staffUrl: '/manage-external-users/bob/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         reason: null,
         errors: undefined,
       })
     })
     it('should copy any flash errors over', async () => {
       const req = {
-        params: { username: 'bob' },
+        params: { username: 'bob', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
       }
       const render = jest.fn()
@@ -33,7 +33,7 @@ describe('deactivate user reason factory', () => {
         title: 'Deactivate user reason',
         username: 'bob',
         reason: null,
-        staffUrl: '/manage-external-users/bob/details',
+        staffUrl: '/manage-external-users/bob/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
   })
@@ -41,7 +41,7 @@ describe('deactivate user reason factory', () => {
   describe('post', () => {
     it('should deactivate user and redirect', async () => {
       const req = {
-        params: { username: 'bob' },
+        params: { username: 'bob', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { reason: 'Left' },
         flash: jest.fn(),
       }
@@ -49,7 +49,7 @@ describe('deactivate user reason factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await deactivateUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/bob/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/bob/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(deactivateUserApi).toBeCalledWith(locals, 'bob', 'Left')
     })
   })

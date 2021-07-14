@@ -45,7 +45,7 @@ describe('create user factory', () => {
   describe('post', () => {
     it('should create user and redirect', async () => {
       const req = {
-        params: {},
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: {
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
@@ -55,12 +55,13 @@ describe('create user factory', () => {
         flash: jest.fn(),
         session: {},
       }
+      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       const render = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {
@@ -73,7 +74,7 @@ describe('create user factory', () => {
 
     it('should trim fields, create user and redirect', async () => {
       const req = {
-        params: {},
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: {
           email: ' bob@digital.justice.gov.uk ',
           firstName: ' bob ',
@@ -83,12 +84,13 @@ describe('create user factory', () => {
         flash: jest.fn(),
         session: {},
       }
+      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       const render = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {
@@ -101,7 +103,7 @@ describe('create user factory', () => {
 
     it('should create user without group and redirect', async () => {
       const req = {
-        params: {},
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: {
           email: 'bob@digital.justice.gov.uk',
           firstName: 'bob',
@@ -112,11 +114,13 @@ describe('create user factory', () => {
         session: {},
       }
 
+      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+
       const render = jest.fn()
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/details',
+        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {
