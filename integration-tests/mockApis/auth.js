@@ -237,7 +237,7 @@ const stubAuthEmailSearch = () =>
 
 const stubAuthUserGroups = () =>
   getFor({
-    urlPattern: '/auth/api/authuser/.*/groups\\?children=false',
+    urlPattern: '/auth/api/authuser/id/.*/groups\\?children=false',
     body: [
       { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
       { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },

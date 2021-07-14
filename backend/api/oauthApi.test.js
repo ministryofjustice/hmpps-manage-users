@@ -63,14 +63,17 @@ describe('oauthApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => groups,
       })
-      actual = oauthApi.userGroups(context, { username: 'joe' })
+      actual = oauthApi.userGroups(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
     })
 
     it('should return groups from endpoint', () => {
       expect(actual).toEqual(groups)
     })
     it('should call auth groups endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/authuser/joe/groups?children=false')
+      expect(client.get).toBeCalledWith(
+        context,
+        '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups?children=false',
+      )
     })
   })
 
