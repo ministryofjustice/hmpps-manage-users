@@ -15,14 +15,14 @@ const controller = ({ oauthApi }) => {
     Promise.all([
       oauthApi.getUser(context, { userId }),
       oauthApi.assignableGroups(context, { username }),
-      oauthApi.userGroups(context, { username }),
+      oauthApi.userGroups(context, { userId }),
     ])
 
   const getUserRolesAndGroupsApi = async (context, username, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
       oauthApi.getUser(context, { userId }),
-      oauthApi.userRoles(context, { username }),
-      oauthApi.userGroups(context, { username }),
+      oauthApi.userRoles(context, { userId }),
+      oauthApi.userGroups(context, { userId }),
       hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
     ])
 
