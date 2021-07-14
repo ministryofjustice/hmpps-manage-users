@@ -246,7 +246,7 @@ const stubAuthUserGroups = () =>
 
 const stubAuthUserRoles = () =>
   getFor({
-    urlPattern: '/auth/api/authuser/.*/roles',
+    urlPattern: '/auth/api/authuser/id/.*/roles',
     body: [
       { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
       { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
