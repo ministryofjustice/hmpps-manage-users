@@ -8,19 +8,19 @@ const { deactivateUserReasonFactory } = require('../controllers/deactivateUserRe
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
-  const getUserAndAssignableRolesApi = (context, username) =>
-    Promise.all([oauthApi.getUser(context, { username }), oauthApi.assignableRoles(context, { username })])
+  const getUserAndAssignableRolesApi = (context, username, userId) =>
+    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { username })])
 
-  const getUserAndGroupsApi = (context, username) =>
+  const getUserAndGroupsApi = (context, username, userId) =>
     Promise.all([
-      oauthApi.getUser(context, { username }),
+      oauthApi.getUser(context, { userId }),
       oauthApi.assignableGroups(context, { username }),
       oauthApi.userGroups(context, { username }),
     ])
 
-  const getUserRolesAndGroupsApi = async (context, username, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
+  const getUserRolesAndGroupsApi = async (context, username, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
-      oauthApi.getUser(context, { username }),
+      oauthApi.getUser(context, { userId }),
       oauthApi.userRoles(context, { username }),
       oauthApi.userGroups(context, { username }),
       hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
@@ -38,7 +38,7 @@ const controller = ({ oauthApi }) => {
     ]
   }
 
-  const getUserApi = (context, username) => oauthApi.getUser(context, { username })
+  const getUserApi = (context, userId) => oauthApi.getUser(context, { userId })
   const saveGroupApi = (context, username, group) => oauthApi.addUserGroup(context, { username, group })
   const removeGroupApi = (context, username, group) => oauthApi.removeUserGroup(context, { username, group })
   const saveRolesApi = (context, username, roles) => oauthApi.addUserRoles(context, { username, roles })

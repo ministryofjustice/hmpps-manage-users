@@ -37,10 +37,13 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, search
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        await createUser(res.locals, user)
+        const userId = await createUser(res.locals, user)
 
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
-        res.render('createUserSuccess.njk', { email: user.email, detailsLink: `${manageUrl}/${user.email}/details` })
+        res.render('createUserSuccess.njk', {
+          email: user.email,
+          detailsLink: `${manageUrl}/${user.email}/${userId}/details`,
+        })
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
           const { emailError: error, error_description: errorDescription, field } = err.response.body
