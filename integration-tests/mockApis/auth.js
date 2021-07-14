@@ -496,6 +496,7 @@ const stubAuthCreateUser = () =>
   stubJson({
     method: 'POST',
     urlPattern: '/auth/api/authuser/create',
+    body: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
   })
 
 const stubHealth = (status = 200) =>
