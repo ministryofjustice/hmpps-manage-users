@@ -50,7 +50,7 @@ describe('deactivate user reason factory', () => {
       const locals = jest.fn()
       await deactivateUser.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/bob/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(deactivateUserApi).toBeCalledWith(locals, 'bob', 'Left')
+      expect(deactivateUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'Left')
     })
   })
 
