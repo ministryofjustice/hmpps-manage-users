@@ -170,6 +170,7 @@ const stubAuthGetUserWithEmail = (enabled = true) =>
 const stubAuthSearch = ({
   content = [
     {
+      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
       username: 'AUTH_ADM',
       email: 'auth_test2@digital.justice.gov.uk',
       enabled: true,

@@ -93,7 +93,7 @@ const userDetailsFactory = (
     const { username, userId } = req.params
     const staffUrl = `${manageUrl}/${username}/${userId}`
 
-    await enableUserApi(res.locals, username)
+    await enableUserApi(res.locals, userId)
     res.redirect(`${staffUrl}/details`)
   }
 
@@ -101,7 +101,7 @@ const userDetailsFactory = (
     const { username, userId } = req.params
     const staffUrl = `${manageUrl}/${username}/${userId}`
 
-    await disableUserApi(res.locals, username)
+    await disableUserApi(res.locals, userId)
     res.redirect(`${staffUrl}/details`)
   }
 

@@ -498,7 +498,7 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(enableUserApi).toBeCalledWith(locals, 'joe')
+      expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })
 
@@ -510,7 +510,7 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(disableUserApi).toBeCalledWith(locals, 'joe')
+      expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })
 })

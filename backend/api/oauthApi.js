@@ -66,10 +66,9 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const removeUserGroup = (context, { username, group }) => del(context, `/api/authuser/${username}/groups/${group}`)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
-  const enableUser = (context, { username }) => put(context, `/api/authuser/${username}/enable`)
-  const disableUser = (context, { username }) => put(context, `/api/authuser/${username}/disable`)
-  const deactivateUser = (context, { username, reason }) =>
-    put(context, `/api/authuser/${username}/disable`, { reason })
+  const enableUser = (context, { userId }) => put(context, `/api/authuser/id/${userId}/enable`)
+  const disableUser = (context, { userId }) => put(context, `/api/authuser/id/${userId}/disable`)
+  const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const assignableRoles = (context, { username }) => get(context, `/api/authuser/${username}/assignable-roles`)
   const amendUser = (context, username, email) => post(context, `/api/authuser/${username}`, email)
   const groupDetails = (context, { group }) => get(context, `/api/groups/${group}`)

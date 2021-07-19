@@ -34,14 +34,14 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
     const { username, userId } = req.params
     const { reason } = req.body
     const staffUrl = `${manageUrl}/${username}/${userId}`
-    const errors = validate({ username, reason })
+    const errors = validate({ userId, reason })
     const reasonText = [{ text: reason, href: '#reason' }]
 
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, reasonText)
     } else {
       try {
-        await deactivateUserApi(res.locals, username, reason)
+        await deactivateUserApi(res.locals, userId, reason)
         res.redirect(`${staffUrl}/details`)
       } catch (error) {
         if (error.status === 403) {

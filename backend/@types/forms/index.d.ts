@@ -1,6 +1,6 @@
 declare module 'forms' {
   export interface DeactivateUserReasonForm {
-    username: string
+    userId: string
     reason?: string
   }
 }

@@ -44,9 +44,9 @@ const controller = ({ oauthApi }) => {
   const saveRolesApi = (context, username, roles) => oauthApi.addUserRoles(context, { username, roles })
   const removeRoleApi = (context, username, role) => oauthApi.removeUserRole(context, { username, role })
   const changeEmailApi = (context, username, email) => oauthApi.amendUser(context, username, { email })
-  const enableUserApi = (context, username) => oauthApi.enableUser(context, { username })
-  const disableUserApi = (context, username) => oauthApi.disableUser(context, { username })
-  const deactivateUserApi = (context, username, reason) => oauthApi.deactivateUser(context, { username, reason })
+  const enableUserApi = (context, userId) => oauthApi.enableUser(context, { userId })
+  const disableUserApi = (context, userId) => oauthApi.disableUser(context, { userId })
+  const deactivateUserApi = (context, userId, reason) => oauthApi.deactivateUser(context, { userId, reason })
 
   const { index: selectGroup, post: postGroup } = selectGroupFactory(
     getUserAndGroupsApi,
