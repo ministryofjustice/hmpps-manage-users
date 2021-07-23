@@ -52,7 +52,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${username}/${userId}`
 
     try {
-      await removeRoleApi(res.locals, username, role)
+      await removeRoleApi(res.locals, userId, role)
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {

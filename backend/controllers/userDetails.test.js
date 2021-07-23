@@ -384,7 +384,7 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.removeRole(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(removeRoleApi).toBeCalledWith(locals, 'joe', 'role1')
+      expect(removeRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
     })
 
     it('should ignore if user does not have role', async () => {

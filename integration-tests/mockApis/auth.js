@@ -390,7 +390,7 @@ const stubAuthAddRoles = () =>
   stubFor({
     request: {
       method: 'POST',
-      urlPattern: '/auth/api/authuser/.*/roles',
+      urlPattern: '/auth/api/authuser/id/.*/roles',
     },
     response: {
       status: 200,
@@ -431,7 +431,7 @@ const stubAuthRemoveRole = () =>
   stubFor({
     request: {
       method: 'DELETE',
-      urlPattern: '/auth/api/authuser/.*/roles/.*',
+      urlPattern: '/auth/api/authuser/id/.*/roles/.*',
     },
     response: {
       status: 200,
@@ -518,13 +518,13 @@ const stubHealth = (status = 200) =>
 const verifyAddRoles = () =>
   getMatchingRequests({
     method: 'POST',
-    urlPathPattern: '/auth/api/authuser/.*/roles',
+    urlPathPattern: '/auth/api/authuser/id/.*/roles',
   }).then((data) => data.body.requests)
 
 const verifyRemoveRole = () =>
   getMatchingRequests({
     method: 'DELETE',
-    urlPathPattern: '/auth/api/authuser/.*/roles/.*',
+    urlPathPattern: '/auth/api/authuser/id/.*/roles/.*',
   }).then((data) => data.body.requests)
 
 const verifyAddGroup = () =>
@@ -554,13 +554,13 @@ const verifyRemoveGroup = () =>
 const verifyUserEnable = () =>
   getMatchingRequests({
     method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/.*/enable',
+    urlPathPattern: '/auth/api/authuser/id/.*/enable',
   }).then((data) => data.body.requests)
 
 const verifyUserDisable = () =>
   getMatchingRequests({
     method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/.*/disable',
+    urlPathPattern: '/auth/api/authuser/id/.*/disable',
   }).then((data) => data.body.requests)
 
 const verifyAuthUserChangeEmail = () =>

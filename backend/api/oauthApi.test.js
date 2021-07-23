@@ -212,14 +212,16 @@ describe('oauthApi tests', () => {
       client.post = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = oauthApi.addUserRoles(context, { username: 'bob', roles: ['maintain'] })
+      actual = oauthApi.addUserRoles(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', roles: ['maintain'] })
     })
 
     it('should return any error from endpoint', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/api/authuser/bob/roles', ['maintain'])
+      expect(client.post).toBeCalledWith(context, '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles', [
+        'maintain',
+      ])
     })
   })
 
@@ -231,14 +233,14 @@ describe('oauthApi tests', () => {
       client.del = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = oauthApi.removeUserRole(context, { username: 'bob', role: 'maintain' })
+      actual = oauthApi.removeUserRole(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', role: 'maintain' })
     })
 
     it('should return any error from endpoint', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/api/authuser/bob/roles/maintain')
+      expect(client.del).toBeCalledWith(context, '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles/maintain')
     })
   })
 
@@ -288,14 +290,17 @@ describe('oauthApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => roles,
       })
-      actual = oauthApi.assignableRoles(context, { username: 'bob' })
+      actual = oauthApi.assignableRoles(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
     })
 
     it('should return roles from endpoint', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/authuser/bob/assignable-roles')
+      expect(client.get).toBeCalledWith(
+        context,
+        '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/assignable-roles',
+      )
     })
   })
 
