@@ -120,7 +120,9 @@ context('External user manage functionality', () => {
     cy.task('verifyAddGroup').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/groups/SOC_NORTH_WEST')
+      expect(requests[0].url).to.equal(
+        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
+      )
     })
 
     UserPage.verifyOnPage('Auth Adm')
@@ -131,7 +133,9 @@ context('External user manage functionality', () => {
     cy.task('verifyRemoveGroup').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/groups/SITE_1_GROUP_1')
+      expect(requests[0].url).to.equal(
+        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1',
+      )
     })
   })
 
@@ -197,7 +201,9 @@ context('External user manage functionality', () => {
     cy.task('verifyAddGroup').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/groups/SOC_NORTH_WEST')
+      expect(requests[0].url).to.equal(
+        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
+      )
     })
   })
 

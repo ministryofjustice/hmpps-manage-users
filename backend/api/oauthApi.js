@@ -62,8 +62,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   }
   const addUserRoles = (context, { userId, roles }) => post(context, `/api/authuser/id/${userId}/roles`, roles)
   const removeUserRole = (context, { userId, role }) => del(context, `/api/authuser/id/${userId}/roles/${role}`)
-  const addUserGroup = (context, { username, group }) => put(context, `/api/authuser/${username}/groups/${group}`)
-  const removeUserGroup = (context, { username, group }) => del(context, `/api/authuser/${username}/groups/${group}`)
+  const addUserGroup = (context, { userId, group }) => put(context, `/api/authuser/id/${userId}/groups/${group}`)
+  const removeUserGroup = (context, { userId, group }) => del(context, `/api/authuser/id/${userId}/groups/${group}`)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
   const enableUser = (context, { userId }) => put(context, `/api/authuser/id/${userId}/enable`)

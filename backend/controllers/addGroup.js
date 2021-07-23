@@ -32,7 +32,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       try {
-        await saveGroup(res.locals, username, group)
+        await saveGroup(res.locals, userId, group)
         res.redirect(`${staffUrl}`)
       } catch (error) {
         if (error.status === 403) {
