@@ -88,7 +88,7 @@ context('External user manage functionality', () => {
     cy.task('verifyRemoveRole').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/auth/api/authuser/AUTH_ADM/roles/GLOBAL_SEARCH')
+      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/roles/GLOBAL_SEARCH')
     })
   })
 

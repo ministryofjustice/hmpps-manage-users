@@ -9,7 +9,7 @@ const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
   const getUserAndAssignableRolesApi = (context, username, userId) =>
-    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { username })])
+    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId })])
 
   const getUserAndGroupsApi = (context, username, userId) =>
     Promise.all([
@@ -41,8 +41,8 @@ const controller = ({ oauthApi }) => {
   const getUserApi = (context, userId) => oauthApi.getUser(context, { userId })
   const saveGroupApi = (context, username, group) => oauthApi.addUserGroup(context, { username, group })
   const removeGroupApi = (context, username, group) => oauthApi.removeUserGroup(context, { username, group })
-  const saveRolesApi = (context, username, roles) => oauthApi.addUserRoles(context, { username, roles })
-  const removeRoleApi = (context, username, role) => oauthApi.removeUserRole(context, { username, role })
+  const saveRolesApi = (context, userId, roles) => oauthApi.addUserRoles(context, { userId, roles })
+  const removeRoleApi = (context, userId, role) => oauthApi.removeUserRole(context, { userId, role })
   const changeEmailApi = (context, username, email) => oauthApi.amendUser(context, username, { email })
   const enableUserApi = (context, userId) => oauthApi.enableUser(context, { userId })
   const disableUserApi = (context, userId) => oauthApi.disableUser(context, { userId })

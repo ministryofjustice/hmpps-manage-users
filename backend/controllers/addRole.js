@@ -33,7 +33,7 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
-      await saveRoles(res.locals, username, roleArray)
+      await saveRoles(res.locals, userId, roleArray)
       res.redirect(`${staffUrl}`)
     }
   }

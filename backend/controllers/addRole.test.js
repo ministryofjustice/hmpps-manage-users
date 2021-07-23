@@ -53,7 +53,7 @@ describe('select roles factory', () => {
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH', 'BOB'])
+      expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
     })
 
     it('should cope with single role being added', async () => {
@@ -67,7 +67,7 @@ describe('select roles factory', () => {
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveRoles).toBeCalledWith(locals, 'joe', ['GLOBAL_SEARCH'])
+      expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
     })
 
     it('should stash the errors and redirect if no roles selected', async () => {
