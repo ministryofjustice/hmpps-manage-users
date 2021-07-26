@@ -69,7 +69,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${username}/${userId}`
 
     try {
-      await removeGroupApi(res.locals, username, group)
+      await removeGroupApi(res.locals, userId, group)
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {

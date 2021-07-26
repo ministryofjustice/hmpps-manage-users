@@ -410,7 +410,7 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.removeGroup(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(removeGroupApi).toBeCalledWith(locals, 'joe', 'group1')
+      expect(removeGroupApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
     })
 
     it('should ignore if user does not have group', async () => {

@@ -1,11 +1,19 @@
-const groupDeleteFactory = (getGroupDetailsApi, deleteGroupApi, maintainUrl) => {
-  const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
+import { Request, Response } from 'express'
+
+const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
+  const stashStateAndRedirectToIndex = (
+    req: Request,
+    res: Response,
+    errors: Array<Record<string, string>>,
+    group: Array<Record<string, string>>,
+    url: string,
+  ) => {
     req.flash('deleteGroupErrors', errors)
     req.flash('group', group)
     res.redirect(url)
   }
 
-  const index = async (req, res) => {
+  const index = async (req: Request, res: Response) => {
     const { group } = req.params
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     try {
@@ -30,7 +38,7 @@ const groupDeleteFactory = (getGroupDetailsApi, deleteGroupApi, maintainUrl) => 
     }
   }
 
-  const deleteGroup = async (req, res) => {
+  const deleteGroup = async (req: Request, res: Response) => {
     const { group } = req.params
     try {
       await deleteGroupApi(res.locals, group)
@@ -49,7 +57,7 @@ const groupDeleteFactory = (getGroupDetailsApi, deleteGroupApi, maintainUrl) => 
         const groupDeleteError = [
           { href: '#groupCode', text: 'Group has child groups please delete before trying to delete parent group' },
         ]
-        stashStateAndRedirectToIndex(req, res, groupDeleteError, [group], groupUrl)
+        stashStateAndRedirectToIndex(req, res, groupDeleteError, [{ text: group, href: '#group' }], groupUrl)
       } else {
         throw error
       }

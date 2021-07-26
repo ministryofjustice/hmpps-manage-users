@@ -530,7 +530,7 @@ const verifyRemoveRole = () =>
 const verifyAddGroup = () =>
   getMatchingRequests({
     method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/.*/groups/.*',
+    urlPathPattern: '/auth/api/authuser/id/.*/groups/.*',
   }).then((data) => data.body.requests)
 
 const verifyCreateGroup = () =>
@@ -548,7 +548,7 @@ const verifyCreateChildGroup = () =>
 const verifyRemoveGroup = () =>
   getMatchingRequests({
     method: 'DELETE',
-    urlPathPattern: '/auth/api/authuser/.*/groups/.*',
+    urlPathPattern: '/auth/api/authuser/id/.*/groups/.*',
   }).then((data) => data.body.requests)
 
 const verifyUserEnable = () =>

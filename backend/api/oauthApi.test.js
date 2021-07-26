@@ -252,14 +252,18 @@ describe('oauthApi tests', () => {
       client.put = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = oauthApi.addUserGroup(context, { username: 'bob', group: 'maintain' })
+      actual = oauthApi.addUserGroup(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', group: 'maintain' })
     })
 
     it('should return any error from endpoint', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/authuser/bob/groups/maintain', undefined)
+      expect(client.put).toBeCalledWith(
+        context,
+        '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
+        undefined,
+      )
     })
   })
 
@@ -271,14 +275,17 @@ describe('oauthApi tests', () => {
       client.del = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = oauthApi.removeUserGroup(context, { username: 'bob', group: 'maintain' })
+      actual = oauthApi.removeUserGroup(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', group: 'maintain' })
     })
 
     it('should return any error from endpoint', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/api/authuser/bob/groups/maintain')
+      expect(client.del).toBeCalledWith(
+        context,
+        '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
+      )
     })
   })
 

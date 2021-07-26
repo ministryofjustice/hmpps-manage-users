@@ -75,7 +75,7 @@ describe('select groups factory', () => {
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveGroup).toBeCalledWith(locals, 'joe', 'GLOBAL_SEARCH')
+      expect(saveGroup).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
