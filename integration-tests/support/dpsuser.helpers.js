@@ -16,11 +16,11 @@ export const goToResultsPage = (roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }])
   return results
 }
 
-export const editUser = (roles) => {
+export const editUser = (roles, isAdmin) => {
   const results = goToResultsPage(roles)
 
   cy.task('stubDpsUserDetails')
-  cy.task('stubDpsUserGetRoles')
+  cy.task(isAdmin ? 'stubDpsUserGetAdminRoles' : 'stubDpsUserGetRoles')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
   results.edit('ITAG_USER5')

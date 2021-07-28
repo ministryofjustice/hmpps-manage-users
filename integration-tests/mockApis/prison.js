@@ -151,7 +151,23 @@ module.exports = {
     }),
   stubUserGetRoles: () =>
     getFor({
-      urlPattern: '/api/users/.*/access-roles/caseload/NWEB.*',
+      urlPattern: '/api/users/.*/access-roles/caseload/NWEB\\?includeAdmin=false',
+      body: [
+        {
+          roleCode: 'MAINTAIN_ACCESS_ROLES',
+          roleName: 'Maintain Roles',
+          roleFunction: 'GENERAL',
+        },
+        {
+          roleCode: 'ANOTHER_GENERAL_ROLE',
+          roleName: 'Another general role',
+          roleFunction: 'GENERAL',
+        },
+      ],
+    }),
+  stubDpsUserGetAdminRoles: () =>
+    getFor({
+      urlPattern: '/api/users/.*/access-roles/caseload/NWEB\\?includeAdmin=true',
       body: [
         {
           roleCode: 'MAINTAIN_ACCESS_ROLES',

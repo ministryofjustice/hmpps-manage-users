@@ -215,7 +215,7 @@ context('DPS user functionality', () => {
     const results = UserSearchResultsPage.verifyOnPage()
 
     cy.task('stubDpsUserDetails')
-    cy.task('stubDpsUserGetRoles')
+    cy.task('stubDpsUserGetAdminRoles')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
     results.edit('ITAG_USER5')
