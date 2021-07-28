@@ -44,7 +44,7 @@ context('DPS user manage functionality', () => {
 
   it('As an ADMIN user should display details for a user', () => {
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
-    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }], true)
 
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage
