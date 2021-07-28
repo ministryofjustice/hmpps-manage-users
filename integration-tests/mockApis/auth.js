@@ -484,7 +484,7 @@ const stubAuthUserEnable = () =>
 const stubAuthUserChangeEmail = () =>
   stubJson({
     method: 'POST',
-    urlPattern: '/auth/api/authuser/.*',
+    urlPattern: '/auth/api/authuser/id/[^/]*/email',
   })
 
 const stubDpsUserChangeEmail = () =>

@@ -43,7 +43,7 @@ const controller = ({ oauthApi }) => {
   const removeGroupApi = (context, userId, group) => oauthApi.removeUserGroup(context, { userId, group })
   const saveRolesApi = (context, userId, roles) => oauthApi.addUserRoles(context, { userId, roles })
   const removeRoleApi = (context, userId, role) => oauthApi.removeUserRole(context, { userId, role })
-  const changeEmailApi = (context, username, email) => oauthApi.amendUser(context, username, { email })
+  const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })
   const enableUserApi = (context, userId) => oauthApi.enableUser(context, { userId })
   const disableUserApi = (context, userId) => oauthApi.disableUser(context, { userId })
   const deactivateUserApi = (context, userId, reason) => oauthApi.deactivateUser(context, { userId, reason })

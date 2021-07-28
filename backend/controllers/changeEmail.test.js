@@ -68,7 +68,7 @@ describe('change email factory', () => {
       expect(redirect).toBeCalledWith(
         '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
       )
-      expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
+      expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
     })
 
     it('should change the email and redirect to new email address', async () => {
@@ -84,7 +84,7 @@ describe('change email factory', () => {
       expect(redirect).toBeCalledWith(
         '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
       )
-      expect(saveEmail).toBeCalledWith(locals, 'joe@digital.justice.gov.uk', 'bob@digital.justice.gov.uk')
+      expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
     })
 
     it('should trim, change the email and redirect', async () => {
@@ -100,7 +100,7 @@ describe('change email factory', () => {
       expect(redirect).toBeCalledWith(
         '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
       )
-      expect(saveEmail).toBeCalledWith(locals, 'joe', 'bob@digital.justice.gov.uk')
+      expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(req.flash).toBeCalledWith('changeEmail', 'bob@digital.justice.gov.uk')
     })
 
