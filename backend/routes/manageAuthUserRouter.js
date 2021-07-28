@@ -14,7 +14,7 @@ const controller = ({ oauthApi }) => {
   const getUserAndGroupsApi = (context, username, userId) =>
     Promise.all([
       oauthApi.getUser(context, { userId }),
-      oauthApi.assignableGroups(context, { username }),
+      oauthApi.assignableGroups(context),
       oauthApi.userGroups(context, { userId }),
     ])
 
