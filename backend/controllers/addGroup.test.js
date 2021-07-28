@@ -7,7 +7,7 @@ describe('select groups factory', () => {
 
   describe('index', () => {
     it('should call addGroup render', async () => {
-      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
+      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ groupName: 'name', groupCode: 'code' }],
@@ -20,12 +20,12 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
 
     it('should filter out existing groups', async () => {
-      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
+      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       getUserAndGroups.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ groupName: 'name', groupCode: 'code' }],
@@ -41,13 +41,13 @@ describe('select groups factory', () => {
         errors: undefined,
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
 
     it('should copy any flash errors over', async () => {
       const req = {
-        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
       }
       getUserAndGroups.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, [], []])
@@ -58,7 +58,7 @@ describe('select groups factory', () => {
         errors: { error: 'some error' },
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
-        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
     })
   })
@@ -66,7 +66,7 @@ describe('select groups factory', () => {
   describe('post', () => {
     it('should add the group and redirect', async () => {
       const req = {
-        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { group: 'GLOBAL_SEARCH' },
         flash: jest.fn(),
       }
@@ -74,13 +74,13 @@ describe('select groups factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveGroup).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
       const req = {
-        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
@@ -98,7 +98,7 @@ describe('select groups factory', () => {
       saveGroup.mockRejectedValue(error)
       await addGroup.post(
         {
-          params: { username: 'joe' },
+          params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
           body: { group: 'GLOBAL_SEARCH' },
           flash: jest.fn(),
           originalUrl: '/some-location',
@@ -108,13 +108,13 @@ describe('select groups factory', () => {
       expect(redirect).toBeCalledWith('/some-location')
     })
 
-    it('should fail gracefully if group managernot allowed to maintain user', async () => {
+    it('should fail gracefully if group manager not allowed to maintain user', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 403 }
       saveGroup.mockRejectedValue(error)
       await addGroup.post(
         {
-          params: { username: 'joe' },
+          params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
           body: { group: 'GLOBAL_SEARCH' },
           flash: jest.fn(),
           originalUrl: '/some-location',

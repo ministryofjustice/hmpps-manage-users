@@ -8,17 +8,17 @@ const { deactivateUserReasonFactory } = require('../controllers/deactivateUserRe
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
-  const getUserAndAssignableRolesApi = (context, username, userId) =>
+  const getUserAndAssignableRolesApi = (context, userId) =>
     Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId })])
 
-  const getUserAndGroupsApi = (context, username, userId) =>
+  const getUserAndGroupsApi = (context, userId) =>
     Promise.all([
       oauthApi.getUser(context, { userId }),
       oauthApi.assignableGroups(context),
       oauthApi.userGroups(context, { userId }),
     ])
 
-  const getUserRolesAndGroupsApi = async (context, username, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
+  const getUserRolesAndGroupsApi = async (context, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
       oauthApi.getUser(context, { userId }),
       oauthApi.userRoles(context, { userId }),

@@ -20,7 +20,7 @@ describe('user detail factory', () => {
 
   it('should call userDetail render', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -53,7 +53,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainDpsUsersAdmin: false,
@@ -67,7 +67,7 @@ describe('user detail factory', () => {
 
   it('should set showUsername to false if email same as username', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -100,7 +100,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainDpsUsersAdmin: false,
@@ -114,7 +114,7 @@ describe('user detail factory', () => {
 
   it('should only have groups set to showRemove when group manager is member of group', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -150,7 +150,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [
         { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
@@ -167,7 +167,7 @@ describe('user detail factory', () => {
 
   it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -200,7 +200,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       hasMaintainDpsUsersAdmin: true,
@@ -214,7 +214,7 @@ describe('user detail factory', () => {
 
   it('should pass through show fields if not set', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -258,7 +258,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
       hasMaintainDpsUsersAdmin: false,
@@ -272,7 +272,7 @@ describe('user detail factory', () => {
 
   it('should copy the search results url through from the session', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: { searchResultsUrl: '/some-url' },
     }
@@ -316,7 +316,7 @@ describe('user detail factory', () => {
         verified: true,
         lastLoggedIn: '2020-11-23T11:13:08.387065',
       },
-      staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
       groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
       hasMaintainDpsUsersAdmin: false,
@@ -330,7 +330,7 @@ describe('user detail factory', () => {
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -349,12 +349,12 @@ describe('user detail factory', () => {
     ])
     const locals = { user: { maintainAuthUsers: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
   })
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
     const req = {
-      params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
       session: {},
     }
@@ -373,17 +373,17 @@ describe('user detail factory', () => {
     ])
     const locals = { user: { maintainAccessAdmin: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, 'joe', '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
+    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
   })
 
   describe('remove role', () => {
     it('should remove role and redirect', async () => {
-      const req = { params: { username: 'joe', role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const req = { params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeRole(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
     })
 
@@ -393,7 +393,7 @@ describe('user detail factory', () => {
       removeRoleApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
-          params: { username: 'joe', role: 'role99' },
+          params: { role: 'role99' },
           originalUrl: '/some-location',
         },
         { redirect },
@@ -404,12 +404,12 @@ describe('user detail factory', () => {
 
   describe('remove group', () => {
     it('should remove group and redirect', async () => {
-      const req = { params: { username: 'joe', group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const req = { params: { group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeGroup(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeGroupApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
     })
 
@@ -419,7 +419,7 @@ describe('user detail factory', () => {
       removeGroupApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
-          params: { username: 'joe', role: 'group99' },
+          params: { role: 'group99' },
           originalUrl: '/some-location',
         },
         { redirect },
@@ -433,7 +433,7 @@ describe('user detail factory', () => {
       removeGroupApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
-          params: { username: 'joe', role: 'group99' },
+          params: { role: 'group99' },
           originalUrl: '/some-location',
         },
         { redirect },
@@ -443,7 +443,7 @@ describe('user detail factory', () => {
 
     it('should copy any flash errors over', async () => {
       const req = {
-        params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
         session: {},
       }
@@ -477,7 +477,7 @@ describe('user detail factory', () => {
           verified: true,
           lastLoggedIn: '2020-11-23T11:13:08.387065',
         },
-        staffUrl: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
         groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
         hasMaintainDpsUsersAdmin: false,
@@ -492,24 +492,24 @@ describe('user detail factory', () => {
 
   describe('enable user', () => {
     it('should enable user and redirect', async () => {
-      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })
 
   describe('disable user', () => {
     it('should disable user and redirect', async () => {
-      const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })

@@ -61,7 +61,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {
@@ -90,7 +90,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {
@@ -120,7 +120,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createUser.post(req, { render, locals })
       expect(render).toBeCalledWith('createUserSuccess.njk', {
-        detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
       expect(createUserApi).toBeCalledWith(locals, {

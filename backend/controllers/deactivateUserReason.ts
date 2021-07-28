@@ -14,16 +14,15 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
   }
 
   const index = async (req: Request, res: Response) => {
-    const { username, userId } = req.params
+    const { userId } = req.params
 
-    const staffUrl = `${manageUrl}/${username}/${userId}/details`
+    const staffUrl = `${manageUrl}/${userId}/details`
 
     const flashReason = req.flash('deactivatedUserReason')
     const reason = flashReason != null && flashReason.length > 0 ? flashReason[0] : null
 
     res.render('userDeactivate.njk', {
       title,
-      username,
       staffUrl,
       reason,
       errors: req.flash('deactivatedUserReasonErrors'),
@@ -31,9 +30,9 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
   }
 
   const post = async (req: Request, res: Response) => {
-    const { username, userId } = req.params
+    const { userId } = req.params
     const { reason } = req.body
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const staffUrl = `${manageUrl}/${userId}`
     const errors = validate({ userId, reason })
     const reasonText = [{ text: reason, href: '#reason' }]
 

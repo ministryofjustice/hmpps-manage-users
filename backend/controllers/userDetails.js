@@ -15,8 +15,8 @@ const userDetailsFactory = (
   }
 
   const index = async (req, res) => {
-    const { username, userId } = req.params
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const { userId } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
@@ -24,7 +24,6 @@ const userDetailsFactory = (
 
     const [user, roles, groups] = await getUserRolesAndGroupsApi(
       res.locals,
-      username,
       userId,
       hasMaintainDpsUsersAdmin,
       hasMaintainAuthUsers,
@@ -48,8 +47,8 @@ const userDetailsFactory = (
   }
 
   const removeRole = async (req, res) => {
-    const { username, userId, role } = req.params
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const { userId, role } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeRoleApi(res.locals, userId, role)
@@ -65,8 +64,8 @@ const userDetailsFactory = (
   }
 
   const removeGroup = async (req, res) => {
-    const { username, userId, group } = req.params
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const { userId, group } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeGroupApi(res.locals, userId, group)
@@ -90,16 +89,16 @@ const userDetailsFactory = (
   }
 
   const enableUser = async (req, res) => {
-    const { username, userId } = req.params
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const { userId } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
 
     await enableUserApi(res.locals, userId)
     res.redirect(`${staffUrl}/details`)
   }
 
   const disableUser = async (req, res) => {
-    const { username, userId } = req.params
-    const staffUrl = `${manageUrl}/${username}/${userId}`
+    const { userId } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
 
     await disableUserApi(res.locals, userId)
     res.redirect(`${staffUrl}/details`)
