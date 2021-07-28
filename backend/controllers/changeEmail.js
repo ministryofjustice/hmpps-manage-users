@@ -44,7 +44,7 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
       if (errors.length > 0) {
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
-        await changeEmail(res.locals, username, email)
+        await changeEmail(res.locals, userId, email)
         const successUrl = `${manageUrl}/${username.includes('@') ? email : username}/${userId}/change-email-success`
         req.flash('changeEmail', email)
         res.redirect(successUrl)
