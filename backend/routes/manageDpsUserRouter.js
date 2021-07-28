@@ -6,10 +6,10 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi, oauthApi }) => {
-  const getUserAndAssignableRolesApi = (context, username, userId, hasAdminRole) =>
+  const getUserAndAssignableRolesApi = (context, username, hasAdminRole) =>
     Promise.all([prisonApi.getUser(context, username), prisonApi.assignableRoles(context, username, hasAdminRole)])
 
-  const getUserAndRolesApi = async (context, username, userId, hasAdminRole) => {
+  const getUserAndRolesApi = async (context, username, hasAdminRole) => {
     const [user, roles, userEmail] = await Promise.all([
       prisonApi.getUser(context, username),
       prisonApi.contextUserRoles(context, username, hasAdminRole),

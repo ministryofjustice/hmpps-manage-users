@@ -42,7 +42,7 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, search
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
         res.render('createUserSuccess.njk', {
           email: user.email,
-          detailsLink: `${manageUrl}/${user.email}/${userId}/details`,
+          detailsLink: `${manageUrl}/${userId}/details`,
         })
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
