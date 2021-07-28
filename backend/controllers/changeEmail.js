@@ -67,7 +67,8 @@ const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
     const staffUrl = `${manageUrl}/${username}/${userId}/details`
 
     const email = req.flash('changeEmail')
-    const usernameChanged = username.includes('@')
+    const user = await getUserApi(res.locals, userId)
+    const usernameChanged = user.username.includes('@')
 
     res.render('changeEmailSuccess.njk', { email, detailsLink: staffUrl, usernameChanged })
   }

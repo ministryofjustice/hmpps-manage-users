@@ -214,6 +214,12 @@ describe('change email factory', () => {
       const req = { params: { username: 'joe', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       const render = jest.fn()
       req.flash.mockReturnValue('bob@digital.justice.gov.uk')
+      getUserApi.mockResolvedValue({
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+      })
       await changeEmail.success(req, { render })
       expect(render).toBeCalledWith('changeEmailSuccess.njk', {
         detailsLink: '/manage-external-users/joe/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
@@ -229,6 +235,12 @@ describe('change email factory', () => {
       }
       const render = jest.fn()
       req.flash.mockReturnValue('bob@digital.justice.gov.uk')
+      getUserApi.mockResolvedValue({
+        username: 'bob@digital.justice.gov.uk',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+      })
       await changeEmail.success(req, { render })
       expect(render).toBeCalledWith('changeEmailSuccess.njk', {
         detailsLink: '/manage-external-users/bob@digital.justice.gov.uk/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
