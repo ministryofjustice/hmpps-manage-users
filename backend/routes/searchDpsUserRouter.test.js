@@ -48,14 +48,18 @@ describe('Search DPS user router', () => {
       ])
       const context = { user: 'bob' }
       await searchApi({ locals: context })
-      expect(apis.oauthApi.userEmails.mock.calls[0][0]).toEqual(context)
-      expect(apis.prisonApi.userSearch.mock.calls[0][0]).toEqual(context)
+      expect(apis.oauthApi.userEmails).toHaveBeenCalledWith(context, ['joe', 'fred', 'harry'])
+      expect(apis.prisonApi.userSearch).toHaveBeenCalledWith(context, {
+        nameFilter: undefined,
+        roleFilter: undefined,
+        status: undefined,
+      })
     })
     it("shouldn't call auth if no results from prison api", async () => {
       apis.prisonApi.userSearch.mockResolvedValue([])
       const results = await searchApi({})
       expect(results).toEqual([])
-      expect(apis.oauthApi.userEmails.mock.calls.length).toEqual(0)
+      expect(apis.oauthApi.userEmails).not.toHaveBeenCalled()
     })
     it('should call admin version if maintain access', async () => {
       apis.prisonApi.userSearchAdmin.mockResolvedValue([{ username: 'joey', status: 'active' }])
@@ -75,7 +79,7 @@ describe('Search DPS user router', () => {
       apis.prisonApi.getCaseloads.mockResolvedValue([])
       const context = { user: { maintainAccessAdmin: true } }
       await caseloads(context)
-      expect(apis.prisonApi.getCaseloads.mock.calls[0][0]).toEqual(context)
+      expect(apis.prisonApi.getCaseloads).toHaveBeenCalledWith(context)
     })
     it('should map and sort results from prison api', async () => {
       apis.prisonApi.getCaseloads.mockResolvedValue([
