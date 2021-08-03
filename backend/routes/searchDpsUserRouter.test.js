@@ -2,15 +2,20 @@ jest.mock('express', () => ({
   Router: () => ({ get: jest.fn(), post: jest.fn() }),
 }))
 jest.mock('../controllers/search', () => ({
-  searchFactory: jest.fn((a, b, c, searchApi) => ({ index: searchApi })),
+  searchFactory: jest.fn((a, caseloads, c, searchApi) => ({ index: searchApi, results: caseloads })),
 }))
 const searchDpsUserRouter = require('./searchDpsUserRouter')
 
 describe('Search DPS user router', () => {
-  const apis = { prisonApi: { userSearch: jest.fn(), userSearchAdmin: jest.fn() }, oauthApi: { userEmails: jest.fn() } }
+  const apis = {
+    prisonApi: { userSearch: jest.fn(), userSearchAdmin: jest.fn(), getCaseloads: jest.fn() },
+    oauthApi: { userEmails: jest.fn() },
+  }
   const router = searchDpsUserRouter(apis)
   // @ts-ignore
   const searchApi = router.get.mock.calls[0][1]
+  // @ts-ignore
+  const caseloads = router.post.mock.calls[0][1]
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -57,6 +62,34 @@ describe('Search DPS user router', () => {
       apis.oauthApi.userEmails.mockResolvedValue([{ username: 'joey', email: 'joey@bloggs' }])
       const results = await searchApi({ locals: { user: { maintainAccessAdmin: true } } })
       expect(results).toEqual([{ username: 'joey', status: 'active', email: 'joey@bloggs' }])
+    })
+  })
+
+  describe('caseloads', () => {
+    it('should do nothing if no admin role', async () => {
+      const context = { user: 'bob' }
+      const results = await caseloads(context)
+      expect(results).toEqual([])
+    })
+    it('should pass the context through to the apis', async () => {
+      apis.prisonApi.getCaseloads.mockResolvedValue([])
+      const context = { user: { maintainAccessAdmin: true } }
+      await caseloads(context)
+      expect(apis.prisonApi.getCaseloads.mock.calls[0][0]).toEqual(context)
+    })
+    it('should map and sort results from prison api', async () => {
+      apis.prisonApi.getCaseloads.mockResolvedValue([
+        { agencyId: 'joe', description: 'active' },
+        { agencyId: 'fred' },
+        { agencyId: 'harry', description: 'field' },
+      ])
+      const context = { user: { maintainAccessAdmin: true } }
+      const results = await caseloads(context)
+      expect(results).toEqual([
+        { text: 'active', value: 'joe' },
+        { text: 'field', value: 'harry' },
+        { text: undefined, value: 'fred' },
+      ])
     })
   })
 })
