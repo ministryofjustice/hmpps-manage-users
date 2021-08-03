@@ -197,10 +197,35 @@ module.exports = {
       },
       response: { status: 200 },
     }),
+  stubDpsGetCaseloads: () =>
+    getFor({
+      urlPath: '/api/agencies/type/INST',
+      body: [
+        {
+          agencyId: 'MDI',
+          description: 'Moorland (HMP & YOI)',
+          longDescription: 'HMP & YOI MOORLAND',
+          agencyType: 'INST',
+          active: true,
+        },
+        {
+          agencyId: 'LEI',
+          description: 'Leeds (HMP)',
+          longDescription: 'HMP LEEDS',
+          agencyType: 'INST',
+          active: true,
+        },
+      ],
+    }),
   verifyDpsSearch: () =>
     getMatchingRequests({
       method: 'GET',
       urlPathPattern: '/api/users/local-administrator/available',
+    }).then((data) => data.body.requests),
+  verifyDpsAdminSearch: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/api/users',
     }).then((data) => data.body.requests),
   verifyDpsAddRoles: () =>
     getMatchingRequests({

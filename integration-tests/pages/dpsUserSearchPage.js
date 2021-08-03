@@ -2,6 +2,7 @@ const page = require('./page')
 
 const user = () => cy.get('[id="user"]')
 const role = () => cy.get('[id="roleCode"]')
+const caseload = () => cy.get('[id="groupCode"]')
 const submit = () => cy.get('button[type="submit"]')
 
 const dpsUserSearchPage = () =>
@@ -13,10 +14,16 @@ const dpsUserSearchPage = () =>
     },
     searchRole: (text) => {
       if (text) role().type(text)
-      else user().clear()
+      else role().clear()
+      submit().click()
+    },
+    searchCaseload: (text) => {
+      if (text) caseload().type(text)
+      else caseload().clear()
       submit().click()
     },
     manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
+    caseload,
   })
 
 export default {

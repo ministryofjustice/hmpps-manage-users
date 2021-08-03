@@ -93,6 +93,30 @@ context('DPS user functionality', () => {
     })
   })
 
+  it('Should allow a user search by caseload and display results', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', {})
+    cy.task('stubDpsGetCaseloads')
+    const searchRole = DpsUserSearchPage.goTo()
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    cy.task('stubAuthUserEmails')
+    searchRole.searchCaseload('Moorland')
+    UserSearchResultsPage.verifyOnPage()
+
+    cy.task('verifyDpsAdminSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].queryParams).to.deep.equal({
+        nameFilter: { key: 'nameFilter', values: [''] },
+        accessRole: { key: 'accessRole', values: [''] },
+        status: { key: 'status', values: ['ALL'] },
+        caseload: { key: 'caseload', values: ['MDI'] },
+        activeCaseload: { key: 'activeCaseload', values: [''] },
+      })
+    })
+  })
+
   it('Should allow a user search and display paged results', () => {
     const results = goToResultsPage()
 
@@ -170,6 +194,16 @@ context('DPS user functionality', () => {
     results.rows().should('have.length', 2)
   })
 
+  it('Should hide caseload search for LSAs (non admin)', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', {})
+    const searchPage = DpsUserSearchPage.goTo()
+    cy.task('stubDpsSearch', {})
+    cy.task('stubAuthUserEmails')
+    searchPage.caseload().should('not.exist')
+  })
+
   it('Should add and remove a role from a user', () => {
     const userPage = editUser()
 
@@ -207,6 +241,7 @@ context('DPS user functionality', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
     cy.login()
     cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubDpsGetCaseloads')
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
     cy.task('stubAuthUserEmails')
 

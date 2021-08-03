@@ -11,14 +11,15 @@ const controller = ({ prisonApi, oauthApi }) => {
     user: nameFilter,
     roleCode,
     status,
+    groupCode,
     pageSize: size,
     pageOffset: offset,
   }) => {
-    const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
+    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })
     const searchResults = await (hasAdminRole
-      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode, status })
+      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode, status, caseload: groupCode })
       : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode, status }))
 
     if (searchResults.length === 0) return searchResults
@@ -34,19 +35,30 @@ const controller = ({ prisonApi, oauthApi }) => {
   }
 
   const searchableRoles = (context) => {
-    const hasAdminRole = Boolean(context && context.user && context.user.maintainAccessAdmin)
+    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     return hasAdminRole ? prisonApi.getRolesAdmin(context) : prisonApi.getRoles(context)
+  }
+
+  const caseloads = async (context) => {
+    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
+    if (!hasAdminRole) return []
+    const getCaseloads = await prisonApi.getCaseloads(context)
+    return getCaseloads.map((g) => ({
+      text: g.description,
+      value: g.agencyId,
+    }))
   }
 
   const { index, results } = searchFactory(
     paginationService,
-    undefined,
+    caseloads,
     searchableRoles,
     searchApi,
     contextProperties.getResponsePagination,
     '/search-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
+    true,
   )
 
   router.get('/', index)

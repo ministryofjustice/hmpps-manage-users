@@ -1,3 +1,4 @@
+const querystring = require('querystring')
 const config = require('../config')
 const contextProperties = require('../contextProperties')
 
@@ -23,8 +24,11 @@ const prisonApiFactory = (client) => {
         nameFilter,
       )}&accessRole=${roleFilter}&status=${status}`,
     )
-  const userSearchAdmin = (context, { nameFilter, roleFilter, status }) =>
-    get(context, `/api/users?nameFilter=${encodeQueryString(nameFilter)}&accessRole=${roleFilter}&status=${status}`)
+  const userSearchAdmin = (context, { nameFilter, roleFilter, status, caseload, activeCaseload }) =>
+    get(
+      context,
+      `/api/users?${querystring.stringify({ nameFilter, accessRole: roleFilter, status, caseload, activeCaseload })}`,
+    )
   const getRoles = (context) => get(context, '/api/access-roles')
   const getRolesAdmin = (context) => get(context, '/api/access-roles?includeAdmin=true')
   const contextUserRoles = (context, username, hasAdminRole) =>
@@ -45,6 +49,8 @@ const prisonApiFactory = (client) => {
     ])
     return allRoles.filter((r) => !userRoles.some((userRole) => userRole.roleCode === r.roleCode))
   }
+  const getCaseloads = (context) =>
+    get(context, '/api/agencies/type/INST?activeOnly=true&withAddresses=false&skipFormatLocation=false')
 
   return {
     userSearch,
@@ -59,6 +65,7 @@ const prisonApiFactory = (client) => {
     getAgencyDetails,
     userCaseLoads,
     assignableRoles,
+    getCaseloads,
   }
 }
 

@@ -38,15 +38,15 @@
             errorMessage: errors | findError('user')
           }) }}
           <input type='hidden' name='status' value='ALL' />
-          {% if not dpsSearch %}
+          {% if showGroupOrPrisonDropdown %}
           <div class="govuk-list">
             {{ govukSelect({label: {
-              text: "Select a group"
+              text: "Select a " + groupOrPrison
             },
               idPrefix: 'groupCode',
               name: 'groupCode',
               id: 'groupCode',
-              items: groupDropdownValues | addBlankOptions('Select a group'),
+              items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison),
               errorMessage: errors | findError('groupCode')
             }) }}
           </div>
@@ -77,7 +77,7 @@
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script>
-    {%- if not dpsSearch %}
+    {%- if showGroupOrPrisonDropdown %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#groupCode'),
       showAllValues: true,

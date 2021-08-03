@@ -52,4 +52,33 @@ describe('prisonApi tests', () => {
       )
     })
   })
+  describe('userSearchAdmin', () => {
+    const users = [{ bob: 'hello there' }]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => users,
+      })
+    })
+
+    it('should call get users endpoint', () => {
+      const actual = prisonApi.userSearchAdmin(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/api/users?nameFilter=&accessRole=&status=&caseload=&activeCaseload=',
+        undefined,
+      )
+      expect(actual).toEqual(users)
+    })
+
+    it('should encode any names', () => {
+      const actual = prisonApi.userSearchAdmin(context, { nameFilter: "Joe O'Brien" })
+      expect(client.get).toBeCalledWith(
+        context,
+        "/api/users?nameFilter=Joe%20O'Brien&accessRole=&status=&caseload=&activeCaseload=",
+        undefined,
+      )
+      expect(actual).toEqual(users)
+    })
+  })
 })
