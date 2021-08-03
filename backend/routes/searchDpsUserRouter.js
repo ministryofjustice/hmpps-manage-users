@@ -42,11 +42,12 @@ const controller = ({ prisonApi, oauthApi }) => {
   const caseloads = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
-    const getCaseloads = await prisonApi.getCaseloads(context)
-    return getCaseloads.map((g) => ({
-      text: g.description,
-      value: g.agencyId,
-    }))
+    return (await prisonApi.getCaseloads(context))
+      .map((g) => ({
+        text: g.description,
+        value: g.agencyId,
+      }))
+      .sort((a, b) => a.text?.localeCompare(b.text))
   }
 
   const { index, results } = searchFactory(
