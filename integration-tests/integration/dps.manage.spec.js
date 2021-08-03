@@ -79,7 +79,7 @@ context('DPS user manage functionality', () => {
 
   it('Should change a user email address', () => {
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
-    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }], true)
 
     userPage.changeEmailLink().click()
     const changeEmailPage = UserChangeEmailPage.verifyOnPage()
@@ -105,7 +105,7 @@ context('DPS user manage functionality', () => {
 
   it('Should cancel a change user email address', () => {
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
-    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
+    const userPage = editUser([{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }], true)
 
     userPage.changeEmailLink().click()
     const changeEmailPage = UserChangeEmailPage.verifyOnPage()

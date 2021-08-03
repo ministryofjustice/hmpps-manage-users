@@ -50,30 +50,59 @@ describe('search factory', () => {
   }
 
   describe('DPS', () => {
+    const getCaseloadsApi = jest.fn()
+
     const search = searchFactory(
       paginationService,
-      undefined,
+      getCaseloadsApi,
       getSearchableRolesApi,
       searchApi,
       pagingApi,
       '/search-dps-users',
       '/manage-dps-users',
       'Search for a DPS user',
+      true,
     )
+
+    beforeEach(() => {
+      getCaseloadsApi.mockReset()
+    })
 
     it('should call search user render', async () => {
       const req = { params: {}, flash: jest.fn() }
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
+      getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
 
       const render = jest.fn()
       await search.index(req, { render })
       expect(render).toBeCalledWith('search.njk', {
         searchTitle: 'Search for a DPS user',
         searchUrl: '/search-dps-users',
-        groupDropdownValues: [],
+        groupOrPrisonDropdownValues: [{ text: 'name', value: 'code' }],
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         errors: undefined,
         dpsSearch: true,
+        groupOrPrison: 'caseload',
+        showGroupOrPrisonDropdown: false,
+      })
+    })
+
+    it('should set admin to true for maintain DPS users', async () => {
+      const req = { params: {}, flash: jest.fn() }
+      getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
+      getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
+
+      const render = jest.fn()
+      await search.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
+      expect(render).toBeCalledWith('search.njk', {
+        searchTitle: 'Search for a DPS user',
+        searchUrl: '/search-dps-users',
+        groupOrPrisonDropdownValues: [{ text: 'name', value: 'code' }],
+        roleDropdownValues: [{ text: 'name', value: 'code' }],
+        errors: undefined,
+        dpsSearch: true,
+        showGroupOrPrisonDropdown: true,
+        groupOrPrison: 'caseload',
       })
     })
     it('should call DPS search results render', async () => {
@@ -156,6 +185,7 @@ describe('search factory', () => {
       '/search-external-users',
       '/manage-external-users',
       'Search for an external user',
+      false,
     )
 
     beforeEach(() => {
@@ -164,7 +194,7 @@ describe('search factory', () => {
 
     it('should call search user render', async () => {
       const req = { params: {}, flash: jest.fn() }
-      getAssignableGroupsApi.mockResolvedValue([{ groupName: 'name', groupCode: 'code' }])
+      getAssignableGroupsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
 
       const render = jest.fn()
@@ -172,10 +202,12 @@ describe('search factory', () => {
       expect(render).toBeCalledWith('search.njk', {
         searchTitle: 'Search for an external user',
         searchUrl: '/search-external-users',
-        groupDropdownValues: [{ text: 'name', value: 'code' }],
+        groupOrPrisonDropdownValues: [{ text: 'name', value: 'code' }],
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         errors: undefined,
         dpsSearch: false,
+        groupOrPrison: 'group',
+        showGroupOrPrisonDropdown: true,
       })
     })
 

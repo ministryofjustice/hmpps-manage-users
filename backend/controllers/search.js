@@ -5,34 +5,34 @@ const mapUsernameAndEmail = (u) => {
 
 const searchFactory = (
   paginationService,
-  getAssignableGroupsApi,
+  getAssignableGroupsOrPrisonsApi,
   getSearchableRolesApi,
   searchApi,
   pagingApi,
   searchUrl,
   maintainUrl,
   searchTitle,
+  dpsSearch,
 ) => {
-  const dpsSearch = getAssignableGroupsApi === undefined
-
   const index = async (req, res) => {
-    const assignableGroups = (!dpsSearch && (await getAssignableGroupsApi(res.locals))) || []
-    const groupDropdownValues = assignableGroups.map((g) => ({
-      text: g.groupName,
-      value: g.groupCode,
-    }))
-    const searchableRoles = await getSearchableRolesApi(res.locals)
+    const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
+      getAssignableGroupsOrPrisonsApi(res.locals),
+      getSearchableRolesApi(res.locals),
+    ])
     const roleDropdownValues = searchableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
     }))
+    const showGroupOrPrisonDropdown = Boolean(res.locals?.user?.maintainAccessAdmin || !dpsSearch)
 
     res.render('search.njk', {
       searchTitle,
       searchUrl,
-      groupDropdownValues,
+      groupOrPrisonDropdownValues,
       roleDropdownValues,
+      showGroupOrPrisonDropdown,
       dpsSearch,
+      groupOrPrison: dpsSearch ? 'caseload' : 'group',
     })
   }
 

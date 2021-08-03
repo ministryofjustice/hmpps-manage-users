@@ -5,11 +5,9 @@
 
 The service requires the following minimum tool versions:
 
-- node v10+ 
+- node v16+ 
 - Chrome 
 - Chromedriver (align the version with chrome version installed on your machine)
-
-(The Gradle wrapper is bundled with the project, currently at version 5.0)
 
 Ensure that you have these installed using your system package manager and/or npm for node. 
 
@@ -27,7 +25,7 @@ versions of all three. This starts the services at the above default ports on yo
 machine.
 
 ```
-$ docker-compose pull && docker-compose up"  
+docker-compose pull && docker-compose up
 ```
 
 # Running manage-hmpps-auth-accounts locally
@@ -81,16 +79,12 @@ docker run -p 3001:3000 -d \
      quay.io/hmpps/manage-hmpps-auth-accounts:latest
 ```
 
-# Integration tests
+# Cypress Integration tests
 
-The `manage-accounts-specs` directory contains a set of integration tests for the `manage-hmpps-auth-accounts` application.
+The `integration-tests` directory contains a set of Cypress integration tests.
+These tests WireMock to stub the application's dependencies on the prison, ouath RESTful APIs.
 
-The tests are written in the Groovy programming language using a test framework called Spock. 
-
-The tests drive the UI using 'Geb', a Groovy wrapper for Selenium Webdriver and use WireMock to 
-stub the application's dependencies on the prison and oauth RESTful APIs.
-
-# Running the feature tests
+## Running the feature tests
 
 They do not need the dependent services to be running as it uses a special version of the service with wiremocked stubs for these.
 Feature tests may be run either from the commandline of from within IntelliJ.
@@ -105,42 +99,6 @@ A choice of web browsers can be configured, though Chrome or Chrome headless are
      ```
    - Check that a chromedriver executable is available on your path
    - Check that the versions of chromedriver and your installed chrome browser match 
-   - Check and alter if necessary manage-accounts-specs/build.gradle to set the chrome version to your installed version.
-   - Alter the keywork-specs/build.gradle to choose either the 'headless' driver or standard chrome - the latter will display the browser during test execution.
-
-* From the commandline:
-
-   - In one terminal session, from the project root : 
-
-       ```npm run start-feature:dev --env=feature.env```
-
-   - In another terminal, from the project root :
-
-       ```./gradlew test```
-
-   - The tests will run and produce reports in `manage-accounts-specs/reports/tests`
-
-   - Choose the Chrome web driver (rather than headless) to see the tests excute in a browser window
-
-
-* From IntelliJ IDE
-
-  - Ensure that `build.gradle` is linked to the IDE project (See here: https://www.jetbrains.com/help/idea/gradle.html)
-
-  - Ensure that chromedriver` is in your executable PATH (as above)
-
-  - Ensure that your chrome and chromedriver versions match, and are set in the build.gradle file.
-
-  - Open a Spock Specification (`uk.gov.justice.digital.hmpps.manageusers.specs.LoginSpecification` for example). 
-
-  - The IDE gutter should now display the green 'run' icons for both the class and each of its test methods.
-
-  - Click the green run icon to start test
-
-## Cypress integration tests
-
-The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the prison, ouath and whreabouts RESTful APIs.
 
 ### Running the Cypress tests
 
@@ -153,9 +111,9 @@ the reqest log at `localhost:9191/__admin/requests/` and a JSON representation o
 ### Starting feature tests node instance
 
 A separate node instance needs to be started for the feature tests. This will run on port 3008 and won't conflict
-with any of the api services, e.g. prison-api or oauth. It will also not conflict with the Groovy integration tests.
+with any of the api services, e.g. prison-api or oauth.
 
-```npm run start-feature:dev --env=cypress.env```
+```npm run start-feature:dev```
 
 Note that the circleci will run `start-feature-no-webpack` instead, which will rely on a production webpack build
 rather than using the dev webpack against the assets.
@@ -189,10 +147,6 @@ This will trigger the banner to become visible showing the given name.
 
 ### Useful links
 
-- Spock: http://spockframework.org/
-- Geb: http://www.gebish.org/
-- Groovy: http://groovy-lang.org/index.html
-- Gradle: https://gradle.org/
 - WireMock: http://wiremock.org/
 - Chromedriver: https://sites.google.com/a/chromium.org/chromedriver
 

@@ -16,15 +16,22 @@ const controller = ({ oauthApi }) => {
     pageSize: size,
   }) => oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
 
+  const assignableGroups = async (context) =>
+    (await oauthApi.assignableGroups(context)).map((g) => ({
+      text: g.groupName,
+      value: g.groupCode,
+    }))
+
   const { index, results } = searchFactory(
     paginationService,
-    oauthApi.assignableGroups,
+    assignableGroups,
     oauthApi.searchableRoles,
     searchApi,
     contextProperties.getPageable,
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
+    false,
   )
 
   router.get('/', index)
