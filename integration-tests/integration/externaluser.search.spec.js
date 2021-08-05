@@ -34,7 +34,8 @@ context('External user search functionality', () => {
       search.search('nothing doing')
       const results = UserSearchResultsPage.verifyOnPage()
       results.noResults().should('contain.text', 'No records found')
-      results.filter().should('exist')
+      results.statusFilter().should('exist')
+      results.caseloadFilter().should('not.exist')
       results.submitFilter().should('exist')
     })
 
@@ -150,7 +151,7 @@ context('External user search functionality', () => {
       })
       searchGroup.searchRole('Global Search')
       const userSearchResults = UserSearchResultsPage.verifyOnPage()
-      userSearchResults.filter().should('have.value', 'ALL').select('INACTIVE')
+      userSearchResults.statusFilter().should('have.value', 'ALL').select('INACTIVE')
       userSearchResults.submitFilter().click()
       userSearchResults.checkStillOnPage()
       cy.task('verifyAuthSearch').should((requests) => {
