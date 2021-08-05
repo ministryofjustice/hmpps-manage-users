@@ -1,27 +1,7 @@
-const MenuPage = require('../pages/menuPage')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
-const UserAddRolePage = require('../pages/userAddRolePage')
-const UserPage = require('../pages/userPage')
 
-const { goToResultsPage, editUser } = require('../support/dpsuser.helpers')
-
-const searchForUser = (totalElements) => {
-  cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-  cy.login()
-  const menuPage = MenuPage.verifyOnPage()
-  cy.task('stubDpsGetRoles', { content: [] })
-  menuPage.searchDpsUsers()
-  const search = DpsUserSearchPage.verifyOnPage()
-
-  cy.task('stubDpsSearch', { totalElements })
-  cy.task('stubAuthUserEmails')
-  search.search('sometext')
-
-  const results = UserSearchResultsPage.verifyOnPage()
-  results.rows().should('have.length', 2)
-  return results
-}
+const { goToResultsPage } = require('../support/dpsuser.helpers')
 
 context('DPS user functionality', () => {
   before(() => {
@@ -33,6 +13,11 @@ context('DPS user functionality', () => {
   })
 
   it('Should display a message if no search results', () => {
+    const results = goToResultsPage({ totalElements: 0 })
+    results.noResults().should('contain.text', 'No records found')
+  })
+
+  it('Should still show the filter if no search results', () => {
     cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.login()
     cy.task('stubDpsGetRoles', { content: [] })
@@ -42,10 +27,12 @@ context('DPS user functionality', () => {
     search.search('nothing doing')
     const results = UserSearchResultsPage.verifyOnPage()
     results.noResults().should('contain.text', 'No records found')
+    results.statusFilter().should('exist')
+    results.submitFilter().should('exist')
   })
 
   it('Should allow a user search by name and display results', () => {
-    const results = searchForUser(2)
+    const results = goToResultsPage({})
 
     results
       .rows()
@@ -112,13 +99,13 @@ context('DPS user functionality', () => {
         accessRole: { key: 'accessRole', values: [''] },
         status: { key: 'status', values: ['ALL'] },
         caseload: { key: 'caseload', values: ['MDI'] },
-        activeCaseload: { key: 'activeCaseload', values: [''] },
+        activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
       })
     })
   })
 
   it('Should allow a user search and display paged results', () => {
-    const results = goToResultsPage()
+    const results = goToResultsPage({})
 
     results.rows().should('have.length', 10)
     results.rows().eq(0).should('include.text', 'Itag\u00a0User0')
@@ -161,7 +148,7 @@ context('DPS user functionality', () => {
   })
 
   it('Should filter results by status', () => {
-    const results = searchForUser(2)
+    const results = goToResultsPage({ totalElements: 2 })
 
     results
       .rows()
@@ -187,11 +174,53 @@ context('DPS user functionality', () => {
 
     results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
     cy.task('stubDpsSearchInactive', { totalElements: 2 })
-    results.filter().should('have.value', 'ALL').select('INACTIVE')
+    results.statusFilter().should('have.value', 'ALL').select('INACTIVE')
     results.submitFilter().click()
     results.checkStillOnPage()
 
     results.rows().should('have.length', 2)
+  })
+
+  it('Should hide caseload filter for non admin users', () => {
+    const results = goToResultsPage({ totalElements: 2 })
+
+    cy.task('stubDpsSearch', { totalElements: 5 })
+    cy.task('stubAuthUserEmails')
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    results.rows().should('have.length', 5)
+    results.caseloadFilter().should('not.exist')
+  })
+
+  it('Should filter results by caseload', () => {
+    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
+    cy.login()
+    cy.task('stubDpsGetRoles', {})
+    cy.task('stubDpsGetCaseloads')
+    const searchRole = DpsUserSearchPage.goTo()
+    cy.task('stubDpsAdminSearch', { totalElements: 21 })
+    cy.task('stubAuthUserEmails')
+    searchRole.searchCaseload('Moorland')
+    const results = UserSearchResultsPage.verifyOnPage()
+
+    // filter should copy value across from search page
+    results.caseloadFilter().should('have.value', 'MDI').select('Any')
+
+    results.submitFilter().click()
+    results.checkStillOnPage()
+
+    results.caseloadFilter().should('have.value', '')
+    cy.task('verifyDpsAdminSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(2)
+
+      expect(requests[1].queryParams).to.deep.equal({
+        nameFilter: { key: 'nameFilter', values: [''] },
+        accessRole: { key: 'accessRole', values: [''] },
+        status: { key: 'status', values: ['ALL'] },
+        caseload: { key: 'caseload', values: ['MDI'] },
+        activeCaseload: { key: 'activeCaseload', values: [''] },
+      })
+    })
   })
 
   it('Should hide caseload search for LSAs (non admin)', () => {
@@ -199,113 +228,6 @@ context('DPS user functionality', () => {
     cy.login()
     cy.task('stubDpsGetRoles', {})
     const searchPage = DpsUserSearchPage.goTo()
-    cy.task('stubDpsSearch', {})
-    cy.task('stubAuthUserEmails')
     searchPage.caseload().should('not.exist')
-  })
-
-  it('Should add and remove a role from a user', () => {
-    const userPage = editUser()
-
-    userPage.roleRows().should('have.length', 2)
-    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
-    userPage.roleRows().eq(1).should('contain', 'Another general role')
-
-    cy.task('stubDpsGetRoles', {})
-    userPage.addRole().click()
-    const addRole = UserAddRolePage.verifyOnPage()
-
-    cy.task('stubDpsAddRoles')
-    addRole.choose('USER_ADMIN')
-    addRole.addRoleButton().click()
-
-    cy.task('verifyDpsAddRoles').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
-    })
-
-    UserPage.verifyOnPage('Itag User')
-
-    cy.task('stubDpsRemoveRole')
-    userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
-
-    cy.task('verifyDpsRemoveRole').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
-    })
-  })
-
-  it('As an admin user should add and remove a role from a user', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
-    cy.task('stubDpsGetCaseloads')
-    cy.task('stubDpsAdminSearch', { totalElements: 21 })
-    cy.task('stubAuthUserEmails')
-
-    const search = DpsUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-
-    cy.task('stubDpsUserDetails')
-    cy.task('stubDpsUserGetAdminRoles')
-    cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
-
-    results.edit('ITAG_USER5')
-    const userPage = UserPage.verifyOnPage('Itag User')
-    userPage.roleRows().should('have.length', 2)
-    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
-    userPage.roleRows().eq(1).should('contain', 'Another general role')
-
-    cy.task('stubDpsGetAdminRoles', {})
-    userPage.addRole().click()
-    const addRole = UserAddRolePage.verifyOnPage()
-
-    cy.task('stubDpsAddRoles')
-    addRole.choose('USER_ADMIN')
-    addRole.addRoleButton().click()
-
-    cy.task('verifyDpsAddRoles').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
-    })
-
-    UserPage.verifyOnPage('Itag User')
-
-    cy.task('stubDpsRemoveRole')
-    userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
-
-    cy.task('verifyDpsRemoveRole').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
-    })
-  })
-
-  it('Should provide breadcrumb link back to search results', () => {
-    const userPage = editUser()
-
-    userPage
-      .searchResultsBreadcrumb()
-      .should(
-        'have.attr',
-        'href',
-        '/search-dps-users/results?user=sometext%40somewhere.com&status=ALL&roleCode=&offset=10',
-      )
-  })
-
-  it('Manage your details contain returnTo url for current dps search page', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
-    cy.task('stubDpsGetRoles', { content: [] })
-    const search = DpsUserSearchPage.goTo()
-    search
-      .manageYourDetails()
-      .should('contain', 'Manage your details')
-      .and('have.attr', 'href')
-      .and('contains', '%2Fsearch-dps-users')
   })
 })

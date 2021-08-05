@@ -24,6 +24,21 @@ context('External user search functionality', () => {
       results.noResults().should('contain.text', 'No records found')
     })
 
+    it('Should still show the filters if no search results', () => {
+      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.login()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      const search = AuthUserSearchPage.goTo()
+      cy.task('stubAuthSearch', { content: [] })
+      search.search('nothing doing')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.noResults().should('contain.text', 'No records found')
+      results.statusFilter().should('exist')
+      results.caseloadFilter().should('not.exist')
+      results.submitFilter().should('exist')
+    })
+
     it('Should allow a user search by name and display results', () => {
       const results = searchForUser()
 
@@ -136,7 +151,7 @@ context('External user search functionality', () => {
       })
       searchGroup.searchRole('Global Search')
       const userSearchResults = UserSearchResultsPage.verifyOnPage()
-      userSearchResults.filter().should('have.value', 'ALL').select('INACTIVE')
+      userSearchResults.statusFilter().should('have.value', 'ALL').select('INACTIVE')
       userSearchResults.submitFilter().click()
       userSearchResults.checkStillOnPage()
       cy.task('verifyAuthSearch').should((requests) => {

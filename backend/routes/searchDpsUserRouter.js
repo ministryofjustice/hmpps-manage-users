@@ -12,6 +12,7 @@ const controller = ({ prisonApi, oauthApi }) => {
     roleCode,
     status,
     groupCode,
+    activeCaseload,
     pageSize: size,
     pageOffset: offset,
   }) => {
@@ -19,7 +20,13 @@ const controller = ({ prisonApi, oauthApi }) => {
 
     contextProperties.setRequestPagination(context, { offset, size })
     const searchResults = await (hasAdminRole
-      ? prisonApi.userSearchAdmin(context, { nameFilter, roleFilter: roleCode, status, caseload: groupCode })
+      ? prisonApi.userSearchAdmin(context, {
+          nameFilter,
+          roleFilter: roleCode,
+          status,
+          caseload: groupCode,
+          activeCaseload,
+        })
       : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode, status }))
 
     if (searchResults.length === 0) return searchResults

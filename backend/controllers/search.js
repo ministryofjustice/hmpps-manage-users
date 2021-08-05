@@ -37,7 +37,7 @@ const searchFactory = (
   }
 
   const results = async (req, res) => {
-    const { user, groupCode, roleCode, size, status, page, offset } = req.query
+    const { user, groupCode, roleCode, activeCaseload, size, status, page, offset } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
@@ -46,16 +46,20 @@ const searchFactory = (
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
 
-    const searchResults = await searchApi({
-      locals: res.locals,
-      user,
-      groupCode,
-      roleCode,
-      status,
-      pageNumber,
-      pageSize,
-      pageOffset,
-    })
+    const [searchResults, caseloads] = await Promise.all([
+      searchApi({
+        locals: res.locals,
+        user,
+        groupCode,
+        roleCode,
+        activeCaseload: activeCaseload ?? groupCode,
+        status,
+        pageNumber,
+        pageSize,
+        pageOffset,
+      }),
+      res.locals?.user?.maintainAccessAdmin ? getAssignableGroupsOrPrisonsApi({ ...res.locals }) : [],
+    ])
 
     const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
       usernameAndEmail: mapUsernameAndEmail(u),
@@ -74,8 +78,10 @@ const searchFactory = (
       status,
       groupCode,
       roleCode,
+      activeCaseload: activeCaseload ?? groupCode,
       username: user,
       errors: req.flash('errors'),
+      caseloads,
     })
   }
 
