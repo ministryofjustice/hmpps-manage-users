@@ -1,3 +1,5 @@
+const path = require('path')
+const parse = require('csv-parse')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 
@@ -229,5 +231,37 @@ context('DPS user functionality', () => {
     cy.task('stubDpsGetRoles', {})
     const searchPage = DpsUserSearchPage.goTo()
     searchPage.caseload().should('not.exist')
+  })
+
+  it('Should allow a user to download all results', () => {
+    const validateCsv = (list) => {
+      expect(list, 'number of records').to.have.length(22)
+      expect(list[0], 'header row').to.deep.equal([
+        'username',
+        'active',
+        'firstName',
+        'lastName',
+        'activeCaseLoadId',
+        'email',
+      ])
+      expect(list[1], 'first row').to.deep.equal([
+        'ITAG_USER0',
+        'true',
+        'Itag',
+        'User0',
+        'BXI',
+        'dps-user@justice.gov.uk',
+      ])
+      expect(list[21], 'last row').to.deep.equal(['ITAG_USER20', 'true', 'Itag', 'User20', 'BXI', ''])
+    }
+    const results = goToResultsPage({})
+    cy.task('stubDpsSearch', { totalElements: 21, page: 0, size: 10000 })
+    results.download().click()
+    const filename = path.join(Cypress.config('downloadsFolder'), 'user-search.csv')
+    cy.readFile(filename, { timeout: 15000 }).then((csv) => {
+      parse(csv, {}, (err, output) => {
+        validateCsv(output)
+      })
+    })
   })
 })

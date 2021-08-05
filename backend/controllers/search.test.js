@@ -118,7 +118,7 @@ describe('search factory', () => {
         flash: jest.fn(),
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
-        originalUrl: '/',
+        originalUrl: '/results',
         session: {},
       }
       const pagination = { offset: 5 }
@@ -142,7 +142,9 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        downloadUrl: expect.any(URL),
       })
+      expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
     })
 
     it('should default the active caseload to the group code', async () => {
@@ -177,6 +179,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        downloadUrl: expect.any(URL),
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -223,6 +226,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        downloadUrl: expect.any(URL),
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -282,7 +286,7 @@ describe('search factory', () => {
           flash: jest.fn(),
           get: jest.fn().mockReturnValue('localhost'),
           protocol: 'http',
-          originalUrl: '/',
+          originalUrl: '/results',
           session: {},
         }
         const pagination = { page: 5 }
@@ -307,7 +311,9 @@ describe('search factory', () => {
           status: undefined,
           caseloads: [],
           activeCaseload: undefined,
+          downloadUrl: expect.any(URL),
         })
+        expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
       })
 
       it('should call external search api', async () => {

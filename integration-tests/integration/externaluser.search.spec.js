@@ -1,3 +1,5 @@
+const path = require('path')
+const parse = require('csv-parse')
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
@@ -241,6 +243,65 @@ context('External user search functionality', () => {
         expect(requests[2].queryParams.page).to.deep.equal({
           key: 'page',
           values: ['0'],
+        })
+      })
+    })
+    it('Should allow a user to download all results', () => {
+      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.login()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(5),
+        totalElements: 21,
+        page: 0,
+        size: 5,
+      })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(21),
+        totalElements: 21,
+        page: 0,
+        size: 10000,
+      })
+      const validateCsv = (list) => {
+        expect(list, 'number of records').to.have.length(22)
+        expect(list[0], 'header row').to.deep.equal([
+          'username',
+          'email',
+          'enabled',
+          'locked',
+          'verified',
+          'firstName',
+          'lastName',
+        ])
+        expect(list[1], 'first row').to.deep.equal([
+          'AUTH_ADM0',
+          'auth_test0@digital.justice.gov.uk',
+          'true',
+          'true',
+          'true',
+          'Auth',
+          'Adm0',
+        ])
+        expect(list[21], 'last row').to.deep.equal([
+          'AUTH_ADM20',
+          'auth_test20@digital.justice.gov.uk',
+          'true',
+          'false',
+          'true',
+          'Auth',
+          'Adm20',
+        ])
+      }
+
+      const search = AuthUserSearchPage.goTo()
+      search.search('sometext@somewhere.com')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.download().click()
+      const filename = path.join(Cypress.config('downloadsFolder'), 'user-search.csv')
+      cy.readFile(filename, { timeout: 15000 }).then((csv) => {
+        parse(csv, {}, (err, output) => {
+          validateCsv(output)
         })
       })
     })

@@ -1,7 +1,9 @@
 const express = require('express')
+const json2csv = require('json2csv')
 const { searchFactory } = require('../controllers/search')
 const paginationService = require('../services/paginationService')
 const contextProperties = require('../contextProperties')
+const { downloadFactory } = require('../controllers/searchDownload')
 
 const router = express.Router({ mergeParams: true })
 
@@ -34,9 +36,12 @@ const controller = ({ oauthApi }) => {
     false,
   )
 
+  const { downloadResults } = downloadFactory(searchApi, json2csv.parse)
+
   router.get('/', index)
   router.get('/results', results)
   router.post('/results', results)
+  router.get('/download', downloadResults)
   return router
 }
 

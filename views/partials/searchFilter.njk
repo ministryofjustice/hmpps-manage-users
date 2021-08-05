@@ -31,6 +31,10 @@
       type: "submit",
       attributes: { "data-qa": "filter-button" }
     }) }}
+    {{ govukButton({
+      text: "Download",
+      attributes: { "id": "download-button", "onclick": downloadAction }
+    }) }}
   </div>
 </form>
 <p class='govuk-body'></p>

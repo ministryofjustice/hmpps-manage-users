@@ -82,6 +82,7 @@ const searchFactory = (
       username: user,
       errors: req.flash('errors'),
       caseloads,
+      downloadUrl: new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
     })
   }
 
