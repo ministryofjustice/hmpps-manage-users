@@ -13,8 +13,8 @@ context('External user search functionality', () => {
 
   describe('search for a user', () => {
     it('Should display a message if no search results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
       const search = AuthUserSearchPage.goTo()
@@ -25,8 +25,8 @@ context('External user search functionality', () => {
     })
 
     it('Should still show the filters if no search results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
       const search = AuthUserSearchPage.goTo()
@@ -85,8 +85,8 @@ context('External user search functionality', () => {
     })
 
     it('Should allow a user search by group and display results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       const searchGroup = AuthUserSearchPage.goTo()
@@ -109,8 +109,8 @@ context('External user search functionality', () => {
     })
 
     it('Should allow a user search by role and display results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       const searchGroup = AuthUserSearchPage.goTo()
@@ -138,8 +138,8 @@ context('External user search functionality', () => {
     })
 
     it('Should filter results by status', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       const searchGroup = AuthUserSearchPage.goTo()
@@ -177,8 +177,8 @@ context('External user search functionality', () => {
     })
 
     it('Should allow a user search and display paged results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
       cy.task('stubAuthSearch', {
@@ -202,8 +202,8 @@ context('External user search functionality', () => {
     })
 
     it('Should move between paged result when next page and previous page selected', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {

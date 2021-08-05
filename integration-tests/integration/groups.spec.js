@@ -17,8 +17,8 @@ context('Groups', () => {
   })
 
   it('Should display all groups with hyperlinks if 10 or less', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
     MenuPage.verifyOnPage().manageGroups()
@@ -31,8 +31,8 @@ context('Groups', () => {
   })
 
   it('Should display filter for groups if more than 10', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', { content: duplicateGroup(11) })
     MenuPage.verifyOnPage().manageGroups()
@@ -45,8 +45,8 @@ context('Groups', () => {
   })
 
   it('Should display message if no groups available', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', { content: [] })
     cy.visit('/manage-groups')
@@ -56,8 +56,8 @@ context('Groups', () => {
   })
 
   it('should display group details', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
     cy.task('stubAuthAssignableGroupDetails', {})
@@ -74,8 +74,8 @@ context('Groups', () => {
   })
 
   it('should allow change group name', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -92,8 +92,8 @@ context('Groups', () => {
   })
 
   it('should display error when delete group if child groups exist', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -106,8 +106,8 @@ context('Groups', () => {
   })
 
   it('should display error when attempt to view group that does not exist', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
     cy.visit('/manage-groups')
@@ -118,8 +118,8 @@ context('Groups', () => {
   })
 
   it('should display error when attempt to delete group that does not exist', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
     cy.visit('/manage-groups')
@@ -130,8 +130,8 @@ context('Groups', () => {
   })
 
   it('should allow delete group if no child groups', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthGroupDetailsNoChildren', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -148,8 +148,8 @@ context('Groups', () => {
   })
 
   it('should allow change child group name', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -167,8 +167,8 @@ context('Groups', () => {
   })
 
   it('should allow create child group', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -197,8 +197,8 @@ context('Groups', () => {
   })
 
   it('should allow create group', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
 
     cy.task('stubAuthAssignableGroupDetails', {})
@@ -229,8 +229,8 @@ context('Groups', () => {
   })
 
   it('should allow delete child group', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -245,8 +245,8 @@ context('Groups', () => {
   })
 
   it('should return user to group detail page if user cancels action when changing child group name', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -260,8 +260,8 @@ context('Groups', () => {
   })
 
   it('should return user to group detail page if user cancels action when creating child group', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
@@ -275,8 +275,8 @@ context('Groups', () => {
   })
 
   it('Manage your details contain returnTo url for current group detail page', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.signIn()
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 

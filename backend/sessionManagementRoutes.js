@@ -11,7 +11,7 @@ const isXHRRequest = (req) =>
 
 /**
  * Add session management related routes to an express 'app'.
- * These handle login, logout, and middleware to handle the JWT token cookie. (hmppsCookie).
+ * These handle sign in, sign out, and middleware to handle the JWT token cookie. (hmppsCookie).
  * @param {Object} params Parameter object
  * @param {any} params.app an Express instance.
  * @param {any} params.tokenRefresher a function which uses the 'context' object to perform an OAuth token refresh (returns a promise).
@@ -19,27 +19,27 @@ const isXHRRequest = (req) =>
  * @param {any} params.homeLink The URL for the home page.
  */
 const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
-  const authLogoutUrl = `${config.apis.oauth2.ui_url}/logout?client_id=${config.apis.oauth2.clientId}&redirect_uri=${config.app.url}`
+  const authSignOutUrl = `${config.apis.oauth2.ui_url}/sign-out?client_id=${config.apis.oauth2.clientId}&redirect_uri=${config.app.url}`
 
-  const remoteLoginIndex = (req, res, next) => {
+  const remoteSignInIndex = (req, res, next) => {
     req.session.returnTo = req.query.returnTo
     return passport.authenticate('oauth2')(req, res, next)
   }
 
-  const logout = (req, res) => {
+  const signOut = (req, res) => {
     req.session.destroy(() => {
-      res.redirect(authLogoutUrl)
+      res.redirect(authSignOutUrl)
     })
   }
 
   /**
-   * A client who sends valid OAuth tokens when visits the login page is redirected to the
+   * A client who sends valid OAuth tokens when visits the sign in page is redirected to the
    * react application at '/'
    * @param req
    * @param res
    * @param next
    */
-  const loginMiddleware = (req, res, next) => {
+  const signInMiddleware = (req, res, next) => {
     if (req.isAuthenticated()) {
       res.redirect('/')
       return
@@ -57,7 +57,7 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
       }
       next()
     } catch (error) {
-      // need to logout here otherwise user will still be considered authenticated when we take them to /login
+      // need to sign out here otherwise user will still be considered authenticated when we take them to /sign-in
       req.logout()
 
       if (isXHRRequest(req)) {
@@ -70,16 +70,16 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
 
       req.session.destroy(() => {
         const query = querystring.stringify({ returnTo: req.originalUrl })
-        res.redirect(`/login?${query}`)
+        res.redirect(`/sign-in?${query}`)
       })
     }
   }
 
   /**
-   * If the user is not authenticated the client is denied access to the application and is redirected to the login page.
+   * If the user is not authenticated the client is denied access to the application and is redirected to the sign in page.
    * (or if this is a 'data' request then the response is an Http 401 status (Expired)
    */
-  const requireLoginMiddleware = async (req, res, next) => {
+  const requireSignInMiddleware = async (req, res, next) => {
     if (req.isAuthenticated() && (await tokenVerifier(req.user))) {
       contextProperties.setTokens(req.user, res.locals)
       next()
@@ -95,13 +95,13 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
 
     req.session.destroy(() => {
       const query = querystring.stringify({ returnTo: req.originalUrl })
-      res.redirect(`/login?${query}`)
+      res.redirect(`/sign-in?${query}`)
     })
   }
 
-  app.get('/login', loginMiddleware, remoteLoginIndex)
+  app.get('/sign-in', signInMiddleware, remoteSignInIndex)
 
-  app.get('/login/callback', (req, res, next) => {
+  app.get('/sign-in/callback', (req, res, next) => {
     passport.authenticate('oauth2', (err, user, info) => {
       if (err) {
         return res.redirect('/autherror')
@@ -115,7 +115,7 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
         logger.info(`Auth failure due to ${JSON.stringify(info)}`)
         return res.redirect('/autherror')
       }
-      req.logIn(user, (err2) => {
+      req.login(user, (err2) => {
         if (err2) {
           return next(err2)
         }
@@ -132,18 +132,18 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
   app.get('/autherror', (req, res) => {
     res.status(401)
     return res.render('autherror.njk', {
-      authURL: authLogoutUrl,
+      authURL: authSignOutUrl,
       homeLink,
     })
   })
 
-  app.get('/auth/logout', logout)
-  app.get('/logout', (req, res) => {
-    res.redirect('/auth/logout')
+  app.get('/auth/sign-out', signOut)
+  app.get('/sign-out', (req, res) => {
+    res.redirect('/auth/sign-out')
   })
 
   app.use(refreshTokenMiddleware)
-  app.use(requireLoginMiddleware)
+  app.use(requireSignInMiddleware)
 
   /**
    * An end-point that does nothing.

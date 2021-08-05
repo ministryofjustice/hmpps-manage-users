@@ -14,14 +14,14 @@ const createToken = () => {
   return jwt.sign(payload, 'secret', { expiresIn: '1h' })
 }
 
-const getLoginUrl = () =>
+const getSignInUrl = () =>
   getMatchingRequests({
     method: 'GET',
     urlPath: '/auth/oauth/authorize',
   }).then((data) => {
     const { requests } = data.body
     const stateValue = requests[requests.length - 1].queryParams.state.values[0]
-    return `/login/callback?code=codexxxx&state=${stateValue}`
+    return `/sign-in/callback?code=codexxxx&state=${stateValue}`
   })
 
 const favicon = () => getFor({ urlPattern: '/favicon.ico' })
@@ -36,24 +36,24 @@ const redirect = () =>
       status: 200,
       headers: {
         'Content-Type': 'text/html',
-        Location: 'http://localhost:3008/login/callback?code=codexxxx&state=stateyyyy',
+        Location: 'http://localhost:3008/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
-      body: '<html><body>Login page<h1>Sign in</h1></body></html>',
+      body: '<html><body>Sign in page<h1>Sign in</h1></body></html>',
     },
   })
 
-const logout = () =>
+const signOut = () =>
   stubFor({
     request: {
       method: 'GET',
-      urlPath: '/auth/logout',
+      urlPath: '/auth/sign-out',
     },
     response: {
       status: 200,
       headers: {
         'Content-Type': 'text/html',
       },
-      body: '<html><body>Login page<h1>Sign in</h1></body></html>',
+      body: '<html><body>Sign in page<h1>Sign in</h1></body></html>',
     },
   })
 
@@ -82,7 +82,7 @@ const token = () =>
       status: 200,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
-        Location: 'http://localhost:3008/login/callback?code=codexxxx&state=stateyyyy',
+        Location: 'http://localhost:3008/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
         access_token: createToken(),
@@ -582,9 +582,17 @@ const verifyAuthCreateUser = () =>
   }).then((data) => data.body.requests)
 
 module.exports = {
-  getLoginUrl,
-  stubLogin: (username, roles) =>
-    Promise.all([favicon(), redirect(), logout(), token(), stubUserMe({}), stubUserMeRoles(roles), stubUser(username)]),
+  getSignInUrl,
+  stubSignIn: (username, roles) =>
+    Promise.all([
+      favicon(),
+      redirect(),
+      signOut(),
+      token(),
+      stubUserMe({}),
+      stubUserMeRoles(roles),
+      stubUser(username),
+    ]),
   stubUserMe,
   stubUserMeRoles,
   stubEmail,
