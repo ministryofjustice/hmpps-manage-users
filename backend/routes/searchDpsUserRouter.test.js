@@ -67,6 +67,30 @@ describe('Search DPS user router', () => {
       const results = await searchApi({ locals: { user: { maintainAccessAdmin: true } } })
       expect(results).toEqual([{ username: 'joey', status: 'active', email: 'joey@bloggs' }])
     })
+    it('should pass parameters through to the apis', async () => {
+      apis.prisonApi.userSearchAdmin.mockResolvedValue([
+        { username: 'joe', status: 'active' },
+        { username: 'fred' },
+        { username: 'harry', other: 'field' },
+      ])
+      const context = { user: { maintainAccessAdmin: true } }
+      await searchApi({
+        locals: context,
+        user: 'use',
+        roleCode: 'role',
+        status: 'inactive',
+        groupCode: 'group',
+        activeCaseload: 'active',
+      })
+      expect(apis.oauthApi.userEmails).toHaveBeenCalledWith(context, ['joe', 'fred', 'harry'])
+      expect(apis.prisonApi.userSearchAdmin).toHaveBeenCalledWith(context, {
+        nameFilter: 'use',
+        roleFilter: 'role',
+        status: 'inactive',
+        caseload: 'group',
+        activeCaseload: 'active',
+      })
+    })
   })
 
   describe('caseloads', () => {

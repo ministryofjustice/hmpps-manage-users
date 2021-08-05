@@ -1,5 +1,44 @@
 const { searchFactory } = require('./search')
 
+const results = [
+  {
+    firstName: 'Billy',
+    lastName: 'Bob',
+    username: 'BOB',
+    usernameAndEmail: 'BOB / bob@digital.justice.gov.uk',
+    email: 'bob@digital.justice.gov.uk',
+    enabled: true,
+    verified: true,
+  },
+  {
+    firstName: 'Billy',
+    lastName: 'Fred',
+    username: 'FRED@DIGITAL.JUSTICE.GOV.UK',
+    usernameAndEmail: 'fred@digital.justice.gov.uk',
+    email: 'fred@digital.justice.gov.uk',
+    enabled: true,
+    verified: true,
+  },
+  {
+    firstName: 'No',
+    lastName: 'Email',
+    username: 'noemail',
+    usernameAndEmail: 'noemail',
+    enabled: true,
+    verified: true,
+  },
+  {
+    firstName: 'Blank',
+    lastName: 'Email',
+    username: 'blankemail',
+    usernameAndEmail: 'blankemail',
+    email: '',
+    enabled: true,
+    verified: true,
+  },
+]
+const users = results.map(({ usernameAndEmail, ...rest }) => rest)
+
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
   const getSearchableRolesApi = jest.fn()
@@ -14,39 +53,7 @@ describe('search factory', () => {
   })
 
   const mockSearchCall = () => {
-    searchApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-      },
-      {
-        username: 'FRED@DIGITAL.JUSTICE.GOV.UK',
-        firstName: 'Billy',
-        lastName: 'Fred',
-        email: 'fred@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-      },
-      {
-        username: 'noemail',
-        firstName: 'No',
-        lastName: 'Email',
-        enabled: true,
-        verified: true,
-      },
-      {
-        username: 'blankemail',
-        firstName: 'Blank',
-        lastName: 'Email',
-        email: '',
-        enabled: true,
-        verified: true,
-      },
-    ])
+    searchApi.mockResolvedValue(users)
   }
 
   describe('DPS', () => {
@@ -122,54 +129,111 @@ describe('search factory', () => {
         render,
         locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
       })
+      expect(render).toBeCalledWith('dpsSearchResults.njk', {
+        searchTitle: 'Search for a DPS user',
+        searchUrl: '/search-dps-users',
+        maintainUrl: '/manage-dps-users',
+        results,
+        errors: undefined,
+        pagination,
+        groupCode: undefined,
+        activeCaseload: undefined,
+        roleCode: undefined,
+        username: 'joe',
+        status: undefined,
+        caseloads: [],
+      })
+    })
+
+    it('should default the active caseload to the group code', async () => {
+      const req = {
+        query: { user: 'joe', groupCode: 'group' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const pagination = { offset: 5 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockSearchCall()
+      const render = jest.fn()
+      const locals = { pageable: { offset: 20, size: 10, totalElements: 123 } }
+      await search.results(req, {
+        render,
+        locals,
+      })
 
       expect(render).toBeCalledWith('dpsSearchResults.njk', {
         searchTitle: 'Search for a DPS user',
         searchUrl: '/search-dps-users',
         maintainUrl: '/manage-dps-users',
-        results: [
-          {
-            firstName: 'Billy',
-            lastName: 'Bob',
-            username: 'BOB',
-            usernameAndEmail: 'BOB / bob@digital.justice.gov.uk',
-            email: 'bob@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-          {
-            firstName: 'Billy',
-            lastName: 'Fred',
-            username: 'FRED@DIGITAL.JUSTICE.GOV.UK',
-            usernameAndEmail: 'fred@digital.justice.gov.uk',
-            email: 'fred@digital.justice.gov.uk',
-            enabled: true,
-            verified: true,
-          },
-          {
-            firstName: 'No',
-            lastName: 'Email',
-            username: 'noemail',
-            usernameAndEmail: 'noemail',
-            enabled: true,
-            verified: true,
-          },
-          {
-            firstName: 'Blank',
-            lastName: 'Email',
-            username: 'blankemail',
-            usernameAndEmail: 'blankemail',
-            email: '',
-            enabled: true,
-            verified: true,
-          },
-        ],
+        results,
         errors: undefined,
         pagination,
-        groupCode: undefined,
+        groupCode: 'group',
+        activeCaseload: 'group',
         roleCode: undefined,
         username: 'joe',
         status: undefined,
+        caseloads: [],
+      })
+      expect(searchApi).toBeCalledWith({
+        locals,
+        user: 'joe',
+        roleCode: undefined,
+        groupCode: 'group',
+        activeCaseload: 'group',
+        status: undefined,
+        pageNumber: 0,
+        pageSize: 20,
+        pageOffset: 0,
+      })
+    })
+
+    it('should use active caseload if set', async () => {
+      const req = {
+        query: { user: 'joe', groupCode: 'group', activeCaseload: 'acl' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const pagination = { offset: 5 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockSearchCall()
+      const render = jest.fn()
+      const locals = { pageable: { offset: 20, size: 10, totalElements: 123 } }
+      await search.results(req, {
+        render,
+        locals,
+      })
+
+      expect(render).toBeCalledWith('dpsSearchResults.njk', {
+        searchTitle: 'Search for a DPS user',
+        searchUrl: '/search-dps-users',
+        maintainUrl: '/manage-dps-users',
+        results,
+        errors: undefined,
+        pagination,
+        groupCode: 'group',
+        activeCaseload: 'acl',
+        roleCode: undefined,
+        username: 'joe',
+        status: undefined,
+        caseloads: [],
+      })
+      expect(searchApi).toBeCalledWith({
+        locals,
+        user: 'joe',
+        roleCode: undefined,
+        groupCode: 'group',
+        activeCaseload: 'acl',
+        status: undefined,
+        pageNumber: 0,
+        pageSize: 20,
+        pageOffset: 0,
       })
     })
   })
@@ -234,49 +298,15 @@ describe('search factory', () => {
           searchTitle: 'Search for an external user',
           searchUrl: '/search-external-users',
           maintainUrl: '/manage-external-users',
-          results: [
-            {
-              firstName: 'Billy',
-              lastName: 'Bob',
-              username: 'BOB',
-              email: 'bob@digital.justice.gov.uk',
-              usernameAndEmail: 'BOB / bob@digital.justice.gov.uk',
-              enabled: true,
-              verified: true,
-            },
-            {
-              firstName: 'Billy',
-              lastName: 'Fred',
-              username: 'FRED@DIGITAL.JUSTICE.GOV.UK',
-              usernameAndEmail: 'fred@digital.justice.gov.uk',
-              email: 'fred@digital.justice.gov.uk',
-              enabled: true,
-              verified: true,
-            },
-            {
-              enabled: true,
-              firstName: 'No',
-              lastName: 'Email',
-              username: 'noemail',
-              usernameAndEmail: 'noemail',
-              verified: true,
-            },
-            {
-              email: '',
-              enabled: true,
-              firstName: 'Blank',
-              lastName: 'Email',
-              username: 'blankemail',
-              usernameAndEmail: 'blankemail',
-              verified: true,
-            },
-          ],
+          results,
           errors: undefined,
           pagination,
           groupCode: undefined,
           roleCode: undefined,
           username: 'joe',
           status: undefined,
+          caseloads: [],
+          activeCaseload: undefined,
         })
       })
 
@@ -304,6 +334,7 @@ describe('search factory', () => {
           user: 'joe',
           roleCode: '',
           groupCode: '',
+          activeCaseload: '',
           status: 'ACTIVE',
           pageNumber: 0,
           pageSize: 20,
@@ -335,6 +366,7 @@ describe('search factory', () => {
           user: 'joe',
           roleCode: '',
           groupCode: '',
+          activeCaseload: '',
           status: 'INACTIVE',
           pageNumber: 3,
           pageSize: 13,

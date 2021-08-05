@@ -2,23 +2,24 @@ const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 
-export const goToResultsPage = (roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }], isAdmin) => {
-  cy.task('stubLogin', { roles })
+export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage }) => {
+  const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+  cy.task('stubLogin', { roles: [{ roleCode }] })
   cy.login()
   cy.task('stubDpsGetRoles', { content: [] })
-  cy.task('stubDpsSearch', { totalElements: 21 })
+  cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
   if (isAdmin) cy.task('stubDpsGetCaseloads')
   cy.task('stubAuthUserEmails')
 
   const search = DpsUserSearchPage.goTo()
   search.search('sometext@somewhere.com')
   const results = UserSearchResultsPage.verifyOnPage()
-  results.nextPage()
+  if (nextPage) results.nextPage()
   return results
 }
 
-export const editUser = (roles, isAdmin) => {
-  const results = goToResultsPage(roles, isAdmin)
+export const editUser = ({ isAdmin = false, nextPage }) => {
+  const results = goToResultsPage({ isAdmin, nextPage })
 
   cy.task('stubDpsUserDetails')
   cy.task(isAdmin ? 'stubDpsUserGetAdminRoles' : 'stubDpsUserGetRoles')

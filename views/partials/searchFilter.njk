@@ -4,9 +4,10 @@
   <input type='hidden' name='roleCode' value='{{ roleCode }}'/>
   <input type='hidden' name='groupCode' value='{{ groupCode }}'/>
   <input type='hidden' name='user' value='{{ username }}'/>
+  <h2 class="govuk-heading-m">Filter by</h2>
   <div class='horizontal-form'>
     {{ govukSelect({label: {
-      text: "Filter by status"
+      text: "Status"
     },
       idPrefix: 'status',
       name: 'status',
@@ -17,6 +18,14 @@
         {text: 'All', value:'ALL'}
       ] | setSelected(status)
     }) }}
+    {{ govukSelect({label: {
+      text: "Active caseload"
+    },
+      idPrefix: 'activeCaseload',
+      name: 'activeCaseload',
+      id: 'activeCaseload',
+      items: caseloads | addDefaultSelectedValue('Any', true) | setSelected(activeCaseload)
+    }) if user.maintainAccessAdmin }}
     {{ govukButton({
       text: "Filter",
       type: "submit",

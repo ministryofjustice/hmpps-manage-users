@@ -22,10 +22,11 @@
   <div class="govuk-grid-row">
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
+    {% block searchFilter %}
+      {% include "./partials/searchFilter.njk" %}
+    {% endblock %}
+
     {% if results.length %}
-      {% block searchFilter %}
-        {% include "./partials/searchFilter.njk" %}
-      {% endblock %}
       {{ mojPagination(pagination) }}
 
       <div class="govuk-grid-row">
