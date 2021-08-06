@@ -26,7 +26,7 @@ module.exports = {
       url: process.env.OAUTH_ENDPOINT_URL || 'http://localhost:9090/auth',
       ui_url: process.env.OAUTH_ENDPOINT_UI_URL || process.env.OAUTH_ENDPOINT_URL || 'http://localhost:9090/auth',
       timeoutSeconds: toInt(process.env.OAUTH_ENDPOINT_TIMEOUT_SECONDS, 10),
-      clientId: process.env.API_CLIENT_ID || 'elite2apiclient',
+      clientId: process.env.API_CLIENT_ID || 'manage-user-accounts-ui',
       clientSecret: process.env.API_CLIENT_SECRET || 'clientsecret',
     },
     prison: {
