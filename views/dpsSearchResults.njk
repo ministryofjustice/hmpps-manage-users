@@ -65,6 +65,7 @@
         }) }}
       </div>
       {{ mojPagination(pagination) }}
+      <a href="{{ downloadUrl }}" class="govuk-link" data-qa="download">Download results</a>
     {% else %}
       <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
     {% endif %}

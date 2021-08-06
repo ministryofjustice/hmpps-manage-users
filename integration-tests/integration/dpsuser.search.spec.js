@@ -254,11 +254,20 @@ context('DPS user functionality', () => {
       ])
       expect(list[21], 'last row').to.deep.equal(['ITAG_USER20', 'true', 'Itag', 'User20', 'BXI', ''])
     }
+    // A workaround for https://github.com/cypress-io/cypress/issues/14857
+    let csv
+    cy.intercept('GET', '*/download*', (req) => {
+      req.reply((res) => {
+        csv = res.body
+        res.headers.location = '/'
+        res.send(302)
+      })
+    }).as('csvDownload')
+
     const results = goToResultsPage({})
     cy.task('stubDpsSearch', { totalElements: 21, page: 0, size: 10000 })
     results.download().click()
-    const filename = path.join(Cypress.config('downloadsFolder'), 'user-search.csv')
-    cy.readFile(filename, { timeout: 15000 }).then((csv) => {
+    cy.wait('@csvDownload').then(() => {
       parse(csv, {}, (err, output) => {
         validateCsv(output)
       })

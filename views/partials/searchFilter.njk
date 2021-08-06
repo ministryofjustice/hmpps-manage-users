@@ -1,5 +1,3 @@
-{% set downloadAction =  "window.open('" + downloadUrl + "', '_blank'); return false;" %}
-
 <form method="GET" action="{{ searchUrl }}/results" class='external-search__form'>
   <input type='hidden' name='roleCode' value='{{ roleCode }}'/>
   <input type='hidden' name='groupCode' value='{{ groupCode }}'/>
@@ -30,10 +28,6 @@
       text: "Filter",
       type: "submit",
       attributes: { "data-qa": "filter-button" }
-    }) }}
-    {{ govukButton({
-      text: "Download",
-      attributes: { "id": "download-button", "onclick": downloadAction }
     }) }}
   </div>
 </form>

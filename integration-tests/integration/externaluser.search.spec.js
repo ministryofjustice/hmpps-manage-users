@@ -247,23 +247,8 @@ context('External user search functionality', () => {
       })
     })
     it('Should allow a user to download all results', () => {
-      cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.login()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
-      cy.task('stubAuthSearch', {
-        content: replicateUser(5),
-        totalElements: 21,
-        page: 0,
-        size: 5,
-      })
-      cy.task('stubAuthSearch', {
-        content: replicateUser(21),
-        totalElements: 21,
-        page: 0,
-        size: 10000,
-      })
       const validateCsv = (list) => {
+        console.log(`list = ${JSON.stringify(list)}`)
         expect(list, 'number of records').to.have.length(22)
         expect(list[0], 'header row').to.deep.equal([
           'username',
@@ -293,13 +278,38 @@ context('External user search functionality', () => {
           'Adm20',
         ])
       }
+      // A workaround for https://github.com/cypress-io/cypress/issues/14857
+      let csv
+      cy.intercept('GET', '*/download*', (req) => {
+        req.reply((res) => {
+          csv = res.body
+          res.headers.location = '/'
+          res.send(302)
+        })
+      }).as('csvDownload')
+
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(5),
+        totalElements: 21,
+        page: 0,
+        size: 5,
+      })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(21),
+        totalElements: 21,
+        page: 0,
+        size: 10000,
+      })
 
       const search = AuthUserSearchPage.goTo()
       search.search('sometext@somewhere.com')
       const results = UserSearchResultsPage.verifyOnPage()
       results.download().click()
-      const filename = path.join(Cypress.config('downloadsFolder'), 'user-search.csv')
-      cy.readFile(filename, { timeout: 15000 }).then((csv) => {
+      cy.wait('@csvDownload').then(() => {
         parse(csv, {}, (err, output) => {
           validateCsv(output)
         })
