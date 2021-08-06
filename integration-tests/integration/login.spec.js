@@ -39,6 +39,16 @@ context('Sign in functionality', () => {
     cy.request('/auth/sign-out').its('body').should('contain', 'Sign in')
   })
 
+  it('Direct access to login callback takes user to sign in page', () => {
+    cy.task('stubSignIn', {})
+    cy.visit('/login/callback')
+    cy.url().should('include', 'authorize')
+    cy.get('h1').should('contain.text', 'Sign in')
+
+    // can't do a visit here as cypress requires only one domain
+    cy.task('getSignInUrl').then(cy.request).its('body').should('contain', '>Manage user accounts</h1>')
+  })
+
   it('Token verification failure takes user to sign in page', () => {
     cy.task('stubSignIn', {})
     cy.signIn()
