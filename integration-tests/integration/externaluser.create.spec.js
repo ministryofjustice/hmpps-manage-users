@@ -29,8 +29,8 @@ function createUser() {
 }
 
 function goToCreateUser(roleCode = 'MAINTAIN_OAUTH_USERS') {
-  cy.task('stubLogin', { roles: [{ roleCode }] })
-  cy.login()
+  cy.task('stubSignIn', { roles: [{ roleCode }] })
+  cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
   cy.task('stubAuthAssignableGroups', {})

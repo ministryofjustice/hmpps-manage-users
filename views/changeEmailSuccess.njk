@@ -19,7 +19,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         {% set message = "A verification email has been sent to " + email  +
-          (".<br>The new address will now have to be used to login." if usernameChanged) %}
+          (".<br>The new address will now have to be used to sign in." if usernameChanged) %}
 
         {{ govukPanel({
           titleText: ("Username" if usernameChanged else "Email address") + " changed",

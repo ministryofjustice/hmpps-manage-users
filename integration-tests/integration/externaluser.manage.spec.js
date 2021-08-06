@@ -229,8 +229,8 @@ context('External user manage functionality', () => {
   })
 
   it('Should display message if no roles to add', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
 
     cy.task('stubAuthGetUsername')
     cy.task('stubAuthAssignableRoles', [])
@@ -240,8 +240,8 @@ context('External user manage functionality', () => {
   })
 
   it('Should provide breadcrumb link back to search results', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
     cy.task('stubAuthAssignableGroups', { content: [] })
     cy.task('stubAuthSearchableRoles', { content: [] })
     cy.task('stubAuthSearch', {

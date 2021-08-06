@@ -12,9 +12,9 @@ module.exports = (on) => {
       await resetStubs()
       return tokenverification.stubVerifyToken(true)
     },
-    stubLogin: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
+    stubSignIn: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
       Promise.all([
-        auth.stubLogin(username, roles),
+        auth.stubSignIn(username, roles),
         auth.stubUserMe({}),
         prisonApi.stubUserCaseloads(),
         tokenverification.stubVerifyToken(true),
@@ -23,7 +23,7 @@ module.exports = (on) => {
     stubHealthAllHealthy: () =>
       Promise.all([auth.stubHealth(), prisonApi.stubHealth(), tokenverification.stubHealth()]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
-    stubLoginPage: auth.redirect,
+    stubSignInPage: auth.redirect,
     ...prisonApi,
     stubDpsGetRoles: prisonApi.stubGetRoles,
     stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,

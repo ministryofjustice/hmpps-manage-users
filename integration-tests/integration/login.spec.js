@@ -1,6 +1,6 @@
 const MenuPage = require('../pages/menuPage')
 
-context('Login functionality', () => {
+context('Sign in functionality', () => {
   before(() => {
     cy.clearCookies()
   })
@@ -9,39 +9,49 @@ context('Login functionality', () => {
     cy.task('reset')
   })
 
-  it('Root (/) redirects to the auth login page if not logged in', () => {
-    cy.task('stubLoginPage')
+  it('Root (/) redirects to the auth sign in page if not signed in', () => {
+    cy.task('stubSignInPage')
     cy.visit('/')
     cy.url().should('include', 'authorize')
     cy.get('h1').should('contain.text', 'Sign in')
   })
 
-  it('Login page redirects to the auth login page if not logged in', () => {
-    cy.task('stubLoginPage')
-    cy.visit('/login')
+  it('Sign in page redirects to the auth sign in page if not signed in', () => {
+    cy.task('stubSignInPage')
+    cy.visit('/sign-in')
     cy.url().should('include', 'authorize')
     cy.get('h1').should('contain.text', 'Sign in')
   })
 
-  it('Page redirects to the auth login page if not logged in', () => {
-    cy.task('stubLogin', {})
-    cy.visit('/login')
+  it('Page redirects to the auth sign in page if not signed in', () => {
+    cy.task('stubSignIn', {})
+    cy.visit('/sign-in')
     cy.url().should('include', 'authorize')
     cy.get('h1').should('contain.text', 'Sign in')
   })
 
-  it('Logout takes user to login page', () => {
-    cy.task('stubLogin', {})
-    cy.login()
+  it('Sign out takes user to sign in page', () => {
+    cy.task('stubSignIn', {})
+    cy.signIn()
     MenuPage.verifyOnPage()
 
     // can't do a visit here as cypress requires only one domain
-    cy.request('/auth/logout').its('body').should('contain', 'Sign in')
+    cy.request('/auth/sign-out').its('body').should('contain', 'Sign in')
+  })
+
+  it('Direct access to login callback takes user to sign in page', () => {
+    cy.task('stubSignIn', {})
+    cy.visit('/login/callback')
+    cy.url().should('include', 'authorize')
+    cy.get('h1').should('contain.text', 'Sign in')
+
+    // can't do a visit here as cypress requires only one domain
+    cy.task('getSignInUrl').then(cy.request).its('body').should('contain', '>Manage user accounts</h1>')
   })
 
   it('Token verification failure takes user to sign in page', () => {
-    cy.task('stubLogin', {})
-    cy.login()
+    cy.task('stubSignIn', {})
+    cy.signIn()
     MenuPage.verifyOnPage()
     cy.task('stubVerifyToken', false)
 
@@ -50,8 +60,8 @@ context('Login functionality', () => {
   })
 
   it('Token verification failure clears user session', () => {
-    cy.task('stubLogin', {})
-    cy.login()
+    cy.task('stubSignIn', {})
+    cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     cy.task('stubVerifyToken', false)
 
@@ -60,27 +70,27 @@ context('Login functionality', () => {
 
     cy.task('stubVerifyToken', true)
     cy.task('stubUserMe', { name: 'Bobby Brown' })
-    cy.login()
+    cy.signIn()
 
     menuPage.headerUsername().contains('B. Brown')
   })
 
-  it('Log in as ordinary user receives unauthorised', () => {
-    cy.task('stubLogin', { username: 'joe', roles: [{}] })
-    cy.login()
+  it('Sign in as ordinary user receives unauthorised', () => {
+    cy.task('stubSignIn', { username: 'joe', roles: [{}] })
+    cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     menuPage.noAdminFunctionsMessage().contains('There are no admin functions associated with your account.')
   })
 
-  it('Log in as access roles user', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
+  it('Sign in as access roles user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.signIn()
     MenuPage.verifyOnPage()
   })
 
-  it('Log in and check header of user', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
+  it('Sign in and check header of user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     menuPage.headerUsername().contains('J. Stuart')
     menuPage.headerCaseload().contains('Moorland')

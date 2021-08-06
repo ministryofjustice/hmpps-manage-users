@@ -4,8 +4,8 @@ const UserPage = require('../pages/userPage')
 
 export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage }) => {
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
-  cy.task('stubLogin', { roles: [{ roleCode }] })
-  cy.login()
+  cy.task('stubSignIn', { roles: [{ roleCode }] })
+  cy.signIn()
   cy.task('stubDpsGetRoles', { content: [] })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
   if (isAdmin) cy.task('stubDpsGetCaseloads')

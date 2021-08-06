@@ -198,8 +198,8 @@ context('DPS user manage functionality', () => {
   })
 
   it('Manage your details contain returnTo url for current dps search page', () => {
-    cy.task('stubLogin', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
-    cy.login()
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.signIn()
     cy.task('stubDpsGetRoles', { content: [] })
     const search = DpsUserSearchPage.goTo()
     search
