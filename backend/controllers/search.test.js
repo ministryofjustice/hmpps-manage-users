@@ -44,12 +44,14 @@ describe('search factory', () => {
   const getSearchableRolesApi = jest.fn()
   const searchApi = jest.fn()
   const pagingApi = jest.fn()
+  const allowDownload = jest.fn()
 
   beforeEach(() => {
     paginationService.getPagination.mockReset()
     getSearchableRolesApi.mockReset()
     searchApi.mockReset()
     pagingApi.mockReset()
+    allowDownload.mockReset()
   })
 
   const mockSearchCall = () => {
@@ -69,6 +71,7 @@ describe('search factory', () => {
       '/manage-dps-users',
       'Search for a DPS user',
       true,
+      allowDownload,
     )
 
     beforeEach(() => {
@@ -203,13 +206,11 @@ describe('search factory', () => {
       }
       const pagination = { offset: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      allowDownload.mockReturnValue(true)
       mockSearchCall()
       const render = jest.fn()
-      const locals = { pageable: { offset: 20, size: 10, totalElements: 123 }, user: { maintainAccessAdmin: true } }
-      await search.results(req, {
-        render,
-        locals,
-      })
+      const locals = { pageable: { offset: 20, size: 10, totalElements: 123 } }
+      await search.results(req, { render, locals })
 
       expect(render.mock.calls[0][1].downloadUrl).toBeInstanceOf(URL)
       expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
@@ -274,6 +275,7 @@ describe('search factory', () => {
       '/manage-external-users',
       'Search for an external user',
       false,
+      allowDownload,
     )
 
     beforeEach(() => {
@@ -450,10 +452,11 @@ describe('search factory', () => {
         const pagination = { page: 5 }
         paginationService.getPagination.mockReturnValue(pagination)
         mockSearchCall()
+        allowDownload.mockReturnValue(true)
         const render = jest.fn()
         const pageable = { page: 5, size: 10, totalElements: 123 }
         pagingApi.mockReturnValue(pageable)
-        await search.results(req, { render, locals: { user: { maintainAuthUsers: true, groupManager: false } } })
+        await search.results(req, { render })
 
         expect(render.mock.calls[0][1].downloadUrl).toBeInstanceOf(URL)
         expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')

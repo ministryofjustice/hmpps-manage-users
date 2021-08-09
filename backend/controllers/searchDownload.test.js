@@ -3,10 +3,12 @@ const { downloadFactory } = require('./searchDownload')
 describe('download factory', () => {
   const searchApi = jest.fn()
   const json2csv = jest.fn()
+  const allowDownload = jest.fn()
 
   beforeEach(() => {
     searchApi.mockReset()
     json2csv.mockReset()
+    allowDownload.mockReset()
   })
 
   const mockSearchCall = () => {
@@ -59,7 +61,7 @@ describe('download factory', () => {
   }
 
   describe('Download CSV', () => {
-    const download = downloadFactory(searchApi, json2csv)
+    const download = downloadFactory(searchApi, json2csv, allowDownload)
 
     it('should call external search api', async () => {
       const req = {
@@ -70,9 +72,10 @@ describe('download factory', () => {
         originalUrl: '/',
         session: {},
       }
-      const locals = { user: { maintainAccessAdmin: true } }
+      const locals = {}
       mockSearchCall()
       mockJson2Csv()
+      allowDownload.mockReturnValue(true)
       await download.downloadResults(req, {
         locals,
         header: jest.fn(),
@@ -113,6 +116,7 @@ describe('download factory', () => {
       }
       mockSearchCall()
       mockJson2Csv()
+      allowDownload.mockReturnValue(true)
       await download.downloadResults(req, res)
 
       expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
@@ -164,6 +168,7 @@ describe('download factory', () => {
       }
       mockSearchCall()
       mockJson2CsvError()
+      allowDownload.mockReturnValue(true)
       await download.downloadResults(req, res)
 
       expect(res.writeHead).toBeCalledWith(500, { 'Content-Type': 'text/plain' })

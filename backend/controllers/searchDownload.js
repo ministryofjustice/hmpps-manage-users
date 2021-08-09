@@ -1,12 +1,10 @@
 const logger = require('../log')
 
-const downloadFactory = (searchApi, json2CsvParse) => {
+const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
   const downloadResults = async (req, res) => {
     const { user, groupCode, roleCode, status } = req.query
 
-    const allowDownload =
-      res.locals?.user?.maintainAccessAdmin || (res.locals?.user?.maintainAuthUsers && !res.locals?.user?.groupManager)
-    if (!allowDownload) {
+    if (!allowDownload(res)) {
       res.writeHead(403, { 'Content-Type': 'text/plain' })
       return res.end('You are not authorised to the resource')
     }

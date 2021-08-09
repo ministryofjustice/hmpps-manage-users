@@ -4,6 +4,7 @@ const { searchFactory } = require('../controllers/search')
 const paginationService = require('../services/paginationService')
 const contextProperties = require('../contextProperties')
 const { downloadFactory } = require('../controllers/searchDownload')
+const { allowDownload } = require('../services/downloadService')
 
 const router = express.Router({ mergeParams: true })
 
@@ -34,9 +35,10 @@ const controller = ({ oauthApi }) => {
     '/manage-external-users',
     'Search for an external user',
     false,
+    allowDownload,
   )
 
-  const { downloadResults } = downloadFactory(searchApi, json2csv.parse)
+  const { downloadResults } = downloadFactory(searchApi, json2csv.parse, allowDownload)
 
   router.get('/', index)
   router.get('/results', results)

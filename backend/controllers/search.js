@@ -13,6 +13,7 @@ const searchFactory = (
   maintainUrl,
   searchTitle,
   dpsSearch,
+  allowDownload,
 ) => {
   const index = async (req, res) => {
     const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
@@ -66,9 +67,6 @@ const searchFactory = (
       ...u,
     }))
 
-    const allowDownload =
-      res.locals?.user?.maintainAccessAdmin || (res.locals?.user?.maintainAuthUsers && !res.locals?.user?.groupManager)
-
     res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
       searchTitle,
       searchUrl,
@@ -86,7 +84,7 @@ const searchFactory = (
       errors: req.flash('errors'),
       caseloads,
       downloadUrl:
-        allowDownload &&
+        allowDownload(res) &&
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
     })
   }
