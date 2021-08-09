@@ -70,7 +70,7 @@ describe('download factory', () => {
         originalUrl: '/',
         session: {},
       }
-      const locals = {}
+      const locals = { user: { maintainAccessAdmin: true } }
       mockSearchCall()
       mockJson2Csv()
       await download.downloadResults(req, {
@@ -104,7 +104,7 @@ describe('download factory', () => {
         session: {},
       }
       const res = {
-        locals: {},
+        locals: { user: { maintainAccessAdmin: true } },
         header: jest.fn(),
         attachment: jest.fn(),
         send: jest.fn(),
@@ -120,7 +120,7 @@ describe('download factory', () => {
       expect(res.send).toBeCalledWith(expect.any(String))
     })
 
-    it('should return in error', async () => {
+    it('should return an error if not authorised', async () => {
       const req = {
         query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
         flash: jest.fn(),
@@ -138,10 +138,35 @@ describe('download factory', () => {
         end: jest.fn(),
       }
       mockSearchCall()
+      mockJson2Csv()
+      await download.downloadResults(req, res)
+
+      expect(res.writeHead).toBeCalledWith(403, { 'Content-Type': 'text/plain' })
+      expect(res.end).toBeCalledWith(expect.any(String))
+    })
+
+    it('should return in error', async () => {
+      const req = {
+        query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const res = {
+        locals: { user: { maintainAccessAdmin: true } },
+        header: jest.fn(),
+        attachment: jest.fn(),
+        send: jest.fn(),
+        writeHead: jest.fn(),
+        end: jest.fn(),
+      }
+      mockSearchCall()
       mockJson2CsvError()
       await download.downloadResults(req, res)
 
-      expect(res.writeHead).toBeCalledWith(400, { 'Content-Type': 'text/plain' })
+      expect(res.writeHead).toBeCalledWith(500, { 'Content-Type': 'text/plain' })
       expect(res.end).toBeCalledWith(expect.any(String))
     })
   })

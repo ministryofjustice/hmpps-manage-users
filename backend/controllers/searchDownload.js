@@ -4,6 +4,13 @@ const downloadFactory = (searchApi, json2CsvParse) => {
   const downloadResults = async (req, res) => {
     const { user, groupCode, roleCode, status } = req.query
 
+    const allowDownload =
+      res.locals?.user?.maintainAccessAdmin || (res.locals?.user?.maintainAuthUsers && !res.locals?.user?.groupManager)
+    if (!allowDownload) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' })
+      return res.end('You are not authorised to the resource')
+    }
+
     const searchResults = await searchApi({
       locals: res.locals,
       user,
@@ -22,7 +29,7 @@ const downloadFactory = (searchApi, json2CsvParse) => {
       return res.send(csv)
     } catch (err) {
       logger.error(err)
-      res.writeHead(400, { 'Content-Type': 'text/plain' })
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
       return res.end('An error occurred while generating the download')
     }
   }

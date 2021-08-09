@@ -246,6 +246,7 @@ context('External user search functionality', () => {
         })
       })
     })
+
     it('Should allow a user to download all results', () => {
       const validateCsv = (list) => {
         console.log(`list = ${JSON.stringify(list)}`)
@@ -314,6 +315,24 @@ context('External user search functionality', () => {
           validateCsv(output)
         })
       })
+    })
+
+    it('Should not show the download link for group managers', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'AUTH_GROUP_MANAGER' }] })
+      cy.signIn()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(5),
+        totalElements: 21,
+        page: 0,
+        size: 5,
+      })
+
+      const search = AuthUserSearchPage.goTo()
+      search.search('sometext@somewhere.com')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.download().should('not.exist')
     })
   })
 })

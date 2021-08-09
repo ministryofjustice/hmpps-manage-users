@@ -112,6 +112,7 @@ describe('search factory', () => {
         groupOrPrison: 'caseload',
       })
     })
+
     it('should call DPS search results render', async () => {
       const req = {
         query: { user: 'joe' },
@@ -142,9 +143,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
-        downloadUrl: expect.any(URL),
       })
-      expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
     })
 
     it('should default the active caseload to the group code', async () => {
@@ -179,7 +178,6 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
-        downloadUrl: expect.any(URL),
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -192,6 +190,29 @@ describe('search factory', () => {
         pageSize: 20,
         pageOffset: 0,
       })
+    })
+
+    it('should pass downloadUrl if user has correct permission', async () => {
+      const req = {
+        query: { user: 'joe', groupCode: 'group' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/results',
+        session: {},
+      }
+      const pagination = { offset: 5 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockSearchCall()
+      const render = jest.fn()
+      const locals = { pageable: { offset: 20, size: 10, totalElements: 123 }, user: { maintainAccessAdmin: true } }
+      await search.results(req, {
+        render,
+        locals,
+      })
+
+      expect(render.mock.calls[0][1].downloadUrl).toBeInstanceOf(URL)
+      expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
     })
 
     it('should use active caseload if set', async () => {
@@ -226,7 +247,6 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
-        downloadUrl: expect.any(URL),
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -311,9 +331,7 @@ describe('search factory', () => {
           status: undefined,
           caseloads: [],
           activeCaseload: undefined,
-          downloadUrl: expect.any(URL),
         })
-        expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
       })
 
       it('should call external search api', async () => {
@@ -418,6 +436,27 @@ describe('search factory', () => {
         await search.results(req, { render })
 
         expect(req.session).toEqual({ searchResultsUrl: '/some-url' })
+      })
+
+      it('should pass downloadUrl if user has correct permission', async () => {
+        const req = {
+          query: { user: 'joe', page: 3, size: 13 },
+          flash: jest.fn(),
+          get: jest.fn().mockReturnValue('localhost'),
+          protocol: 'http',
+          originalUrl: '/results',
+          session: {},
+        }
+        const pagination = { page: 5 }
+        paginationService.getPagination.mockReturnValue(pagination)
+        mockSearchCall()
+        const render = jest.fn()
+        const pageable = { page: 5, size: 10, totalElements: 123 }
+        pagingApi.mockReturnValue(pageable)
+        await search.results(req, { render, locals: { user: { maintainAuthUsers: true, groupManager: false } } })
+
+        expect(render.mock.calls[0][1].downloadUrl).toBeInstanceOf(URL)
+        expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
       })
     })
   })

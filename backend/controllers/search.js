@@ -66,6 +66,9 @@ const searchFactory = (
       ...u,
     }))
 
+    const allowDownload =
+      res.locals?.user?.maintainAccessAdmin || (res.locals?.user?.maintainAuthUsers && !res.locals?.user?.groupManager)
+
     res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
       searchTitle,
       searchUrl,
@@ -82,7 +85,9 @@ const searchFactory = (
       username: user,
       errors: req.flash('errors'),
       caseloads,
-      downloadUrl: new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
+      downloadUrl:
+        allowDownload &&
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
     })
   }
 

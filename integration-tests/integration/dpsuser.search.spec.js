@@ -194,6 +194,16 @@ context('DPS user functionality', () => {
     results.caseloadFilter().should('not.exist')
   })
 
+  it('Should hide download link for non admin users', () => {
+    const results = goToResultsPage({ totalElements: 2 })
+
+    cy.task('stubDpsSearch', { totalElements: 5 })
+    cy.task('stubAuthUserEmails')
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    results.download().should('not.exist')
+  })
+
   it('Should filter results by caseload', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
     cy.signIn()
@@ -264,7 +274,7 @@ context('DPS user functionality', () => {
       })
     }).as('csvDownload')
 
-    const results = goToResultsPage({})
+    const results = goToResultsPage({ isAdmin: true })
     cy.task('stubDpsSearch', { totalElements: 21, page: 0, size: 10000 })
     results.download().click()
     cy.wait('@csvDownload').then(() => {
