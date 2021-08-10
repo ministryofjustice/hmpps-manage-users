@@ -97,6 +97,48 @@ describe('download factory', () => {
       })
     })
 
+    it('should call external search api with all non-page related query parameters', async () => {
+      const req = {
+        query: {
+          whatever: 'what',
+          something: 'some',
+          somethingElse: 'else',
+          andAnotherThing: 'ANOTHER',
+          size: 100,
+          page: 10,
+          offset: 1,
+        },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const locals = {}
+      mockSearchCall()
+      mockJson2Csv()
+      allowDownload.mockReturnValue(true)
+      await download.downloadResults(req, {
+        locals,
+        header: jest.fn(),
+        attachment: jest.fn(),
+        send: jest.fn(),
+        writeHead: jest.fn(),
+        end: jest.fn(),
+      })
+
+      expect(searchApi).toBeCalledWith({
+        locals,
+        whatever: 'what',
+        something: 'some',
+        somethingElse: 'else',
+        andAnotherThing: 'ANOTHER',
+        pageNumber: 0,
+        pageSize: 10000,
+        pageOffset: 0,
+      })
+    })
+
     it('should return the csv', async () => {
       const req = {
         query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
