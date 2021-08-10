@@ -2,7 +2,7 @@ const logger = require('../log')
 
 const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
   const downloadResults = async (req, res) => {
-    const { user, groupCode, roleCode, status } = req.query
+    const { size, page, offset, ...parameters } = req.query
 
     if (!allowDownload(res)) {
       res.writeHead(403, { 'Content-Type': 'text/plain' })
@@ -11,10 +11,7 @@ const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
 
     const searchResults = await searchApi({
       locals: res.locals,
-      user,
-      groupCode,
-      roleCode,
-      status,
+      ...parameters,
       pageNumber: 0,
       pageSize: 10000,
       pageOffset: 0,
