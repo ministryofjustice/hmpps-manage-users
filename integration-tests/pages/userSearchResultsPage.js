@@ -12,6 +12,7 @@ const authUserSearchPage = () =>
     statusFilter: () => cy.get('[name="status"]'),
     caseloadFilter: () => cy.get('[name="activeCaseload"]'),
     submitFilter: () => cy.get('button[type="submit"]'),
+    download: () => cy.get('a[data-qa="download"]'),
   })
 
 export default {

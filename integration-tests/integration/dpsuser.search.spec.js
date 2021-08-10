@@ -1,3 +1,5 @@
+const path = require('path')
+const parse = require('csv-parse')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 
@@ -192,6 +194,16 @@ context('DPS user functionality', () => {
     results.caseloadFilter().should('not.exist')
   })
 
+  it('Should hide download link for non admin users', () => {
+    const results = goToResultsPage({ totalElements: 2 })
+
+    cy.task('stubDpsSearch', { totalElements: 5 })
+    cy.task('stubAuthUserEmails')
+    const search = DpsUserSearchPage.goTo()
+    search.search('sometext@somewhere.com')
+    results.download().should('not.exist')
+  })
+
   it('Should filter results by caseload', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
     cy.signIn()
@@ -229,5 +241,46 @@ context('DPS user functionality', () => {
     cy.task('stubDpsGetRoles', {})
     const searchPage = DpsUserSearchPage.goTo()
     searchPage.caseload().should('not.exist')
+  })
+
+  it('Should allow a user to download all results', () => {
+    const validateCsv = (list) => {
+      expect(list, 'number of records').to.have.length(22)
+      expect(list[0], 'header row').to.deep.equal([
+        'username',
+        'active',
+        'firstName',
+        'lastName',
+        'activeCaseLoadId',
+        'email',
+      ])
+      expect(list[1], 'first row').to.deep.equal([
+        'ITAG_USER0',
+        'true',
+        'Itag',
+        'User0',
+        'BXI',
+        'dps-user@justice.gov.uk',
+      ])
+      expect(list[21], 'last row').to.deep.equal(['ITAG_USER20', 'true', 'Itag', 'User20', 'BXI', ''])
+    }
+    // A workaround for https://github.com/cypress-io/cypress/issues/14857
+    let csv
+    cy.intercept('GET', '*/download*', (req) => {
+      req.reply((res) => {
+        csv = res.body
+        res.headers.location = '/'
+        res.send(302)
+      })
+    }).as('csvDownload')
+
+    const results = goToResultsPage({ isAdmin: true })
+    cy.task('stubDpsSearch', { totalElements: 21, page: 0, size: 10000 })
+    results.download().click()
+    cy.wait('@csvDownload').then(() => {
+      parse(csv, {}, (err, output) => {
+        validateCsv(output)
+      })
+    })
   })
 })

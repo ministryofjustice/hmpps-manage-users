@@ -1,3 +1,5 @@
+const path = require('path')
+const parse = require('csv-parse')
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
@@ -243,6 +245,94 @@ context('External user search functionality', () => {
           values: ['0'],
         })
       })
+    })
+
+    it('Should allow a user to download all results', () => {
+      const validateCsv = (list) => {
+        console.log(`list = ${JSON.stringify(list)}`)
+        expect(list, 'number of records').to.have.length(22)
+        expect(list[0], 'header row').to.deep.equal([
+          'username',
+          'email',
+          'enabled',
+          'locked',
+          'verified',
+          'firstName',
+          'lastName',
+        ])
+        expect(list[1], 'first row').to.deep.equal([
+          'AUTH_ADM0',
+          'auth_test0@digital.justice.gov.uk',
+          'true',
+          'true',
+          'true',
+          'Auth',
+          'Adm0',
+        ])
+        expect(list[21], 'last row').to.deep.equal([
+          'AUTH_ADM20',
+          'auth_test20@digital.justice.gov.uk',
+          'true',
+          'false',
+          'true',
+          'Auth',
+          'Adm20',
+        ])
+      }
+      // A workaround for https://github.com/cypress-io/cypress/issues/14857
+      let csv
+      cy.intercept('GET', '*/download*', (req) => {
+        req.reply((res) => {
+          csv = res.body
+          res.headers.location = '/'
+          res.send(302)
+        })
+      }).as('csvDownload')
+
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(5),
+        totalElements: 21,
+        page: 0,
+        size: 5,
+      })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(21),
+        totalElements: 21,
+        page: 0,
+        size: 10000,
+      })
+
+      const search = AuthUserSearchPage.goTo()
+      search.search('sometext@somewhere.com')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.download().click()
+      cy.wait('@csvDownload').then(() => {
+        parse(csv, {}, (err, output) => {
+          validateCsv(output)
+        })
+      })
+    })
+
+    it('Should not show the download link for group managers', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'AUTH_GROUP_MANAGER' }] })
+      cy.signIn()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      cy.task('stubAuthSearch', {
+        content: replicateUser(5),
+        totalElements: 21,
+        page: 0,
+        size: 5,
+      })
+
+      const search = AuthUserSearchPage.goTo()
+      search.search('sometext@somewhere.com')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.download().should('not.exist')
     })
   })
 })

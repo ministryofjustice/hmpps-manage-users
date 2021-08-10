@@ -13,6 +13,7 @@ const searchFactory = (
   maintainUrl,
   searchTitle,
   dpsSearch,
+  allowDownload,
 ) => {
   const index = async (req, res) => {
     const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
@@ -82,6 +83,9 @@ const searchFactory = (
       username: user,
       errors: req.flash('errors'),
       caseloads,
+      downloadUrl:
+        allowDownload(res) &&
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
     })
   }
 
