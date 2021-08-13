@@ -23,7 +23,7 @@
       name: 'activeCaseload',
       id: 'activeCaseload',
       items: caseloads | addDefaultSelectedValue('Any', true) | setSelected(activeCaseload)
-    }) if user.maintainAccessAdmin }}
+    }) if dpsSearch and user.maintainAccessAdmin }}
     {{ govukButton({
       text: "Filter",
       type: "submit",

@@ -1,4 +1,3 @@
-const path = require('path')
 const parse = require('csv-parse')
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
@@ -27,7 +26,26 @@ context('External user search functionality', () => {
     })
 
     it('Should still show the filters if no search results', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
+      })
+      cy.signIn()
+      cy.task('stubAuthAssignableGroups', { content: [] })
+      cy.task('stubAuthSearchableRoles', { content: [] })
+      const search = AuthUserSearchPage.goTo()
+      cy.task('stubAuthSearch', { content: [] })
+      search.search('nothing doing')
+      const results = UserSearchResultsPage.verifyOnPage()
+      results.noResults().should('contain.text', 'No records found')
+      results.statusFilter().should('exist')
+      results.caseloadFilter().should('not.exist')
+      results.submitFilter().should('exist')
+    })
+
+    it('Should hide the caseload filter for external searches', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
+      })
       cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
@@ -249,7 +267,6 @@ context('External user search functionality', () => {
 
     it('Should allow a user to download all results', () => {
       const validateCsv = (list) => {
-        console.log(`list = ${JSON.stringify(list)}`)
         expect(list, 'number of records').to.have.length(22)
         expect(list[0], 'header row').to.deep.equal([
           'username',

@@ -146,6 +146,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        dpsSearch: true,
       })
     })
 
@@ -181,6 +182,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        dpsSearch: true,
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -248,6 +250,7 @@ describe('search factory', () => {
         username: 'joe',
         status: undefined,
         caseloads: [],
+        dpsSearch: true,
       })
       expect(searchApi).toBeCalledWith({
         locals,
@@ -333,6 +336,7 @@ describe('search factory', () => {
           status: undefined,
           caseloads: [],
           activeCaseload: undefined,
+          dpsSearch: false,
         })
       })
 
