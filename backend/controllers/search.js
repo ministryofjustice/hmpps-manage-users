@@ -86,6 +86,7 @@ const searchFactory = (
       downloadUrl:
         allowDownload(res) &&
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
+      dpsSearch,
     })
   }
 
