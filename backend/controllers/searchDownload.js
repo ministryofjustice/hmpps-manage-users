@@ -13,7 +13,7 @@ const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
       locals: res.locals,
       ...parameters,
       pageNumber: 0,
-      pageSize: 10000,
+      pageSize: 20000,
       pageOffset: 0,
     })
 
