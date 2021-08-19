@@ -92,7 +92,7 @@ describe('download factory', () => {
         groupCode: '',
         status: 'ACTIVE',
         pageNumber: 0,
-        pageSize: 10000,
+        pageSize: 20000,
         pageOffset: 0,
       })
     })
@@ -134,7 +134,7 @@ describe('download factory', () => {
         somethingElse: 'else',
         andAnotherThing: 'ANOTHER',
         pageNumber: 0,
-        pageSize: 10000,
+        pageSize: 20000,
         pageOffset: 0,
       })
     })
