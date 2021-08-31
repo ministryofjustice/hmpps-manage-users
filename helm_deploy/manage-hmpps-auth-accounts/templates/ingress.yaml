@@ -13,6 +13,7 @@ metadata:
     nginx.ingress.kubernetes.io/limit-rpm: "120"
     # setting to 429 (default is 503) so we can alert on this
     nginx.ingress.kubernetes.io/server-snippet: |
+      add_header X-Robots-Tag "noindex, nofollow";
       limit_req_status 429;
     {{- if .Values.ingress.modsecurity_enabled }}
     nginx.ingress.kubernetes.io/enable-modsecurity: "true"
