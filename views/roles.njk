@@ -1,0 +1,57 @@
+{% extends "./partials/layout.njk" %}
+{%- from "govuk/components/select/macro.njk" import govukSelect -%}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{%- from "govuk/components/error-summary/macro.njk" import govukErrorSummary -%}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% set title = "Manage roles" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ mojPagination(pagination) }}
+            {% set rows = [] %}
+            {% for r in roles %}
+{#              {% set roleLink = '<a href="' + maintainUrl + '/' + r.value + '" class="govuk-link" data-qa="edit-button-'#}
+{#                + r.text +'">' + r.text + '</a>' %}#}
+              {% set rows = (rows.push([
+                { text: r.text }
+              ]), rows) %}
+            {% endfor %}
+            {{ govukTable({
+              rows: rows,
+              attributes: { "data-qa": "roles" }
+            }) }}
+        {{ mojPagination(pagination) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}
+

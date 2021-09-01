@@ -31,6 +31,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      maintainRoles: false,
     })
   })
 
@@ -56,6 +57,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      maintainRoles: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -72,6 +74,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      maintainRoles: false,
     })
   })
 
@@ -86,6 +89,7 @@ describe('Current user', () => {
       maintainAccess: true,
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
+      maintainRoles: false,
     })
   })
 
@@ -100,6 +104,7 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: true,
       maintainAuthUsers: false,
+      maintainRoles: false,
     })
   })
 
@@ -114,6 +119,22 @@ describe('Current user', () => {
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: true,
+      maintainRoles: false,
+    })
+  })
+
+  it('should set Role admin for an external user', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'ROLES_ADMIN' }])
+    const controller = currentUser({ prisonApi, oauthApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainRoles: true,
     })
   })
 
@@ -124,6 +145,7 @@ describe('Current user', () => {
       { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' },
       { roleCode: 'AUTH_GROUP_MANAGER' },
       { roleCode: 'MAINTAIN_ACCESS_ROLES' },
+      { roleCode: 'ROLES_ADMIN' },
     ])
     const controller = currentUser({ prisonApi, oauthApi })
 
@@ -134,6 +156,7 @@ describe('Current user', () => {
       maintainAccess: true,
       maintainAccessAdmin: true,
       maintainAuthUsers: true,
+      maintainRoles: true,
     })
   })
 

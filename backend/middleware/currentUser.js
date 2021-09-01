@@ -17,6 +17,7 @@ module.exports =
           maintainAccessAdmin: hasRole(roles, 'MAINTAIN_ACCESS_ROLES_ADMIN'),
           maintainAuthUsers: hasRole(roles, 'MAINTAIN_OAUTH_USERS'),
           groupManager: hasRole(roles, 'AUTH_GROUP_MANAGER'),
+          maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
         }
       }
 
