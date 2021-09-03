@@ -35,21 +35,20 @@
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        {{ mojPagination(pagination) }}
-            {% set rows = [] %}
-            {% for r in roles %}
-{#              {% set roleLink = '<a href="' + maintainUrl + '/' + r.value + '" class="govuk-link" data-qa="edit-button-'#}
-{#                + r.text +'">' + r.text + '</a>' %}#}
-              {% set rows = (rows.push([
-                { text: r.text }
-              ]), rows) %}
-            {% endfor %}
-            {{ govukTable({
-              rows: rows,
-              attributes: { "data-qa": "roles" }
-            }) }}
-        {{ mojPagination(pagination) }}
+      {{ mojPagination(pagination) }}
+      {% set rows = [] %}
+      {% for r in roles %}
+        {% set roleLink = '<a href="' + maintainUrl + '/' + r.value + '" class="govuk-link" data-qa="edit-button-'
+          + r.text +'">' + r.text + '</a>' %}
+        {% set rows = (rows.push([
+          { html: roleLink }
+        ]), rows) %}
+      {% endfor %}
+      {{ govukTable({
+        rows: rows,
+        attributes: { "data-qa": "roles" }
+      }) }}
+      {{ mojPagination(pagination) }}
       </div>
     </div>
   </div>
