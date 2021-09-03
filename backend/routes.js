@@ -7,6 +7,7 @@ const searchDpsUserRouter = require('./routes/searchDpsUserRouter')
 const createAuthUserRouter = require('./routes/createAuthUserRouter')
 const manageDpsUserRouter = require('./routes/manageDpsUserRouter')
 const manageGroupsRouter = require('./routes/manageGroupsRouter')
+const manageRolesRouter = require('./routes/manageRolesRouter')
 const currentUser = require('./middleware/currentUser')
 
 const configureRoutes = ({ oauthApi, prisonApi }) => {
@@ -21,6 +22,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ prisonApi, oauthApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))
+  router.use('/manage-roles', manageRolesRouter({ oauthApi }))
 
   return router
 }
