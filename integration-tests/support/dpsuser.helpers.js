@@ -1,4 +1,5 @@
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
+const DpsUserSearchWithFilterPage = require('../pages/dpsUserSearchWithFilterPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 
@@ -16,6 +17,19 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
   const results = UserSearchResultsPage.verifyOnPage()
   if (nextPage) results.nextPage()
   return results
+}
+
+export const goToSearchWithFilterPage = ({ isAdmin = false, totalElements = 21, nextPage }) => {
+  const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+  cy.task('stubSignIn', { roles: [{ roleCode }] })
+  cy.signIn()
+  cy.task('stubDpsGetRoles', { content: [] })
+  cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
+  if (isAdmin) cy.task('stubDpsGetCaseloads')
+  cy.task('stubAuthUserEmails')
+
+  const search = DpsUserSearchWithFilterPage.goTo()
+  return search
 }
 
 export const editUser = ({ isAdmin = false, nextPage }) => {

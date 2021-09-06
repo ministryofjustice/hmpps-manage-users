@@ -1,0 +1,104 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% set title = "Search for a DPS user (BETA)" if dpsSearch else  "Search for an external user " %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+{% set filterOptionsHtml %}
+  <form id="filter-form" action="{{ searchUrl }}" novalidate>
+    {{ govukInput({
+      label: { text: "Name or username" if dpsSearch else "Name, username or email address" },
+      classes: "govuk-input--width-20",
+      value: currentFilter.user,
+      id: "user",
+      name: "user",
+      errorMessage: errors | findError('user')
+    }) }}
+    <input type='hidden' name='status' value='ALL' />
+    {% if showGroupOrPrisonDropdown %}
+    <div class="govuk-list">
+      {{ govukSelect({label: {
+        text: "Select a " + groupOrPrison
+      },
+        idPrefix: 'groupCode',
+        name: 'groupCode',
+        id: 'groupCode',
+        items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison),
+        errorMessage: errors | findError('groupCode')
+      }) }}
+    </div>
+    {% endif %}
+    <div class="govuk-list">
+      {{ govukSelect({label: {
+        text: "Select a role"
+      },
+        idPrefix: 'roleCode',
+        name: 'roleCode',
+        id: 'roleCode',
+        items: roleDropdownValues | addBlankOptions('Select a role'),
+        errorMessage: errors | findError('roleCode')
+      }) }}
+    </div>
+  </form>
+{% endset %}
+
+  <div class="govuk-grid-row govuk-body">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="moj-filter-layout">
+        <div class="moj-filter-layout__filter">
+          {{ mojFilter(currentFilter | toUserSearchFilter(groupOrPrisonDropdownValues, roleDropdownValues, filterOptionsHtml, showGroupOrPrisonDropdown))}}
+        </div>
+
+        <div class="moj-filter-layout__content">
+          <p>Results will be here ...</p>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/js/search-filter.js"></script>
+  <script>
+    {%- if showGroupOrPrisonDropdown %}
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#groupCode'),
+      showAllValues: true,
+      preserveNullOptions: true,
+    })
+    {%- endif %}
+    accessibleAutocomplete.enhanceSelectElement({
+      selectElement: document.querySelector('#roleCode'),
+      showAllValues: true,
+      preserveNullOptions: true,
+    })
+  </script>
+{% endblock %}
+
