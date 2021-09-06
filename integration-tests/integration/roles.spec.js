@@ -22,9 +22,9 @@ context('Roles', () => {
     const roles = RolesPage.verifyOnPage()
 
     roles.rows().should('have.length', 3)
-    roles.rows().eq(0).should('contain.text', 'Global Search')
-    roles.rows().eq(1).should('contain.text', 'Licence Responsible Officer')
-    roles.rows().eq(2).should('contain.text', 'Licence Vary')
+    roles.rows().eq(0).should('contain.text', 'Auth Group Manager')
+    roles.rows().eq(1).should('contain.text', 'Global Search')
+    roles.rows().eq(2).should('contain.text', 'Licence Responsible Officer')
   })
 
   it('Should display paged results for all roles', () => {
@@ -88,21 +88,20 @@ context('Roles', () => {
     })
   })
 
-  // it.only('should display role details', () => {
-  //   cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-  //   cy.signIn()
-  //
-  //   cy.task('stubAllRoles', {})
-  //   cy.task('stubRoleDetails', {})
-  //   cy.visit('/manage-roles')
-  //   const roles = RolesPage.verifyOnPage()
-  //
-  //   roles.rows().should('have.length', 3)
-  //   roles.rows().eq(0).should('contain.text', 'SOCU North West')
-  //   roles.rows().get('[data-qa="edit-button-SOCU North West"]').click()
-  //
-  //   const roleDetails = RoleDetailsPage.verifyOnPage('Site 1 - Group 2')
-  //   roleDetails.assignableRoles().should('have.length', 2)
-  //   roleDetails.childGroups().should('have.length', 1)
-  // })
+  it('should display role details', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+
+    cy.task('stubAllRoles', {})
+    cy.task('stubRoleDetails', {})
+    cy.visit('/manage-roles')
+    const roles = RolesPage.verifyOnPage()
+
+    roles.rows().should('have.length', 3)
+    roles.rows().eq(0).should('contain.text', 'Auth Group Manager')
+    roles.rows().get('[data-qa="edit-button-Auth Group Manager"]').click()
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.adminTypes().should('have.length', 2)
+  })
 })
