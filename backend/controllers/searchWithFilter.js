@@ -26,7 +26,7 @@ const searchFactory = (getAssignableGroupsOrPrisonsApi, getSearchableRolesApi, s
 
 function parseFilter(query) {
   const roleCode = toArrayOrUndefined(query.roleCode)
-  const activeCaseload = toArrayOrUndefined(query.activeCaseload)
+  const activeCaseload = toArrayOrUndefined(query.groupCode)
   return {
     user: query.user,
     status: query.status || 'ALL',

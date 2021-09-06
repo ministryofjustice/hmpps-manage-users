@@ -52,7 +52,7 @@ describe('search factory', () => {
     it('should set current filter with single query parameters', async () => {
       const req = {
         flash: jest.fn(),
-        query: { user: 'Andy', status: 'INACTIVE', activeCaseload: 'MDI', roleCode: 'ACCESS_ROLE_ADMIN' },
+        query: { user: 'Andy', status: 'INACTIVE', groupCode: 'MDI', roleCode: 'ACCESS_ROLE_ADMIN' },
       }
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
@@ -73,7 +73,7 @@ describe('search factory', () => {
     })
 
     it('should set list current filters to undefined when no values', async () => {
-      const req = { flash: jest.fn(), query: { user: 'Andy', status: 'INACTIVE', activeCaseload: '', roleCode: '' } }
+      const req = { flash: jest.fn(), query: { user: 'Andy', status: 'INACTIVE', groupCode: '', roleCode: '' } }
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
 
@@ -98,7 +98,7 @@ describe('search factory', () => {
         query: {
           user: 'Andy',
           status: 'INACTIVE',
-          activeCaseload: ['MDI', 'BXI'],
+          groupCode: ['MDI', 'BXI'],
           roleCode: ['ACCESS_ROLE_ADMIN', 'ACCESS_ROLE_GENERAL'],
         },
       }

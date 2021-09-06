@@ -42,4 +42,14 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.statusFilterRadioButton('All').should('be.checked')
     searchWithFilter.filterWithTag('All').should('not.exist')
   })
+
+  it('can add and remove a single caseload filter', () => {
+    const searchWithFilter = goToSearchWithFilterPage({})
+
+    searchWithFilter.filterCaseload('Moorland')
+    searchWithFilter.filterWithTag('Moorland').should('exist')
+
+    searchWithFilter.filterWithTag('Moorland').click()
+    searchWithFilter.filterWithTag('Moorland').should('not.exist')
+  })
 })
