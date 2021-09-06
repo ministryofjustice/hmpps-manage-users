@@ -93,17 +93,11 @@ describe('toUserSearchFilter', () => {
       expect(categoryWithHeading(result, 'Caseload').items).toBeFalsy()
     })
     it('should have single caseload tag when a single prison set in filter', () => {
-      const result = njk.getFilter('toUserSearchFilter')({ activeCaseload: ['MDI'] }, prisons, [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', true)
       expect(categoryWithHeading(result, 'Caseload').items).toHaveLength(1)
     })
     it('caseload tag should have text and reset url for removing the prison', () => {
-      const result = njk.getFilter('toUserSearchFilter')(
-        { user: 'Andy', activeCaseload: ['MDI'] },
-        prisons,
-        [],
-        '',
-        true,
-      )
+      const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', groupCode: ['MDI'] }, prisons, [], '', true)
       expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
         text: 'Moorland (HMP)',
         href: '/search-with-filter-dps-users?user=Andy',
@@ -111,7 +105,7 @@ describe('toUserSearchFilter', () => {
     })
     it('caseload tag should have text and reset url for removing the prison when multiple prisons set', () => {
       const result = njk.getFilter('toUserSearchFilter')(
-        { user: 'Andy', activeCaseload: ['MDI', 'RNI'] },
+        { user: 'Andy', groupCode: ['MDI', 'RNI'] },
         prisons,
         [],
         '',
@@ -119,11 +113,11 @@ describe('toUserSearchFilter', () => {
       )
       expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
         text: 'Moorland (HMP)',
-        href: '/search-with-filter-dps-users?user=Andy&activeCaseload=RNI',
+        href: '/search-with-filter-dps-users?user=Andy&groupCode=RNI',
       })
       expect(categoryWithHeading(result, 'Caseload').items[1]).toStrictEqual({
         text: 'Ranby (HMP)',
-        href: '/search-with-filter-dps-users?user=Andy&activeCaseload=MDI',
+        href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI',
       })
     })
   })

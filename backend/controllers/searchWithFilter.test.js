@@ -41,7 +41,7 @@ describe('search factory', () => {
         groupOrPrison: 'caseload',
         showGroupOrPrisonDropdown: false,
         currentFilter: {
-          activeCaseload: undefined,
+          groupCode: undefined,
           roleCode: undefined,
           status: 'ALL',
           user: undefined,
@@ -63,7 +63,7 @@ describe('search factory', () => {
         'searchWithFilter.njk',
         expect.objectContaining({
           currentFilter: {
-            activeCaseload: ['MDI'],
+            groupCode: ['MDI'],
             roleCode: ['ACCESS_ROLE_ADMIN'],
             status: 'INACTIVE',
             user: 'Andy',
@@ -83,7 +83,7 @@ describe('search factory', () => {
         'searchWithFilter.njk',
         expect.objectContaining({
           currentFilter: {
-            activeCaseload: undefined,
+            groupCode: undefined,
             roleCode: undefined,
             status: 'INACTIVE',
             user: 'Andy',
@@ -111,7 +111,7 @@ describe('search factory', () => {
         'searchWithFilter.njk',
         expect.objectContaining({
           currentFilter: {
-            activeCaseload: ['MDI', 'BXI'],
+            groupCode: ['MDI', 'BXI'],
             roleCode: ['ACCESS_ROLE_ADMIN', 'ACCESS_ROLE_GENERAL'],
             status: 'INACTIVE',
             user: 'Andy',

@@ -242,10 +242,10 @@ function getStatusTags(currentFilter, hrefBase) {
 }
 
 function getCaseloadTags(currentFilter, hrefBase, prisons) {
-  const { activeCaseload, ...currentFilterNoCaseloads } = currentFilter
+  const { groupCode, ...currentFilterNoCaseloads } = currentFilter
 
-  return activeCaseload?.map((caseload) => {
-    const newFilter = { ...currentFilterNoCaseloads, activeCaseload: activeCaseload.filter((c) => c !== caseload) }
+  return groupCode?.map((caseload) => {
+    const newFilter = { ...currentFilterNoCaseloads, groupCode: groupCode.filter((c) => c !== caseload) }
     return {
       // TODO look at using new URLSearchParams instead
       href: `${hrefBase}${querystring.stringify(newFilter)}`,

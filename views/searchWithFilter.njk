@@ -77,7 +77,7 @@
         idPrefix: 'groupCode',
         name: 'groupCode',
         id: 'groupCode',
-        items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison),
+        items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison) | setSelected(currentFilter.groupCode[0]),
         errorMessage: errors | findError('groupCode')
       }) }}
     </div>
@@ -89,7 +89,7 @@
         idPrefix: 'roleCode',
         name: 'roleCode',
         id: 'roleCode',
-        items: roleDropdownValues | addBlankOptions('Select a role'),
+        items: roleDropdownValues | addBlankOptions('Select a role') | setSelected(currentFilter.roleCode[0]),
         errorMessage: errors | findError('roleCode')
       }) }}
     </div>
