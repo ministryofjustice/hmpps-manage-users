@@ -43,7 +43,7 @@ describe('search factory', () => {
         currentFilter: {
           activeCaseload: undefined,
           roleCode: undefined,
-          status: undefined,
+          status: 'ALL',
           user: undefined,
         },
       })

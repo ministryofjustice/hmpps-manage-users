@@ -4,6 +4,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
 
 {% block header %}
   {{ super() }}
@@ -34,7 +35,40 @@
       name: "user",
       errorMessage: errors | findError('user')
     }) }}
-    <input type='hidden' name='status' value='ALL' />
+
+    {{ govukRadios({
+      idPrefix: 'status',
+      name: 'status',
+      classes: 'govuk-radios--small govuk-radios--inline',
+      fieldset: {
+        legend: {
+          text: 'Status',
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      hint: {
+        text: 'Display active or inactive users only'
+      },
+      items: [
+        {
+          value: 'ALL',
+          text: 'All',
+          checked: currentFilter.status === 'ALL'
+        },
+        {
+          value: 'ACTIVE',
+          text: 'Active',
+          checked: currentFilter.status === 'ACTIVE'
+        },
+        {
+          value: 'INACTIVE',
+          text: 'Inactive',
+          checked: currentFilter.status === 'INACTIVE'
+        }
+      ]
+    }
+    )}}
+
     {% if showGroupOrPrisonDropdown %}
     <div class="govuk-list">
       {{ govukSelect({label: {

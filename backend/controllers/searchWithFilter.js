@@ -29,7 +29,7 @@ function parseFilter(query) {
   const activeCaseload = toArrayOrUndefined(query.activeCaseload)
   return {
     user: query.user,
-    status: query.status,
+    status: query.status || 'ALL',
     roleCode,
     activeCaseload,
   }

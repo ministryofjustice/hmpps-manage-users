@@ -19,7 +19,7 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
   return results
 }
 
-export const goToSearchWithFilterPage = ({ isAdmin = false, totalElements = 21, nextPage }) => {
+export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, nextPage }) => {
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
