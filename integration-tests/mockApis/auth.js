@@ -583,9 +583,9 @@ const verifyAuthCreateUser = () =>
 
 const stubAllRoles = ({
   content = [
+    { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
     { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
     { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
-    { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
   ],
   totalElements = 3,
   page = 0,
@@ -602,6 +602,28 @@ const stubAllRoles = ({
       },
       totalElements,
     },
+  })
+
+const stubRoleDetails = ({
+  content = {
+    roleCode: 'AUTH_GROUP_MANAGER',
+    roleName: 'Auth Group Manager',
+    roleDescription: 'Role to be a Group Manager',
+    adminType: [
+      {
+        adminTypeName: 'External Admin',
+        id: '8bdd748f-25cf-4d06-8e55-a6e9aa792b0f',
+      },
+      {
+        adminTypeName: 'External Group Manager',
+        id: 'c6d27933-888b-44e1-968c-59ba0edffab1',
+      },
+    ],
+  },
+}) =>
+  getFor({
+    urlPattern: '/auth/api/roles/[^/]*',
+    body: content,
   })
 
 const verifyAllRoles = () =>
@@ -659,6 +681,7 @@ module.exports = {
   stubAuthCreateUser,
   stubError,
   stubHealth,
+  stubRoleDetails,
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,
