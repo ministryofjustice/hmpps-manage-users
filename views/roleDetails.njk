@@ -29,8 +29,21 @@
 {% endif %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
 
-    <h1 class="govuk-heading-l">{{ roleDetails.roleName }}</h1>
+    {{ govukTable({
+
+      rows: [
+        [
+          {html: heading, colspan: 2, rowspan: 1},
+          {
+            html: '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>',
+            classes: 'govuk-!-width-one-quarter',
+            format: "numeric"
+          }
+        ]
+      ]
+    }) }}
 
     {{ govukTable({
       caption: "Role details",
@@ -48,6 +61,8 @@
         ]
       ]
     }) }}
+
+
 
     {% set rows = [] %}
     {% for a in roleDetails.adminType %}

@@ -398,6 +398,12 @@ const stubAuthAddRoles = () =>
     },
   })
 
+const stubAuthChangeRoleName = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/roles/.*',
+  })
+
 const stubAuthAddGroup = () =>
   stubFor({
     request: {
@@ -664,6 +670,7 @@ module.exports = {
   stubAuthRemoveGroup,
   stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
+  stubAuthChangeRoleName,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
   stubAuthChangeGroupName,
