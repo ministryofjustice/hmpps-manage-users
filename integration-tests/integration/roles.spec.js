@@ -2,6 +2,7 @@ const RolesPage = require('../pages/rolesPage')
 const MenuPage = require('../pages/menuPage')
 const { replicateRoles } = require('../support/roles.helpers')
 const RoleDetailsPage = require('../pages/roleDetailsPage')
+const RoleNameChangePage = require('../pages/roleNameChangePage')
 
 context('Roles', () => {
   before(() => {
@@ -104,4 +105,30 @@ context('Roles', () => {
     const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
     roleDetails.adminTypes().should('have.length', 2)
   })
+
+  it('should allow change role name', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+
+    cy.task('stubAllRoles', {})
+    cy.task('stubRoleDetails', {})
+    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.changeRoleName()
+
+    cy.task('stubAuthChangeRoleName')
+    cy.task('stubRoleDetails', roleDetailsAfterRoleNameChange)
+    const roleNameChange = RoleNameChangePage.verifyOnPage()
+    roleNameChange.changeName('Name Change')
+
+    RoleDetailsPage.verifyOnPage('New Role Name')
+  })
+
+  const roleDetailsAfterRoleNameChange = {
+    content: {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'New Role Name',
+    },
+  }
 })

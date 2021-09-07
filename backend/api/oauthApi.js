@@ -88,6 +88,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     return client.get(context, `/api/roles?${query}`).then(processPageResponse(context))
   }
   const getRoleDetails = (context, role) => get(context, `/api/roles/${role}`)
+  const changeRoleName = (context, role, roleName) => put(context, `/api/roles/${role}`, roleName)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -181,6 +182,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     changeDpsEmail,
     getAllRoles,
     getRoleDetails,
+    changeRoleName,
   }
 }
 

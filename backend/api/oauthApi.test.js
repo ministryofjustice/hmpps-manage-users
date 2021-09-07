@@ -387,6 +387,21 @@ describe('oauthApi tests', () => {
     })
   })
 
+  describe('change role name', () => {
+    const roleName = { roleName: 'rolie' }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      oauthApi.changeRoleName(context, 'role1', roleName)
+    })
+
+    it('should call external user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/api/roles/role1', roleName)
+    })
+  })
+
   describe('disableUser', () => {
     const errorResponse = { field: 'hello' }
     let actual
