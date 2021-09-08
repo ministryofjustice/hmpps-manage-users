@@ -1,6 +1,7 @@
 const express = require('express')
 const json2csv = require('json2csv')
 const { searchFactory } = require('../controllers/searchWithFilter')
+const paginationService = require('../services/offsetPaginationService')
 const contextProperties = require('../contextProperties')
 const { downloadFactory } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
@@ -60,8 +61,11 @@ const controller = ({ prisonApi, oauthApi }) => {
   }
 
   const search = searchFactory(
+    paginationService,
     caseloads,
     searchableRoles,
+    searchApi,
+    contextProperties.getResponsePagination,
     '/search-with-filter-dps-users',
     '/manage-dps-users',
     'Search for a DPS user (BETA)',

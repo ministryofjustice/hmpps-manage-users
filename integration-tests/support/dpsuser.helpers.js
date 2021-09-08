@@ -23,7 +23,18 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, n
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
-  cy.task('stubDpsGetRoles', { content: [] })
+  cy.task('stubDpsGetRoles', {
+    content: [
+      {
+        roleCode: 'MAINTAIN_ACCESS_ROLES',
+        roleName: 'Maintain Roles',
+      },
+      {
+        roleCode: 'USER_ADMIN',
+        roleName: 'User Admin',
+      },
+    ],
+  })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
   if (isAdmin) cy.task('stubDpsGetCaseloads')
   cy.task('stubAuthUserEmails')

@@ -3,8 +3,11 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
-{% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
 
 {% block header %}
   {{ super() }}
@@ -81,6 +84,32 @@
         errorMessage: errors | findError('groupCode')
       }) }}
     </div>
+        {{ govukRadios({
+            idPrefix: 'restrictToActiveGroup',
+            name: 'restrictToActiveGroup',
+            classes: 'govuk-radios--small govuk-radios--inline',
+            fieldset: {
+              legend: {
+                text: 'Active caseload only',
+                classes: 'govuk-label'
+              }
+            },
+            items: [
+              {
+                value: 'true',
+                text: 'Yes',
+                checked: currentFilter.restrictToActiveGroup !== false
+              },
+              {
+                value: 'false',
+                text: 'No',
+                checked: currentFilter.restrictToActiveGroup === false
+              }
+            ]
+          }
+          )}}
+
+
     {% endif %}
     <div class="govuk-list">
       {{ govukSelect({label: {
@@ -105,12 +134,57 @@
         <div class="moj-filter-layout__filter">
           {{ mojFilter(currentFilter | toUserSearchFilter(groupOrPrisonDropdownValues, roleDropdownValues, filterOptionsHtml, showGroupOrPrisonDropdown))}}
         </div>
-
         <div class="moj-filter-layout__content">
-          <p>Results will be here ...</p>
+            <div class="govuk-grid-row">
+              <div class="govuk-grid-column-full">
+              {% if results.length %}
+                {{ mojPagination(pagination) }}
 
+                {% set rows = [] %}
+                {% for u in results %}
+                  {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/details" class="govuk-link" data-qa="edit-button-'
+                    + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
+                {% set tags %}
+                {{ govukTag({
+                  text: "Inactive",
+                  classes: "govuk-tag--pink"
+                }) if not u.active }}
+                {{ govukTag({
+                  text: "Active",
+                  classes: "govuk-tag--green"
+                }) if u.active }}
+                {% endset %}
+                    {% set rows = (rows.push([
+                      { html: userLink },
+                      { text: u.username },
+                      { text: u.email },
+                      { text: u.activeCaseLoadId },
+                      { html: tags }
+                    ]), rows) %}
+                  {% endfor %}
+
+                  {{ govukTable({
+                    head: [
+                      { text: "Name" },
+                      { text: "Username" },
+                      { text: "Verified email" },
+                      { text: "Active caseload" },
+                      { text: "Status" }
+                    ],
+                    rows: rows
+                  }) }}
+                {{ mojPagination(pagination) }}
+                {% if downloadUrl %}
+                  <div class="pull-right">
+                    <a href="{{ downloadUrl }}" class="govuk-link" data-qa="download" download="user-search.csv" type="text/csv">Download results</a>
+                  </div>
+                {% endif %}
+              {% else %}
+                <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+              {% endif %}
+            </div>
+          </div>
         </div>
-
       </div>
     </div>
   </div>

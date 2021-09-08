@@ -244,14 +244,31 @@ function getStatusTags(currentFilter, hrefBase) {
 function getCaseloadTags(currentFilter, hrefBase, prisons) {
   const { groupCode, ...currentFilterNoCaseloads } = currentFilter
 
-  return groupCode?.map((caseload) => {
+  let tags = groupCode?.map((caseload) => {
     const newFilter = { ...currentFilterNoCaseloads, groupCode: groupCode.filter((c) => c !== caseload) }
+    if (newFilter.groupCode.length === 0) {
+      delete newFilter.restrictToActiveGroup
+    }
     return {
       // TODO look at using new URLSearchParams instead
       href: `${hrefBase}${querystring.stringify(newFilter)}`,
       text: prisons.find((prison) => prison.value === caseload)?.text,
     }
   })
+
+  if (groupCode && currentFilter.restrictToActiveGroup) {
+    const newFilter = { ...currentFilter, restrictToActiveGroup: false }
+    tags = [
+      ...tags,
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: 'Active caseload only',
+      },
+    ]
+  }
+
+  return tags
 }
 function getRoleTags(currentFilter, hrefBase, roles) {
   const { roleCode, ...currentFilterNoRoles } = currentFilter

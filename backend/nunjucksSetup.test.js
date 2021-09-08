@@ -89,23 +89,32 @@ describe('toUserSearchFilter', () => {
       expect(categoryWithHeading(result, 'Caseload')).toBeFalsy()
     })
     it('should not have caseload tag when caseload not set in filter', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, prisons, [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ restrictToActiveGroup: true }, prisons, [], '', true)
       expect(categoryWithHeading(result, 'Caseload').items).toBeFalsy()
     })
     it('should have single caseload tag when a single prison set in filter', () => {
-      const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')(
+        { groupCode: ['MDI'], restrictToActiveGroup: false },
+        prisons,
+        [],
+        '',
+        true,
+      )
       expect(categoryWithHeading(result, 'Caseload').items).toHaveLength(1)
     })
-    it('caseload tag should have text and reset url for removing the prison', () => {
-      const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', groupCode: ['MDI'] }, prisons, [], '', true)
-      expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
-        text: 'Moorland (HMP)',
-        href: '/search-with-filter-dps-users?user=Andy',
-      })
-    })
-    it('caseload tag should have text and reset url for removing the prison when multiple prisons set', () => {
+    it('should have additional caseload tag when a single prison set in filter with restrict to active caseload', () => {
       const result = njk.getFilter('toUserSearchFilter')(
-        { user: 'Andy', groupCode: ['MDI', 'RNI'] },
+        { groupCode: ['MDI'], restrictToActiveGroup: true },
+        prisons,
+        [],
+        '',
+        true,
+      )
+      expect(categoryWithHeading(result, 'Caseload').items).toHaveLength(2)
+    })
+    it('caseload tag should have text and reset url for removing the prison', () => {
+      const result = njk.getFilter('toUserSearchFilter')(
+        { user: 'Andy', groupCode: ['MDI'], restrictToActiveGroup: true },
         prisons,
         [],
         '',
@@ -113,11 +122,32 @@ describe('toUserSearchFilter', () => {
       )
       expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
         text: 'Moorland (HMP)',
-        href: '/search-with-filter-dps-users?user=Andy&groupCode=RNI',
+        href: '/search-with-filter-dps-users?user=Andy',
+      })
+      expect(categoryWithHeading(result, 'Caseload').items[1]).toStrictEqual({
+        text: 'Active caseload only',
+        href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI&restrictToActiveGroup=false',
+      })
+    })
+    it('caseload tag should have text and reset url for removing the prison when multiple prisons set', () => {
+      const result = njk.getFilter('toUserSearchFilter')(
+        { user: 'Andy', groupCode: ['MDI', 'RNI'], restrictToActiveGroup: true },
+        prisons,
+        [],
+        '',
+        true,
+      )
+      expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
+        text: 'Moorland (HMP)',
+        href: '/search-with-filter-dps-users?user=Andy&restrictToActiveGroup=true&groupCode=RNI',
       })
       expect(categoryWithHeading(result, 'Caseload').items[1]).toStrictEqual({
         text: 'Ranby (HMP)',
-        href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI',
+        href: '/search-with-filter-dps-users?user=Andy&restrictToActiveGroup=true&groupCode=MDI',
+      })
+      expect(categoryWithHeading(result, 'Caseload').items[2]).toStrictEqual({
+        text: 'Active caseload only',
+        href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI&groupCode=RNI&restrictToActiveGroup=false',
       })
     })
   })
