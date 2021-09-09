@@ -11,7 +11,7 @@ const roleNameChangePage = () =>
       cancelButton().click()
     },
     changeName: (text) => {
-      if (text) roleName().type(text)
+      if (text) roleName().clear().type(text)
       else roleName().clear()
       submit().click()
     },

@@ -123,6 +123,12 @@ context('Roles', () => {
     roleNameChange.changeName('Name Change')
 
     RoleDetailsPage.verifyOnPage('New Role Name')
+    cy.task('verifyRoleNameUpdate').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        roleName: 'Name Change',
+      })
+    })
   })
 
   const roleDetailsAfterRoleNameChange = {
