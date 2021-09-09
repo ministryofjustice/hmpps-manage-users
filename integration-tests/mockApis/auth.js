@@ -587,6 +587,12 @@ const verifyAuthCreateUser = () =>
     urlPathPattern: '/auth/api/authuser/create',
   }).then((data) => data.body.requests)
 
+const verifyCreateRole = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/auth/api/roles',
+  }).then((data) => data.body.requests)
+
 const stubAllRoles = ({
   content = [
     { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
@@ -620,16 +626,24 @@ const stubRoleDetails = ({
         adminTypeName: 'External Admin',
         id: '8bdd748f-25cf-4d06-8e55-a6e9aa792b0f',
       },
-      {
-        adminTypeName: 'External Group Manager',
-        id: 'c6d27933-888b-44e1-968c-59ba0edffab1',
-      },
     ],
   },
 }) =>
   getFor({
     urlPattern: '/auth/api/roles/[^/]*',
     body: content,
+  })
+
+const stubAuthCreateRole = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/auth/api/roles',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
   })
 
 const verifyAllRoles = () =>
@@ -677,6 +691,7 @@ module.exports = {
   stubAuthChangeChildGroupName,
   stubAuthCreateChildGroup,
   stubAuthCreateGroup,
+  stubAuthCreateRole,
   stubAuthDeleteChildGroup,
   stubAuthDeleteGroup,
   stubAuthGroupDetailsNoChildren,
@@ -694,6 +709,7 @@ module.exports = {
   verifyAddGroup,
   verifyCreateGroup,
   verifyCreateChildGroup,
+  verifyCreateRole,
   verifyRemoveGroup,
   verifyUserEnable,
   verifyUserDisable,

@@ -6,6 +6,7 @@ const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
 const manageGroups = () => cy.get('[data-qa="manage_groups_link"]')
 const manageRoles = () => cy.get('[data-qa="view_roles_link"]')
 const createGroup = () => cy.get('[data-qa="create_groups_link"]')
+const createRole = () => cy.get('[data-qa="create_roles_link"]')
 
 const menuPage = () =>
   page('Manage user accounts', {
@@ -17,6 +18,7 @@ const menuPage = () =>
     searchDpsUsers: () => dpsUsers().click(),
     createGroup: () => createGroup().click(),
     manageGroups: () => manageGroups().click(),
+    createRole: () => createRole().click(),
     manageRoles: () => manageRoles().click(),
   })
 
