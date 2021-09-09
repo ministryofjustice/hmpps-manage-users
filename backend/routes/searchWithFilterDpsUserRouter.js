@@ -70,6 +70,7 @@ const controller = ({ prisonApi, oauthApi }) => {
     '/manage-dps-users',
     'Search for a DPS user (BETA)',
     true,
+    allowDownload,
   )
 
   const { downloadResults } = downloadFactory(searchApi, json2csv.parse, allowDownload)

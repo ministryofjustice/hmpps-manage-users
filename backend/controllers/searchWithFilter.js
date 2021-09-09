@@ -1,3 +1,5 @@
+const querystring = require('querystring')
+
 const searchFactory = (
   paginationService,
   getAssignableGroupsOrPrisonsApi,
@@ -5,8 +7,10 @@ const searchFactory = (
   searchApi,
   pagingApi,
   searchUrl,
+  maintainUrl,
   searchTitle,
   dpsSearch,
+  allowDownload,
 ) => {
   return async (req, res) => {
     const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
@@ -58,8 +62,16 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
+      downloadUrl:
+        allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
     })
   }
+}
+
+function toDownloadParameters(currentFilter) {
+  const { restrictToActiveGroup, ...params } = currentFilter
+  params.activeCaseload = restrictToActiveGroup && params.groupCode ? params.groupCode : undefined
+  return querystring.stringify(params)
 }
 
 function parseFilter(query) {

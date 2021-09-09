@@ -5,6 +5,7 @@ describe('search factory', () => {
   const getSearchableRolesApi = jest.fn()
   const searchApi = jest.fn()
   const pagingApi = jest.fn()
+  const allowDownload = jest.fn()
 
   beforeEach(() => {
     getSearchableRolesApi.mockReset()
@@ -20,8 +21,10 @@ describe('search factory', () => {
       searchApi,
       pagingApi,
       '/search-with-filter-dps-users',
+      '/manage-dps-users',
       'Search for a DPS user',
       true,
+      allowDownload,
     )
 
     const pagination = { offset: 5 }
@@ -38,6 +41,8 @@ describe('search factory', () => {
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'Access Role Admin', roleCode: 'ACCESS_ROLE_ADMIN' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'Moorland HMP', value: 'MDI' }])
       searchApi.mockResolvedValue([])
+      allowDownload.mockReset()
+      allowDownload.mockReturnValue(true)
       paginationService.getPagination.mockReturnValue(pagination)
     })
 
@@ -68,7 +73,42 @@ describe('search factory', () => {
             restrictToActiveGroup: true,
           },
           results: [],
+          downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
         })
+      })
+      it('should call renderer with download url when download is allowed', async () => {
+        allowDownload.mockReturnValue(true)
+
+        const req = {
+          ...standardReq,
+          query: {},
+        }
+
+        const render = jest.fn()
+        await search(req, { render })
+        expect(render).toBeCalledWith(
+          'searchWithFilter.njk',
+          expect.objectContaining({
+            downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+          }),
+        )
+      })
+      it('should not call renderer with download url when download is not allowed', async () => {
+        allowDownload.mockReturnValue(false)
+
+        const req = {
+          ...standardReq,
+          query: {},
+        }
+
+        const render = jest.fn()
+        await search(req, { render })
+        expect(render).toBeCalledWith(
+          'searchWithFilter.njk',
+          expect.not.objectContaining({
+            downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+          }),
+        )
       })
 
       it('should set current filter with single query parameters', async () => {
@@ -95,6 +135,8 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: false,
             },
+            downloadUrl:
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&activeCaseload=',
           }),
         )
       })
@@ -117,6 +159,8 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: true,
             },
+            downloadUrl:
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=&groupCode=&activeCaseload=',
           }),
         )
       })
@@ -145,6 +189,8 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: true,
             },
+            downloadUrl:
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&activeCaseload=MDI&activeCaseload=BXI',
           }),
         )
       })

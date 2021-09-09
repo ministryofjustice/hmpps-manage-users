@@ -1,3 +1,4 @@
+const parse = require('csv-parse')
 const { goToSearchWithFilterPage } = require('../support/dpsuser.helpers')
 
 context('DPS search with filter user functionality', () => {
@@ -143,6 +144,47 @@ context('DPS search with filter user functionality', () => {
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
         accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
         status: { key: 'status', values: ['ACTIVE'] },
+      })
+    })
+  })
+  it('Should allow a user to download all results', () => {
+    const validateCsv = (list) => {
+      expect(list, 'number of records').to.have.length(22)
+      expect(list[0], 'header row').to.deep.equal([
+        'username',
+        'active',
+        'firstName',
+        'lastName',
+        'activeCaseLoadId',
+        'email',
+      ])
+      expect(list[1], 'first row').to.deep.equal([
+        'ITAG_USER0',
+        'true',
+        'Itag',
+        'User0',
+        'BXI',
+        'dps-user@justice.gov.uk',
+      ])
+      expect(list[21], 'last row').to.deep.equal(['ITAG_USER20', 'true', 'Itag', 'User20', 'BXI', ''])
+    }
+    // A workaround for https://github.com/cypress-io/cypress/issues/14857
+    let csv
+    cy.intercept('GET', '*/download*', (req) => {
+      req.reply((res) => {
+        csv = res.body
+        res.headers.location = '/'
+        res.send(302)
+      })
+    }).as('csvDownload')
+
+    const results = goToSearchWithFilterPage({})
+
+    cy.task('stubDpsAdminSearch', { totalElements: 21, page: 0, size: 10000 })
+    results.download().click()
+    cy.wait('@csvDownload').then(() => {
+      parse(csv, {}, (err, output) => {
+        validateCsv(output)
       })
     })
   })

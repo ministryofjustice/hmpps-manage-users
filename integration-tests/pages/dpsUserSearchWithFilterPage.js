@@ -51,6 +51,7 @@ const dpsUserSearchWithFilterPage = () =>
     rows: () => cy.get('table tbody tr'),
     getPaginationList: () => cy.get('.moj-pagination__list'),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
+    download: () => cy.get('a[data-qa="download"]'),
   })
 
 export default {
