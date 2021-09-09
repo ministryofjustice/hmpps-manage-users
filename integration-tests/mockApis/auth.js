@@ -593,6 +593,12 @@ const verifyCreateRole = () =>
     urlPathPattern: '/auth/api/roles',
   }).then((data) => data.body.requests)
 
+const verifyRoleNameUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/roles/.*',
+  }).then((data) => data.body.requests)
+
 const stubAllRoles = ({
   content = [
     { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
@@ -717,4 +723,5 @@ module.exports = {
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
   verifyAllRoles,
+  verifyRoleNameUpdate,
 }
