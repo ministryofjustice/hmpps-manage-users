@@ -1,5 +1,6 @@
 const parse = require('csv-parse')
 const { goToSearchWithFilterPage } = require('../support/dpsuser.helpers')
+const UserPage = require('../pages/userPage')
 
 context('DPS search with filter user functionality', () => {
   before(() => {
@@ -70,7 +71,7 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterWithTag('User Admin').should('not.exist')
   })
 
-  it('wiill shows result before and after filtering', () => {
+  it('will shows result before and after filtering', () => {
     const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
     searchWithFilter.rows().should('have.length', 5)
     searchWithFilter.rows().eq(0).should('include.text', 'Itag\u00a0User0')
@@ -81,6 +82,13 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterCaseload('Moorland')
     searchWithFilter.rows().should('have.length', 3)
     searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
+  })
+  it('will have a link to maintain the user', () => {
+    cy.task('stubDpsUserDetails')
+
+    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
+    searchWithFilter.manageLinkForUser('ITAG_USER0').click()
+    UserPage.verifyOnPage('Itag User')
   })
   it('will call the admin search api when admin is logged in and no filter', () => {
     goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
@@ -129,7 +137,7 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
-  it('wiill call the dps search api when non-admin is logged in with filter', () => {
+  it('will call the dps search api when non-admin is logged in with filter', () => {
     const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
     searchWithFilter.filterAllNonAdmin({
       user: 'Andy',

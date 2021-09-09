@@ -74,6 +74,7 @@ describe('search factory', () => {
           },
           results: [],
           downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+          maintainUrl: '/manage-dps-users',
         })
       })
       it('should call renderer with download url when download is allowed', async () => {

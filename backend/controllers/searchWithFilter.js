@@ -64,6 +64,7 @@ const searchFactory = (
       ),
       downloadUrl:
         allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
+      maintainUrl,
     })
   }
 }
