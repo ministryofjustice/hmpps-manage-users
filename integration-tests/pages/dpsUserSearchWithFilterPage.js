@@ -53,6 +53,7 @@ const dpsUserSearchWithFilterPage = () =>
     getPaginationResults: () => cy.get('.moj-pagination__results'),
     download: () => cy.get('a[data-qa="download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
+    caseload,
   })
 
 export default {

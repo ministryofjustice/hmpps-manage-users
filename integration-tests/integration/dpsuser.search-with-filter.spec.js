@@ -61,6 +61,11 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterWithTag('Moorland').should('not.exist')
     searchWithFilter.activeCaseloadFilterRadioButton('Yes').should('be.checked')
   })
+  it('can not see caseload filter when not an admin', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false })
+
+    searchWithFilter.caseload().should('not.exist')
+  })
   it('can add and remove a single role filter', () => {
     const searchWithFilter = goToSearchWithFilterPage({})
 
@@ -104,7 +109,7 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
-  it('wiill call the admin search api when admin is logged in and has filter', () => {
+  it('will call the admin search api when admin is logged in and has filter', () => {
     const searchWithFilter = goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
     searchWithFilter.filterAll({
       user: 'Andy',
@@ -125,7 +130,7 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
-  it('wiill call the dps search api when non-admin is logged in and no filter', () => {
+  it('will call the dps search api when non-admin is logged in and no filter', () => {
     goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
     cy.task('verifyDpsSearch').should((requests) => {
       expect(requests).to.have.lengthOf(1)
