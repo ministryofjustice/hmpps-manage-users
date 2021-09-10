@@ -1,0 +1,82 @@
+{% extends "./partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set title =  roleDetails.roleName %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: 'Manage roles', href: maintainUrl },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+
+{% block content %}
+{% if errors.length > 0 %}
+  <div class="govuk-grid-column-two-thirds">
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  </div>
+{% endif %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
+
+    {{ govukTable({
+
+      rows: [
+        [
+          {html: heading, colspan: 2, rowspan: 1},
+          {
+            html: '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>',
+            classes: 'govuk-!-width-one-quarter',
+            format: "numeric"
+          }
+        ]
+      ]
+    }) }}
+
+    {{ govukTable({
+      caption: "Role details",
+      attributes: { "data-qa": "role-details" },
+      rows: [
+        [
+          {text: "Role code"},
+          {text: roleDetails.roleCode },
+          {text: ''}
+        ],
+        [
+          {text: "Role description"},
+          {text: roleDetails.roleDescription },
+          {text: ''}
+        ]
+      ]
+    }) }}
+
+
+
+    {% set rows = [] %}
+    {% for a in roleDetails.adminType %}
+        {% set rows = (rows.push([
+          { text: a.adminTypeName }
+        ]), rows) %}
+    {% endfor %}
+
+    {{ govukTable({
+      caption: "Admin type",
+      rows: rows,
+      attributes: { "data-qa": "admin-type" }
+    }) }}
+
+  </div>
+</div>
+{% endblock %}

@@ -311,6 +311,25 @@ describe('oauthApi tests', () => {
     })
   })
 
+  describe('roleDetails', () => {
+    const roles = { role: { roleName: 'hello there' } }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = oauthApi.getRoleDetails(context, 'role1')
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/api/roles/role1')
+    })
+  })
+
   describe('assignableGroups', () => {
     const groups = { bob: 'hello there' }
     let actual
@@ -365,6 +384,21 @@ describe('oauthApi tests', () => {
         '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/enable',
         undefined,
       )
+    })
+  })
+
+  describe('change role name', () => {
+    const roleName = { roleName: 'rolie' }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      oauthApi.changeRoleName(context, 'role1', roleName)
+    })
+
+    it('should call external user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/api/roles/role1', roleName)
     })
   })
 

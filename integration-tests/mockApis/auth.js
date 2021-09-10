@@ -398,6 +398,12 @@ const stubAuthAddRoles = () =>
     },
   })
 
+const stubAuthChangeRoleName = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/roles/.*',
+  })
+
 const stubAuthAddGroup = () =>
   stubFor({
     request: {
@@ -581,6 +587,63 @@ const verifyAuthCreateUser = () =>
     urlPathPattern: '/auth/api/authuser/create',
   }).then((data) => data.body.requests)
 
+const verifyRoleNameUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/roles/.*',
+  }).then((data) => data.body.requests)
+
+const stubAllRoles = ({
+  content = [
+    { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
+    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+  ],
+  totalElements = 3,
+  page = 0,
+  size = 10,
+}) =>
+  getFor({
+    urlPath: '/auth/api/roles',
+    body: {
+      content,
+      pageable: {
+        offset: 0,
+        pageNumber: page,
+        pageSize: size,
+      },
+      totalElements,
+    },
+  })
+
+const stubRoleDetails = ({
+  content = {
+    roleCode: 'AUTH_GROUP_MANAGER',
+    roleName: 'Auth Group Manager',
+    roleDescription: 'Role to be a Group Manager',
+    adminType: [
+      {
+        adminTypeName: 'External Admin',
+        id: '8bdd748f-25cf-4d06-8e55-a6e9aa792b0f',
+      },
+      {
+        adminTypeName: 'External Group Manager',
+        id: 'c6d27933-888b-44e1-968c-59ba0edffab1',
+      },
+    ],
+  },
+}) =>
+  getFor({
+    urlPattern: '/auth/api/roles/[^/]*',
+    body: content,
+  })
+
+const verifyAllRoles = () =>
+  getMatchingRequests({
+    method: 'GET',
+    urlPathPattern: '/auth/api/roles',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   getSignInUrl,
   stubSignIn: (username, roles) =>
@@ -602,6 +665,7 @@ module.exports = {
   stubAuthUserEmails,
   stubAuthSearch,
   verifyAuthSearch,
+  stubAllRoles,
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,
@@ -612,6 +676,7 @@ module.exports = {
   stubAuthRemoveGroup,
   stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
+  stubAuthChangeRoleName,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
   stubAuthChangeGroupName,
@@ -629,6 +694,7 @@ module.exports = {
   stubAuthCreateUser,
   stubError,
   stubHealth,
+  stubRoleDetails,
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,
@@ -640,4 +706,6 @@ module.exports = {
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
+  verifyAllRoles,
+  verifyRoleNameUpdate,
 }
