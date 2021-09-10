@@ -1,5 +1,7 @@
 const moment = require('moment')
 const nunjucks = require('nunjucks')
+const querystring = require('querystring')
+
 const config = require('./config')
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
 
@@ -151,5 +153,143 @@ module.exports = (app, path) => {
   njkEnv.addGlobal('supportUrl', config.app.supportUrl)
   njkEnv.addGlobal('googleTagManagerId', config.analytics.googleTagManagerId)
 
+  njkEnv.addFilter(
+    'toUserSearchFilter',
+    (currentFilter, prisons, roles, filterOptionsHtml, showGroupOrPrisonFilter) => {
+      const hrefBase = '/search-with-filter-dps-users?'
+      const usernameTags = getUsernameTags(currentFilter, hrefBase)
+      const caseloadTags = getCaseloadTags(currentFilter, hrefBase, prisons)
+      const rolesTags = getRoleTags(currentFilter, hrefBase, roles)
+      const statusTags = getStatusTags(currentFilter, hrefBase)
+      const categories = [
+        {
+          heading: {
+            text: 'User',
+          },
+          items: usernameTags,
+        },
+        {
+          heading: {
+            text: 'Status',
+          },
+          items: statusTags,
+        },
+        {
+          heading: {
+            text: 'Roles',
+          },
+          items: rolesTags,
+        },
+      ]
+
+      if (showGroupOrPrisonFilter) {
+        categories.splice(2, 0, {
+          heading: {
+            text: 'Caseload',
+          },
+          items: caseloadTags,
+        })
+      }
+
+      return {
+        heading: {
+          text: 'Filter',
+        },
+        selectedFilters: {
+          heading: {
+            text: 'Selected filters',
+          },
+          clearLink: {
+            text: 'Clear filters',
+            href: '/search-with-filter-dps-users',
+          },
+          categories,
+        },
+        optionsHtml: filterOptionsHtml,
+      }
+    },
+  )
+
   return njkEnv
+}
+
+function getUsernameTags(currentFilter, hrefBase) {
+  const { user, ...newFilter } = currentFilter
+  if (user) {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: user,
+      },
+    ]
+  }
+  return undefined
+}
+
+function getStatusTags(currentFilter, hrefBase) {
+  const { status, ...newFilter } = currentFilter
+  if (status && status !== 'ALL') {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: toStatusDesctiption(status),
+      },
+    ]
+  }
+  return undefined
+}
+
+function getCaseloadTags(currentFilter, hrefBase, prisons) {
+  const { groupCode, ...currentFilterNoCaseloads } = currentFilter
+
+  let tags = groupCode?.map((caseload) => {
+    const newFilter = { ...currentFilterNoCaseloads, groupCode: groupCode.filter((c) => c !== caseload) }
+    if (newFilter.groupCode.length === 0) {
+      delete newFilter.restrictToActiveGroup
+    }
+    return {
+      // TODO look at using new URLSearchParams instead
+      href: `${hrefBase}${querystring.stringify(newFilter)}`,
+      text: prisons.find((prison) => prison.value === caseload)?.text,
+    }
+  })
+
+  if (groupCode && currentFilter.restrictToActiveGroup) {
+    const newFilter = { ...currentFilter, restrictToActiveGroup: false }
+    tags = [
+      ...tags,
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: 'Active caseload only',
+      },
+    ]
+  }
+
+  return tags
+}
+function getRoleTags(currentFilter, hrefBase, roles) {
+  const { roleCode, ...currentFilterNoRoles } = currentFilter
+
+  return roleCode?.map((role) => {
+    const newFilter = { ...currentFilterNoRoles, roleCode: roleCode.filter((r) => r !== role) }
+    return {
+      // TODO look at using new URLSearchParams instead
+      href: `${hrefBase}${querystring.stringify(newFilter)}`,
+      text: roles.find((r) => r.value === role)?.text,
+    }
+  })
+}
+
+function toStatusDesctiption(status) {
+  switch (status) {
+    case 'ACTIVE':
+      return 'Active'
+    case 'INACTIVE':
+      return 'Inactive'
+    default:
+      return status
+  }
 }

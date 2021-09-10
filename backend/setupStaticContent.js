@@ -10,6 +10,7 @@ module.exports = () => {
     '/node_modules/govuk-frontend/govuk/assets',
     '/node_modules/govuk-frontend',
     '/node_modules/@ministryofjustice/frontend',
+    '/node_modules/@ministryofjustice/frontend/moj/assets',
     '/node_modules/accessible-autocomplete/dist',
   ]
   assetPaths.forEach((dir) => {
