@@ -54,6 +54,7 @@ const dpsUserSearchWithFilterPage = () =>
     download: () => cy.get('a[data-qa="download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
     caseload,
+    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber),
   })
 
 export default {

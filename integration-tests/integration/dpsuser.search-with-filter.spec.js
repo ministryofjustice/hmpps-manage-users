@@ -160,6 +160,36 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
+  it('will allow paging through results while maintain the filter', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 101, size: 20 })
+    searchWithFilter.filterAll({
+      user: 'Andy',
+      statusText: 'Active',
+      caseloadText: 'Moorland',
+      roleText: 'User Admin',
+    })
+
+    searchWithFilter.rows().should('have.length', 20)
+    searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
+
+    searchWithFilter.paginationLink('5').click()
+    searchWithFilter.filterWithTag('Andy').should('exist')
+    searchWithFilter.filterWithTag('Active').should('exist')
+    searchWithFilter.filterWithTag('Moorland').should('exist')
+    searchWithFilter.filterWithTag('User Admin').should('exist')
+
+    cy.task('verifyDpsAdminSearch').should((requests) => {
+      expect(requests).to.have.lengthOf(3)
+
+      expect(requests[2].queryParams).to.deep.equal({
+        nameFilter: { key: 'nameFilter', values: ['Andy'] },
+        accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
+        status: { key: 'status', values: ['ACTIVE'] },
+        caseload: { key: 'caseload', values: ['MDI'] },
+        activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
+      })
+    })
+  })
   it('Should allow a user to download all results', () => {
     const validateCsv = (list) => {
       expect(list, 'number of records').to.have.length(22)
