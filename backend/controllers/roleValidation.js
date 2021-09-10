@@ -20,7 +20,7 @@ const validateRoleDescriptionFormat = (roleDescription) => {
   if (!roleDescription) {
     return errors
   }
-  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
+  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&\r\n]*$/)) {
     errors.push({
       href: '#roleDescription',
       text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters",

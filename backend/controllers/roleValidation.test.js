@@ -34,6 +34,119 @@ describe('role name change validation', () => {
 })
 
 describe('create role validation', () => {
+  it('should pass create role validation', () => {
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE1',
+        roleName: 'Role Name',
+        roleDescription: 'Description',
+        adminType: 'EXT_ADM',
+      }),
+    ).toEqual([])
+  })
+
+  it('should pass create role validation with multi line role description', () => {
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE1',
+        roleName: 'Role Name',
+        roleDescription: 'Description\r\non\r\nmultiple lines',
+        adminType: 'EXT_ADM',
+      }),
+    ).toEqual([])
+  })
+
+  it('should return errors if no roleCode specified', () => {
+    expect(validateCreateRole({ roleCode: '', roleName: 'bob', adminType: 'EXT_ADM' })).toEqual([
+      { href: '#roleCode', text: 'Enter a role code' },
+    ])
+  })
+  it('should return errors if no roleName specified', () => {
+    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: '', adminType: 'EXT_ADM' })).toEqual([
+      { href: '#roleName', text: 'Enter a role name' },
+    ])
+  })
+  it('should disallow role name that are too short', () => {
+    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(3), adminType: ['EXT_ADM'] })).toEqual([
+      {
+        href: '#roleName',
+        text: 'Role name must be 4 characters or more',
+      },
+    ])
+  })
+
+  it('should disallow role name that are too long', () => {
+    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(101), adminType: 'EXT_ADM' })).toEqual([
+      {
+        href: '#roleName',
+        text: 'Role name must be 100 characters or less',
+      },
+    ])
+  })
+  it('should validate specific characters allowed for role name', () => {
+    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b@c,d.com', adminType: 'EXT_ADM' })).toEqual(
+      expect.arrayContaining([
+        { href: '#roleName', text: "Role name can only contain 0-9, a-z and ( ) & , - . '  characters" },
+      ]),
+    )
+  })
+
+  it('should disallow role description that are too long', () => {
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'role name',
+        roleDescription: 'b'.repeat(1025),
+        adminType: 'EXT_ADM',
+      }),
+    ).toEqual([
+      {
+        href: '#roleDescription',
+        text: 'Role name must be 1024 characters or less',
+      },
+    ])
+  })
+  it('should validate specific characters allowed for role description', () => {
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'role name',
+        roleDescription: '@ or $',
+        adminType: 'EXT_ADM',
+      }),
+    ).toEqual(
+      expect.arrayContaining([
+        { href: '#roleDescription', text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters" },
+      ]),
+    )
+  })
+
+  it('should validate specific characters allowed for role code', () => {
+    expect(validateCreateRole({ roleCode: 'ROLE_CODE@', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual(
+      expect.arrayContaining([{ href: '#roleCode', text: 'Role code can only contain 0-9, A-Z and _ characters' }]),
+    )
+  })
+
+  it('should disallow role code that are too short', () => {
+    expect(validateCreateRole({ roleCode: 'R', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+      {
+        href: '#roleCode',
+        text: 'Role code must be 2 characters or more',
+      },
+    ])
+  })
+
+  it('should disallow role code that are too long', () => {
+    expect(validateCreateRole({ roleCode: 'R'.repeat(31), roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+      {
+        href: '#roleCode',
+        text: 'Role code must be 30 characters or less',
+      },
+    ])
+  })
+})
+
+describe('create role validation', () => {
   it('should return errors if no roleCode specified', () => {
     expect(validateCreateRole({ roleCode: '', roleName: 'bob', adminType: 'EXT_ADM' })).toEqual([
       { href: '#roleCode', text: 'Enter a role code' },
