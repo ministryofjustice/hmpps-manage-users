@@ -3,7 +3,6 @@ const MenuPage = require('../pages/menuPage')
 const { replicateRoles } = require('../support/roles.helpers')
 const RoleDetailsPage = require('../pages/roleDetailsPage')
 const RoleNameChangePage = require('../pages/roleNameChangePage')
-const GroupDetailsPage = require('../pages/groupDetailsPage')
 const CreateRolePage = require('../pages/createRolePage')
 
 context('Roles', () => {

@@ -723,4 +723,5 @@ module.exports = {
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
   verifyAllRoles,
+  verifyRoleNameUpdate,
 }
