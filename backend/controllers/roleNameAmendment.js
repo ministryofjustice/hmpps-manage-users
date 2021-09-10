@@ -1,7 +1,7 @@
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils')
 
-const roleAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, title, manageRoleUrl) => {
+const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, title, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {
     req.flash('changeRoleErrors', errors)
     req.flash('changeRoleName', roleName)
@@ -52,5 +52,5 @@ const roleAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, title, manag
 }
 
 module.exports = {
-  roleAmendmentFactory,
+  roleNameAmendmentFactory,
 }

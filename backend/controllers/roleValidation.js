@@ -21,4 +21,24 @@ const validateRoleName = (roleName) => {
   return validateRoleNameFormat(roleName)
 }
 
-module.exports = { validateRoleName }
+const validateRoleDescriptionFormat = (roleDescription) => {
+  const errors = []
+  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
+    errors.push({
+      href: '#roleDescription',
+      text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters",
+    })
+  }
+  if (roleDescription.length > 1024) {
+    errors.push({ href: '#roleDescription', text: 'Role description must be 1024 characters or less' })
+  }
+  return errors
+}
+
+const validateRoleDescription = (roleDescription) => {
+  if (!roleDescription) return []
+
+  return validateRoleDescriptionFormat(roleDescription)
+}
+
+module.exports = { validateRoleName, validateRoleDescription }

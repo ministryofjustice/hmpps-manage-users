@@ -30,6 +30,8 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
+    {% set changeRoleNameLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>' %}
+    {% set changeRoleDescriptionLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-description" class="govuk-link" data-qa="change-role-description-link">Change <span class="govuk-visually-hidden"> role description</span> </a>' %}
 
     {{ govukTable({
 
@@ -37,7 +39,7 @@
         [
           {html: heading, colspan: 2, rowspan: 1},
           {
-            html: '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>',
+            html: changeRoleNameLink,
             classes: 'govuk-!-width-one-quarter',
             format: "numeric"
           }
@@ -57,7 +59,11 @@
         [
           {text: "Role description"},
           {text: roleDetails.roleDescription },
-          {text: ''}
+          {
+            html: changeRoleDescriptionLink,
+            classes: 'govuk-!-width-one-quarter',
+            format: "numeric"
+          }
         ]
       ]
     }) }}
