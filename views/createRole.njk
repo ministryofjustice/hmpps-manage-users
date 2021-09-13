@@ -1,0 +1,115 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+
+{% set title =  "Create role" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="POST">
+
+          {{ govukInput({label: {
+            text: "Role code"
+          },
+            classes: "govuk-input--width-30",
+            value: roleCode,
+            id: "roleCode",
+            name: "roleCode",
+            errorMessage: errors | findError('roleCode')
+          }) }}
+
+          {{ govukInput({label: {
+            text: "Role name"
+          },
+            classes: "govuk-input--width-30",
+            value: roleName,
+            id: "roleName",
+            name: "roleName",
+            errorMessage: errors | findError('roleName')
+          }) }}
+
+          {{ govukTextarea({label: {
+            text: "Role description"
+          },
+            classes: "govuk-input--width-50",
+            value: roleDescription,
+            id: "roleDescription",
+            name: "roleDescription",
+            errorMessage: errors | findError('roleDescription')
+          }) }}
+
+          {{ govukCheckboxes({
+            idPrefix: 'adminType',
+            name: 'adminType',
+            fieldset: {
+              legend: {
+                text: "Who will be able to allocate the role",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            hint: {
+              text: "Select all that apply"
+            },
+            items: [
+              {
+                value: "EXT_ADM",
+                text: "External Administrators"
+              },
+              {
+                value: "DPS_LSA",
+                text: "DPS Local System Administrators (LSA)"
+              },
+              {
+                value: "DPS_ADM",
+                text: "DPS Central Admin"
+              }
+            ],
+            errorMessage: errors | findError('adminType')
+          }) }}
+
+          {{ govukButton({
+            text: "Create",
+            type: "submit",
+            classes: "govuk-!-margin-right-1",
+            attributes: { "data-qa": "create-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: roleUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "id": "cancel-button" }
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

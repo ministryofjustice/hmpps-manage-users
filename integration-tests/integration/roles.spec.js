@@ -3,6 +3,7 @@ const MenuPage = require('../pages/menuPage')
 const { replicateRoles } = require('../support/roles.helpers')
 const RoleDetailsPage = require('../pages/roleDetailsPage')
 const RoleNameChangePage = require('../pages/roleNameChangePage')
+const CreateRolePage = require('../pages/createRolePage')
 
 context('Roles', () => {
   before(() => {
@@ -42,11 +43,6 @@ context('Roles', () => {
     const roles = RolesPage.verifyOnPage()
 
     roles.rows().should('have.length', 5)
-    // roles.rows().eq(0).should('include.text', 'Role\u00a0Name\u00a00')
-    // roles.rows().eq(1).should('include.text', 'Role\u00a0Name\u00a01')
-    // roles.rows().eq(2).should('include.text', 'Role\u00a0Name\u00a02')
-    // roles.rows().eq(3).should('include.text', 'Role\u00a0Name\u00a03')
-    // roles.rows().eq(4).should('include.text', 'Role\u00a0Name\u00a04')
 
     roles.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
   })
@@ -103,7 +99,7 @@ context('Roles', () => {
     roles.rows().get('[data-qa="edit-button-Auth Group Manager"]').click()
 
     const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.adminTypes().should('have.length', 2)
+    roleDetails.adminTypes().should('have.length', 1)
   })
 
   it('should allow change role name', () => {
@@ -137,4 +133,37 @@ context('Roles', () => {
       roleName: 'New Role Name',
     },
   }
+
+  it('should allow create role', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+
+    menuPage.createRole()
+
+    cy.task('stubAuthCreateRole')
+    CreateRolePage.verifyOnPage()
+    cy.task('stubRoleDetails', {})
+    const createRole = CreateRolePage.verifyOnPage()
+    createRole.createRole('BO$', '', '', '')
+    createRole.errorSummary().should('contain.text', 'Enter a role name')
+
+    createRole.createRole('BO$', 'Bob Role', 'Bob Description', 'EXT_ADM')
+    createRole.errorSummary().should('contain.text', 'Role code can only contain 0-9, A-Z and _ characters')
+
+    createRole.createRole('', '')
+    createRole.createRole('AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')
+    RoleDetailsPage.verifyOnPage('Auth Group Manager')
+
+    cy.task('verifyCreateRole').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        roleCode: 'AUTH_GROUP_MANAGER',
+        roleName: 'Auth Group Manager',
+        roleDescription: 'Role to be a Group Manager',
+        adminType: ['EXT_ADM'],
+      })
+    })
+  })
 })
