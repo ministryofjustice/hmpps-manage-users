@@ -1,9 +1,14 @@
-const { roleAmendmentFactory } = require('./roleNameAmendment')
+const { roleNameAmendmentFactory } = require('./roleNameAmendment')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
   const changeRoleNameApi = jest.fn()
-  const changeRoleName = roleAmendmentFactory(getRoleDetailsApi, changeRoleNameApi, 'Change role name', '/manage-roles')
+  const changeRoleName = roleNameAmendmentFactory(
+    getRoleDetailsApi,
+    changeRoleNameApi,
+    'Change role name',
+    '/manage-roles',
+  )
 
   describe('index', () => {
     it('should call roleName render', async () => {
