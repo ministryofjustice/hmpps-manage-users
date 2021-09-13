@@ -16,6 +16,7 @@ const dpsUserSearchWithFilterPage = () =>
       if (text) userFilterInput().type(text)
       else userFilterInput().clear()
       applyFilters().click()
+      return dpsUserSearchWithFilterPage()
     },
     filterWithTag,
     userFilterInput,

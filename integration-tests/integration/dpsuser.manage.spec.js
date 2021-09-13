@@ -185,9 +185,10 @@ context('DPS user manage functionality', () => {
     })
   })
 
-  it('Should provide breadcrumb link back to search results', () => {
+  it('Should provide breadcrumb link back to search results and start search', () => {
     const userPage = editUser({ nextPage: true })
 
+    userPage.searchBreadcrumb().should('have.attr', 'href', '/search-dps-users')
     userPage
       .searchResultsBreadcrumb()
       .should(
@@ -195,6 +196,15 @@ context('DPS user manage functionality', () => {
         'href',
         '/search-dps-users/results?user=sometext%40somewhere.com&status=ALL&roleCode=&offset=10',
       )
+  })
+
+  it('Should provide breadcrumb link back to search results with filter only', () => {
+    const userPage = editUser({ nextPage: true, fromSearchFilterPage: true })
+
+    userPage
+      .searchBreadcrumb()
+      .should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL&roleCode=')
+    userPage.searchResultsBreadcrumb().should('not.exist')
   })
 
   it('Manage your details contain returnTo url for current dps search page', () => {

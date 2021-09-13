@@ -29,7 +29,6 @@
 {% block content %}
 
 {% set filterOptionsHtml %}
-  <form id="filter-form" action="{{ searchUrl }}" novalidate>
     {{ govukInput({
       label: { text: "Name or username" if dpsSearch else "Name, username or email address" },
       classes: "govuk-input--width-20",
@@ -122,7 +121,6 @@
         errorMessage: errors | findError('roleCode')
       }) }}
     </div>
-  </form>
 {% endset %}
 
   <div class="govuk-grid-row govuk-body">
@@ -132,7 +130,9 @@
       <div class="govuk-grid-column-full">
         <div class="moj-filter-layout">
         <div class="moj-filter-layout__filter">
+        <form id="filter-form" action="{{ searchUrl }}" novalidate>
           {{ mojFilter(currentFilter | toUserSearchFilter(groupOrPrisonDropdownValues, roleDropdownValues, filterOptionsHtml, showGroupOrPrisonDropdown))}}
+        </form>
         </div>
         <div class="moj-filter-layout__content">
             <div class="govuk-grid-row">
@@ -193,7 +193,6 @@
 {% block bodyEnd %}
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script src="/js/search-filter.js"></script>
   <script>
     {%- if showGroupOrPrisonDropdown %}
     accessibleAutocomplete.enhanceSelectElement({
