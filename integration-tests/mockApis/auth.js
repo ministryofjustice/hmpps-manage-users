@@ -641,8 +641,8 @@ const stubRoleDetails = ({
     roleDescription: 'Role to be a Group Manager',
     adminType: [
       {
-        adminTypeName: 'External Admin',
-        id: '8bdd748f-25cf-4d06-8e55-a6e9aa792b0f',
+        adminTypeCode: 'EXT_ADM',
+        adminTypeName: 'External Administrator',
       },
     ],
   },
