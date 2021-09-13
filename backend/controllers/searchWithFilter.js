@@ -43,6 +43,9 @@ const searchFactory = (
       pageSize,
       pageOffset,
     })
+    req.session.searchResultsUrl = req.originalUrl
+    req.session.searchTitle = searchTitle
+    req.session.searchUrl = req.originalUrl
 
     const results = searchResults.map((user) => ({
       usernameAndEmail: mapUsernameAndEmail(user),

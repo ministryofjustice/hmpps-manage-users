@@ -5,14 +5,28 @@
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
  {% block beforeContent %}
+      {% if searchUrl === searchResultsUrl %}
+      {% set breadcrumbs = 
+        [
+          { text: "Home", href: homeUrl },
+          { text: "Manage user accounts", href: '/' },
+          { text: searchTitle, href: searchUrl },
+          { text: staff.name}
+        ]
+       %}
+      {% else %}
+      {% set breadcrumbs = 
+        [
+          { text: "Home", href: homeUrl },
+          { text: "Manage user accounts", href: '/' },
+          { text: searchTitle, href: searchUrl },
+          { text: "Search results", href: searchResultsUrl },
+          { text: staff.name}
+        ]
+       %}
+     {% endif %}
    {{ govukBreadcrumbs({
-     items: [
-       { text: "Home", href: homeUrl },
-       { text: "Manage user accounts", href: '/' },
-       { text: searchTitle, href: searchUrl },
-       { text: "Search results", href: searchResultsUrl },
-       { text: staff.name}
-     ]
+     items: breadcrumbs
    }) }}
  {% endblock %}
 

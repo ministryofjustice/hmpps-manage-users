@@ -46,6 +46,8 @@ const searchFactory = (
 
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
+    delete req.session.searchTitle
+    delete req.session.searchUrl
 
     const [searchResults, caseloads] = await Promise.all([
       searchApi({

@@ -149,6 +149,33 @@ describe('search factory', () => {
         dpsSearch: true,
       })
     })
+    it('should delete any previous breadcrumb information but replace url', async () => {
+      const req = {
+        query: { user: 'joe' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/results',
+        session: {
+          searchResultsUrl:
+            '/search-with-filter-dps-users?user=local&status=ACTIVE&groupCode=&restrictToActiveGroup=true&roleCode=',
+          searchTitle: 'Search for a DPS user (BETA)',
+          searchUrl:
+            '/search-with-filter-dps-users?user=local&status=ACTIVE&groupCode=&restrictToActiveGroup=true&roleCode=',
+        },
+      }
+      const pagination = { offset: 5 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockSearchCall()
+      await search.results(req, {
+        render: jest.fn(),
+        locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
+      })
+
+      expect(req.session.searchResultsUrl).toEqual(req.originalUrl)
+      expect(req.session.searchTitle).toBeUndefined()
+      expect(req.session.searchUrl).toBeUndefined()
+    })
 
     it('should default the active caseload to the group code', async () => {
       const req = {

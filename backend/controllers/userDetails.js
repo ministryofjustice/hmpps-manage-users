@@ -4,9 +4,9 @@ const userDetailsFactory = (
   removeGroupApi,
   enableUserApi,
   disableUserApi,
-  searchUrl,
+  defaultSearchUrl,
   manageUrl,
-  searchTitle,
+  defaultSearchTitle,
   showExtraUserDetails,
 ) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
@@ -20,6 +20,8 @@ const userDetailsFactory = (
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
 
+    const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
+    const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
 
     const [user, roles, groups] = await getUserRolesAndGroupsApi(
