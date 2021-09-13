@@ -12,6 +12,7 @@ describe('role name change validation', () => {
       },
     ])
   })
+
   it('should disallow fields that are too long', () => {
     expect(validateRoleName('b'.repeat(101))).toEqual([
       {
@@ -31,21 +32,6 @@ describe('role name change validation', () => {
     expect(validateRoleName("good's & Role(),.-")).toEqual([])
   })
 })
-
-describe('role description change validation', () => {
-  it('should allow no role description', () => {
-    expect(validateRoleDescription(null)).toEqual([])
-  })
-  it('should disallow fields that are too long', () => {
-    expect(validateRoleDescription('b'.repeat(1025))).toEqual([
-      {
-        href: '#roleDescription',
-        text: 'Role description must be 1024 characters or less',
-      },
-    ])
-  })
-  it('should validate specific characters allowed', () => {
-    expect(validateRoleDescription('b@c,d.com')).toEqual(
 
 describe('create role validation', () => {
   it('should pass create role validation', () => {
@@ -116,10 +102,11 @@ describe('create role validation', () => {
     ).toEqual([
       {
         href: '#roleDescription',
-        text: 'Role name must be 1024 characters or less',
+        text: 'Role description must be 1024 characters or less',
       },
     ])
   })
+
   it('should validate specific characters allowed for role description', () => {
     expect(
       validateCreateRole({
@@ -130,7 +117,10 @@ describe('create role validation', () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        { href: '#roleDescription', text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters" },
+        {
+          href: '#roleDescription',
+          text: "Role description can only contain 0-9, a-z, newline and ( ) & , - . '  characters",
+        },
       ]),
     )
   })
@@ -207,11 +197,10 @@ describe('create role validation', () => {
     ).toEqual([
       {
         href: '#roleDescription',
-        text: 'Role name must be 1024 characters or less',
+        text: 'Role description must be 1024 characters or less',
       },
     ])
   })
-
   it('should validate specific characters allowed for role description', () => {
     expect(
       validateCreateRole({
@@ -222,12 +211,13 @@ describe('create role validation', () => {
       }),
     ).toEqual(
       expect.arrayContaining([
-        { href: '#roleDescription', text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters" },
+        {
+          href: '#roleDescription',
+          text: "Role description can only contain 0-9, a-z, newline and ( ) & , - . '  characters",
+        },
       ]),
     )
   })
-  it('should pass role description validation', () => {
-    expect(validateRoleDescription("good's & Role(),.-")).toEqual([])
 
   it('should validate specific characters allowed for role code', () => {
     expect(validateCreateRole({ roleCode: 'ROLE_CODE@', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual(
@@ -251,5 +241,35 @@ describe('create role validation', () => {
         text: 'Role code must be 30 characters or less',
       },
     ])
+  })
+})
+
+describe('role description change validation', () => {
+  it('should allow no role description', () => {
+    expect(validateRoleDescription(null)).toEqual([])
+  })
+
+  it('should disallow fields that are too long', () => {
+    expect(validateRoleDescription('b'.repeat(1025))).toEqual([
+      {
+        href: '#roleDescription',
+        text: 'Role description must be 1024 characters or less',
+      },
+    ])
+  })
+
+  it('should validate specific characters allowed', () => {
+    expect(validateRoleDescription('b@c,d.com')).toEqual(
+      expect.arrayContaining([
+        {
+          href: '#roleDescription',
+          text: "Role description can only contain 0-9, a-z, newline and ( ) & , - . '  characters",
+        },
+      ]),
+    )
+  })
+
+  it('should pass role description validation', () => {
+    expect(validateRoleDescription("good's & Role(),.-lineonelinetwo")).toEqual([])
   })
 })

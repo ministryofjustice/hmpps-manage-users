@@ -15,23 +15,6 @@ const validateRoleNameFormat = (roleName) => {
   return errors
 }
 
-const validateRoleDescriptionFormat = (roleDescription) => {
-  const errors = []
-  if (!roleDescription) {
-    return errors
-  }
-  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&\r\n]*$/)) {
-    errors.push({
-      href: '#roleDescription',
-      text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters",
-    })
-  }
-  if (roleDescription.length > 1024) {
-    errors.push({ href: '#roleDescription', text: 'Role name must be 1024 characters or less' })
-  }
-  return errors
-}
-
 const validateRoleCodeFormat = (roleCode) => {
   const errors = []
   if (!roleCode.match(/^[0-9A-Z_]*$/)) {
@@ -58,10 +41,13 @@ const validateRoleName = (roleName) => {
 
 const validateRoleDescriptionFormat = (roleDescription) => {
   const errors = []
-  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
+  if (!roleDescription) {
+    return errors
+  }
+  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&\r\n]*$/)) {
     errors.push({
       href: '#roleDescription',
-      text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters",
+      text: "Role description can only contain 0-9, a-z, newline and ( ) & , - . '  characters",
     })
   }
   if (roleDescription.length > 1024) {
@@ -71,8 +57,6 @@ const validateRoleDescriptionFormat = (roleDescription) => {
 }
 
 const validateRoleDescription = (roleDescription) => {
-  if (!roleDescription) return []
-
   return validateRoleDescriptionFormat(roleDescription)
 }
 
