@@ -183,3 +183,10 @@ pre {
     background-color: govuk-colour('light-grey');
   }
 }
+
+/* TODO - should not need this, but font size is 0, but is ok in other apps */
+.moj-filter__selected-heading a {
+  font-size: 20px;
+  margin-bottom: 20px;
+  display: inline-block;
+}

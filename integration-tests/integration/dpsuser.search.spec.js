@@ -1,4 +1,3 @@
-const path = require('path')
 const parse = require('csv-parse')
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
