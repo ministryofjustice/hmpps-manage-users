@@ -87,6 +87,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     })
     return client.get(context, `/api/roles?${query}`).then(processPageResponse(context))
   }
+  const createRole = (context, role) => post(context, '/api/roles', role)
   const getRoleDetails = (context, role) => get(context, `/api/roles/${role}`)
   const changeRoleName = (context, role, roleName) => put(context, `/api/roles/${role}`, roleName)
 
@@ -180,6 +181,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     createGroup,
     deleteChildGroup,
     changeDpsEmail,
+    createRole,
     getAllRoles,
     getRoleDetails,
     changeRoleName,
