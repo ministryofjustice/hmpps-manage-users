@@ -1,4 +1,5 @@
 $govuk-page-width: 1170px;
+$govuk-global-styles: true;
 @import 'node_modules/govuk-frontend/govuk/all';
 @import 'node_modules/@ministryofjustice/frontend/moj/components/sortable-table/sortable-table';
 @import 'node_modules/@ministryofjustice/frontend/moj/all';
@@ -184,9 +185,3 @@ pre {
   }
 }
 
-/* TODO - should not need this, but font size is 0, but is ok in other apps */
-.moj-filter__selected-heading a {
-  font-size: 20px;
-  margin-bottom: 20px;
-  display: inline-block;
-}

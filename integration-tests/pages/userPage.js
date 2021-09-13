@@ -10,6 +10,7 @@ const userPage = (user) =>
     removeRole: (role) => cy.get(`[data-qa="remove-button-${role}"]`),
     removeGroup: (group) => cy.get(`[data-qa="remove-button-${group}"]`),
     searchResultsBreadcrumb: () => cy.get('a[href*="results"]'),
+    searchBreadcrumb: () => cy.get('a[href*="search"]'),
     enableLink: () => cy.get('[data-qa="enable-button"]'),
     changeEmailLink: () => cy.get('[data-qa="amend-link"]'),
     searchLink: () => cy.get('[data-qa="search-link"]'),
