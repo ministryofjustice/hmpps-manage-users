@@ -15,23 +15,6 @@ const validateRoleNameFormat = (roleName) => {
   return errors
 }
 
-const validateRoleDescriptionFormat = (roleDescription) => {
-  const errors = []
-  if (!roleDescription) {
-    return errors
-  }
-  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&\r\n]*$/)) {
-    errors.push({
-      href: '#roleDescription',
-      text: "Role description can only contain 0-9, a-z and ( ) & , - . '  characters",
-    })
-  }
-  if (roleDescription.length > 1024) {
-    errors.push({ href: '#roleDescription', text: 'Role name must be 1024 characters or less' })
-  }
-  return errors
-}
-
 const validateRoleCodeFormat = (roleCode) => {
   const errors = []
   if (!roleCode.match(/^[0-9A-Z_]*$/)) {
@@ -56,6 +39,27 @@ const validateRoleName = (roleName) => {
   return validateRoleNameFormat(roleName)
 }
 
+const validateRoleDescriptionFormat = (roleDescription) => {
+  const errors = []
+  if (!roleDescription) {
+    return errors
+  }
+  if (!roleDescription.match(/^[0-9A-Za-z- ,.()'&\r\n]*$/)) {
+    errors.push({
+      href: '#roleDescription',
+      text: "Role description can only contain 0-9, a-z, newline and ( ) & , - . '  characters",
+    })
+  }
+  if (roleDescription.length > 1024) {
+    errors.push({ href: '#roleDescription', text: 'Role description must be 1024 characters or less' })
+  }
+  return errors
+}
+
+const validateRoleDescription = (roleDescription) => {
+  return validateRoleDescriptionFormat(roleDescription)
+}
+
 const validateCreateRole = ({ roleCode, roleName, roleDescription, adminType }) => {
   const errors = []
 
@@ -78,4 +82,4 @@ const validateCreateRole = ({ roleCode, roleName, roleDescription, adminType }) 
   return errors
 }
 
-module.exports = { validateRoleName, validateCreateRole }
+module.exports = { validateRoleName, validateRoleDescription, validateCreateRole }

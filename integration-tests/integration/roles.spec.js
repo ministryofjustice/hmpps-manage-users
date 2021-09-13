@@ -3,6 +3,7 @@ const MenuPage = require('../pages/menuPage')
 const { replicateRoles } = require('../support/roles.helpers')
 const RoleDetailsPage = require('../pages/roleDetailsPage')
 const RoleNameChangePage = require('../pages/roleNameChangePage')
+const RoleDescriptionChangePage = require('../pages/roleDescriptionChangePage')
 const CreateRolePage = require('../pages/createRolePage')
 
 context('Roles', () => {
@@ -127,10 +128,43 @@ context('Roles', () => {
     })
   })
 
+  it('should allow change role description', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+
+    cy.task('stubAllRoles', {})
+    cy.task('stubRoleDetails', {})
+    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.changeRoleDescription()
+
+    cy.task('stubAuthChangeRoleDescription')
+    cy.task('stubRoleDetails', roleDetailsAfterRoleDescriptionChange)
+    const roleDescriptionChange = RoleDescriptionChangePage.verifyOnPage()
+    roleDescriptionChange.changeDescription('Description Change')
+
+    RoleDetailsPage.verifyOnPage('Role Name For Description Change')
+    cy.task('verifyRoleDescriptionUpdate').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        roleDescription: 'Description Change',
+      })
+    })
+  })
+
   const roleDetailsAfterRoleNameChange = {
     content: {
       roleCode: 'AUTH_GROUP_MANAGER',
       roleName: 'New Role Name',
+    },
+  }
+
+  const roleDetailsAfterRoleDescriptionChange = {
+    content: {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'Role Name For Description Change',
+      roleDescription: 'New Role Description',
     },
   }
 
