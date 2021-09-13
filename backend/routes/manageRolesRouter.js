@@ -5,6 +5,7 @@ const { roleNameAmendmentFactory } = require('../controllers/roleNameAmendment')
 const { roleDescriptionAmendmentFactory } = require('../controllers/roleDescriptionAmendment')
 const paginationService = require('../services/paginationService')
 const contextProperties = require('../contextProperties')
+const { createRoleFactory } = require('../controllers/createRole')
 
 const router = express.Router({ mergeParams: true })
 
@@ -14,6 +15,7 @@ const controller = ({ oauthApi }) => {
   const changeRoleNameApi = (context, role, roleName) => oauthApi.changeRoleName(context, role, { roleName })
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
     oauthApi.changeRoleDescription(context, role, { roleDescription })
+  const createRoleApi = (context, role) => oauthApi.createRole(context, role)
 
   const { index } = viewRolesFactory(paginationService, contextProperties.getPageable, getAllRolesApi, '/manage-roles')
 
@@ -30,7 +32,12 @@ const controller = ({ oauthApi }) => {
     'Change role description',
     '/manage-roles',
   )
+
+  const { index: getRoleCreate, post: postRoleCreate } = createRoleFactory(createRoleApi, '/manage-roles')
+
   router.get('/', index)
+  router.get('/create-role', getRoleCreate)
+  router.post('/create-role', postRoleCreate)
   router.get('/:roleCode', roleDetails)
   router.get('/:role/change-role-name', getRoleNameAmendment)
   router.post('/:role/change-role-name', postRoleNameAmendment)

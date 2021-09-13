@@ -34,8 +34,8 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
       } catch (err) {
         if (err.status === 409 && err.response && err.response.body) {
           //  group code already exists
-          const emailError = [{ href: '#groupCode', text: 'Group code already exists' }]
-          stashStateAndRedirectToIndex(req, res, emailError, [group])
+          const groupError = [{ href: '#groupCode', text: 'Group code already exists' }]
+          stashStateAndRedirectToIndex(req, res, groupError, [group])
         } else {
           throw err
         }
