@@ -332,6 +332,9 @@ context('External user search functionality', () => {
           validateCsv(output)
         })
       })
+      // attempt to ensure with go any other page except '/' which is where we go after
+      // csv download - else next test fail to signin since we are already at '/'
+      AuthUserSearchPage.goTo()
     })
 
     it('Should not show the download link for group managers', () => {
