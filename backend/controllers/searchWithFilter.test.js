@@ -195,7 +195,7 @@ describe('search factory', () => {
           }),
         )
       })
-      it('should delete any previous breadcrumb information but replace url', async () => {
+      it('should replace previous breadcrumb information', async () => {
         const req = {
           ...standardReq,
           originalUrl: '/search-with-filter-dps-users',
