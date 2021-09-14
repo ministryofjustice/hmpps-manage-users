@@ -1,17 +1,19 @@
-const superagent = require('superagent')
-const { Readable } = require('stream')
-const Agent = require('agentkeepalive')
-const { HttpsAgent } = require('agentkeepalive')
-const logger = require('../log')
+import superagent, { Response } from 'superagent'
+import { Readable } from 'stream'
+import Agent, { HttpsAgent } from 'agentkeepalive'
+import logger from '../log'
 
-const { getHeaders } = require('./axios-config-decorators')
+import { getHeaders, RequestContext } from './axios-config-decorators'
 
-const resultLogger = (result) => {
-  logger.debug(`${result.req.method} ${result.req.path} ${result.status}`)
+const resultLogger = (result?: { req?: { method: unknown; path: unknown }; status: unknown }) => {
+  logger.debug(`${result?.req?.method} ${result?.req?.path} ${result?.status}`)
   return result
 }
 
-const errorLogger = (error) => {
+const errorLogger = (error: {
+  response?: { body: unknown; status: string; req?: { method: unknown; path: unknown } }
+  message: unknown
+}) => {
   const status = error.response ? error.response.status : '-'
   const responseData = error.response ? error.response.body : '-'
   if (error.response && error.response.req) {
@@ -40,7 +42,7 @@ const errorLogger = (error) => {
  * }}
  */
 
-const factory = ({ baseUrl, timeout }) => {
+const factory = ({ baseUrl, timeout }: { baseUrl: string; timeout: number }) => {
   // strip off any excess / from the required url
   const remoteUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl
 
@@ -61,7 +63,7 @@ const factory = ({ baseUrl, timeout }) => {
    *        The header isn't set if resultLimit is falsy.
    * @returns {Promise<any>} A Promise which settles to the superagent result object if the promise is resolved, otherwise to the 'error' object.
    */
-  const get = (context, path, resultLimit) =>
+  const get = (context: RequestContext, path: string, resultLimit: number | undefined = undefined) =>
     new Promise((resolve, reject) => {
       superagent
         .get(remoteUrl + path)
@@ -89,7 +91,11 @@ const factory = ({ baseUrl, timeout }) => {
    * @param {number} params.customTimeout value in milliseconds to override default timeout
    * @returns {Promise<any>} A Promise which settles to the superagent result object if the promise is resolved, otherwise to the 'error' object.
    */
-  const getWithCustomTimeout = (context, path, { resultLimit, customTimeout }) =>
+  const getWithCustomTimeout = (
+    context: RequestContext,
+    path: string,
+    { resultLimit, customTimeout }: { resultLimit: number; customTimeout: number },
+  ) =>
     new Promise((resolve, reject) => {
       superagent
         .get(remoteUrl + path)
@@ -113,7 +119,7 @@ const factory = ({ baseUrl, timeout }) => {
    * @param {any} body
    * @returns {any} A Promise which resolves to the superagent result object, or the superagent error object if it is rejected
    */
-  const post = (context, path, body) =>
+  const post = (context: RequestContext, path: string, body: string) =>
     new Promise((resolve, reject) => {
       superagent
         .post(remoteUrl + path)
@@ -125,7 +131,7 @@ const factory = ({ baseUrl, timeout }) => {
         })
     })
 
-  const put = (context, path, body) =>
+  const put = (context: RequestContext, path: string, body: string | undefined = undefined) =>
     new Promise((resolve, reject) => {
       superagent
         .put(remoteUrl + path)
@@ -137,7 +143,7 @@ const factory = ({ baseUrl, timeout }) => {
         })
     })
 
-  const del = (context, path, body) =>
+  const del = (context: RequestContext, path: string, body: string | undefined = undefined) =>
     new Promise((resolve, reject) => {
       superagent
         .del(remoteUrl + path)
@@ -149,7 +155,7 @@ const factory = ({ baseUrl, timeout }) => {
         })
     })
 
-  const getStream = (context, path) =>
+  const getStream = (context: RequestContext, path: string) =>
     new Promise((resolve, reject) => {
       superagent
         .get(remoteUrl + path)
@@ -166,7 +172,9 @@ const factory = ({ baseUrl, timeout }) => {
             resultLogger(response)
             const s = new Readable()
             // eslint-disable-next-line no-underscore-dangle
-            s._read = () => {}
+            s._read = () => {
+              /* do nothing */
+            }
             s.push(response.body)
             s.push(null)
             resolve(s)
@@ -174,9 +182,14 @@ const factory = ({ baseUrl, timeout }) => {
         })
     })
 
-  const pipe = (context, path, pipeTo, options = { retry: 2 }) => {
+  const pipe = (
+    context: RequestContext,
+    path: string,
+    pipeTo: NodeJS.WritableStream & Response,
+    options = { retry: 2 },
+  ) => {
     const url = remoteUrl + path
-    const retryHandler = (err, res) => {
+    const retryHandler = (err: { code: string; message: string }) => {
       if (err) logger.info(`Retry handler found API error with ${err.code} ${err.message}`)
       return undefined // retry handler only for logging retries, not to influence retry logic
     }
@@ -204,4 +217,6 @@ const factory = ({ baseUrl, timeout }) => {
   }
 }
 
-module.exports = factory
+export type ClientFactory = typeof factory
+export type Client = ReturnType<ClientFactory>
+export default factory

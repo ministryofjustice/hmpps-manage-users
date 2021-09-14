@@ -1,6 +1,49 @@
-const contextProperties = require('../contextProperties')
+import { RequestContext } from '../api/axios-config-decorators'
+import { PrisonApi, Role, User } from '../api/prisonApi'
+import contextProperties from '../contextProperties'
 
-function searchApiFacade(prisonApi, oauthApi) {
+interface LoogedInUser {
+  maintainAccessAdmin?: boolean
+}
+interface UserContext extends RequestContext {
+  user?: LoogedInUser
+}
+
+interface SearchApi {
+  locals: UserContext
+  user?: string
+  roleCode?: string
+  status?: 'ACTIVE' | 'INACTIVE' | 'ALL'
+  groupCode?: string
+  activeCaseload?: string
+  pageSize: number
+  pageOffset: number
+}
+
+interface OauthApi {
+  userEmails: (context: UserContext, usernames: string[]) => Promise<AuthUserEmail[]>
+}
+interface AuthUserEmail {
+  username: string
+  email: string
+}
+
+interface UserWithEmail extends User {
+  email?: string
+}
+
+interface Option {
+  value: string
+  text: string
+}
+
+interface SearchApiComponents {
+  searchApi: (params: SearchApi) => Promise<UserWithEmail[]>
+  searchableRoles: (context: UserContext) => Promise<Role[]>
+  caseloads: (context: UserContext) => Promise<Option[]>
+}
+
+function searchApiFactory(prisonApi: PrisonApi, oauthApi: OauthApi): SearchApiComponents {
   const searchApi = async ({
     locals: context,
     user: nameFilter,
@@ -10,7 +53,7 @@ function searchApiFacade(prisonApi, oauthApi) {
     activeCaseload,
     pageSize: size,
     pageOffset: offset,
-  }) => {
+  }: SearchApi) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
 
     contextProperties.setRequestPagination(context, { offset, size })
@@ -36,12 +79,12 @@ function searchApiFacade(prisonApi, oauthApi) {
     return searchResults.map((user) => ({ ...user, email: emailMap.get(user.username) }))
   }
 
-  const searchableRoles = (context) => {
+  const searchableRoles = (context: UserContext) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     return hasAdminRole ? prisonApi.getRolesAdmin(context) : prisonApi.getRoles(context)
   }
 
-  const caseloads = async (context) => {
+  const caseloads = async (context: UserContext) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
     return (await prisonApi.getCaseloads(context))
@@ -58,5 +101,6 @@ function searchApiFacade(prisonApi, oauthApi) {
     caseloads,
   }
 }
+const factory = (prisonApi: PrisonApi, oauthApi: OauthApi): SearchApiComponents => searchApiFactory(prisonApi, oauthApi)
 
-module.exports = (prisonApi, oauthApi) => searchApiFacade(prisonApi, oauthApi)
+export default factory

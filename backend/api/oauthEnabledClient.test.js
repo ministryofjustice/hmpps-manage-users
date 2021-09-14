@@ -1,5 +1,5 @@
 const nock = require('nock')
-const clientFactory = require('./oauthEnabledClient')
+const clientFactory = require('./oauthEnabledClient').default
 const contextProperties = require('../contextProperties')
 
 const hostname = 'http://localhost:8080'

@@ -5,7 +5,7 @@ const paginationService = require('../services/offsetPaginationService')
 const contextProperties = require('../contextProperties')
 const { downloadFactory } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
-const searchApiFactory = require('./searchApiFactory')
+const searchApiFactory = require('./searchApiFactory').default
 
 const router = express.Router({ mergeParams: true })
 

@@ -1,4 +1,5 @@
-const searchApiFactory = require('./searchApiFactory')
+import { PrisonApi } from '../api/prisonApi'
+import searchApiFactory from './searchApiFactory'
 
 describe('Search API Factory', () => {
   const prisonApi = {
@@ -7,7 +8,7 @@ describe('Search API Factory', () => {
     getRolesAdmin: jest.fn(),
     getRoles: jest.fn(),
     getCaseloads: jest.fn(),
-  }
+  } as unknown as jest.Mocked<PrisonApi>
   const oauthApi = { userEmails: jest.fn() }
   const { searchApi, searchableRoles, caseloads } = searchApiFactory(prisonApi, oauthApi)
 
