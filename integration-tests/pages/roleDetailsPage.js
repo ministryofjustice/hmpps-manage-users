@@ -9,6 +9,7 @@ const roleDetailsPage = (roleName) =>
     roleDetails: () => cy.get('[data-qa="role-details"] tbody tr'),
     changeRoleName: () => role().click(),
     changeRoleDescription: () => roleDescription().click(),
+    adminType: () => cy.get('[data-qa="admin-type"] tbody tr'),
     changeRoleAdminType: () => roleAdminType().click(),
     errorSummary: () => cy.get('[data-qa-errors]'),
   })
