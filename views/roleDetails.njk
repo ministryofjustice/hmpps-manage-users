@@ -32,6 +32,7 @@
     {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
     {% set changeRoleNameLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>' %}
     {% set changeRoleDescriptionLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-description" class="govuk-link" data-qa="change-role-description-link">Change <span class="govuk-visually-hidden"> role description</span> </a>' %}
+    {% set roleDescriptionWithWrapping = '<span class="wrapped"><pre class="govuk-body govuk-!-margin-bottom-0">' + ("" if roleDetails.roleDescription == null else roleDetails.roleDescription) + '</pre></span>' %}
 
     {{ govukTable({
 
@@ -58,7 +59,7 @@
         ],
         [
           {text: "Role description"},
-          {text: roleDetails.roleDescription },
+          {html: roleDescriptionWithWrapping},
           {
             html: changeRoleDescriptionLink,
             classes: 'govuk-!-width-one-quarter',

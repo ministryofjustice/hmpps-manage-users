@@ -117,7 +117,7 @@ describe('Search API Factory', () => {
         user: { maintainAccessAdmin: true },
       })
     })
-    it('will get normal roles with admin role context', async () => {
+    it('will get normal roles without admin role context', async () => {
       prisonApi.getRolesAdmin.mockResolvedValue([])
 
       await searchableRoles({ user: { maintainAccessAdmin: false } })
