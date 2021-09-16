@@ -410,6 +410,12 @@ const stubAuthChangeRoleDescription = () =>
     urlPattern: '/auth/api/roles/.*/description',
   })
 
+const stubAuthChangeRoleAdminType = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/auth/api/roles/.*/admintype',
+  })
+
 const stubAuthAddGroup = () =>
   stubFor({
     request: {
@@ -611,6 +617,12 @@ const verifyRoleDescriptionUpdate = () =>
     urlPathPattern: '/auth/api/roles/.*/description',
   }).then((data) => data.body.requests)
 
+const verifyRoleAdminTypeUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/auth/api/roles/.*/admintype',
+  }).then((data) => data.body.requests)
+
 const stubAllRoles = ({
   content = [
     { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
@@ -642,7 +654,7 @@ const stubRoleDetails = ({
     adminType: [
       {
         adminTypeName: 'External Admin',
-        id: '8bdd748f-25cf-4d06-8e55-a6e9aa792b0f',
+        adminTypeCode: 'EXT_ADM',
       },
     ],
   },
@@ -704,6 +716,7 @@ module.exports = {
   stubAuthAssignableRoles,
   stubAuthChangeRoleName,
   stubAuthChangeRoleDescription,
+  stubAuthChangeRoleAdminType,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
   stubAuthChangeGroupName,
@@ -738,4 +751,5 @@ module.exports = {
   verifyAllRoles,
   verifyRoleNameUpdate,
   verifyRoleDescriptionUpdate,
+  verifyRoleAdminTypeUpdate,
 }
