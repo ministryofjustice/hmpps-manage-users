@@ -1,4 +1,9 @@
-const { validateRoleName, validateRoleDescription, validateCreateRole } = require('./roleValidation')
+const {
+  validateRoleName,
+  validateRoleDescription,
+  validateCreateRole,
+  validateRoleAdminType,
+} = require('./roleValidation')
 
 describe('role name change validation', () => {
   it('should return errors if no fields specified', () => {
@@ -40,7 +45,7 @@ describe('create role validation', () => {
         roleCode: 'ROLE1',
         roleName: 'Role Name',
         roleDescription: 'Description',
-        adminType: 'EXT_ADM',
+        adminType: ['EXT_ADM'],
       }),
     ).toEqual([])
   })
@@ -51,23 +56,30 @@ describe('create role validation', () => {
         roleCode: 'ROLE1',
         roleName: 'Role Name',
         roleDescription: 'Description\r\non\r\nmultiple lines',
-        adminType: 'EXT_ADM',
+        adminType: ['EXT_ADM'],
       }),
     ).toEqual([])
   })
 
   it('should return errors if no roleCode specified', () => {
-    expect(validateCreateRole({ roleCode: '', roleName: 'bob', adminType: 'EXT_ADM' })).toEqual([
-      { href: '#roleCode', text: 'Enter a role code' },
-    ])
+    expect(
+      validateCreateRole({ roleCode: '', roleName: 'bob', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([{ href: '#roleCode', text: 'Enter a role code' }])
   })
   it('should return errors if no roleName specified', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: '', adminType: 'EXT_ADM' })).toEqual([
-      { href: '#roleName', text: 'Enter a role name' },
-    ])
+    expect(
+      validateCreateRole({ roleCode: 'ROLE_CODE', roleName: '', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([{ href: '#roleName', text: 'Enter a role name' }])
   })
   it('should disallow role name that are too short', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(3), adminType: ['EXT_ADM'] })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b'.repeat(3),
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleName',
         text: 'Role name must be 4 characters or more',
@@ -76,7 +88,14 @@ describe('create role validation', () => {
   })
 
   it('should disallow role name that are too long', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(101), adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b'.repeat(101),
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleName',
         text: 'Role name must be 100 characters or less',
@@ -84,7 +103,14 @@ describe('create role validation', () => {
     ])
   })
   it('should validate specific characters allowed for role name', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b@c,d.com', adminType: 'EXT_ADM' })).toEqual(
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b@c,d.com',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual(
       expect.arrayContaining([
         { href: '#roleName', text: "Role name can only contain 0-9, a-z and ( ) & , - . '  characters" },
       ]),
@@ -97,7 +123,7 @@ describe('create role validation', () => {
         roleCode: 'ROLE_CODE',
         roleName: 'role name',
         roleDescription: 'b'.repeat(1025),
-        adminType: 'EXT_ADM',
+        adminType: ['EXT_ADM'],
       }),
     ).toEqual([
       {
@@ -113,7 +139,7 @@ describe('create role validation', () => {
         roleCode: 'ROLE_CODE',
         roleName: 'role name',
         roleDescription: '@ or $',
-        adminType: 'EXT_ADM',
+        adminType: ['EXT_ADM'],
       }),
     ).toEqual(
       expect.arrayContaining([
@@ -126,13 +152,22 @@ describe('create role validation', () => {
   })
 
   it('should validate specific characters allowed for role code', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE@', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual(
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE@',
+        roleName: 'role name',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual(
       expect.arrayContaining([{ href: '#roleCode', text: 'Role code can only contain 0-9, A-Z and _ characters' }]),
     )
   })
 
   it('should disallow role code that are too short', () => {
-    expect(validateCreateRole({ roleCode: 'R', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({ roleCode: 'R', roleName: 'role name', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([
       {
         href: '#roleCode',
         text: 'Role code must be 2 characters or more',
@@ -141,7 +176,14 @@ describe('create role validation', () => {
   })
 
   it('should disallow role code that are too long', () => {
-    expect(validateCreateRole({ roleCode: 'R'.repeat(31), roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'R'.repeat(31),
+        roleName: 'role name',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleCode',
         text: 'Role code must be 30 characters or less',
@@ -152,17 +194,24 @@ describe('create role validation', () => {
 
 describe('create role validation', () => {
   it('should return errors if no roleCode specified', () => {
-    expect(validateCreateRole({ roleCode: '', roleName: 'bob', adminType: 'EXT_ADM' })).toEqual([
-      { href: '#roleCode', text: 'Enter a role code' },
-    ])
+    expect(
+      validateCreateRole({ roleCode: '', roleName: 'bob', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([{ href: '#roleCode', text: 'Enter a role code' }])
   })
   it('should return errors if no roleName specified', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: '', adminType: 'EXT_ADM' })).toEqual([
-      { href: '#roleName', text: 'Enter a role name' },
-    ])
+    expect(
+      validateCreateRole({ roleCode: 'ROLE_CODE', roleName: '', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([{ href: '#roleName', text: 'Enter a role name' }])
   })
   it('should disallow role name that are too short', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(3), adminType: ['EXT_ADM'] })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b'.repeat(3),
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleName',
         text: 'Role name must be 4 characters or more',
@@ -171,7 +220,14 @@ describe('create role validation', () => {
   })
 
   it('should disallow role name that are too long', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b'.repeat(101), adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b'.repeat(101),
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleName',
         text: 'Role name must be 100 characters or less',
@@ -179,7 +235,14 @@ describe('create role validation', () => {
     ])
   })
   it('should validate specific characters allowed for role name', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE', roleName: 'b@c,d.com', adminType: 'EXT_ADM' })).toEqual(
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE',
+        roleName: 'b@c,d.com',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual(
       expect.arrayContaining([
         { href: '#roleName', text: "Role name can only contain 0-9, a-z and ( ) & , - . '  characters" },
       ]),
@@ -220,13 +283,22 @@ describe('create role validation', () => {
   })
 
   it('should validate specific characters allowed for role code', () => {
-    expect(validateCreateRole({ roleCode: 'ROLE_CODE@', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual(
+    expect(
+      validateCreateRole({
+        roleCode: 'ROLE_CODE@',
+        roleName: 'role name',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual(
       expect.arrayContaining([{ href: '#roleCode', text: 'Role code can only contain 0-9, A-Z and _ characters' }]),
     )
   })
 
   it('should disallow role code that are too short', () => {
-    expect(validateCreateRole({ roleCode: 'R', roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({ roleCode: 'R', roleName: 'role name', roleDescription: null, adminType: ['EXT_ADM'] }),
+    ).toEqual([
       {
         href: '#roleCode',
         text: 'Role code must be 2 characters or more',
@@ -235,7 +307,14 @@ describe('create role validation', () => {
   })
 
   it('should disallow role code that are too long', () => {
-    expect(validateCreateRole({ roleCode: 'R'.repeat(31), roleName: 'role name', adminType: 'EXT_ADM' })).toEqual([
+    expect(
+      validateCreateRole({
+        roleCode: 'R'.repeat(31),
+        roleName: 'role name',
+        roleDescription: null,
+        adminType: ['EXT_ADM'],
+      }),
+    ).toEqual([
       {
         href: '#roleCode',
         text: 'Role code must be 30 characters or less',
@@ -271,5 +350,20 @@ describe('role description change validation', () => {
 
   it('should pass role description validation', () => {
     expect(validateRoleDescription("good's & Role(),.-lineonelinetwo")).toEqual([])
+  })
+})
+
+describe('role admin type change validation', () => {
+  it('should not allow null role admin type', () => {
+    expect(validateRoleAdminType(null)).toEqual([{ href: '#adminType', text: 'Select an admin type' }])
+  })
+  it('should not allow empty role admin type', () => {
+    expect(validateRoleAdminType([])).toEqual([{ href: '#adminType', text: 'Select an admin type' }])
+  })
+  it('should pass role admin type validation with one type', () => {
+    expect(validateRoleAdminType(['EXT_ADM'])).toEqual([])
+  })
+  it('should pass role admin type validation with multiple admin types', () => {
+    expect(validateRoleAdminType(['EXT_ADM', 'DPS_ADM'])).toEqual([])
   })
 })

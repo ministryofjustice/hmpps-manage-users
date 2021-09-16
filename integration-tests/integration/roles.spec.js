@@ -4,6 +4,8 @@ const { replicateRoles } = require('../support/roles.helpers')
 const RoleDetailsPage = require('../pages/roleDetailsPage')
 const RoleNameChangePage = require('../pages/roleNameChangePage')
 const RoleDescriptionChangePage = require('../pages/roleDescriptionChangePage')
+const RoleAdminTypeChangePage = require('../pages/roleAdminTypeChangePage')
+
 const CreateRolePage = require('../pages/createRolePage')
 
 context('Roles', () => {
@@ -100,7 +102,7 @@ context('Roles', () => {
     roles.rows().get('[data-qa="edit-button-Auth Group Manager"]').click()
 
     const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.adminTypes().should('have.length', 1)
+    roleDetails.adminType().should('have.length', 1)
   })
 
   it('should allow change role name', () => {
@@ -153,20 +155,31 @@ context('Roles', () => {
     })
   })
 
-  const roleDetailsAfterRoleNameChange = {
-    content: {
-      roleCode: 'AUTH_GROUP_MANAGER',
-      roleName: 'New Role Name',
-    },
-  }
+  it('should allow change role admin type', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
 
-  const roleDetailsAfterRoleDescriptionChange = {
-    content: {
-      roleCode: 'AUTH_GROUP_MANAGER',
-      roleName: 'Role Name For Description Change',
-      roleDescription: 'New Role Description',
-    },
-  }
+    cy.task('stubAllRoles', {})
+    cy.task('stubRoleDetails', {})
+    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.changeRoleAdminType()
+
+    cy.task('stubAuthChangeRoleAdminType')
+    cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
+    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage()
+    roleAdminTypeChange.changeRoleAdminType('EXT_ADM')
+
+    RoleDetailsPage.verifyOnPage('Role Name For Admin Type Change')
+
+    cy.task('verifyRoleAdminTypeUpdate').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        adminType: ['EXT_ADM'],
+      })
+    })
+  })
 
   it('should allow create role', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
@@ -200,4 +213,31 @@ context('Roles', () => {
       })
     })
   })
+
+  const roleDetailsAfterRoleAdminTypeChange = {
+    content: {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'Role Name For Admin Type Change',
+      roleDescription: 'Role Description',
+      adminType: [
+        {
+          adminTypeName: 'External Admin',
+          adminTypeCode: 'EXT_ADM',
+        },
+      ],
+    },
+  }
+  const roleDetailsAfterRoleNameChange = {
+    content: {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'New Role Name',
+    },
+  }
+  const roleDetailsAfterRoleDescriptionChange = {
+    content: {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'Role Name For Description Change',
+      roleDescription: 'New Role Description',
+    },
+  }
 })

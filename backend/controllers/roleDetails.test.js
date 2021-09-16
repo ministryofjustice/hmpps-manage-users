@@ -11,7 +11,7 @@ describe('Role details factory', () => {
         {
           roleName: 'name',
           roleCode: 'code',
-          adminType: [{ adminTypeName: 'LSA', adminTypeId: 'f54f3176-3a12-4785-a7e9-b4b9d8f0ee2e' }],
+          adminType: [{ adminTypeName: 'LSA', adminTypeCode: 'DPS_LSA' }],
         },
       ])
 
@@ -22,7 +22,7 @@ describe('Role details factory', () => {
           {
             roleName: 'name',
             roleCode: 'code',
-            adminType: [{ adminTypeName: 'LSA', adminTypeId: 'f54f3176-3a12-4785-a7e9-b4b9d8f0ee2e' }],
+            adminType: [{ adminTypeName: 'LSA', adminTypeCode: 'DPS_LSA' }],
           },
         ],
         maintainUrl: '/manage-roles',

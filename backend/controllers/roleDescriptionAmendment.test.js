@@ -88,6 +88,28 @@ describe('role amendment factory', () => {
       expect(changeRoleDescriptionApi).toBeCalledWith(locals, 'role1', '')
     })
 
+    it('should not change the role description and redirect if no role description entered', async () => {
+      const req = {
+        params: { role: 'role1' },
+        body: {},
+        flash: jest.fn(),
+        originalUrl: '/original',
+      }
+      const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
+      changeRoleDescriptionApi.mockRejectedValue(error)
+
+      const redirect = jest.fn()
+      await changeRoleDescription.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/original')
+      expect(req.flash).toBeCalledWith('changeRoleDescription', [undefined])
+      expect(req.flash).toBeCalledWith('changeRoleErrors', [
+        {
+          href: '#roleDescription',
+          text: undefined,
+        },
+      ])
+    })
+
     it('should fail gracefully if role description not valid', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }

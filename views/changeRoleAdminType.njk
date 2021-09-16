@@ -1,0 +1,75 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% set title =  title %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <form method="POST">
+
+          {{ govukCheckboxes({
+            idPrefix: 'adminType',
+            name: 'adminType',
+            fieldset: {
+              legend: {
+                text: "Who will be able to allocate the role",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            hint: {
+              text: "Select all that apply"
+            },
+            items: [
+              {
+                value: "EXT_ADM",
+                text: "External Administrators",
+                checked: currentRoleAdminType["EXT_ADM"]
+              },
+              {
+                value: "DPS_LSA",
+                text: "DPS Local System Administrators (LSA)",
+                checked: currentRoleAdminType["DPS_LSA"]
+              },
+              {
+                value: "DPS_ADM",
+                text: "DPS Central Admin",
+                checked: currentRoleAdminType["DPS_ADM"]
+              }
+            ],
+            errorMessage: errors | findError('adminType')
+          }) }}
+
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            classes: "govuk-!-margin-right-1",
+            attributes: { "data-qa": "confirm-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: roleUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "id": "cancel-button" }
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -1,4 +1,4 @@
-const validateRoleNameFormat = (roleName) => {
+const validateRoleNameFormat = (roleName: string) => {
   const errors = []
   if (!roleName.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
     errors.push({
@@ -15,7 +15,7 @@ const validateRoleNameFormat = (roleName) => {
   return errors
 }
 
-const validateRoleCodeFormat = (roleCode) => {
+const validateRoleCodeFormat = (roleCode: string) => {
   const errors = []
   if (!roleCode.match(/^[0-9A-Z_]*$/)) {
     errors.push({
@@ -33,14 +33,14 @@ const validateRoleCodeFormat = (roleCode) => {
 
   return errors
 }
-const validateRoleName = (roleName) => {
+const validateRoleName = (roleName: string) => {
   if (!roleName) return [{ href: '#roleName', text: 'Enter a role name' }]
 
   return validateRoleNameFormat(roleName)
 }
 
-const validateRoleDescriptionFormat = (roleDescription) => {
-  const errors = []
+const validateRoleDescriptionFormat = (roleDescription: string) => {
+  const errors: { href: string; text: string }[] = []
   if (!roleDescription) {
     return errors
   }
@@ -56,30 +56,43 @@ const validateRoleDescriptionFormat = (roleDescription) => {
   return errors
 }
 
-const validateRoleDescription = (roleDescription) => {
+const validateRoleDescription = (roleDescription: string) => {
   return validateRoleDescriptionFormat(roleDescription)
 }
 
-const validateCreateRole = ({ roleCode, roleName, roleDescription, adminType }) => {
+const validateRoleAdminType = (adminType: string[]) => {
+  const errors = []
+  if (!adminType?.length) {
+    errors.push({ href: '#adminType', text: 'Select an admin type' })
+  }
+  return errors
+}
+
+const validateCreateRole = (obj: {
+  roleCode: string
+  roleName: string
+  roleDescription: string
+  adminType: string[]
+}) => {
   const errors = []
 
-  if (!roleCode) {
+  if (!obj.roleCode) {
     errors.push({ href: '#roleCode', text: 'Enter a role code' })
   }
-  if (!roleName) {
+  if (!obj.roleName) {
     errors.push({ href: '#roleName', text: 'Enter a role name' })
   }
-  if (!adminType?.length) {
+  if (!obj.adminType?.length) {
     errors.push({ href: '#adminType', text: 'Select an admin type' })
   }
 
   if (errors.length) return errors
 
-  errors.push(...validateRoleCodeFormat(roleCode))
-  errors.push(...validateRoleNameFormat(roleName))
-  errors.push(...validateRoleDescriptionFormat(roleDescription))
+  errors.push(...validateRoleCodeFormat(obj.roleCode))
+  errors.push(...validateRoleNameFormat(obj.roleName))
+  errors.push(...validateRoleDescriptionFormat(obj.roleDescription))
 
   return errors
 }
 
-module.exports = { validateRoleName, validateRoleDescription, validateCreateRole }
+module.exports = { validateRoleName, validateRoleDescription, validateCreateRole, validateRoleAdminType }

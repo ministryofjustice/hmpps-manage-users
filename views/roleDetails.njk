@@ -33,6 +33,8 @@
     {% set changeRoleNameLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>' %}
     {% set changeRoleDescriptionLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-description" class="govuk-link" data-qa="change-role-description-link">Change <span class="govuk-visually-hidden"> role description</span> </a>' %}
     {% set roleDescriptionWithWrapping = '<span class="wrapped"><pre class="govuk-body govuk-!-margin-bottom-0">' + ("" if roleDetails.roleDescription == null else roleDetails.roleDescription) + '</pre></span>' %}
+    {% set caption = '<b>Admin type</b>' %}
+    {% set changeRoleAdminTypeLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-adminType" class="govuk-link" data-qa="change-role-admintype-link">Change <span class="govuk-visually-hidden"> role admintype</span> </a>' %}
 
     {{ govukTable({
 
@@ -69,8 +71,6 @@
       ]
     }) }}
 
-
-
     {% set rows = [] %}
     {% for a in roleDetails.adminType %}
         {% set rows = (rows.push([
@@ -79,7 +79,19 @@
     {% endfor %}
 
     {{ govukTable({
-      caption: "Admin type",
+      rows: [
+        [
+          {html: caption, colspan: 2, rowspan: 1},
+          {
+            html: changeRoleAdminTypeLink,
+            classes: 'govuk-!-width-one-quarter',
+            format: "numeric"
+          }
+        ]
+      ]
+    }) }}
+
+    {{ govukTable({
       rows: rows,
       attributes: { "data-qa": "admin-type" }
     }) }}
