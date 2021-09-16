@@ -68,7 +68,7 @@ const validateRoleAdminType = (adminType: string[]) => {
   return errors
 }
 
-const validateCreateRole = (obj: {
+const validateCreateRole = (role: {
   roleCode: string
   roleName: string
   roleDescription: string
@@ -76,21 +76,21 @@ const validateCreateRole = (obj: {
 }) => {
   const errors = []
 
-  if (!obj.roleCode) {
+  if (!role.roleCode) {
     errors.push({ href: '#roleCode', text: 'Enter a role code' })
   }
-  if (!obj.roleName) {
+  if (!role.roleName) {
     errors.push({ href: '#roleName', text: 'Enter a role name' })
   }
-  if (!obj.adminType?.length) {
+  if (!role.adminType?.length) {
     errors.push({ href: '#adminType', text: 'Select an admin type' })
   }
 
   if (errors.length) return errors
 
-  errors.push(...validateRoleCodeFormat(obj.roleCode))
-  errors.push(...validateRoleNameFormat(obj.roleName))
-  errors.push(...validateRoleDescriptionFormat(obj.roleDescription))
+  errors.push(...validateRoleCodeFormat(role.roleCode))
+  errors.push(...validateRoleNameFormat(role.roleName))
+  errors.push(...validateRoleDescriptionFormat(role.roleDescription))
 
   return errors
 }
