@@ -7,7 +7,9 @@ const statusFilterRadioButton = (text) => cy.contains('label', text).prev()
 const activeCaseloadFilterRadioButton = (text) => cy.contains('label', text).prev()
 
 const caseload = () => cy.get('[id="groupCode"]')
-const role = () => cy.get('[id="roleCode"]')
+const roleSearch = () => cy.get('[id="roleCode-search"]')
+const roleCheckbox = (text) => cy.contains('label', text).prev()
+const roleCheckboxLabel = (text) => cy.get('label').contains(text)
 
 const dpsUserSearchWithFilterPage = () =>
   page('Search for a DPS user (BETA)', {
@@ -27,8 +29,7 @@ const dpsUserSearchWithFilterPage = () =>
       applyFilters().click()
     },
     filterRole: (text) => {
-      if (text) role().type(text)
-      else role().clear()
+      roleCheckbox(text).click()
       applyFilters().click()
     },
     filterCaseload: (text) => {
@@ -40,13 +41,13 @@ const dpsUserSearchWithFilterPage = () =>
       userFilterInput().type(user)
       statusFilterRadioButton(statusText).click()
       caseload().type(caseloadText)
-      role().type(roleText)
+      roleCheckbox(roleText).click()
       applyFilters().click()
     },
     filterAllNonAdmin: ({ user, statusText, roleText }) => {
       userFilterInput().type(user)
       statusFilterRadioButton(statusText).click()
-      role().type(roleText)
+      roleCheckbox(roleText).click()
       applyFilters().click()
     },
     rows: () => cy.get('table tbody tr'),
@@ -56,6 +57,12 @@ const dpsUserSearchWithFilterPage = () =>
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
     caseload,
     paginationLink: (pageNumber) => cy.get('a').contains(pageNumber),
+    searchForRole: (text) => {
+      if (text) roleSearch().clear().type(text)
+      else roleSearch().clear()
+      return dpsUserSearchWithFilterPage()
+    },
+    role: (text) => roleCheckboxLabel(text),
   })
 
 export default {

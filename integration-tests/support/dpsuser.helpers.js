@@ -33,6 +33,10 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
         roleCode: 'USER_ADMIN',
         roleName: 'User Admin',
       },
+      {
+        roleCode: 'USER_GENERAL',
+        roleName: 'User General',
+      },
     ],
   })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements, size })

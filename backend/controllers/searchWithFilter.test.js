@@ -223,8 +223,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'ALL',
@@ -244,7 +244,7 @@ describe('search factory', () => {
         expect(searchApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: '',
+          roleCode: undefined,
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'ALL',
@@ -263,7 +263,7 @@ describe('search factory', () => {
         expect(searchApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: '',
+          roleCode: undefined,
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'ALL',
@@ -281,8 +281,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: 'MDI',
           activeCaseload: 'MDI',
           status: 'ALL',
@@ -300,8 +300,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: 'MDI',
           activeCaseload: 'MDI',
           status: 'ALL',
@@ -319,8 +319,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: 'MDI',
           activeCaseload: undefined,
           status: 'ALL',
@@ -338,8 +338,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: 'OMIC_ADMIN',
+          user: undefined,
+          roleCode: ['OMIC_ADMIN'],
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'ALL',
@@ -357,8 +357,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'INACTIVE',
@@ -376,8 +376,8 @@ describe('search factory', () => {
 
         expect(searchApi).toBeCalledWith({
           locals,
-          user: '',
-          roleCode: '',
+          user: undefined,
+          roleCode: undefined,
           groupCode: undefined,
           activeCaseload: undefined,
           status: 'ACTIVE',
@@ -396,7 +396,7 @@ describe('search factory', () => {
         expect(searchApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: 'OMIC_ADMIN',
+          roleCode: ['OMIC_ADMIN'],
           groupCode: 'MDI',
           activeCaseload: 'MDI',
           status: 'ACTIVE',

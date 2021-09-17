@@ -20,9 +20,11 @@ const prisonApiFactory = (client) => {
   const userSearch = (context, { nameFilter, roleFilter, status }) =>
     get(
       context,
-      `/api/users/local-administrator/available?nameFilter=${encodeQueryString(
+      `/api/users/local-administrator/available?${querystring.stringify({
         nameFilter,
-      )}&accessRole=${roleFilter}&status=${status}`,
+        accessRole: roleFilter,
+        status,
+      })}`,
     )
   const userSearchAdmin = (context, { nameFilter, roleFilter, status, caseload, activeCaseload }) =>
     get(

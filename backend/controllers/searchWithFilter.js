@@ -31,11 +31,11 @@ const searchFactory = (
     const pageOffset = (offset && parseInt(offset, 10)) || 0
 
     const groupCode = currentFilter.groupCode && currentFilter.groupCode[0]
-    const roleCode = (currentFilter.roleCode && currentFilter.roleCode[0]) ?? ''
+    const { roleCode } = currentFilter
 
     const searchResults = await searchApi({
       locals: res.locals,
-      user: currentFilter.user ?? '',
+      user: currentFilter.user,
       groupCode,
       roleCode,
       activeCaseload: currentFilter.restrictToActiveGroup ? groupCode : undefined,
