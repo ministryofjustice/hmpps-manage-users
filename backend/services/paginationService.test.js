@@ -80,7 +80,7 @@ describe('Pagination service 2', () => {
     })
   })
 
-  it('should handle being on the last page', () => {
+  it('should handle being on a full last page', () => {
     const response = service.getPagination({ totalElements: 200, page: 19, size: 10 }, new URL('http://localhost/'))
 
     expect(response).toEqual({
@@ -109,6 +109,39 @@ describe('Pagination service 2', () => {
         count: 200,
         from: 191,
         to: 200,
+      },
+    })
+  })
+
+  it('should handle being on partially populated last page', () => {
+    const response = service.getPagination({ totalElements: 198, page: 19, size: 10 }, new URL('http://localhost/'))
+
+    expect(response).toEqual({
+      classes: 'govuk-!-font-size-19',
+      items: [
+        { href: 'http://localhost/?page=10', selected: false, text: 11 },
+        { href: 'http://localhost/?page=11', selected: false, text: 12 },
+        { href: 'http://localhost/?page=12', selected: false, text: 13 },
+        { href: 'http://localhost/?page=13', selected: false, text: 14 },
+        { href: 'http://localhost/?page=14', selected: false, text: 15 },
+        { href: 'http://localhost/?page=15', selected: false, text: 16 },
+        { href: 'http://localhost/?page=16', selected: false, text: 17 },
+        { href: 'http://localhost/?page=17', selected: false, text: 18 },
+        { href: 'http://localhost/?page=18', selected: false, text: 19 },
+        { href: 'http://localhost/?page=19', selected: true, text: 20 },
+      ],
+      next: {
+        href: 'http://localhost/?page=19',
+        text: 'Next',
+      },
+      previous: {
+        href: 'http://localhost/?page=18',
+        text: 'Previous',
+      },
+      results: {
+        count: 198,
+        from: 191,
+        to: 198,
       },
     })
   })
