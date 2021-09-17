@@ -103,7 +103,7 @@ const getPagination = ({ totalElements: totalResults, page: currentPage, size: l
     next: nextPage,
     results: {
       from: currentPage * limit + 1,
-      to: numberOfPages > 1 && currentPage < numberOfPages ? (currentPage + 1) * limit : totalResults,
+      to: numberOfPages > 1 && currentPage + 1 < numberOfPages ? (currentPage + 1) * limit : totalResults,
       count: totalResults,
     },
     classes: 'govuk-!-font-size-19',
