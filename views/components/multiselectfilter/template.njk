@@ -5,9 +5,9 @@
   {% set inputName = params.name + '-search' %}
 
 <div class="msf-multi-select-filter">
-    <h2 class="govuk-heading-s">{{ params.title }}</h2>
     <div>
         {{ govukInput({
+            label: { text: params.title, classes: "govuk-label--s" },
             classes: "govuk-input--width-20 js-search-input msf-search-input",
             value: '',
             id: inputName,

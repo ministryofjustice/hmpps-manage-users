@@ -29,10 +29,11 @@
 
 {% block content %}
 
+
 {% set filterOptionsHtml %}
     {{ govukInput({
-      label: { text: "Name or username" if dpsSearch else "Name, username or email address" },
-      classes: "govuk-input--width-20",
+      label: { text: "Name or username" if dpsSearch else "Name, username or email address", classes: "govuk-label--s" },
+      classes: "govuk-input--width-20 govuk-fieldset__legend--s",
       value: currentFilter.user,
       id: "user",
       name: "user",
@@ -46,7 +47,7 @@
       fieldset: {
         legend: {
           text: 'Status',
-          classes: 'govuk-fieldset__legend--m'
+          classes: 'govuk-label--s'
         }
       },
       hint: {
@@ -75,7 +76,8 @@
     {% if showGroupOrPrisonDropdown %}
     <div class="govuk-list">
       {{ govukSelect({label: {
-        text: "Select a " + groupOrPrison
+        text: "Caseload" if groupOrPrison === 'caseload' else groupOrPrison,
+        classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
         name: 'groupCode',
@@ -114,7 +116,7 @@
     <div class="govuk-list">
      {{multiSelectFilter({
        name: 'roleCode', 
-       title: 'Select a role',
+       title: 'Role',
        items: roleDropdownValues  | setChecked(currentFilter.roleCode)     
       })}}
     </div>
@@ -132,42 +134,52 @@
         </form>
         </div>
         <div class="moj-filter-layout__content">
-            <div class="govuk-grid-row">
+            <div>
               <div class="govuk-grid-column-full">
               {% if results.length %}
                 {{ mojPagination(pagination) }}
 
                 {% set rows = [] %}
                 {% for u in results %}
-                  {% set userLink = '<a href="' + maintainUrl + '/' + u.username + '/details" class="govuk-link" data-qa="edit-button-'
-                    + u.username +'">' + u.firstName + '&nbsp;' + u.lastName + '</a>' %}
-                {% set tags %}
-                {{ govukTag({
-                  text: "Inactive",
-                  classes: "govuk-tag--pink"
-                }) if not u.active }}
-                {{ govukTag({
-                  text: "Active",
-                  classes: "govuk-tag--green"
-                }) if u.active }}
-                {% endset %}
+                  {% set maintainUserUrl = maintainUrl + '/' + u.username + '/details' %}
+                  {% set cellHtml %}
+                    <div>
+                      <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-full">
+                          <a href="{{maintainUserUrl}}" class="govuk-link" data-qa="edit-button-{{u.username}}">{{u.firstName}}  {{u.lastName}}</a>
+                        </div>
+                      </div>
+                      <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-quarter govuk-label--s">Username</div>
+                        <div class="govuk-grid-column-three-quarters">{{u.username}}</div>
+                      </div>
+                      <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-quarter">&nbsp;<span class="govuk-visually-hidden">Email<span></div>
+                        <div class="govuk-grid-column-three-quarters">{{u.email}}</div>
+                      </div>
+                      <div class="govuk-grid-row">
+                        <div class="govuk-grid-column-one-quarter govuk-label--s">Status</div>
+                        <div class="govuk-grid-column-three-quarters">
+                          {{ govukTag({
+                            text: "Inactive",
+                            classes: "govuk-tag--pink"
+                          }) if not u.active }}
+                          {{ govukTag({
+                            text: "Active",
+                            classes: "govuk-tag--green"
+                          }) if u.active }}
+                          <span>at <strong>{{u.activeCaseLoadId}}</strong></span>
+                      </div>
+                      </div>
+                    </div>
+                  {% endset %}
+
                     {% set rows = (rows.push([
-                      { html: userLink },
-                      { text: u.username },
-                      { text: u.email },
-                      { text: u.activeCaseLoadId },
-                      { html: tags }
+                      { html: cellHtml }
                     ]), rows) %}
                   {% endfor %}
 
                   {{ govukTable({
-                    head: [
-                      { text: "Name" },
-                      { text: "Username" },
-                      { text: "Verified email" },
-                      { text: "Active caseload" },
-                      { text: "Status" }
-                    ],
                     rows: rows
                   }) }}
                 {{ mojPagination(pagination) }}
