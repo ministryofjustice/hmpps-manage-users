@@ -15,3 +15,11 @@ new MOJFrontend.FilterToggleButton({
     container: $('.moj-filter-layout__filter'),
   },
 })
+
+function moveFilterTagsToResults() {
+  var newContainer = $('.moj-action-bar__filterTagsContainer')
+  var tagsContainer = $('.moj-filter__selected')
+  tagsContainer.appendTo(newContainer)
+}
+
+moveFilterTagsToResults()
