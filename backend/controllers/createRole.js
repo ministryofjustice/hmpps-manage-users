@@ -11,8 +11,17 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
     const flashRole = req.flash('role')
     const role = flashRole != null && flashRole.length > 0 ? flashRole[0] : ''
     const roleUrl = manageRoleUrl
+
+    // create map of all adminType and their status value
+    const roleAminTypeMap = {
+      DPS_ADM: role === '' ? false : role.adminType.includes('DPS_ADM'),
+      DPS_LSA: role === '' ? false : role.adminType.includes('DPS_LSA'),
+      EXT_ADM: role === '' ? false : role.adminType.includes('EXT_ADM'),
+    }
+
     res.render('createRole.njk', {
       roleUrl,
+      adminTypeMap: roleAminTypeMap,
       ...role,
       errors: req.flash('createRoleErrors'),
     })

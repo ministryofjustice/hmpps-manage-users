@@ -80,15 +80,18 @@
             items: [
               {
                 value: "EXT_ADM",
-                text: "External Administrators"
+                text: "External Administrators",
+                checked: adminTypeMap["EXT_ADM"]
               },
               {
                 value: "DPS_LSA",
-                text: "DPS Local System Administrators (LSA)"
+                text: "DPS Local System Administrators (LSA)",
+                checked: adminTypeMap["DPS_LSA"]
               },
               {
                 value: "DPS_ADM",
-                text: "DPS Central Admin"
+                text: "DPS Central Admin",
+                checked: adminTypeMap["DPS_ADM"]
               }
             ],
             errorMessage: errors | findError('adminType')

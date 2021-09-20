@@ -13,6 +13,7 @@ describe('create role factory', () => {
       expect(render).toBeCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
         errors: undefined,
+        adminTypeMap: { DPS_ADM: false, DPS_LSA: false, EXT_ADM: false },
       })
     })
 
@@ -23,6 +24,7 @@ describe('create role factory', () => {
       await createRole.index(req, { render })
       expect(render).toBeCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
+        adminTypeMap: { DPS_ADM: false, DPS_LSA: false, EXT_ADM: false },
         errors: { error: 'some error' },
       })
     })
