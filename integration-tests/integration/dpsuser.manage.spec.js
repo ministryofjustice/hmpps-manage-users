@@ -201,9 +201,7 @@ context('DPS user manage functionality', () => {
   it('Should provide breadcrumb link back to search results with filter only', () => {
     const userPage = editUser({ nextPage: true, fromSearchFilterPage: true })
 
-    userPage
-      .searchBreadcrumb()
-      .should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL&roleCode=')
+    userPage.searchBreadcrumb().should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL')
     userPage.searchResultsBreadcrumb().should('not.exist')
   })
 

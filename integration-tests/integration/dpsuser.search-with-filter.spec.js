@@ -136,7 +136,7 @@ context('DPS search with filter user functionality', () => {
       user: 'Andy',
       statusText: 'Active',
       caseloadText: 'Moorland',
-      roleText: 'User Admin',
+      roleText: ['User Admin', 'User General'],
     })
 
     cy.task('verifyDpsAdminSearch').should((requests) => {
@@ -144,7 +144,7 @@ context('DPS search with filter user functionality', () => {
 
       expect(requests[1].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
-        accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
+        accessRole: { key: 'accessRole', values: ['USER_ADMIN', 'USER_GENERAL'] },
         status: { key: 'status', values: ['ACTIVE'] },
         caseload: { key: 'caseload', values: ['MDI'] },
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },

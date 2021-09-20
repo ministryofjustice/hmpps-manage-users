@@ -41,7 +41,11 @@ const dpsUserSearchWithFilterPage = () =>
       userFilterInput().type(user)
       statusFilterRadioButton(statusText).click()
       caseload().type(caseloadText)
-      roleCheckbox(roleText).click()
+      if (Array.isArray(roleText)) {
+        roleText.forEach((text) => roleCheckbox(text).click())
+      } else {
+        roleCheckbox(roleText).click()
+      }
       applyFilters().click()
     },
     filterAllNonAdmin: ({ user, statusText, roleText }) => {
