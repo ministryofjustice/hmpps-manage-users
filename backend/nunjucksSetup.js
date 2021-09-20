@@ -99,6 +99,15 @@ module.exports = (app, path) => {
       })),
   )
 
+  njkEnv.addFilter(
+    'setChecked',
+    (items, selectedList) =>
+      items &&
+      items.map((entry) => ({
+        ...entry,
+        checked: entry && selectedList && selectedList.includes(entry.value),
+      })),
+  )
   njkEnv.addFilter('toSummaryViewModel', (model) =>
     Object.keys(model)
       .filter((key) => model[key])

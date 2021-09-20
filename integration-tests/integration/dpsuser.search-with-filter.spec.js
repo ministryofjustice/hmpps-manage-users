@@ -75,7 +75,28 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterWithTag('User Admin').click()
     searchWithFilter.filterWithTag('User Admin').should('not.exist')
   })
+  it('can search for a role to filter', () => {
+    const searchWithFilter = goToSearchWithFilterPage({})
 
+    searchWithFilter.role('Maintain Roles').should('be.visible')
+    searchWithFilter.role('User Admin').should('be.visible')
+    searchWithFilter.role('User General').should('be.visible')
+
+    searchWithFilter.searchForRole('User')
+    searchWithFilter.role('Maintain Roles').should('not.be.visible')
+    searchWithFilter.role('User Admin').should('be.visible')
+    searchWithFilter.role('User General').should('be.visible')
+
+    searchWithFilter.searchForRole('Maintain')
+    searchWithFilter.role('Maintain Roles').should('be.visible')
+    searchWithFilter.role('User Admin').should('not.be.visible')
+    searchWithFilter.role('User General').should('not.be.visible')
+
+    searchWithFilter.searchForRole('')
+    searchWithFilter.role('Maintain Roles').should('be.visible')
+    searchWithFilter.role('User Admin').should('be.visible')
+    searchWithFilter.role('User General').should('be.visible')
+  })
   it('will shows result before and after filtering', () => {
     const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
     searchWithFilter.rows().should('have.length', 5)
@@ -115,7 +136,7 @@ context('DPS search with filter user functionality', () => {
       user: 'Andy',
       statusText: 'Active',
       caseloadText: 'Moorland',
-      roleText: 'User Admin',
+      roleText: ['User Admin', 'User General'],
     })
 
     cy.task('verifyDpsAdminSearch').should((requests) => {
@@ -123,7 +144,7 @@ context('DPS search with filter user functionality', () => {
 
       expect(requests[1].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
-        accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
+        accessRole: { key: 'accessRole', values: ['USER_ADMIN', 'USER_GENERAL'] },
         status: { key: 'status', values: ['ACTIVE'] },
         caseload: { key: 'caseload', values: ['MDI'] },
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },

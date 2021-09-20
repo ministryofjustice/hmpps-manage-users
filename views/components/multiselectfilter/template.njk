@@ -1,0 +1,36 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+
+  {% set inputName = params.name + '-search' %}
+  {% set counterSelectedId = params.name + '-search-counter' %}
+  {% set counterTotalSelectedId = params.name + '-total-search-counter' %}
+
+<div class="msf-multi-select-filter">
+    <div>
+        {{ govukInput({
+            label: { text: params.title, classes: "govuk-label--s" },
+            classes: "govuk-input--width-20 js-search-input msf-search-input",
+            value: '',
+            id: inputName,
+            describedBy: counterSelectedId
+        }) }}
+    </div>
+    <span id={{counterSelectedId}} class="app-c-option-select__count govuk-visually-hidden" aria-live="polite"></span> 
+    <div class="msf-multi-select-filter__selected-counter govuk-!-font-size-14 js-selected-counter" id={{counterTotalSelectedId}}>&nbsp;</div>
+    <div role="group" class="js-options-container msf-option-container">
+        <div class="js-auto-height-inner">
+            {{ govukCheckboxes({
+            idPrefix: params.name,
+            name: params.name,
+            items: params.items,
+            classes: "govuk-checkboxes--small"
+            }) }}
+        </div>
+    </div>
+</div>
+
+
+  {% block pageScripts %}
+    <script src="/js/multiselectfilter.js"></script>
+  {% endblock %}

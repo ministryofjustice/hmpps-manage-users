@@ -8,6 +8,7 @@ $govuk-global-styles: true;
 @import 'components/print-link';
 @import 'components/buttons';
 @import 'components/card';
+@import 'components/multi-select-filter';
 
 @import 'govuk-overrides';
 @import 'moj-overrides';
