@@ -143,23 +143,18 @@
                 {% for u in results %}
                   {% set maintainUserUrl = maintainUrl + '/' + u.username + '/details' %}
                   {% set cellHtml %}
-                    <div>
-                      <div class="govuk-grid-row">
+                    <div class="govuk-!-margin-bottom-5">
+                      <div class="govuk-grid-row govuk-!-margin-bottom-2">
                         <div class="govuk-grid-column-full">
-                          <a href="{{maintainUserUrl}}" class="govuk-link" data-qa="edit-button-{{u.username}}">{{u.firstName}}  {{u.lastName}}</a>
+                          <a href="{{maintainUserUrl}}" class="govuk-link" data-qa="edit-button-{{u.username}}">{{u.firstName}}  {{u.lastName}}</a><span> - {{u.username}}</span>
                         </div>
                       </div>
-                      <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-quarter govuk-label--s">Username</div>
-                        <div class="govuk-grid-column-three-quarters">{{u.username}}</div>
+                      <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                        <div class="govuk-grid-column-full"><span class="govuk-visually-hidden">Email</span><span>{{u.email}}</span></div>
                       </div>
-                      <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-quarter">&nbsp;<span class="govuk-visually-hidden">Email<span></div>
-                        <div class="govuk-grid-column-three-quarters">{{u.email}}</div>
-                      </div>
-                      <div class="govuk-grid-row">
-                        <div class="govuk-grid-column-one-quarter govuk-label--s">Status</div>
-                        <div class="govuk-grid-column-three-quarters">
+                      <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                        <div class="govuk-grid-column-full">
+                        <span class="govuk-visually-hidden">Status</span>
                           {{ govukTag({
                             text: "Inactive",
                             classes: "govuk-tag--pink"

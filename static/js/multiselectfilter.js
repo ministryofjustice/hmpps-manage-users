@@ -24,6 +24,11 @@ window.onload = function () {
         this.checkboxLabels.push(this.cleanString(this.$allCheckboxes[n].textContent))
       this.$filter.addEventListener('keyup', this.typeFilterText.bind(this))
       this.setupHeight()
+      this.$filterCount = document.getElementById(this.$filter.getAttribute('aria-describedby'))
+      this.$optionsContainer
+        .querySelector('.govuk-checkboxes')
+        .addEventListener('change', this.updateCheckedCount.bind(this))
+      this.updateCheckedCount()
     }),
       (MultiSelectFilter.prototype.typeFilterText = function (searchInput) {
         searchInput.stopPropagation()
@@ -64,6 +69,11 @@ window.onload = function () {
           multiSelectFilterInstance.$allCheckboxes[index].style.display = 'none'
         for (index = 0; index < currentlySelected.length; index++)
           multiSelectFilterInstance.$allCheckboxes[currentlySelected[index]].style.display = 'block'
+        var selectedItems = multiSelectFilterInstance.$optionsContainer.querySelectorAll(
+            '.govuk-checkboxes__input:checked',
+          ).length,
+          counterText = currentlySelected.length + ' found, ' + selectedItems + ' selected'
+        multiSelectFilterInstance.$filterCount.innerHTML = counterText
       }),
       (MultiSelectFilter.prototype.setContainerHeight = function (height) {
         this.$optionsContainer.style.height = height + 'px'
@@ -73,7 +83,7 @@ window.onload = function () {
           optionsTop = this.$optionList.getBoundingClientRect().top
         return multiSelectFilterInstance.getBoundingClientRect().top - optionsTop < containerHeight
       }),
-      (MultiSelectFilter.prototype.getVisibleCheckboxes = function h() {
+      (MultiSelectFilter.prototype.getVisibleCheckboxes = function () {
         for (var visibleOptions = [], index = 0; index < this.$options.length; index++)
           this.isCheckboxVisible(this.$options[index]) && visibleOptions.push(this.$options[index])
         return (
@@ -98,5 +108,19 @@ window.onload = function () {
           this.setContainerHeight(topOfLastVisible + lastVisible.clientHeight / 1.5)
         }
       }),
+      (MultiSelectFilter.prototype.updateCheckedCount = function () {
+        var checked = this.checkedString(),
+          selectedCounter = this.$optionSelect.querySelector('.js-selected-counter')
+        selectedCounter.textContent = checked
+      })
+    ;(MultiSelectFilter.prototype.checkedString = function () {
+      this.getAllCheckedCheckboxes()
+      var selectedCount = this.checkedCheckboxes.length
+
+      if (selectedCount > 0) {
+        return selectedCount + ' selected'
+      }
+      return ''
+    }),
       (root.MultiSelectFilter = MultiSelectFilter)
   })(window.GOVUK.Modules)

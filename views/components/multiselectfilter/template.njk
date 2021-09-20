@@ -3,6 +3,8 @@
 
 
   {% set inputName = params.name + '-search' %}
+  {% set counterSelectedId = params.name + '-search-counter' %}
+  {% set counterTotalSelectedId = params.name + '-total-search-counter' %}
 
 <div class="msf-multi-select-filter">
     <div>
@@ -11,9 +13,12 @@
             classes: "govuk-input--width-20 js-search-input msf-search-input",
             value: '',
             id: inputName,
-            name: inputName
+            name: inputName,
+            describedBy: counterSelectedId
         }) }}
     </div>
+    <span id={{counterSelectedId}} class="app-c-option-select__count govuk-visually-hidden" aria-live="polite"></span> 
+    <div class="msf-multi-select-filter__selected-counter govuk-!-font-size-14 js-selected-counter" id={{counterTotalSelectedId}}>&nbsp;</div>
     <div role="group" class="js-options-container msf-option-container">
         <div class="js-auto-height-inner">
             {{ govukCheckboxes({
