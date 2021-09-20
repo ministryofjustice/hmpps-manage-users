@@ -13,7 +13,12 @@ describe('create role factory', () => {
       expect(render).toBeCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
         errors: undefined,
-        adminTypeMap: { DPS_ADM: false, DPS_LSA: false, EXT_ADM: false },
+        adminTypeValues: [
+          { text: 'External Administrators', value: 'EXT_ADM' },
+          { text: 'DPS Local System Administrators (LSA)', value: 'DPS_LSA' },
+          { text: 'DPS Central Admin', value: 'DPS_ADM' },
+        ],
+        currentFilter: undefined,
       })
     })
 
@@ -24,7 +29,12 @@ describe('create role factory', () => {
       await createRole.index(req, { render })
       expect(render).toBeCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
-        adminTypeMap: { DPS_ADM: false, DPS_LSA: false, EXT_ADM: false },
+        adminTypeValues: [
+          { text: 'External Administrators', value: 'EXT_ADM' },
+          { text: 'DPS Local System Administrators (LSA)', value: 'DPS_LSA' },
+          { text: 'DPS Central Admin', value: 'DPS_ADM' },
+        ],
+        currentFilter: undefined,
         errors: { error: 'some error' },
       })
     })
