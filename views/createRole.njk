@@ -77,22 +77,11 @@
             hint: {
               text: "Select all that apply"
             },
-            items: [
-              {
-                value: "EXT_ADM",
-                text: "External Administrators"
-              },
-              {
-                value: "DPS_LSA",
-                text: "DPS Local System Administrators (LSA)"
-              },
-              {
-                value: "DPS_ADM",
-                text: "DPS Central Admin"
-              }
-            ],
+            items:  adminTypeValues | setChecked(currentFilter) ,
             errorMessage: errors | findError('adminType')
           }) }}
+
+
 
           {{ govukButton({
             text: "Create",
