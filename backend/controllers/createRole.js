@@ -11,8 +11,17 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
     const flashRole = req.flash('role')
     const role = flashRole != null && flashRole.length > 0 ? flashRole[0] : ''
     const roleUrl = manageRoleUrl
+
+    const adminTypeValues = [
+      { value: 'EXT_ADM', text: 'External Administrators' },
+      { value: 'DPS_LSA', text: 'DPS Local System Administrators (LSA)' },
+      { value: 'DPS_ADM', text: 'DPS Central Admin' },
+    ]
+
     res.render('createRole.njk', {
       roleUrl,
+      adminTypeValues,
+      currentFilter: role?.adminType,
       ...role,
       errors: req.flash('createRoleErrors'),
     })
