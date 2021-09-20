@@ -136,6 +136,7 @@
         <div class="moj-filter-layout__content">
             <div>
               <div class="govuk-grid-column-full">
+              <div class="moj-action-bar__filter"></div>
               {% if results.length %}
                 {{ mojPagination(pagination) }}
 
@@ -197,6 +198,8 @@
 {% block bodyEnd %}
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/js/moj-filter-button-toggle.js"></script>
+
   <script>
     {%- if showGroupOrPrisonDropdown %}
     accessibleAutocomplete.enhanceSelectElement({

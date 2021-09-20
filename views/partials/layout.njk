@@ -56,7 +56,9 @@
 <body>, to avoid blocking the initial render. #}
   <script src="/assets/govuk/all.js"></script>
   <script>window.GOVUKFrontend.initAll()</script>
-  <script>var MOJFrontend = {}</script>
+  <script src="/assets/moj/all.js"></script>
+  <script>window.MOJFrontend.initAll()</script>
+
   {# Javascript block for individual pages #}
   {% block pageScripts %}
   {% endblock %}
