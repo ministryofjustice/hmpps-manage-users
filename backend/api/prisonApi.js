@@ -2,8 +2,6 @@ const querystring = require('querystring')
 const config = require('../config')
 const contextProperties = require('../contextProperties')
 
-const encodeQueryString = (input) => encodeURIComponent(input)
-
 const prisonApiFactory = (client) => {
   const processResponse = (context) => (response) => {
     contextProperties.setResponsePagination(context, response.headers)
