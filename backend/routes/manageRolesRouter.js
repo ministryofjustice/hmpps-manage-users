@@ -10,9 +10,9 @@ const { createRoleFactory } = require('../controllers/createRole')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi }) => {
+const controller = ({ oauthApi, manageUsersApi }) => {
   const getAllRolesApi = (context, page, size) => oauthApi.getAllRoles(context, page, size)
-  const getRoleDetailsApi = (context, roleCode) => oauthApi.getRoleDetails(context, roleCode)
+  const getRoleDetailsApi = (context, role) => manageUsersApi.getRoleDetails(context, role)
   const changeRoleNameApi = (context, role, roleName) => oauthApi.changeRoleName(context, role, { roleName })
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
     oauthApi.changeRoleDescription(context, role, { roleDescription })

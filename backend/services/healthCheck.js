@@ -32,10 +32,11 @@ const addAppInfo = (result) => {
   return { ...result, ...buildInfo }
 }
 
-module.exports = function healthcheckFactory(authUrl, prisonUrl, tokenverificationUrl) {
+module.exports = function healthcheckFactory(authUrl, prisonUrl, manageusersUrl, tokenverificationUrl) {
   const checks = [
     service('auth', authUrl),
     service('prison', prisonUrl),
+    service('manageusers', manageusersUrl),
     service('tokenverification', tokenverificationUrl),
   ]
 

@@ -1,6 +1,6 @@
 version: '3'
 services:
-  auth-server:
+  hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
     container_name: auth_mhaa
     networks:
@@ -19,13 +19,28 @@ services:
       - hmpps
     container_name: prison-api_mhaa
     depends_on:
-      - auth-server
+      - hmpps-auth
     ports:
       - "8080:8080"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
     environment:
       - SPRING_PROFILES_ACTIVE=nomis-hsqldb
+
+  manage-users-api:
+    image: quay.io/hmpps/hmpps-manage-users-api:latest
+    networks:
+      - hmpps
+    container_name: manage-users-api_mhaa
+    depends_on:
+      - hmpps-auth
+    ports:
+      - "9091:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:9091/health" ]
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
 
 networks:
   hmpps:
