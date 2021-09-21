@@ -358,6 +358,7 @@ context('External user manage functionality', () => {
   it('Should change a user email address when username same as email address', () => {
     const results = searchForUser(undefined, [
       {
+        userId: 1,
         username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
         email: 'auth_test2@digital.justice.gov.uk',
         enabled: true,

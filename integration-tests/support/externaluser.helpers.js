@@ -4,6 +4,7 @@ const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 
 export const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
+    userId: i,
     username: `AUTH_ADM${i}`,
     email: `auth_test${i}@digital.justice.gov.uk`,
     enabled: i % 2 === 0,
