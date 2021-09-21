@@ -169,14 +169,16 @@ context('Roles', () => {
     cy.task('stubAuthChangeRoleAdminType')
     cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
     const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage()
-    roleAdminTypeChange.changeRoleAdminType('EXT_ADM')
+    roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.checked').should('be.disabled')
+    roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.disabled')
+    roleAdminTypeChange.changeRoleAdminType('DPS_ADM')
 
     RoleDetailsPage.verifyOnPage('Role Name For Admin Type Change')
 
     cy.task('verifyRoleAdminTypeUpdate').should((requests) => {
       expect(requests).to.have.lengthOf(1)
       expect(JSON.parse(requests[0].body)).to.deep.equal({
-        adminType: ['EXT_ADM'],
+        adminType: ['DPS_ADM', 'EXT_ADM'],
       })
     })
   })
