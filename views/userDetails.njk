@@ -159,7 +159,9 @@
 
         {% set rows = [] %}
         {% for userRole in roles %}
-          {% set roleLink = '<a href="' + staffUrl + '/roles/' + userRole.roleCode + '/remove" class="govuk-link" data-qa="remove-button-' + userRole.roleCode +'">Remove role</a>' %}
+          {% set roleLink %}
+            <a href="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove" class="govuk-link" data-qa="remove-button-{{ userRole.roleCode }}">Remove role</a>
+          {% endset %}
           {% set rows = (rows.push([
             { text: userRole.roleName },
             { html: roleLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
@@ -184,7 +186,9 @@
           {% set rows = [] %}
           {% for userGroup in groups %}
             {% if userGroup.showRemove %}
-              {% set groupLink = '<a href="' + staffUrl + '/groups/' + userGroup.groupCode + '/remove" class="govuk-link" data-qa="remove-button-' + userGroup.groupCode +'">Remove from group</a>' %}
+              {% set groupLink %}
+                <a href="{{ staffUrl }}/groups/{{ userGroup.groupCode }}/remove" class="govuk-link" data-qa="remove-button-{{ userGroup.groupCode }}">Remove from group</a>
+              {% endset %}
               {% set rows = (rows.push([
                 { text: userGroup.groupName },
                 { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
