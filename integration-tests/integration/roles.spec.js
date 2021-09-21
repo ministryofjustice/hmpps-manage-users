@@ -194,9 +194,11 @@ context('Roles', () => {
     const createRole = CreateRolePage.verifyOnPage()
     createRole.createRole('BO$', '', '', '')
     createRole.errorSummary().should('contain.text', 'Enter a role name')
+    createRole.errorSummary().should('contain.text', 'Select an admin type')
 
     createRole.createRole('BO$', 'Bob Role', 'Bob Description', 'EXT_ADM')
     createRole.errorSummary().should('contain.text', 'Role code can only contain 0-9, A-Z and _ characters')
+    createRole.adminTypeCheckbox('External Administrators').should('be.checked')
 
     createRole.createRole('', '')
     createRole.createRole('AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')

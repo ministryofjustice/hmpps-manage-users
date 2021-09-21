@@ -77,11 +77,9 @@
             hint: {
               text: "Select all that apply"
             },
-            items:  adminTypeValues | setChecked(currentFilter) ,
+            items:  adminTypeValues | setChecked(adminType) ,
             errorMessage: errors | findError('adminType')
           }) }}
-
-
 
           {{ govukButton({
             text: "Create",
