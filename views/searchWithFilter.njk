@@ -136,6 +136,8 @@
         <div class="moj-filter-layout__content">
             <div>
               <div class="govuk-grid-column-full">
+              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+              <div class="moj-action-bar__filter"></div>
               {% if results.length %}
                 {{ mojPagination(pagination) }}
 
@@ -145,8 +147,12 @@
                   {% set cellHtml %}
                     <div class="govuk-!-margin-bottom-5">
                       <div class="govuk-grid-row govuk-!-margin-bottom-2">
-                        <div class="govuk-grid-column-full">
+                        <div class="govuk-grid-column-three-quarters">
                           <a href="{{maintainUserUrl}}" class="govuk-link" data-qa="edit-button-{{u.username}}">{{u.firstName}}&nbsp;{{u.lastName}}</a><span> - {{u.username}}</span>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter  pull-right">
+                          <a href="{{maintainUserUrl}}" class="govuk-link">View details</a>
+                          <span class="govuk-visually-hidden">for {{u.firstName}}&nbsp;{{u.lastName}}</span>
                         </div>
                       </div>
                       <div class="govuk-grid-row govuk-!-margin-bottom-2">
@@ -197,6 +203,8 @@
 {% block bodyEnd %}
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/js/moj-filter-button-toggle.js"></script>
+
   <script>
     {%- if showGroupOrPrisonDropdown %}
     accessibleAutocomplete.enhanceSelectElement({
