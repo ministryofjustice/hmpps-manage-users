@@ -87,6 +87,23 @@ context('External user search functionality', () => {
       results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
     })
 
+    it('Should escape html tags in user names when displaying results', () => {
+      const results = searchForUser('MAINTAIN_OAUTH_USERS', [
+        {
+          userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+          username: 'AUTH_ADM',
+          email: 'auth_test2@digital.justice.gov.uk',
+          enabled: true,
+          locked: false,
+          verified: false,
+          firstName: '<script>document.write("XSS" + "Attack")</script>',
+          lastName: '<script>document.write("XSS" + "Attack")</script>',
+        },
+      ])
+
+      results.rows().eq(0).should('not.include.text', 'XSSAttack')
+    })
+
     it('Should display locked and enabled tags', () => {
       const results = searchForUser('MAINTAIN_OAUTH_USERS', replicateUser(5))
 
@@ -269,6 +286,7 @@ context('External user search functionality', () => {
       const validateCsv = (list) => {
         expect(list, 'number of records').to.have.length(22)
         expect(list[0], 'header row').to.deep.equal([
+          'userId',
           'username',
           'email',
           'enabled',
@@ -278,6 +296,7 @@ context('External user search functionality', () => {
           'lastName',
         ])
         expect(list[1], 'first row').to.deep.equal([
+          '0',
           'AUTH_ADM0',
           'auth_test0@digital.justice.gov.uk',
           'true',
@@ -287,6 +306,7 @@ context('External user search functionality', () => {
           'Adm0',
         ])
         expect(list[21], 'last row').to.deep.equal([
+          '20',
           'AUTH_ADM20',
           'auth_test20@digital.justice.gov.uk',
           'true',
