@@ -21,7 +21,6 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
     res.render('createRole.njk', {
       roleUrl,
       adminTypeValues,
-      currentFilter: role?.adminType,
       ...role,
       errors: req.flash('createRoleErrors'),
     })
