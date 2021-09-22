@@ -5,6 +5,7 @@ const roleName = () => cy.get('[id="roleName"]')
 const roleDescription = () => cy.get('[id="roleDescription"]')
 const submit = () => cy.get('button[type="submit"]')
 const cancelButton = () => cy.get('[id="cancel-button"]')
+const adminTypeCheckbox = (text) => cy.contains('label', text).prev()
 
 const createRolePage = () =>
   page('Create role', {
@@ -21,6 +22,7 @@ const createRolePage = () =>
     cancel: () => {
       cancelButton().click()
     },
+    adminTypeCheckbox,
     errorSummary: () => cy.get('[data-qa-errors]'),
   })
 

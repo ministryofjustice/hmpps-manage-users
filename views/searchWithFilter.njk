@@ -76,7 +76,7 @@
     {% if showGroupOrPrisonDropdown %}
     <div class="govuk-list">
       {{ govukSelect({label: {
-        text: "Caseload" if groupOrPrison === 'caseload' else groupOrPrison,
+        text: "Prison" if groupOrPrison === 'caseload' else groupOrPrison,
         classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
@@ -168,7 +168,9 @@
                             text: "Active",
                             classes: "govuk-tag--green"
                           }) if u.active }}
+                          {% if u.activeCaseLoadId %}
                           <span>at <strong>{{u.activeCaseLoadId}}</strong></span>
+                          {% endif %}
                       </div>
                       </div>
                     </div>

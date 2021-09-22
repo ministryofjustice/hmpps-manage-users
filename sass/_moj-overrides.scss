@@ -5,7 +5,7 @@
 .moj-filter__selected {
   background-color: govuk-colour("white");
   h3 {
-    margin-right: 20px;
+    margin-right: 10px;
     display: inline-block;
   }
 
@@ -32,4 +32,10 @@
     }
   }
 
+}
+
+.moj-filter-layout {
+  .msf-multi-select-filter__selected-counter {
+    min-height: 1.5em;
+  }
 }

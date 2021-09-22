@@ -11,7 +11,7 @@ const manageGroupsRouter = require('./routes/manageGroupsRouter')
 const manageRolesRouter = require('./routes/manageRolesRouter')
 const currentUser = require('./middleware/currentUser')
 
-const configureRoutes = ({ oauthApi, prisonApi }) => {
+const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ prisonApi, oauthApi }))
@@ -24,7 +24,7 @@ const configureRoutes = ({ oauthApi, prisonApi }) => {
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ prisonApi, oauthApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))
-  router.use('/manage-roles', manageRolesRouter({ oauthApi }))
+  router.use('/manage-roles', manageRolesRouter({ oauthApi, manageUsersApi }))
 
   return router
 }

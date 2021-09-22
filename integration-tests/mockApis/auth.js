@@ -646,24 +646,6 @@ const stubAllRoles = ({
     },
   })
 
-const stubRoleDetails = ({
-  content = {
-    roleCode: 'AUTH_GROUP_MANAGER',
-    roleName: 'Auth Group Manager',
-    roleDescription: 'Role to be a Group Manager',
-    adminType: [
-      {
-        adminTypeName: 'External Admin',
-        adminTypeCode: 'EXT_ADM',
-      },
-    ],
-  },
-}) =>
-  getFor({
-    urlPattern: '/auth/api/roles/[^/]*',
-    body: content,
-  })
-
 const stubAuthCreateRole = () =>
   stubFor({
     request: {
@@ -735,7 +717,6 @@ module.exports = {
   stubAuthCreateUser,
   stubError,
   stubHealth,
-  stubRoleDetails,
   verifyAddRoles,
   verifyRemoveRole,
   verifyAddGroup,

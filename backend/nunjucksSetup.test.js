@@ -14,20 +14,20 @@ describe('toUserSearchFilter', () => {
   describe('user filter', () => {
     it('should show current user filter section', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'User')).toBeTruthy()
+      expect(categoryWithHeading(result, 'Name or username')).toBeTruthy()
     })
 
     it('should not show current user filter section when no filter for users', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-      expect(categoryWithHeading(result, 'User')).toBeFalsy()
+      expect(categoryWithHeading(result, 'Name or username')).toBeFalsy()
     })
     it('should have single user tag when user set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'User').items).toHaveLength(1)
+      expect(categoryWithHeading(result, 'Name or username').items).toHaveLength(1)
     })
     it('user tag should have text and reset url removing the user', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', status: 'ACTIVE' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'User').items[0]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Name or username').items[0]).toStrictEqual({
         text: 'Andy',
         href: '/search-with-filter-dps-users?status=ACTIVE',
       })
@@ -81,15 +81,15 @@ describe('toUserSearchFilter', () => {
     ]
     it('should show current caseload filter section', () => {
       const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', true)
-      expect(categoryWithHeading(result, 'Caseload')).toBeTruthy()
+      expect(categoryWithHeading(result, 'Prison')).toBeTruthy()
     })
     it('should not show current caseload filter section when user can see no caseloads', () => {
       const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', false)
-      expect(categoryWithHeading(result, 'Caseload')).toBeFalsy()
+      expect(categoryWithHeading(result, 'Prison')).toBeFalsy()
     })
     it('should not show current caseload filter section when caseload not set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ restrictToActiveGroup: true }, prisons, [], '', true)
-      expect(categoryWithHeading(result, 'Caseload')).toBeFalsy()
+      expect(categoryWithHeading(result, 'Prison')).toBeFalsy()
     })
     it('should have single caseload tag when a single prison set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')(
@@ -99,7 +99,7 @@ describe('toUserSearchFilter', () => {
         '',
         true,
       )
-      expect(categoryWithHeading(result, 'Caseload').items).toHaveLength(1)
+      expect(categoryWithHeading(result, 'Prison').items).toHaveLength(1)
     })
     it('should have additional caseload tag when a single prison set in filter with restrict to active caseload', () => {
       const result = njk.getFilter('toUserSearchFilter')(
@@ -109,7 +109,7 @@ describe('toUserSearchFilter', () => {
         '',
         true,
       )
-      expect(categoryWithHeading(result, 'Caseload').items).toHaveLength(2)
+      expect(categoryWithHeading(result, 'Prison').items).toHaveLength(2)
     })
     it('caseload tag should have text and reset url for removing the prison', () => {
       const result = njk.getFilter('toUserSearchFilter')(
@@ -119,11 +119,11 @@ describe('toUserSearchFilter', () => {
         '',
         true,
       )
-      expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Prison').items[0]).toStrictEqual({
         text: 'Moorland (HMP)',
         href: '/search-with-filter-dps-users?user=Andy',
       })
-      expect(categoryWithHeading(result, 'Caseload').items[1]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Prison').items[1]).toStrictEqual({
         text: 'Active caseload only',
         href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI&restrictToActiveGroup=false',
       })
@@ -136,15 +136,15 @@ describe('toUserSearchFilter', () => {
         '',
         true,
       )
-      expect(categoryWithHeading(result, 'Caseload').items[0]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Prison').items[0]).toStrictEqual({
         text: 'Moorland (HMP)',
         href: '/search-with-filter-dps-users?user=Andy&restrictToActiveGroup=true&groupCode=RNI',
       })
-      expect(categoryWithHeading(result, 'Caseload').items[1]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Prison').items[1]).toStrictEqual({
         text: 'Ranby (HMP)',
         href: '/search-with-filter-dps-users?user=Andy&restrictToActiveGroup=true&groupCode=MDI',
       })
-      expect(categoryWithHeading(result, 'Caseload').items[2]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Prison').items[2]).toStrictEqual({
         text: 'Active caseload only',
         href: '/search-with-filter-dps-users?user=Andy&groupCode=MDI&groupCode=RNI&restrictToActiveGroup=false',
       })
