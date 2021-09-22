@@ -1,3 +1,35 @@
 .moj-pagination__results {
   margin: 0;
 }
+
+.moj-filter__selected {
+  background-color: govuk-colour("white");
+  h3 {
+    margin-right: 20px;
+    display: inline-block;
+  }
+
+  .moj-filter-tags {
+    display: inline;
+    &:after {
+      content: '\A';
+      white-space: pre;
+    }
+  }
+  .moj-action-bar__filter {
+    button {
+      margin-bottom: 0;
+    }
+    &:after {
+      display: none;
+    }
+}
+
+  .moj-filter__tag {
+    background-color: govuk-colour("white");
+    &:hover {
+      background-color: govuk-colour("black");
+    }
+  }
+
+}

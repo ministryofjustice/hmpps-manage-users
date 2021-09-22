@@ -8,19 +8,18 @@ describe('toUserSearchFilter', () => {
   it('should show filter headings', () => {
     const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
     expect(result.heading.text).toBe('Filter')
-    expect(result.selectedFilters.heading.text).toBe('Selected filters')
     expect(result.selectedFilters.clearLink.text).toBe('Clear filters')
   })
 
   describe('user filter', () => {
     it('should show current user filter section', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
       expect(categoryWithHeading(result, 'User')).toBeTruthy()
     })
 
-    it('should not have user tag when user not set in filter', () => {
+    it('should not show current user filter section when no filter for users', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-      expect(categoryWithHeading(result, 'User').items).toBeFalsy()
+      expect(categoryWithHeading(result, 'User')).toBeFalsy()
     })
     it('should have single user tag when user set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
@@ -36,17 +35,17 @@ describe('toUserSearchFilter', () => {
   })
   describe('status filter', () => {
     it('should show current status filter section', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ status: 'ACTIVE' }, [], [], '', true)
       expect(categoryWithHeading(result, 'Status')).toBeTruthy()
     })
 
-    it('should not have status tag when status not set in filter (AKA as ALL)', () => {
+    it('should not show current status filter section when status not set in filter (AKA as ALL)', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-      expect(categoryWithHeading(result, 'Status').items).toBeFalsy()
+      expect(categoryWithHeading(result, 'Status')).toBeFalsy()
     })
-    it('should not have status tag when status set to ALL', () => {
+    it('should not show current status filter section when status set to ALL', () => {
       const result = njk.getFilter('toUserSearchFilter')({ status: 'ALL' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'Status').items).toBeFalsy()
+      expect(categoryWithHeading(result, 'Status')).toBeFalsy()
     })
     it('should have single status tag when status set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ status: 'ACTIVE' }, [], [], '', true)
@@ -81,16 +80,16 @@ describe('toUserSearchFilter', () => {
       { text: 'Troom', value: 'TRO' },
     ]
     it('should show current caseload filter section', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, prisons, [], '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', true)
       expect(categoryWithHeading(result, 'Caseload')).toBeTruthy()
     })
     it('should not show current caseload filter section when user can see no caseloads', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, prisons, [], '', false)
+      const result = njk.getFilter('toUserSearchFilter')({ groupCode: ['MDI'] }, prisons, [], '', false)
       expect(categoryWithHeading(result, 'Caseload')).toBeFalsy()
     })
-    it('should not have caseload tag when caseload not set in filter', () => {
+    it('should not show current caseload filter section when caseload not set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ restrictToActiveGroup: true }, prisons, [], '', true)
-      expect(categoryWithHeading(result, 'Caseload').items).toBeFalsy()
+      expect(categoryWithHeading(result, 'Caseload')).toBeFalsy()
     })
     it('should have single caseload tag when a single prison set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')(
@@ -159,13 +158,13 @@ describe('toUserSearchFilter', () => {
       { text: 'Omic Admin', value: 'OMIC_ADMIN' },
     ]
     it('should show current role filter section', () => {
-      const result = njk.getFilter('toUserSearchFilter')({}, [], roles, '', true)
+      const result = njk.getFilter('toUserSearchFilter')({ roleCode: ['ACCESS_ROLE_ADMIN'] }, [], roles, '', true)
       expect(categoryWithHeading(result, 'Roles')).toBeTruthy()
     })
 
-    it('should not have roles tag when roles not set in filter', () => {
+    it('should not show current role filter section when roles not set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], roles, '', true)
-      expect(categoryWithHeading(result, 'Roles').items).toBeFalsy()
+      expect(categoryWithHeading(result, 'Roles')).toBeFalsy()
     })
     it('should have single role tag when a single role set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ roleCode: ['ACCESS_ROLE_ADMIN'] }, [], roles, '', true)
