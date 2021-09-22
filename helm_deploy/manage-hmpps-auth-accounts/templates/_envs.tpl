@@ -49,6 +49,9 @@ env:
   - name: API_ENDPOINT_URL
     value: {{ .Values.env.API_ENDPOINT_URL | quote }}
 
+  - name: MANAGE_USERS_API_ENDPOINT_URL
+    value: {{ .Values.env.API_ENDPOINT_URL | quote }}
+
   - name: OAUTH_ENDPOINT_URL
     value: {{ .Values.env.OAUTH_ENDPOINT_URL | quote }}
 

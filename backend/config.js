@@ -33,6 +33,10 @@ module.exports = {
       url: process.env.API_ENDPOINT_URL || 'http://localhost:8080',
       timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 30),
     },
+    manageusers: {
+      url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
+      timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 10),
+    },
     tokenverification: {
       url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
       timeoutSeconds: toInt(process.env.TOKENVERIFICATION_API_TIMEOUT_SECONDS, 10),
