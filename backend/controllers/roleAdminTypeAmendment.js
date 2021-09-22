@@ -30,7 +30,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
   }
 
   const maintainImmutableAdminTypes = (originalAdminType, amendedAdminType) => {
-    const allImmutableAdminTypes = adminTypeValues.filter((item) => item.immutable === true).map((e) => e.value)
+    const allImmutableAdminTypes = adminTypeValues.filter((item) => item.immutable).map((e) => e.value)
     const immutableAdminTypes = originalAdminType.filter((element) => allImmutableAdminTypes.includes(element))
     return amendedAdminType.concat(immutableAdminTypes)
   }
