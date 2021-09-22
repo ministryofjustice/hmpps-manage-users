@@ -28,5 +28,4 @@ const createRolePage = () =>
 
 export default {
   verifyOnPage: createRolePage,
-  adminTypeCheckbox,
 }

@@ -108,6 +108,17 @@ module.exports = (app, path) => {
         checked: entry && selectedList && selectedList.includes(entry.value),
       })),
   )
+
+  njkEnv.addFilter(
+    'setDisabled',
+    (items, currentSelectedList) =>
+      items &&
+      items.map((entry) => ({
+        ...entry,
+        disabled: entry && currentSelectedList && currentSelectedList.includes(entry.value) && entry.immutable,
+      })),
+  )
+
   njkEnv.addFilter('toSummaryViewModel', (model) =>
     Object.keys(model)
       .filter((key) => model[key])
