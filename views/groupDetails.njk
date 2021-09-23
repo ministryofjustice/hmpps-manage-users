@@ -121,10 +121,15 @@
     {% if groupDetails.children.length > 0 %}
     {% set rows = [] %}
     {% for cg in groupDetails.children %}
-    {% set changeChildGroupLink = '<a href="' + maintainUrl + '/' + groupDetails.groupCode + '/change-child-group-name/' + cg.groupCode + '" class="govuk-link" data-qa="edit-button-'
-    + cg.groupName +'">Change <span class="govuk-visually-hidden"> child group name</span> </a>' %}
-    {% set deleteChildGroupLink = '<a href="' + maintainUrl + '/' + groupDetails.groupCode + '/delete-child-group/' + cg.groupCode + '" class="govuk-link" data-qa="delete-button-'
-    + cg.groupName +'">Delete <span class="govuk-visually-hidden"> child group name</span> </a>' %}
+
+    {% set changeChildGroupLink %}
+      <a href="{{ maintainUrl }}/{{ groupDetails.groupCode }}/change-child-group-name/{{ cg.groupCode }}"
+         class="govuk-link" data-qa="edit-button-{{ cg.groupName }}">Change <span class="govuk-visually-hidden"> child group name</span> </a>
+    {% endset %}
+    {% set deleteChildGroupLink %}
+      <a href="{{ maintainUrl }}/{{ groupDetails.groupCode }}/delete-child-group/{{ cg.groupCode }}"
+         class="govuk-link" data-qa="delete-button-{{ cg.groupName }}">Delete <span class="govuk-visually-hidden"> child group name</span> </a>
+    {% endset %}
     {% if hasMaintainAuthUsers %}
     {% set rows = (rows.push([
       { text: cg.groupName },

@@ -30,11 +30,19 @@
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
     {% set heading = '<h1 class="govuk-heading-l">' +  title  + '</h1>' %}
-    {% set changeRoleNameLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>' %}
-    {% set changeRoleDescriptionLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-description" class="govuk-link" data-qa="change-role-description-link">Change <span class="govuk-visually-hidden"> role description</span> </a>' %}
-    {% set roleDescriptionWithWrapping = '<span class="wrapped"><pre class="govuk-body govuk-!-margin-bottom-0">' + ("" if roleDetails.roleDescription == null else roleDetails.roleDescription) + '</pre></span>' %}
+    {% set changeRoleNameLink %}
+      <a href="{{ maintainUrl }}/{{ roleDetails.roleCode }}/change-role-name" class="govuk-link" data-qa="change-role-name-link">Change <span class="govuk-visually-hidden"> role name</span> </a>
+    {% endset %}
+    {% set changeRoleDescriptionLink %}
+      <a href="{{ maintainUrl }}/{{ roleDetails.roleCode }}/change-role-description" class="govuk-link" data-qa="change-role-description-link">Change <span class="govuk-visually-hidden"> role description</span> </a>
+    {% endset %}
+    {% set roleDescriptionWithWrapping %}
+      <span class="wrapped"><pre class="govuk-body govuk-!-margin-bottom-0">{{ "" if roleDetails.roleDescription == null else roleDetails.roleDescription }}</pre></span>
+    {% endset %}
     {% set caption = '<b>Admin type</b>' %}
-    {% set changeRoleAdminTypeLink = '<a href="' + maintainUrl + '/' + roleDetails.roleCode  + '/change-role-adminType" class="govuk-link" data-qa="change-role-admintype-link">Change <span class="govuk-visually-hidden"> role admintype</span> </a>' %}
+    {% set changeRoleAdminTypeLink %}
+      <a href="{{ maintainUrl }}/{{ roleDetails.roleCode }}/change-role-adminType" class="govuk-link" data-qa="change-role-admintype-link">Change <span class="govuk-visually-hidden"> role admintype</span> </a>
+    {% endset %}
 
     {{ govukTable({
 
