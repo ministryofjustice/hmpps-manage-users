@@ -7,7 +7,7 @@ describe('toUserSearchFilter', () => {
   const njk = nunjucksSetup(app, path)
   it('should show filter headings', () => {
     const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-    expect(result.heading.text).toBe('Filter')
+    expect(result.heading.text).toBe('Filters')
     expect(result.selectedFilters.clearLink.text).toBe('Clear filters')
   })
 

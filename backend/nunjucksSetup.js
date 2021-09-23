@@ -213,7 +213,7 @@ module.exports = (app, path) => {
 
       return {
         heading: {
-          text: 'Filter',
+          text: 'Filters',
         },
         selectedFilters: {
           heading: {
