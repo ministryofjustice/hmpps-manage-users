@@ -76,7 +76,7 @@
     {% if showGroupOrPrisonDropdown %}
     <div class="govuk-list">
       {{ govukSelect({label: {
-        text: "Caseload" if groupOrPrison === 'caseload' else groupOrPrison,
+        text: "Prison" if groupOrPrison === 'caseload' else groupOrPrison,
         classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
@@ -136,8 +136,7 @@
         <div class="moj-filter-layout__content">
             <div>
               <div class="govuk-grid-column-full">
-              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
-              <div class="moj-action-bar__filter"></div>
+              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>              
               {% if results.length %}
                 {{ mojPagination(pagination) }}
 
@@ -169,7 +168,9 @@
                             text: "Active",
                             classes: "govuk-tag--green"
                           }) if u.active }}
+                          {% if u.activeCaseLoadId %}
                           <span>at <strong>{{u.activeCaseLoadId}}</strong></span>
+                          {% endif %}
                       </div>
                       </div>
                     </div>

@@ -184,7 +184,7 @@ module.exports = (app, path) => {
       const categories = [
         {
           heading: {
-            text: 'User',
+            text: 'Name or username',
           },
           items: usernameTags,
         },
@@ -205,7 +205,7 @@ module.exports = (app, path) => {
       if (showGroupOrPrisonFilter) {
         categories.splice(2, 0, {
           heading: {
-            text: 'Caseload',
+            text: 'Prison',
           },
           items: caseloadTags,
         })
@@ -217,13 +217,13 @@ module.exports = (app, path) => {
         },
         selectedFilters: {
           heading: {
-            text: 'Selected filters',
+            html: '<div class="moj-action-bar__filter"></div>',
           },
           clearLink: {
             text: 'Clear filters',
             href: '/search-with-filter-dps-users',
           },
-          categories,
+          categories: categories.filter((category) => category.items),
         },
         optionsHtml: filterOptionsHtml,
       }
