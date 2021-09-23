@@ -29,6 +29,7 @@ env:
   TOKENVERIFICATION_API_ENABLED: true
   SUPPORT_URL: https://support-preprod.hmpps.service.justice.gov.uk
   SYSTEM_PHASE: PRE-PRODUCTION
+  FEATURE_DPS_USER_FILTER_SEARCH: false
 
 
 # CloudPlatform AlertManager receiver to route promethues alerts to slack

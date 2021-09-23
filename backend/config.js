@@ -49,5 +49,8 @@ module.exports = {
     port: process.env.REDIS_PORT || 6379,
     password: process.env.REDIS_PASSWORD,
   },
+  featureSwitches: {
+    dpsUserFilterSearch: process.env.FEATURE_DPS_USER_FILTER_SEARCH !== 'false',
+  },
   phaseName: process.env.SYSTEM_PHASE,
 }

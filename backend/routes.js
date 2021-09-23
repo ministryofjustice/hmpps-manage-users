@@ -10,11 +10,14 @@ const manageDpsUserRouter = require('./routes/manageDpsUserRouter')
 const manageGroupsRouter = require('./routes/manageGroupsRouter')
 const manageRolesRouter = require('./routes/manageRolesRouter')
 const currentUser = require('./middleware/currentUser')
+const featureSwitches = require('./middleware/featureSwitches')
+const config = require('./config')
 
 const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ prisonApi, oauthApi }))
+  router.use(featureSwitches(config))
 
   router.use('/', menuRouter())
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))

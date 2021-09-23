@@ -1,5 +1,5 @@
 const parse = require('csv-parse')
-const { goToSearchWithFilterPage } = require('../support/dpsuser.helpers')
+const { goToSearchWithFilterPage, goToMainMenuPage } = require('../support/dpsuser.helpers')
 const UserPage = require('../pages/userPage')
 
 context('DPS search with filter user functionality', () => {
@@ -9,6 +9,11 @@ context('DPS search with filter user functionality', () => {
 
   beforeEach(() => {
     cy.task('reset')
+  })
+
+  it('Should show menu option for search page', () => {
+    const menu = goToMainMenuPage({})
+    menu.searchWithFilterDpsUsers().should('exist')
   })
 
   it('Should show filter', () => {
