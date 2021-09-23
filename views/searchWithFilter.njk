@@ -32,11 +32,14 @@
 
 {% set filterOptionsHtml %}
     {{ govukInput({
-      label: { text: "Name or username" if dpsSearch else "Name, username or email address", classes: "govuk-label--s" },
+      label: { text: "Name" if dpsSearch else "Name, username or email address", classes: "govuk-label--s" },
       classes: "govuk-input--width-20 govuk-fieldset__legend--s",
       value: currentFilter.user,
       id: "user",
       name: "user",
+      hint: { 
+        text: "Will match the user's name or username"
+      },
       errorMessage: errors | findError('user')
     }) }}
 
@@ -74,7 +77,6 @@
     )}}
 
     {% if showGroupOrPrisonDropdown %}
-    <div class="govuk-list">
       {{ govukSelect({label: {
         text: "Prison" if groupOrPrison === 'caseload' else groupOrPrison,
         classes: 'govuk-label--s'
@@ -83,40 +85,44 @@
         name: 'groupCode',
         id: 'groupCode',
         items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison) | setSelected(currentFilter.groupCode[0]),
+        formGroup: {
+          classes: 'govuk-!-margin-bottom-3'
+        },
         errorMessage: errors | findError('groupCode')
       }) }}
-    </div>
-        {{ govukRadios({
-            idPrefix: 'restrictToActiveGroup',
-            name: 'restrictToActiveGroup',
-            classes: 'govuk-radios--small govuk-radios--inline',
-            fieldset: {
-              legend: {
-                text: 'Active caseload only',
-                classes: 'govuk-label'
-              }
+      {{ govukRadios({
+          idPrefix: 'restrictToActiveGroup',
+          name: 'restrictToActiveGroup',
+          classes: 'govuk-radios--small govuk-radios--inline',
+          hint: { 
+            text: 'Will match users that currently have their active caseload set to the selected prison'
+          },
+          fieldset: {
+            legend: {
+              text: 'Active caseload only',
+              classes: 'govuk-label'
+            }
+          },
+          items: [
+            {
+              value: 'true',
+              text: 'Yes',
+              checked: currentFilter.restrictToActiveGroup !== false
             },
-            items: [
-              {
-                value: 'true',
-                text: 'Yes',
-                checked: currentFilter.restrictToActiveGroup !== false
-              },
-              {
-                value: 'false',
-                text: 'No',
-                checked: currentFilter.restrictToActiveGroup === false
-              }
-            ]
-          }
-          )}}
-
-
+            {
+              value: 'false',
+              text: 'No',
+              checked: currentFilter.restrictToActiveGroup === false
+            }
+          ]
+        }
+        )}}
     {% endif %}
     <div class="govuk-list">
      {{multiSelectFilter({
        name: 'roleCode', 
        title: 'Role',
+       hint: 'Will match users that have all roles that are selected',
        items: roleDropdownValues  | setChecked(currentFilter.roleCode)     
       })}}
     </div>

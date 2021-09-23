@@ -184,7 +184,7 @@ module.exports = (app, path) => {
       const categories = [
         {
           heading: {
-            text: 'Name or username',
+            text: 'Name',
           },
           items: usernameTags,
         },
