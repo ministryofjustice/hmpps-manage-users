@@ -184,7 +184,7 @@ module.exports = (app, path) => {
       const categories = [
         {
           heading: {
-            text: 'Name or username',
+            text: 'Name',
           },
           items: usernameTags,
         },
@@ -213,7 +213,7 @@ module.exports = (app, path) => {
 
       return {
         heading: {
-          text: 'Filter',
+          text: 'Filters',
         },
         selectedFilters: {
           heading: {

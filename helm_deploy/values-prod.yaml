@@ -28,6 +28,7 @@ env:
   TOKENVERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
   TOKENVERIFICATION_API_ENABLED: true
   SUPPORT_URL: https://support.hmpps.service.justice.gov.uk
+  FEATURE_DPS_USER_FILTER_SEARCH: false
 
 
 # determine which slack channel alerts are sent to, via the correct Alert Manager receiver

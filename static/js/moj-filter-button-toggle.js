@@ -3,8 +3,8 @@ new MOJFrontend.FilterToggleButton({
   startHidden: false,
   toggleButton: {
     container: $('.moj-action-bar__filter'),
-    showText: 'Show filter',
-    hideText: 'Hide filter',
+    showText: 'Show filters',
+    hideText: 'Hide filters',
     classes: 'govuk-button--secondary',
   },
   closeButton: {

@@ -86,4 +86,7 @@ env:
 
   - name: SUPPORT_URL
     value: {{ .Values.env.SUPPORT_URL | quote }}
+
+  - name: FEATURE_DPS_USER_FILTER_SEARCH
+    value: {{ .Values.env.FEATURE_DPS_USER_FILTER_SEARCH | quote }}
 {{- end -}}

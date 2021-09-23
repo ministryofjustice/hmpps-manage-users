@@ -7,27 +7,27 @@ describe('toUserSearchFilter', () => {
   const njk = nunjucksSetup(app, path)
   it('should show filter headings', () => {
     const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-    expect(result.heading.text).toBe('Filter')
+    expect(result.heading.text).toBe('Filters')
     expect(result.selectedFilters.clearLink.text).toBe('Clear filters')
   })
 
   describe('user filter', () => {
     it('should show current user filter section', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'Name or username')).toBeTruthy()
+      expect(categoryWithHeading(result, 'Name')).toBeTruthy()
     })
 
     it('should not show current user filter section when no filter for users', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
-      expect(categoryWithHeading(result, 'Name or username')).toBeFalsy()
+      expect(categoryWithHeading(result, 'Name')).toBeFalsy()
     })
     it('should have single user tag when user set in filter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'Name or username').items).toHaveLength(1)
+      expect(categoryWithHeading(result, 'Name').items).toHaveLength(1)
     })
     it('user tag should have text and reset url removing the user', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', status: 'ACTIVE' }, [], [], '', true)
-      expect(categoryWithHeading(result, 'Name or username').items[0]).toStrictEqual({
+      expect(categoryWithHeading(result, 'Name').items[0]).toStrictEqual({
         text: 'Andy',
         href: '/search-with-filter-dps-users?status=ACTIVE',
       })

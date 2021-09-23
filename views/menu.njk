@@ -33,20 +33,24 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">Search and manage users of DPS and NOMIS</p>
           </div>
         </div>
-        {# <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="maintain_roles_link">
+        {% if featureSwitches.dpsUserFilterSearch %}
+        <div class="govuk-grid-column-one-third">
+          <div class="card card--clickable" data-qa="search_with_filter_dps_users">
             <h1 class="govuk-heading-m card__heading">
+              <span class="govuk-!-padding-right-2">
               {{ govukTag({
                 text: "BETA"
               }) }}
+              </span>
               <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user </a>
             </h1>
             <p class="govuk-body card__description">Try out the new version of this service, that has enhanced filtering</p>
           </div>
-        </div> #}
+        </div>
+        {% endif %}
       {% endif %}
       {% if hasMaintainAuthUsers %}
         <div class="govuk-grid-column-one-third">
@@ -54,7 +58,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/search-external-users">Search for an external user</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">Search for users that typically do not have a DPS or Delius account</p>
           </div>
         </div>
         <div class="govuk-grid-column-one-third">
@@ -62,7 +66,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/create-external-user">Create an external user</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">Create an account for people who do not have a DPS or Delius account</p>
           </div>
         </div>
 
@@ -71,7 +75,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/manage-groups">View the groups I administer</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">View and make changes to a group which contain users outside of HMPPS</p>
           </div>
         </div>
       {% endif %}
@@ -82,7 +86,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/manage-groups/create-group">Create a group</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">Create a new group which will represent a cohort of users outside of HMPPS</p>
           </div>
         </div>
       {% endif %}
@@ -92,7 +96,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/manage-roles">View roles</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">View roles that are available to be assigned to users</p>
           </div>
         </div>
         <div class="govuk-grid-column-one-third">
@@ -100,7 +104,7 @@
             <h1 class="govuk-heading-m card__heading">
               <a class="govuk-link card__link" href="/manage-roles/create-role">Create a role</a>
             </h1>
-            <p class="govuk-body card__description">&nbsp</p>
+            <p class="govuk-body card__description">Create a new role that can later be assigned to users</p>
           </div>
         </div>
       {% endif %}

@@ -30,6 +30,7 @@ env:
   TOKENVERIFICATION_API_ENABLED: true
   SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
   SYSTEM_PHASE: DEV
+  FEATURE_DPS_USER_FILTER_SEARCH: true
 
 
 # CloudPlatform AlertManager receiver to route promethues alerts to slack
