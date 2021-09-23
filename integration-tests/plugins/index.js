@@ -1,5 +1,6 @@
 const auth = require('../mockApis/auth')
 const prisonApi = require('../mockApis/prison')
+const manageUsersApi = require('../mockApis/manageusers')
 const tokenverification = require('../mockApis/tokenverification')
 
 const { resetStubs } = require('../mockApis/wiremock')
@@ -21,10 +22,16 @@ module.exports = (on) => {
       ]),
     stubPrisonApiHealth: (status) => prisonApi.stubHealth(status),
     stubHealthAllHealthy: () =>
-      Promise.all([auth.stubHealth(), prisonApi.stubHealth(), tokenverification.stubHealth()]),
+      Promise.all([
+        auth.stubHealth(),
+        prisonApi.stubHealth(),
+        manageUsersApi.stubHealth(),
+        tokenverification.stubHealth(),
+      ]),
     stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubSignInPage: auth.redirect,
     ...prisonApi,
+    ...manageUsersApi,
     stubDpsGetRoles: prisonApi.stubGetRoles,
     stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
     stubDpsUserDetails: prisonApi.stubUserDetails,

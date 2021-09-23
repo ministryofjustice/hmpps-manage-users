@@ -20,7 +20,12 @@ describe('role amendment factory', () => {
       const render = jest.fn()
       await changeRoleAdminType.index(req, { render })
       expect(render).toBeCalledWith('changeRoleAdminType.njk', {
-        currentRoleAdminType: { DPS_ADM: false, DPS_LSA: true, EXT_ADM: false },
+        adminTypeValues: [
+          { text: 'External Administrators', value: 'EXT_ADM', immutable: true },
+          { text: 'DPS Local System Administrators (LSA)', value: 'DPS_LSA', immutable: false },
+          { text: 'DPS Central Admin', value: 'DPS_ADM', immutable: true },
+        ],
+        currentFilter: ['DPS_LSA'],
         title: 'Change role admin type',
         roleUrl: '/manage-roles/role1',
         errors: undefined,
@@ -37,9 +42,14 @@ describe('role amendment factory', () => {
       await changeRoleAdminType.index(req, { render })
       expect(render).toBeCalledWith('changeRoleAdminType.njk', {
         errors: { error: 'some error' },
-        currentRoleAdminType: { DPS_ADM: false, DPS_LSA: true, EXT_ADM: false },
         title: 'Change role admin type',
         roleUrl: '/manage-roles/role1',
+        adminTypeValues: [
+          { text: 'External Administrators', value: 'EXT_ADM', immutable: true },
+          { text: 'DPS Local System Administrators (LSA)', value: 'DPS_LSA', immutable: false },
+          { text: 'DPS Central Admin', value: 'DPS_ADM', immutable: true },
+        ],
+        currentFilter: ['DPS_LSA'],
       })
     })
   })

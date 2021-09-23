@@ -1,4 +1,5 @@
 {% extends "./partials/layout.njk" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
 {% set title =  "Manage user accounts" %}
 
@@ -35,6 +36,17 @@
             <p class="govuk-body card__description">&nbsp</p>
           </div>
         </div>
+        {# <div class="govuk-grid-column-one-third">
+          <div class="card card--clickable" data-qa="maintain_roles_link">
+            <h1 class="govuk-heading-m card__heading">
+              {{ govukTag({
+                text: "BETA"
+              }) }}
+              <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user </a>
+            </h1>
+            <p class="govuk-body card__description">Try out the new version of this service, that has enhanced filtering</p>
+          </div>
+        </div> #}
       {% endif %}
       {% if hasMaintainAuthUsers %}
         <div class="govuk-grid-column-one-third">
