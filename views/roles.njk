@@ -38,8 +38,9 @@
       {{ mojPagination(pagination) }}
       {% set rows = [] %}
       {% for r in roles %}
-        {% set roleLink = '<a href="' + maintainUrl + '/' + r.value + '" class="govuk-link" data-qa="edit-button-'
-          + r.text +'">' + r.text + '</a>' %}
+        {% set roleLink %}
+          <a href="{{ maintainUrl }}/{{ r.value }}" class="govuk-link" data-qa="edit-button-{{ r.text }}">{{ r.text }}</a>
+        {% endset %}
         {% set rows = (rows.push([
           { html: roleLink }
         ]), rows) %}

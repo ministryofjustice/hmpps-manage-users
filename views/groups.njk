@@ -63,8 +63,9 @@
           {% else %}
             {% set rows = [] %}
             {% for g in groupValues %}
-              {% set groupLink = '<a href="' + maintainUrl + '/' + g.value + '" class="govuk-link" data-qa="edit-button-'
-                + g.text +'">' + g.text + '</a>' %}
+              {% set groupLink %}
+                <a href="{{ maintainUrl }}/{{ g.value }}" class="govuk-link" data-qa="edit-button-{{ g.text }}">{{ g.text }}</a>
+              {% endset %}
               {% set rows = (rows.push([
                 { html: groupLink }
               ]), rows) %}
