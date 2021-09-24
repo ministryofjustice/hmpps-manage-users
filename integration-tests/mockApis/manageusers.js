@@ -36,13 +36,13 @@ const stubRoleDetails = ({
 const stubChangeRoleName = () =>
   stubJson({
     method: 'PUT',
-    urlPattern: '/api/roles/.*',
+    urlPattern: '/roles/.*',
   })
 
 const verifyRoleNameUpdate = () =>
   getMatchingRequests({
     method: 'PUT',
-    urlPathPattern: '/api/roles/.*',
+    urlPathPattern: '/roles/.*',
   }).then((data) => data.body.requests)
 
 module.exports = {
