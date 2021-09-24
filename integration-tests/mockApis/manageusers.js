@@ -1,4 +1,4 @@
-const { getFor, stubFor } = require('./wiremock')
+const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
 const stubHealth = (status = 200) =>
   stubFor({
@@ -33,7 +33,21 @@ const stubRoleDetails = ({
     body: content,
   })
 
+const stubChangeRoleName = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/roles/.*',
+  })
+
+const verifyRoleNameUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/roles/.*',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubHealth,
   stubRoleDetails,
+  stubChangeRoleName,
+  verifyRoleNameUpdate,
 }

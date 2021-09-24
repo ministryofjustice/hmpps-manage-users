@@ -28,4 +28,19 @@ describe('manageUsersApi tests', () => {
       expect(client.get).toBeCalledWith(context, '/roles/role1')
     })
   })
+
+  describe('change role name', () => {
+    const roleName = { roleName: 'rolie' }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.changeRoleName(context, 'role1', roleName)
+    })
+
+    it('should call external user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/roles/role1', roleName)
+    })
+  })
 })

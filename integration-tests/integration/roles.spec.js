@@ -116,7 +116,7 @@ context('Roles', () => {
     const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
     roleDetails.changeRoleName()
 
-    cy.task('stubAuthChangeRoleName')
+    cy.task('stubChangeRoleName')
     cy.task('stubRoleDetails', roleDetailsAfterRoleNameChange)
     const roleNameChange = RoleNameChangePage.verifyOnPage()
     roleNameChange.changeName('Name Change')

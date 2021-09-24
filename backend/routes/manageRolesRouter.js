@@ -13,7 +13,7 @@ const router = express.Router({ mergeParams: true })
 const controller = ({ oauthApi, manageUsersApi }) => {
   const getAllRolesApi = (context, page, size) => oauthApi.getAllRoles(context, page, size)
   const getRoleDetailsApi = manageUsersApi.getRoleDetails
-  const changeRoleNameApi = (context, role, roleName) => oauthApi.changeRoleName(context, role, { roleName })
+  const changeRoleNameApi = (context, role, roleName) => manageUsersApi.changeRoleName(context, role, { roleName })
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
     oauthApi.changeRoleDescription(context, role, { roleDescription })
   const changeRoleAdminTypeApi = (context, role, adminType) =>
