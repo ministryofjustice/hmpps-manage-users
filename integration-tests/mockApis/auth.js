@@ -398,12 +398,6 @@ const stubAuthAddRoles = () =>
     },
   })
 
-const stubAuthChangeRoleDescription = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/roles/.*/description',
-  })
-
 const stubAuthChangeRoleAdminType = () =>
   stubJson({
     method: 'PUT',
@@ -599,12 +593,6 @@ const verifyCreateRole = () =>
     urlPathPattern: '/auth/api/roles',
   }).then((data) => data.body.requests)
 
-const verifyRoleDescriptionUpdate = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/roles/.*/description',
-  }).then((data) => data.body.requests)
-
 const verifyRoleAdminTypeUpdate = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -684,7 +672,6 @@ module.exports = {
   stubAuthRemoveGroup,
   stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
-  stubAuthChangeRoleDescription,
   stubAuthChangeRoleAdminType,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
@@ -717,6 +704,5 @@ module.exports = {
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
   verifyAllRoles,
-  verifyRoleDescriptionUpdate,
   verifyRoleAdminTypeUpdate,
 }

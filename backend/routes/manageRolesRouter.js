@@ -15,7 +15,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const getRoleDetailsApi = manageUsersApi.getRoleDetails
   const changeRoleNameApi = (context, role, roleName) => manageUsersApi.changeRoleName(context, role, { roleName })
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
-    oauthApi.changeRoleDescription(context, role, { roleDescription })
+    manageUsersApi.changeRoleDescription(context, role, { roleDescription })
   const changeRoleAdminTypeApi = (context, role, adminType) =>
     oauthApi.changeRoleAdminType(context, role, { adminType })
   const createRoleApi = (context, role) => oauthApi.createRole(context, role)
