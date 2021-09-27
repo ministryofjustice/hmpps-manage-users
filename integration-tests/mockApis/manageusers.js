@@ -39,15 +39,29 @@ const stubChangeRoleName = () =>
     urlPattern: '/roles/.*',
   })
 
+const stubChangeRoleDescription = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/roles/.*/description',
+  })
+
 const verifyRoleNameUpdate = () =>
   getMatchingRequests({
     method: 'PUT',
     urlPathPattern: '/roles/.*',
   }).then((data) => data.body.requests)
 
+const verifyRoleDescriptionUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/roles/.*/description',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubHealth,
   stubRoleDetails,
   stubChangeRoleName,
+  stubChangeRoleDescription,
   verifyRoleNameUpdate,
+  verifyRoleDescriptionUpdate,
 }
