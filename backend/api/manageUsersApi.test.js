@@ -58,4 +58,19 @@ describe('manageUsersApi tests', () => {
       expect(client.put).toBeCalledWith(context, '/roles/role1/description', roleDescription)
     })
   })
+
+  describe('change role admin type', () => {
+    const roleAdminType = { adminType: ['DPS_ADM'] }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.changeRoleAdminType(context, 'role1', roleAdminType)
+    })
+
+    it('should call external user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/roles/role1/admintype', roleAdminType)
+    })
+  })
 })

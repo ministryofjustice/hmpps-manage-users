@@ -7,11 +7,13 @@ const manageUsersApiFactory = (client) => {
   const changeRoleName = (context, roleCode, roleName) => client.put(context, `/roles/${roleCode}`, roleName)
   const changeRoleDescription = (context, role, roleDescription) =>
     put(context, `/roles/${role}/description`, roleDescription)
+  const changeRoleAdminType = (context, role, adminType) => put(context, `/roles/${role}/admintype`, adminType)
 
   return {
     getRoleDetails,
     changeRoleName,
     changeRoleDescription,
+    changeRoleAdminType,
   }
 }
 

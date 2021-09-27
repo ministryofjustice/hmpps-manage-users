@@ -17,7 +17,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
     manageUsersApi.changeRoleDescription(context, role, { roleDescription })
   const changeRoleAdminTypeApi = (context, role, adminType) =>
-    oauthApi.changeRoleAdminType(context, role, { adminType })
+    manageUsersApi.changeRoleAdminType(context, role, { adminType })
   const createRoleApi = (context, role) => oauthApi.createRole(context, role)
 
   const { index } = viewRolesFactory(paginationService, contextProperties.getPageable, getAllRolesApi, '/manage-roles')
