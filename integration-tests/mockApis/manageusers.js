@@ -45,6 +45,12 @@ const stubChangeRoleDescription = () =>
     urlPattern: '/roles/.*/description',
   })
 
+const stubChangeRoleAdminType = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/roles/.*/admintype',
+  })
+
 const verifyRoleNameUpdate = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -57,11 +63,19 @@ const verifyRoleDescriptionUpdate = () =>
     urlPathPattern: '/roles/.*/description',
   }).then((data) => data.body.requests)
 
+const verifyRoleAdminTypeUpdate = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/roles/.*/admintype',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubHealth,
   stubRoleDetails,
   stubChangeRoleName,
   stubChangeRoleDescription,
+  stubChangeRoleAdminType,
   verifyRoleNameUpdate,
   verifyRoleDescriptionUpdate,
+  verifyRoleAdminTypeUpdate,
 }

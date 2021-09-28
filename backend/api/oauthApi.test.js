@@ -385,21 +385,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('change role admin type', () => {
-    const roleAdminType = { adminType: ['DPS_ADM'] }
-
-    beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
-        then: () => {},
-      })
-      oauthApi.changeRoleAdminType(context, 'role1', roleAdminType)
-    })
-
-    it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/roles/role1/admintype', roleAdminType)
-    })
-  })
-
   describe('disableUser', () => {
     const errorResponse = { field: 'hello' }
     let actual

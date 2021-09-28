@@ -166,7 +166,7 @@ context('Roles', () => {
     const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
     roleDetails.changeRoleAdminType()
 
-    cy.task('stubAuthChangeRoleAdminType')
+    cy.task('stubChangeRoleAdminType')
     cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
     const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage()
     roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.checked').should('be.disabled')

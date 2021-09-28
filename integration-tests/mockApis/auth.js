@@ -398,12 +398,6 @@ const stubAuthAddRoles = () =>
     },
   })
 
-const stubAuthChangeRoleAdminType = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/roles/.*/admintype',
-  })
-
 const stubAuthAddGroup = () =>
   stubFor({
     request: {
@@ -593,12 +587,6 @@ const verifyCreateRole = () =>
     urlPathPattern: '/auth/api/roles',
   }).then((data) => data.body.requests)
 
-const verifyRoleAdminTypeUpdate = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/roles/.*/admintype',
-  }).then((data) => data.body.requests)
-
 const stubAllRoles = ({
   content = [
     { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
@@ -672,7 +660,6 @@ module.exports = {
   stubAuthRemoveGroup,
   stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
-  stubAuthChangeRoleAdminType,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
   stubAuthChangeGroupName,
@@ -704,5 +691,4 @@ module.exports = {
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
   verifyAllRoles,
-  verifyRoleAdminTypeUpdate,
 }

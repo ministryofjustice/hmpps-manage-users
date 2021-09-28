@@ -89,8 +89,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   }
   const createRole = (context, role) => post(context, '/api/roles', role)
 
-  const changeRoleAdminType = (context, role, adminType) => put(context, `/api/roles/${role}/admintype`, adminType)
-
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
     method: 'post',
@@ -183,7 +181,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     changeDpsEmail,
     createRole,
     getAllRoles,
-    changeRoleAdminType,
   }
 }
 
