@@ -87,7 +87,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     })
     return client.get(context, `/api/roles?${query}`).then(processPageResponse(context))
   }
-  const createRole = (context, role) => post(context, '/api/roles', role)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -179,7 +178,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     createGroup,
     deleteChildGroup,
     changeDpsEmail,
-    createRole,
     getAllRoles,
   }
 }

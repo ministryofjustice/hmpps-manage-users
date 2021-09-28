@@ -311,23 +311,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('createRole', () => {
-    const role = {
-      role: { roleCode: 'role_code', roleName: 'role name', roleDescription: 'description', adminType: ['EXT_ADM'] },
-    }
-
-    beforeEach(() => {
-      client.post = jest.fn().mockReturnValue({
-        then: () => {},
-      })
-      oauthApi.createRole(context, role)
-    })
-
-    it('should call create role endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/api/roles', role)
-    })
-  })
-
   describe('assignableGroups', () => {
     const groups = { bob: 'hello there' }
     let actual
