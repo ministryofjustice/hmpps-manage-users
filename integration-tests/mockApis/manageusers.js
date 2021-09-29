@@ -15,6 +15,18 @@ const stubHealth = (status = 200) =>
     },
   })
 
+const stubAuthCreateRole = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/roles',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
 const stubRoleDetails = ({
   content = {
     roleCode: 'AUTH_GROUP_MANAGER',
@@ -51,6 +63,12 @@ const stubChangeRoleAdminType = () =>
     urlPattern: '/roles/.*/admintype',
   })
 
+const verifyCreateRole = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/roles',
+  }).then((data) => data.body.requests)
+
 const verifyRoleNameUpdate = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -71,10 +89,12 @@ const verifyRoleAdminTypeUpdate = () =>
 
 module.exports = {
   stubHealth,
+  stubAuthCreateRole,
   stubRoleDetails,
   stubChangeRoleName,
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
+  verifyCreateRole,
   verifyRoleNameUpdate,
   verifyRoleDescriptionUpdate,
   verifyRoleAdminTypeUpdate,

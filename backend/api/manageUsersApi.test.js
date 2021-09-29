@@ -10,6 +10,23 @@ describe('manageUsersApi tests', () => {
     nock.cleanAll()
   })
 
+  describe('createRole', () => {
+    const role = {
+      role: { roleCode: 'role_code', roleName: 'role name', roleDescription: 'description', adminType: ['EXT_ADM'] },
+    }
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createRole(context, role)
+    })
+
+    it('should call create role endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/roles', role)
+    })
+  })
+
   describe('roleDetails', () => {
     const roles = { role: { roleName: 'hello there' } }
     let actual
