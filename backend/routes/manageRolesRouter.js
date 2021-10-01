@@ -26,20 +26,17 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const { index: getRoleNameAmendment, post: postRoleNameAmendment } = roleNameAmendmentFactory(
     getRoleDetailsApi,
     changeRoleNameApi,
-    'Change role name',
     '/manage-roles',
   )
   const { index: getRoleDescriptionAmendment, post: postRoleDescriptionAmendment } = roleDescriptionAmendmentFactory(
     getRoleDetailsApi,
     changeRoleDescriptionApi,
-    'Change role description',
     '/manage-roles',
   )
 
   const { index: getRoleAdminTypeAmendment, post: postRoleAdminTypeAmendment } = roleAdminTypeAmendmentFactory(
     getRoleDetailsApi,
     changeRoleAdminTypeApi,
-    'Change role admin type',
     '/manage-roles',
   )
 

@@ -6,7 +6,6 @@ describe('role amendment factory', () => {
   const changeRoleDescription = roleDescriptionAmendmentFactory(
     getRoleDetailsApi,
     changeRoleDescriptionApi,
-    'Change role description',
     '/manage-roles',
   )
 
@@ -15,13 +14,14 @@ describe('role amendment factory', () => {
       const req = { params: { role: 'role1' }, flash: jest.fn() }
       getRoleDetailsApi.mockResolvedValue({
         roleDescription: 'role description',
+        roleName: 'Auth Group Manager',
       })
 
       const render = jest.fn()
       await changeRoleDescription.index(req, { render })
       expect(render).toBeCalledWith('changeRoleDescription.njk', {
         currentRoleDescription: 'role description',
-        title: 'Change role description',
+        title: 'Change role description for Auth Group Manager',
         roleUrl: '/manage-roles/role1',
         errors: undefined,
       })
@@ -31,6 +31,7 @@ describe('role amendment factory', () => {
       const req = { params: { role: 'role1' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
       getRoleDetailsApi.mockResolvedValue({
         roleDescription: 'role description',
+        roleName: 'Auth Group Manager',
       })
 
       const render = jest.fn()
@@ -38,7 +39,7 @@ describe('role amendment factory', () => {
       expect(render).toBeCalledWith('changeRoleDescription.njk', {
         errors: { error: 'some error' },
         currentRoleDescription: 'role description',
-        title: 'Change role description',
+        title: 'Change role description for Auth Group Manager',
         roleUrl: '/manage-roles/role1',
       })
     })

@@ -4,8 +4,8 @@ const roleName = () => cy.get('[id="roleName"]')
 const submit = () => cy.get('button[type="submit"]')
 const cancelButton = () => cy.get('[id="cancel-button"]')
 
-const roleNameChangePage = () =>
-  page('Change role name', {
+const roleNameChangePage = (role) =>
+  page(`Change role name for ${role}`, {
     roleRows: () => cy.get('[data-qa="roles"] tbody tr'),
     cancel: () => {
       cancelButton().click()
