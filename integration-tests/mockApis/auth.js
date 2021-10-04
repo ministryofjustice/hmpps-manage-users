@@ -581,35 +581,6 @@ const verifyAuthCreateUser = () =>
     urlPathPattern: '/auth/api/authuser/create',
   }).then((data) => data.body.requests)
 
-const stubAllRoles = ({
-  content = [
-    { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
-    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
-    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
-  ],
-  totalElements = 3,
-  page = 0,
-  size = 10,
-}) =>
-  getFor({
-    urlPath: '/auth/api/roles',
-    body: {
-      content,
-      pageable: {
-        offset: 0,
-        pageNumber: page,
-        pageSize: size,
-      },
-      totalElements,
-    },
-  })
-
-const verifyAllRoles = () =>
-  getMatchingRequests({
-    method: 'GET',
-    urlPathPattern: '/auth/api/roles',
-  }).then((data) => data.body.requests)
-
 module.exports = {
   getSignInUrl,
   stubSignIn: (username, roles) =>
@@ -631,7 +602,6 @@ module.exports = {
   stubAuthUserEmails,
   stubAuthSearch,
   verifyAuthSearch,
-  stubAllRoles,
   stubAuthEmailSearch,
   stubAuthUserRoles,
   stubAuthUserGroups,
@@ -670,5 +640,4 @@ module.exports = {
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
-  verifyAllRoles,
 }
