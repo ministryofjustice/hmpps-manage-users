@@ -3,18 +3,14 @@ const { roleAdminTypeAmendmentFactory } = require('./roleAdminTypeAmendment')
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
   const changeRoleAdminTypeApi = jest.fn()
-  const changeRoleAdminType = roleAdminTypeAmendmentFactory(
-    getRoleDetailsApi,
-    changeRoleAdminTypeApi,
-    'Change role admin type',
-    '/manage-roles',
-  )
+  const changeRoleAdminType = roleAdminTypeAmendmentFactory(getRoleDetailsApi, changeRoleAdminTypeApi, '/manage-roles')
 
   describe('index', () => {
     it('should call roleAdminType render', async () => {
       const req = { params: { role: 'role1' }, flash: jest.fn() }
       getRoleDetailsApi.mockResolvedValue({
         adminType: [{ adminTypeName: 'LSA role', adminTypeCode: 'DPS_LSA' }],
+        roleName: 'Auth Group Manager',
       })
 
       const render = jest.fn()
@@ -26,7 +22,7 @@ describe('role amendment factory', () => {
           { text: 'DPS Central Admin', value: 'DPS_ADM', immutable: true },
         ],
         currentFilter: ['DPS_LSA'],
-        title: 'Change role admin type',
+        title: 'Change role admin type for Auth Group Manager',
         roleUrl: '/manage-roles/role1',
         errors: undefined,
       })
@@ -36,13 +32,14 @@ describe('role amendment factory', () => {
       const req = { params: { role: 'role1' }, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
       getRoleDetailsApi.mockResolvedValue({
         adminType: [{ adminTypeName: 'LSA role', adminTypeCode: 'DPS_LSA' }],
+        roleName: 'Auth Group Manager',
       })
 
       const render = jest.fn()
       await changeRoleAdminType.index(req, { render })
       expect(render).toBeCalledWith('changeRoleAdminType.njk', {
         errors: { error: 'some error' },
-        title: 'Change role admin type',
+        title: 'Change role admin type for Auth Group Manager',
         roleUrl: '/manage-roles/role1',
         adminTypeValues: [
           { text: 'External Administrators', value: 'EXT_ADM', immutable: true },

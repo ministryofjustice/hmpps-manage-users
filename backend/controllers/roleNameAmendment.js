@@ -1,7 +1,7 @@
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils')
 
-const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, title, manageRoleUrl) => {
+const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {
     req.flash('changeRoleErrors', errors)
     req.flash('changeRoleName', roleName)
@@ -17,7 +17,7 @@ const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, title, m
     const roleName = flashRole != null && flashRole.length > 0 ? flashRole[0] : roleDetails.roleName
 
     res.render('changeRoleName.njk', {
-      title,
+      title: `Change role name for ${roleDetails.roleName}`,
       roleUrl,
       currentRoleName: roleName,
       errors: req.flash('changeRoleErrors'),

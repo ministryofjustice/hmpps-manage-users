@@ -118,7 +118,7 @@ context('Roles', () => {
 
     cy.task('stubChangeRoleName')
     cy.task('stubRoleDetails', roleDetailsAfterRoleNameChange)
-    const roleNameChange = RoleNameChangePage.verifyOnPage()
+    const roleNameChange = RoleNameChangePage.verifyOnPage('Auth Group Manager')
     roleNameChange.changeName('Name Change')
 
     RoleDetailsPage.verifyOnPage('New Role Name')
@@ -143,10 +143,10 @@ context('Roles', () => {
 
     cy.task('stubChangeRoleDescription')
     cy.task('stubRoleDetails', roleDetailsAfterRoleDescriptionChange)
-    const roleDescriptionChange = RoleDescriptionChangePage.verifyOnPage()
+    const roleDescriptionChange = RoleDescriptionChangePage.verifyOnPage('Auth Group Manager')
     roleDescriptionChange.changeDescription('Description Change')
 
-    RoleDetailsPage.verifyOnPage('Role Name For Description Change')
+    RoleDetailsPage.verifyOnPage('Role Description Change Name')
     cy.task('verifyRoleDescriptionUpdate').should((requests) => {
       expect(requests).to.have.lengthOf(1)
       expect(JSON.parse(requests[0].body)).to.deep.equal({
@@ -168,7 +168,7 @@ context('Roles', () => {
 
     cy.task('stubChangeRoleAdminType')
     cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
-    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage()
+    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
     roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.checked').should('be.disabled')
     roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.disabled')
     roleAdminTypeChange.changeRoleAdminType('DPS_ADM')
@@ -240,7 +240,7 @@ context('Roles', () => {
   const roleDetailsAfterRoleDescriptionChange = {
     content: {
       roleCode: 'AUTH_GROUP_MANAGER',
-      roleName: 'Role Name For Description Change',
+      roleName: 'Role Description Change Name',
       roleDescription: 'New Role Description',
     },
   }

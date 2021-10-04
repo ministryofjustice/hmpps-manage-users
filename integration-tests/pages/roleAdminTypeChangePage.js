@@ -5,8 +5,8 @@ const submit = () => cy.get('button[type="submit"]')
 const cancelButton = () => cy.get('[id="cancel-button"]')
 const adminTypeCheckbox = (text) => cy.contains('label', text).prev()
 
-const roleAdminTypeChangePage = () =>
-  page('Change role admin type', {
+const roleAdminTypeChangePage = (role) =>
+  page(`Change role admin type for ${role}`, {
     cancel: () => {
       cancelButton().click()
     },

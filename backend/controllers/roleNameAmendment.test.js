@@ -3,12 +3,7 @@ const { roleNameAmendmentFactory } = require('./roleNameAmendment')
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
   const changeRoleNameApi = jest.fn()
-  const changeRoleName = roleNameAmendmentFactory(
-    getRoleDetailsApi,
-    changeRoleNameApi,
-    'Change role name',
-    '/manage-roles',
-  )
+  const changeRoleName = roleNameAmendmentFactory(getRoleDetailsApi, changeRoleNameApi, '/manage-roles')
 
   describe('index', () => {
     it('should call roleName render', async () => {
@@ -21,7 +16,7 @@ describe('role amendment factory', () => {
       await changeRoleName.index(req, { render })
       expect(render).toBeCalledWith('changeRoleName.njk', {
         currentRoleName: 'role name',
-        title: 'Change role name',
+        title: 'Change role name for role name',
         roleUrl: '/manage-roles/role1',
         errors: undefined,
       })
@@ -38,7 +33,7 @@ describe('role amendment factory', () => {
       expect(render).toBeCalledWith('changeRoleName.njk', {
         errors: { error: 'some error' },
         currentRoleName: 'role name',
-        title: 'Change role name',
+        title: 'Change role name for role name',
         roleUrl: '/manage-roles/role1',
       })
     })

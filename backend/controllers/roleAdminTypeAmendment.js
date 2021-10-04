@@ -5,7 +5,7 @@ const adminTypeValues = [
   { value: 'DPS_LSA', text: 'DPS Local System Administrators (LSA)', immutable: false },
   { value: 'DPS_ADM', text: 'DPS Central Admin', immutable: true },
 ]
-const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi, title, manageRoleUrl) => {
+const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, adminType) => {
     req.flash('changeRoleErrors', errors)
     req.flash('changeRoleAdminType', adminType)
@@ -21,7 +21,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
     const roleAdminType = flashRole != null && flashRole.length > 0 ? flashRole[0] : roleDetails.adminType
 
     res.render('changeRoleAdminType.njk', {
-      title,
+      title: `Change role admin type for ${roleDetails.roleName}`,
       roleUrl,
       adminTypeValues,
       currentFilter: roleAdminType.map((e) => e.adminTypeCode),
