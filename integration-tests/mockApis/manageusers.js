@@ -1,5 +1,28 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
+const stubAllRoles = ({
+  content = [
+    { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
+    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+  ],
+  totalElements = 3,
+  page = 0,
+  size = 10,
+}) =>
+  getFor({
+    urlPath: '/roles',
+    body: {
+      content,
+      pageable: {
+        offset: 0,
+        pageNumber: page,
+        pageSize: size,
+      },
+      totalElements,
+    },
+  })
+
 const stubHealth = (status = 200) =>
   stubFor({
     request: {
@@ -63,6 +86,12 @@ const stubChangeRoleAdminType = () =>
     urlPattern: '/roles/.*/admintype',
   })
 
+const verifyAllRoles = () =>
+  getMatchingRequests({
+    method: 'GET',
+    urlPathPattern: '/roles',
+  }).then((data) => data.body.requests)
+
 const verifyCreateRole = () =>
   getMatchingRequests({
     method: 'POST',
@@ -88,12 +117,14 @@ const verifyRoleAdminTypeUpdate = () =>
   }).then((data) => data.body.requests)
 
 module.exports = {
-  stubHealth,
+  stubAllRoles,
   stubAuthCreateRole,
-  stubRoleDetails,
+  stubHealth,
   stubChangeRoleName,
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
+  stubRoleDetails,
+  verifyAllRoles,
   verifyCreateRole,
   verifyRoleNameUpdate,
   verifyRoleDescriptionUpdate,

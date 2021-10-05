@@ -46,6 +46,25 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('allRoles', () => {
+    const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.getAllRoles(context)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/roles?page=&size=')
+    })
+  })
+
   describe('change role name', () => {
     const roleName = { roleName: 'rolie' }
 
