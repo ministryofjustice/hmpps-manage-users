@@ -1,5 +1,5 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/manage-hmpps-auth-accounts)
-[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/manage-hmpps-auth-accounts/badge.svg)](https://snyk.io/test/github/ministryofjustice/manage-hmpps-auth-accounts)
+[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-manage-users/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-manage-users)
+[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/hmpps-manage-users/badge.svg)](https://snyk.io/test/github/ministryofjustice/hmpps-manage-users)
 
 # Manage HMPPS Auth Accounts
 
@@ -28,7 +28,7 @@ machine.
 docker-compose pull && docker-compose up
 ```
 
-# Running manage-hmpps-auth-accounts locally
+# Running hmpps-manage-users locally
 
 The application can be built & run with the following bash commands : 
 
@@ -46,7 +46,7 @@ The application will listen for any changes and restart as necessary.
 
 # Overriding the Default Environment Settings
 
-When manage-hmpps-auth-accounts runs in non-local environments it requires a set of environment variables to 
+When hmpps-manage-users runs in non-local environments it requires a set of environment variables to 
 tell it where to find the dependent services and other important settings.
 The following environment variables supply these values:
 
@@ -74,9 +74,9 @@ node-env mode=PRODUCTION npm start
 
 ```
 docker run -p 3001:3000 -d \
-     --name manage-hmpps-auth-accounts \
+     --name hmpps-manage-users \
      -e USE_API_GATEWAY_AUTH=no \
-     quay.io/hmpps/manage-hmpps-auth-accounts:latest
+     quay.io/hmpps/hmpps-manage-users:latest
 ```
 
 # Cypress Integration tests

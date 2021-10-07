@@ -1,5 +1,5 @@
 {
-  "name": "manage-hmpps-auth-accounts",
+  "name": "hmpps-manage-users",
   "description": "Nodejs application to support managing staff user account in hmpps auth",
   "version": "0.1.0",
   "private": true,

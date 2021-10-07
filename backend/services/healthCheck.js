@@ -44,7 +44,7 @@ module.exports = function healthcheckFactory(authUrl, prisonUrl, manageusersUrl,
     Promise.all(checks.map((fn) => fn())).then((checkResults) => {
       const allOk = checkResults.every((item) => item.status === 'UP') ? 'UP' : 'DOWN'
       const result = {
-        name: 'manage-hmpps-auth-accounts',
+        name: 'hmpps-manage-users',
         status: allOk,
         api: checkResults.reduce(gatherCheckInfo, {}),
       }

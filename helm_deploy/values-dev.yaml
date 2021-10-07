@@ -4,7 +4,7 @@
 replicaCount: 2
 
 image:
-  repository: quay.io/hmpps/manage-hmpps-auth-accounts
+  repository: quay.io/hmpps/hmpps-manage-users
   tag: latest
   pullPolicy: IfNotPresent
   port: 3000
@@ -14,8 +14,8 @@ ingress:
   class: modsec01
   modsecurity_enabled: true
   modsecurity_audit_enabled: true
-  host: manage-hmpps-auth-accounts-dev.prison.service.justice.gov.uk
-  cert_secret: manage-hmpps-auth-accounts-cert
+  host: hmpps-manage-users-dev.prison.service.justice.gov.uk
+  cert_secret: hmpps-manage-users-cert
   path: /
 
 env:
