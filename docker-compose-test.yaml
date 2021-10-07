@@ -1,8 +1,8 @@
 version: '3.1'
 services:
-  manage-hmpps-auth-accounts-wiremock:
+  hmpps-manage-users-wiremock:
     image: rodolpheche/wiremock
-    container_name: manage-hmpps-auth-accounts-wiremock
+    container_name: hmpps-manage-users-wiremock
     restart: always
     ports:
       - "9191:8080"

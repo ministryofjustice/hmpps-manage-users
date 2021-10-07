@@ -2,4 +2,4 @@
 # Values here are the same across all environments
 
 generic-prometheus-alerts:
-  targetApplication: manage-hmpps-auth-accounts
+  targetApplication: hmpps-manage-users
