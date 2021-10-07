@@ -14,7 +14,7 @@ ingress:
   class: modsec01
   modsecurity_enabled: true
   modsecurity_audit_enabled: true
-  host: hmpps-manage-users-dev.prison.service.justice.gov.uk
+  host: manage-users-dev.hmpps.service.justice.gov.uk
   cert_secret: hmpps-manage-users-cert
   path: /
 
