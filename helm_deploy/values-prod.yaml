@@ -2,7 +2,6 @@
 # Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
 
 generic-service:
-  replicaCount: 4
   ingress:
     host: manage-users.hmpps.service.justice.gov.uk
 
@@ -12,13 +11,9 @@ generic-service:
     OAUTH_ENDPOINT_URL: https://sign-in.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-prod
-    NODE_ENV: production
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
     TOKENVERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
-    TOKENVERIFICATION_API_ENABLED: true
     SUPPORT_URL: https://support.hmpps.service.justice.gov.uk
-    FEATURE_DPS_USER_FILTER_SEARCH: false
-    APPLICATIONINSIGHTS_CONFIGURATION_FILE: applicationinsights.json
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:

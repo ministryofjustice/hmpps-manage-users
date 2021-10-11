@@ -22,8 +22,10 @@ generic-service:
     modsecurity_enabled: true
 
   env:
-    JAVA_OPTS: "-Xmx512m"
-    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+    NODE_ENV: production
+    TOKENVERIFICATION_API_ENABLED: true
+    FEATURE_DPS_USER_FILTER_SEARCH: false
+    APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
@@ -35,6 +37,7 @@ generic-service:
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
       GOOGLE_TAG_MANAGER_ID: "GOOGLE_TAG_MANAGER_ID"
       SESSION_COOKIE_SECRET: "SESSION_COOKIE_SECRET"
+    hmpps-redis:
       REDIS_HOST: "REDIS_HOST"
       REDIS_PASSWORD: "REDIS_PASSWORD"
 
