@@ -1,5 +1,42 @@
 ---
 # Values here are the same across all environments
 
+generic-service:
+  nameOverride: hmpps-manage-users
+
+  image:
+    repository: quay.io/hmpps/hmpps-manage-users
+    tag: app_version    # override at deployment time
+    port: 3000
+
+  ingress:
+    enabled: true
+    annotations:
+      # note this limit is per ingress replica
+      nginx.ingress.kubernetes.io/limit-rpm: "120"
+      # setting to 429 (default is 503) so we can alert on this
+      nginx.ingress.kubernetes.io/server-snippet: |
+        add_header X-Robots-Tag "noindex, nofollow";
+        limit_req_status 429;
+    tlsSecretName: hmpps-manage-users-cert
+    modsecurity_enabled: true
+
+  env:
+    JAVA_OPTS: "-Xmx512m"
+    APPLICATIONINSIGHTS_CONNECTION_STRING: "InstrumentationKey=$(APPINSIGHTS_INSTRUMENTATIONKEY)"
+
+  # Pre-existing kubernetes secrets to load as environment variables in the deployment.
+  # namespace_secrets:
+  #   [name of kubernetes secret]:
+  #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+  namespace_secrets:
+    hmpps-manage-users:
+      API_CLIENT_ID: "API_CLIENT_ID"
+      API_CLIENT_SECRET: "API_CLIENT_SECRET"
+      GOOGLE_TAG_MANAGER_ID: "GOOGLE_TAG_MANAGER_ID"
+      SESSION_COOKIE_SECRET: "SESSION_COOKIE_SECRET"
+      REDIS_HOST: "REDIS_HOST"
+      REDIS_PASSWORD: "REDIS_PASSWORD"
+
 generic-prometheus-alerts:
   targetApplication: hmpps-manage-users
