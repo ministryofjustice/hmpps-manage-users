@@ -42,6 +42,10 @@ module.exports = {
       timeoutSeconds: toInt(process.env.TOKENVERIFICATION_API_TIMEOUT_SECONDS, 10),
       enabled: process.env.TOKENVERIFICATION_API_ENABLED === 'true',
     },
+    nomisUsersAndRoles: {
+      url: process.env.NOMIS_USERS_API_ENDPOINT_URL || 'http://localhost:8082',
+      timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 30),
+    },
   },
 
   redis: {

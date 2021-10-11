@@ -13,6 +13,7 @@ context('Health page reports health correctly', () => {
         prison: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
         manageusers: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
         tokenverification: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
+        nomisUsersAndRoles: 'UP',
       })
     })
   })
@@ -30,6 +31,7 @@ context('Health page reports health correctly', () => {
         prison: 'UP',
         manageusers: 'UP',
         tokenverification: 'UP',
+        nomisUsersAndRoles: 'UP',
       })
     })
   })
