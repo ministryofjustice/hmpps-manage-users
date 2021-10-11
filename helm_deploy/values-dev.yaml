@@ -12,8 +12,8 @@ generic-service:
     MANAGE_USERS_API_ENDPOINT_URL: https://hmpps-manage-users-api-dev.hmpps.service.justice.gov.uk
     OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital-dev.prison.service.justice.gov.uk
+    NOMIS_USERS_API_ENDPOINT_URL: https://nomis-user-dev.aks-dev-1.studio-hosting.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-dev
-    WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
     TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
     SYSTEM_PHASE: DEV

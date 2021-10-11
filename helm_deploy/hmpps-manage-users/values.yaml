@@ -26,6 +26,7 @@ generic-service:
     TOKENVERIFICATION_API_ENABLED: true
     FEATURE_DPS_USER_FILTER_SEARCH: false
     APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
+    WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
