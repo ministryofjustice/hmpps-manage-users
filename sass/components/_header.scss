@@ -129,6 +129,11 @@
     @include govuk-responsive-margin(3, 'right');
   }
 
+  &__feedback {
+    @include govuk-font($size: 19, $weight: 'normal');
+    @include govuk-responsive-margin(3, 'right');
+  }
+
   &__link {
     @include govuk-link-common;
     @include govuk-link-style-default;
