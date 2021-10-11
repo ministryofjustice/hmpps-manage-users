@@ -69,6 +69,7 @@ const health = healthFactory(
   config.apis.prison.url,
   config.apis.manageusers.url,
   config.apis.tokenverification.url,
+  config.apis.nomisUsersAndRoles.url,
 )
 
 app.get('/health', (req, res, next) => {
