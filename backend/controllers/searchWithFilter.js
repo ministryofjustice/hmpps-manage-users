@@ -68,6 +68,8 @@ const searchFactory = (
       downloadUrl:
         allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
       maintainUrl,
+      feedbackUrl:
+        'https://eu.surveymonkey.com/r/Preview/?sm=TfmN8s6gn0k1b1t8BZAQGkqZiBOohqWKRNXXo0bRD6d_2F5p42M7T5TK6pSvdYcSlo',
     })
   }
 }
