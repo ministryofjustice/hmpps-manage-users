@@ -9,6 +9,7 @@ const health = healthFactory(
   config.apis.prison.url,
   config.apis.manageusers.url,
   config.apis.tokenverification.url,
+  config.apis.nomisUsersAndRoles.url,
 )
 
 module.exports = () => {
