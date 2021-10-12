@@ -8,6 +8,12 @@ const RoleAdminTypeChangePage = require('../pages/roleAdminTypeChangePage')
 
 const CreateRolePage = require('../pages/createRolePage')
 
+const toRole = ($cell) => ({
+  roleName: $cell[0]?.textContent.trim(),
+  roleDescription: $cell[1]?.textContent.trim(),
+  adminType: $cell[2]?.textContent.replace(/\s+/g, ' ').trim(),
+})
+
 context('Roles', () => {
   before(() => {
     cy.clearCookies()
@@ -24,12 +30,29 @@ context('Roles', () => {
     cy.task('stubAllRoles', {})
     MenuPage.verifyOnPage().manageRoles()
 
-    const roles = RolesPage.verifyOnPage()
+    RolesPage.verifyOnPage()
 
-    roles.rows().should('have.length', 3)
-    roles.rows().eq(0).should('contain.text', 'Auth Group Manager')
-    roles.rows().eq(1).should('contain.text', 'Global Search')
-    roles.rows().eq(2).should('contain.text', 'Licence Responsible Officer')
+    cy.get('[data-qa="roles"]').then(($table) => {
+      cy.get($table)
+        .find('tr')
+        .then(($tableRows) => {
+          cy.get($tableRows).its('length').should('eq', 4) // 3 results plus table header
+
+          const role = Array.from($tableRows).map(($row) => toRole($row.cells))
+
+          expect(role[1].roleName).to.eq('Auth Group Manager')
+          expect(role[1].roleDescription).to.eq('Group manager')
+          expect(role[1].adminType).to.contain('EXT ADMIN')
+
+          expect(role[2].roleName).to.eq('Global Search')
+          expect(role[2].roleDescription).to.eq('Search for prisoner')
+          expect(role[2].adminType).to.contain('DPS ADMIN EXT ADMIN')
+
+          expect(role[3].roleName).to.eq('Licence Responsible Officer')
+          expect(role[3].roleDescription).to.eq('')
+          expect(role[3].adminType).to.contain('DPS ADMIN DPS LSA')
+        })
+    })
   })
 
   it('Should display paged results for all roles', () => {

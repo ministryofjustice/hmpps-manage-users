@@ -2,9 +2,47 @@ const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
 const stubAllRoles = ({
   content = [
-    { roleCode: 'AUTH_GROUP_MANAGER', roleName: 'Auth Group Manager' },
-    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
-    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+    {
+      roleCode: 'AUTH_GROUP_MANAGER',
+      roleName: 'Auth Group Manager',
+      roleDescription: 'Group manager',
+      adminType: [
+        {
+          adminTypeCode: 'EXT_ADM',
+          adminTypeName: 'External Administrator',
+        },
+      ],
+    },
+    {
+      roleCode: 'GLOBAL_SEARCH',
+      roleName: 'Global Search',
+      roleDescription: 'Search for prisoner',
+      adminType: [
+        {
+          adminTypeCode: 'DPS_ADM',
+          adminTypeName: 'DPS Central Administrator',
+        },
+        {
+          adminTypeCode: 'EXT_ADM',
+          adminTypeName: 'External Administrator',
+        },
+      ],
+    },
+    {
+      roleCode: 'LICENCE_RO',
+      roleName: 'Licence Responsible Officer',
+      roleDescription: null,
+      adminType: [
+        {
+          adminTypeCode: 'DPS_ADM',
+          adminTypeName: 'DPS Central Administrator',
+        },
+        {
+          adminTypeCode: 'DPS_LSA',
+          adminTypeName: 'DPS Local System Administrator',
+        },
+      ],
+    },
   ],
   totalElements = 3,
   page = 0,

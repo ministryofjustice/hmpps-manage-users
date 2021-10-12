@@ -8,10 +8,10 @@ const viewRolesFactory = (paginationService, pagingApi, getAllRolesApi, maintain
 
     req.session.searchResultsUrl = req.originalUrl
 
-    const allRoles = await getAllRolesApi(res.locals, pageNumber, pageSize, pageOffset)
+    const roles = await getAllRolesApi(res.locals, pageNumber, pageSize, pageOffset)
 
     res.render('roles.njk', {
-      roles: allRoles.map((r) => ({ text: r.roleName, value: r.roleCode })),
+      roles,
       pagination: paginationService.getPagination(
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
