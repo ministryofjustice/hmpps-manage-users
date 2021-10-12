@@ -25,7 +25,6 @@ generic-service:
     NODE_ENV: production
     TOKENVERIFICATION_API_ENABLED: true
     FEATURE_DPS_USER_FILTER_SEARCH: false
-    APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
@@ -34,6 +33,7 @@ generic-service:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
   namespace_secrets:
     hmpps-manage-users:
+      APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
       API_CLIENT_ID: "API_CLIENT_ID"
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
       GOOGLE_TAG_MANAGER_ID: "GOOGLE_TAG_MANAGER_ID"
