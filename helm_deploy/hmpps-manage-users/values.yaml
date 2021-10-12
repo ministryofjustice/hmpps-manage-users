@@ -21,6 +21,14 @@ generic-service:
     tlsSecretName: hmpps-manage-users-cert
     modsecurity_enabled: true
 
+  livenessProbe:
+    httpGet:
+      path: /ping
+
+  readinessProbe:
+    httpGet:
+      path: /ping
+
   env:
     NODE_ENV: production
     TOKENVERIFICATION_API_ENABLED: true
