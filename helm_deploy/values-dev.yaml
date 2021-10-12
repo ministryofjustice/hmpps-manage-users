@@ -1,39 +1,24 @@
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
+---
+# Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
 
-replicaCount: 2
+generic-service:
+  replicaCount: 2
+  ingress:
+    host: manage-users-dev.hmpps.service.justice.gov.uk
+    modsecurity_audit_enabled: true
 
-image:
-  repository: quay.io/hmpps/hmpps-manage-users
-  tag: latest
-  pullPolicy: IfNotPresent
-  port: 3000
+  env:
+    API_ENDPOINT_URL: https://api-dev.prison.service.justice.gov.uk
+    MANAGE_USERS_API_ENDPOINT_URL: https://hmpps-manage-users-api-dev.hmpps.service.justice.gov.uk
+    OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+    DPS_ENDPOINT_URL: https://digital-dev.prison.service.justice.gov.uk
+    NOMIS_USERS_API_ENDPOINT_URL: https://nomis-user-dev.aks-dev-1.studio-hosting.service.justice.gov.uk
+    HMPPS_COOKIE_NAME: hmpps-session-dev
+    TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
+    SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
+    SYSTEM_PHASE: DEV
+    FEATURE_DPS_USER_FILTER_SEARCH: true
 
-ingress:
-  enabled: true
-  class: modsec01
-  modsecurity_enabled: true
-  modsecurity_audit_enabled: true
-  host: manage-users-dev.hmpps.service.justice.gov.uk
-  cert_secret: hmpps-manage-users-cert
-  path: /
-
-env:
-  API_ENDPOINT_URL: https://api-dev.prison.service.justice.gov.uk
-  MANAGE_USERS_API_ENDPOINT_URL: https://hmpps-manage-users-api-dev.hmpps.service.justice.gov.uk
-  OAUTH_ENDPOINT_URL: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
-  DPS_ENDPOINT_URL: https://digital-dev.prison.service.justice.gov.uk
-  NOMIS_USERS_API_ENDPOINT_URL: https://nomis-user-dev.aks-dev-1.studio-hosting.service.justice.gov.uk
-  HMPPS_COOKIE_NAME: hmpps-session-dev
-  NODE_ENV: production
-  WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
-  TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
-  TOKENVERIFICATION_API_ENABLED: true
-  SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
-  SYSTEM_PHASE: DEV
-  FEATURE_DPS_USER_FILTER_SEARCH: true
-
-
-# CloudPlatform AlertManager receiver to route promethues alerts to slack
+# CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
   alertSeverity: hmpps_tech_non_prod
