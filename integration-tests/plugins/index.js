@@ -34,6 +34,7 @@ module.exports = (on) => {
     stubSignInPage: auth.redirect,
     ...prisonApi,
     ...manageUsersApi,
+    ...nomisUsersAndRoles,
     stubDpsGetRoles: prisonApi.stubGetRoles,
     stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
     stubDpsUserDetails: prisonApi.stubUserDetails,

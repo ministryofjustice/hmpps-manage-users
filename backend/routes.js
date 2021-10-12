@@ -13,7 +13,7 @@ const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config')
 
-const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi }) => {
+const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRolesApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ prisonApi, oauthApi }))
@@ -23,7 +23,10 @@ const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi }) => {
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
   router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, oauthApi }))
-  router.use('/search-with-filter-dps-users', searchWithFilterDpsUserRouter({ prisonApi, oauthApi }))
+  router.use(
+    '/search-with-filter-dps-users',
+    searchWithFilterDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi }),
+  )
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ prisonApi, oauthApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))

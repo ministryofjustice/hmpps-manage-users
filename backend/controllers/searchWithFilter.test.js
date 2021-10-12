@@ -3,8 +3,7 @@ const { searchFactory } = require('./searchWithFilter')
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
   const getSearchableRolesApi = jest.fn()
-  const searchApi = jest.fn()
-  const pagingApi = jest.fn()
+  const findUsersApi = jest.fn()
   const allowDownload = jest.fn()
 
   beforeEach(() => {
@@ -18,8 +17,7 @@ describe('search factory', () => {
       paginationService,
       getCaseloadsApi,
       getSearchableRolesApi,
-      searchApi,
-      pagingApi,
+      findUsersApi,
       '/search-with-filter-dps-users',
       '/manage-dps-users',
       'Search for a DPS user (BETA)',
@@ -40,7 +38,7 @@ describe('search factory', () => {
       getCaseloadsApi.mockReset()
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'Access Role Admin', roleCode: 'ACCESS_ROLE_ADMIN' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'Moorland HMP', value: 'MDI' }])
-      searchApi.mockResolvedValue([])
+      findUsersApi.mockResolvedValue({ searchResults: [], number: 0, page: 0 })
       allowDownload.mockReset()
       allowDownload.mockReturnValue(true)
       paginationService.getPagination.mockReturnValue(pagination)
@@ -223,35 +221,34 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: undefined,
+          accessRoles: undefined,
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
 
-      it('should search with current page offsets and page defaults', async () => {
+      it('should search with current page and page defaults', async () => {
         const req = {
           ...standardReq,
-          query: { user: 'jane', offset: 50 },
+          query: { user: 'jane', page: 3 },
         }
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: undefined,
-          groupCode: undefined,
+          accessRoles: undefined,
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 50,
+          size: 20,
+          page: 3,
         })
       })
       it('should search for user with any status with just user filter set', async () => {
@@ -262,15 +259,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: undefined,
-          groupCode: undefined,
+          accessRoles: undefined,
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for prison with active caseload with just group filter set', async () => {
@@ -281,15 +277,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: 'MDI',
+          accessRoles: undefined,
+          caseload: 'MDI',
           activeCaseload: 'MDI',
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for prison with active caseload with group filter and restrictToActiveGroup is set to true', async () => {
@@ -300,15 +295,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: 'MDI',
+          accessRoles: undefined,
+          caseload: 'MDI',
           activeCaseload: 'MDI',
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for prison without active caseload with group filter and restrictToActiveGroup is set to false set', async () => {
@@ -319,15 +313,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: 'MDI',
+          accessRoles: undefined,
+          caseload: 'MDI',
           activeCaseload: undefined,
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for users with role of any status with just role filter set', async () => {
@@ -338,15 +331,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: ['OMIC_ADMIN'],
-          groupCode: undefined,
+          accessRoles: ['OMIC_ADMIN'],
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'ALL',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for inactive users with inactive status filter set', async () => {
@@ -357,15 +349,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: undefined,
+          accessRoles: undefined,
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'INACTIVE',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search for active users with active status filter set', async () => {
@@ -376,15 +367,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: undefined,
-          roleCode: undefined,
-          groupCode: undefined,
+          accessRoles: undefined,
+          caseload: undefined,
           activeCaseload: undefined,
           status: 'ACTIVE',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
       it('should search with all filters when all set', async () => {
@@ -395,15 +385,14 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(searchApi).toBeCalledWith({
+        expect(findUsersApi).toBeCalledWith({
           locals,
           user: 'jane',
-          roleCode: ['OMIC_ADMIN'],
-          groupCode: 'MDI',
+          accessRoles: ['OMIC_ADMIN'],
+          caseload: 'MDI',
           activeCaseload: 'MDI',
           status: 'ACTIVE',
-          pageSize: 20,
-          pageOffset: 0,
+          size: 20,
         })
       })
     })
