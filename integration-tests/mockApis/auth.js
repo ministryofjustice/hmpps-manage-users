@@ -249,7 +249,7 @@ const stubAuthUserRoles = () =>
   getFor({
     urlPattern: '/auth/api/authuser/id/.*/roles',
     body: [
-      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', roleDescription: 'Is allowed to search' },
       { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
     ],
   })
@@ -258,7 +258,7 @@ const stubAuthAssignableRoles = (body) =>
   getFor({
     urlPattern: '/auth/api/authuser/.*/assignable-roles',
     body: body || [
-      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', roleDescription: 'Is allowed to search' },
       { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
       { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
     ],
