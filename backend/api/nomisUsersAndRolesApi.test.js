@@ -18,15 +18,15 @@ describe('nomis users and roles API tests', () => {
       const actual = nomisUsersAndRolesApi.userSearch(context, {
         nameFilter: 'RAJ',
         status: 'ACTIVE',
-        roleFilter: ['OMIC_ADMIN', 'OMIC_USER'],
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
         caseload: 'MDI',
         activeCaseload: 'BXI',
-        pageSize: 30,
+        size: 30,
         page: 3,
       })
       expect(client.get).toBeCalledWith(
         context,
-        '/users?nameFilter=RAJ&accessRole=OMIC_ADMIN&accessRole=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&size=30&page=3',
+        '/users?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&size=30&page=3',
       )
       expect(actual).toEqual(users)
     })
@@ -34,7 +34,7 @@ describe('nomis users and roles API tests', () => {
       const actual = nomisUsersAndRolesApi.userSearch(context, {})
       expect(client.get).toBeCalledWith(
         context,
-        '/users?nameFilter=&accessRole=&status=&caseload=&activeCaseload=&size=20&page=0',
+        '/users?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&size=20&page=0',
       )
       expect(actual).toEqual(users)
     })

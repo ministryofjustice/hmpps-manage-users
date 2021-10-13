@@ -109,7 +109,7 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.rows().eq(1).should('include.text', 'Itag\u00a0User1')
     searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
 
-    cy.task('stubDpsAdminSearch', { totalElements: 3 })
+    cy.task('stubDpsFindUsers', { totalElements: 3 })
     searchWithFilter.filterCaseload('Moorland')
     searchWithFilter.rows().should('have.length', 3)
     searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
@@ -121,21 +121,23 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.manageLinkForUser('ITAG_USER0').click()
     UserPage.verifyOnPage('Itag User')
   })
-  it('will call the admin search api when admin is logged in and no filter', () => {
+  it('will call the find users api when admin is logged in and no filter', () => {
     goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
-    cy.task('verifyDpsAdminSearch').should((requests) => {
+    cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
       expect(requests[0].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: [''] },
-        accessRole: { key: 'accessRole', values: [''] },
+        accessRoles: { key: 'accessRoles', values: [''] },
         status: { key: 'status', values: ['ALL'] },
         caseload: { key: 'caseload', values: [''] },
         activeCaseload: { key: 'activeCaseload', values: [''] },
+        size: { key: 'size', values: ['20'] },
+        page: { key: 'page', values: ['0'] },
       })
     })
   })
-  it('will call the admin search api when admin is logged in and has filter', () => {
+  it('will call the find users api when admin is logged in and has filter', () => {
     const searchWithFilter = goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
     searchWithFilter.filterAll({
       user: 'Andy',
@@ -144,31 +146,37 @@ context('DPS search with filter user functionality', () => {
       roleText: ['User Admin', 'User General'],
     })
 
-    cy.task('verifyDpsAdminSearch').should((requests) => {
+    cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(2)
 
       expect(requests[1].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
-        accessRole: { key: 'accessRole', values: ['USER_ADMIN', 'USER_GENERAL'] },
+        accessRoles: { key: 'accessRoles', values: ['USER_ADMIN', 'USER_GENERAL'] },
         status: { key: 'status', values: ['ACTIVE'] },
         caseload: { key: 'caseload', values: ['MDI'] },
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
+        size: { key: 'size', values: ['20'] },
+        page: { key: 'page', values: ['0'] },
       })
     })
   })
-  it('will call the dps search api when non-admin is logged in and no filter', () => {
+  it('will call the find users api when non-admin is logged in and no filter', () => {
     goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
-    cy.task('verifyDpsSearch').should((requests) => {
+    cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
       expect(requests[0].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: [''] },
-        accessRole: { key: 'accessRole', values: [''] },
+        accessRoles: { key: 'accessRoles', values: [''] },
         status: { key: 'status', values: ['ALL'] },
+        caseload: { key: 'caseload', values: [''] },
+        activeCaseload: { key: 'activeCaseload', values: [''] },
+        size: { key: 'size', values: ['20'] },
+        page: { key: 'page', values: ['0'] },
       })
     })
   })
-  it('will call the dps search api when non-admin is logged in with filter', () => {
+  it('will call the find users api when non-admin is logged in with filter', () => {
     const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
     searchWithFilter.filterAllNonAdmin({
       user: 'Andy',
@@ -176,13 +184,17 @@ context('DPS search with filter user functionality', () => {
       roleText: 'User Admin',
     })
 
-    cy.task('verifyDpsSearch').should((requests) => {
+    cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(2)
 
       expect(requests[1].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
-        accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
+        accessRoles: { key: 'accessRoles', values: ['USER_ADMIN'] },
         status: { key: 'status', values: ['ACTIVE'] },
+        caseload: { key: 'caseload', values: [''] },
+        activeCaseload: { key: 'activeCaseload', values: [''] },
+        size: { key: 'size', values: ['20'] },
+        page: { key: 'page', values: ['0'] },
       })
     })
   })
@@ -204,15 +216,17 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterWithTag('Moorland').should('exist')
     searchWithFilter.filterWithTag('User Admin').should('exist')
 
-    cy.task('verifyDpsAdminSearch').should((requests) => {
+    cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(3)
 
       expect(requests[2].queryParams).to.deep.equal({
         nameFilter: { key: 'nameFilter', values: ['Andy'] },
-        accessRole: { key: 'accessRole', values: ['USER_ADMIN'] },
+        accessRoles: { key: 'accessRoles', values: ['USER_ADMIN'] },
         status: { key: 'status', values: ['ACTIVE'] },
         caseload: { key: 'caseload', values: ['MDI'] },
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
+        size: { key: 'size', values: ['20'] },
+        page: { key: 'page', values: ['4'] },
       })
     })
   })

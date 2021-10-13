@@ -40,7 +40,7 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
       },
     ],
   })
-  cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements, size })
+  cy.task('stubDpsFindUsers', { totalElements, size })
   if (isAdmin) cy.task('stubDpsGetCaseloads')
   cy.task('stubAuthUserEmails')
 

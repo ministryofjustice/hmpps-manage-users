@@ -1,11 +1,12 @@
 const querystring = require('querystring')
 
+const size = 20
+
 const searchFactory = (
   paginationService,
   getAssignableGroupsOrPrisonsApi,
   getSearchableRolesApi,
-  searchApi,
-  pagingApi,
+  findUsersApi,
   searchUrl,
   maintainUrl,
   searchTitle,
@@ -25,23 +26,20 @@ const searchFactory = (
 
     const currentFilter = parseFilter(req.query)
 
-    const { offset } = req.query
+    const { page } = req.query
 
-    const pageSize = 20
-    const pageOffset = (offset && parseInt(offset, 10)) || 0
+    const caseload = currentFilter.groupCode && currentFilter.groupCode[0]
+    const { roleCode: accessRoles } = currentFilter
 
-    const groupCode = currentFilter.groupCode && currentFilter.groupCode[0]
-    const { roleCode } = currentFilter
-
-    const searchResults = await searchApi({
+    const { searchResults, totalElements, number } = await findUsersApi({
       locals: res.locals,
       user: currentFilter.user,
-      groupCode,
-      roleCode,
-      activeCaseload: currentFilter.restrictToActiveGroup ? groupCode : undefined,
+      caseload,
+      accessRoles,
+      activeCaseload: currentFilter.restrictToActiveGroup ? caseload : undefined,
       status: currentFilter.status,
-      pageSize,
-      pageOffset,
+      size,
+      page,
     })
     req.session.searchResultsUrl = req.originalUrl
     req.session.searchTitle = searchTitle
@@ -51,6 +49,7 @@ const searchFactory = (
       usernameAndEmail: mapUsernameAndEmail(user),
       ...user,
     }))
+
     res.render('searchWithFilter.njk', {
       searchTitle,
       searchUrl,
@@ -62,7 +61,7 @@ const searchFactory = (
       currentFilter,
       results,
       pagination: paginationService.getPagination(
-        pagingApi(res.locals),
+        { totalElements, page: number, size },
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
       downloadUrl:

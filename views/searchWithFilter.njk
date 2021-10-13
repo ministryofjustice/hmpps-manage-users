@@ -174,8 +174,8 @@
                             text: "Active",
                             classes: "govuk-tag--green"
                           }) if u.active }}
-                          {% if u.activeCaseLoadId %}
-                          <span>at <strong>{{u.activeCaseLoadId}}</strong></span>
+                          {% if u.activeCaseload %}
+                          <span>{{u.activeCaseload.name}}</span>
                           {% endif %}
                       </div>
                       </div>

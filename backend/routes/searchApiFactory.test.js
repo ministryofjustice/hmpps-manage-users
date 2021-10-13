@@ -8,8 +8,15 @@ describe('Search API Factory', () => {
     getRoles: jest.fn(),
     getCaseloads: jest.fn(),
   }
+  const nomisUsersAndRolesApi = {
+    userSearch: jest.fn(),
+  }
   const oauthApi = { userEmails: jest.fn() }
-  const { searchApi, searchableRoles, caseloads } = searchApiFactory(prisonApi, oauthApi)
+  const { searchApi, searchableRoles, caseloads, findUsersApi } = searchApiFactory(
+    prisonApi,
+    oauthApi,
+    nomisUsersAndRolesApi,
+  )
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -102,6 +109,117 @@ describe('Search API Factory', () => {
         ['jane', 'jill'],
       )
       expect(results).toEqual([
+        { username: 'jane', activeCaseLoadId: 'MDI', email: 'jane@email.com' },
+        { username: 'jill', activeCaseLoadId: 'MDI' },
+      ])
+    })
+  })
+  describe('findUsersApi', () => {
+    const noResults = {
+      content: [],
+      last: true,
+      totalPages: 0,
+      totalElements: 0,
+      size: 20,
+      number: 0,
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      first: true,
+      numberOfElements: 0,
+      empty: true,
+    }
+    it('will call userSearch with admin role context', async () => {
+      nomisUsersAndRolesApi.userSearch.mockResolvedValue(noResults)
+
+      await findUsersApi({
+        locals: { user: { maintainAccessAdmin: true } },
+        user: 'jane',
+        caseload: 'MDI',
+        accessRoles: 'OMIC_ADMIN',
+        activeCaseload: 'LEI',
+        status: 'ACTIVE',
+        size: 20,
+        page: 2,
+      })
+
+      expect(nomisUsersAndRolesApi.userSearch).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: true },
+        },
+        {
+          nameFilter: 'jane',
+          accessRoles: 'OMIC_ADMIN',
+          status: 'ACTIVE',
+          caseload: 'MDI',
+          activeCaseload: 'LEI',
+          size: 20,
+          page: 2,
+        },
+      )
+    })
+    it('will call userSearch without admin role context', async () => {
+      nomisUsersAndRolesApi.userSearch.mockResolvedValue(noResults)
+
+      await findUsersApi({
+        locals: { user: { maintainAccessAdmin: false } },
+        user: 'jane',
+        accessRoles: 'OMIC_ADMIN',
+        status: 'ACTIVE',
+        size: 20,
+        page: 2,
+      })
+
+      expect(nomisUsersAndRolesApi.userSearch).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: false },
+        },
+        {
+          nameFilter: 'jane',
+          accessRoles: 'OMIC_ADMIN',
+          status: 'ACTIVE',
+          size: 20,
+          page: 2,
+        },
+      )
+    })
+    it('will retrieve emails for each user found and add to results', async () => {
+      nomisUsersAndRolesApi.userSearch.mockResolvedValue({
+        content: [
+          { username: 'jane', activeCaseLoadId: 'MDI' },
+          { username: 'jill', activeCaseLoadId: 'MDI' },
+        ],
+        totalPages: 5079,
+        totalElements: 101567,
+        size: 20,
+        number: 0,
+        sort: {
+          empty: false,
+          sorted: true,
+          unsorted: false,
+        },
+        first: true,
+        numberOfElements: 20,
+      })
+      oauthApi.userEmails.mockResolvedValue([{ username: 'jane', email: 'jane@email.com' }])
+
+      const { searchResults } = await findUsersApi({
+        locals: {
+          user: { maintainAccessAdmin: true },
+        },
+        pageSize: 20,
+        pageOffset: 40,
+      })
+
+      expect(oauthApi.userEmails).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: true },
+        },
+        ['jane', 'jill'],
+      )
+      expect(searchResults).toEqual([
         { username: 'jane', activeCaseLoadId: 'MDI', email: 'jane@email.com' },
         { username: 'jill', activeCaseLoadId: 'MDI' },
       ])
