@@ -17,7 +17,7 @@ describe('select roles factory', () => {
       await addRole.index(req, { render })
       expect(render).toBeCalledWith('addRole.njk', {
         errors: undefined,
-        roleDropdownValues: [{ text: 'name', value: 'code', hint: { text: '' } }],
+        roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
       })
