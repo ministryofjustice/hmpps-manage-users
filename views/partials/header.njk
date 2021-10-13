@@ -42,7 +42,7 @@
   This is a new service – your <a class="govuk-link" target="feedback" href="{{ feedbackUrl }}">feedback</a> will help us to improve it.</span>
   {% endif %}
   <span class="location-bar__location" data-qa="active-location">
-    {% if phaseName %}
+    {% if phaseName and not feedbackUrl %}
       {{ govukTag({
         text: phaseName,
         classes: 'govuk-!-margin-right-1 ' + phaseNameColour
