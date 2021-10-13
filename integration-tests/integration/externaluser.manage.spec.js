@@ -68,6 +68,7 @@ context('External user manage functionality', () => {
     cy.task('stubAuthAssignableRoles')
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
+    addRole.hint('Global Search').should('contain.text', 'Is allowed to search')
 
     cy.task('stubAuthAddRoles')
     addRole.choose('LICENCE_VARY')

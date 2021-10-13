@@ -8,7 +8,7 @@ module.exports = {
     supportUrl: process.env.SUPPORT_URL || 'http://localhost:3003',
     tokenRefreshThresholdSeconds: toInt(process.env.TOKEN_REFRESH_THRESHOLD_SECONDS, 60),
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
-    url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}/`,
+    url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}`,
   },
 
   analytics: {

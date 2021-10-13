@@ -81,7 +81,7 @@ describe('Test the routes and middleware installed by sessionManagementRoutes', 
       .expect(302)
       .expect(
         'location',
-        'http://localhost:9090/auth/sign-out?client_id=manage-user-accounts-ui&redirect_uri=http://localhost:3001/',
+        'http://localhost:9090/auth/sign-out?client_id=manage-user-accounts-ui&redirect_uri=http://localhost:3001',
       ))
 
   it('After sign out get "/" should redirect to "/sign-in"', () =>
