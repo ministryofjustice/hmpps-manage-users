@@ -13,9 +13,9 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
     const roleDropdownValues = assignableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
-      ...(r.roleDescription != null && {
+      ...(r.roleDescription && {
         hint: {
-          text: `${r.roleDescription}`,
+          text: r.roleDescription,
         },
       }),
     }))
