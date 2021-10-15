@@ -165,18 +165,31 @@
                       </div>
                       <div class="govuk-grid-row govuk-!-margin-bottom-2">
                         <div class="govuk-grid-column-full">
-                        <span class="govuk-visually-hidden">Status</span>
-                          {{ govukTag({
-                            text: "Inactive",
-                            classes: "govuk-tag--pink"
-                          }) if not u.active }}
-                          {{ govukTag({
-                            text: "Active",
-                            classes: "govuk-tag--green"
-                          }) if u.active }}
-                          {% if u.activeCaseload %}
-                          <span>{{u.activeCaseload.name}}</span>
-                          {% endif %}
+                          <div class="govuk-grid-row">
+                            <div class="govuk-grid-column-one-half">
+                              <span class="govuk-visually-hidden">Status</span>
+                                {{ govukTag({
+                                  text: "Inactive",
+                                  classes: "govuk-tag--pink"
+                                }) if not u.active }}
+                                {{ govukTag({
+                                  text: "Active",
+                                  classes: "govuk-tag--green"
+                                }) if u.active }}
+                                {% if u.activeCaseload %}
+                                  <span>{{u.activeCaseload.name}}</span>
+                                {% endif %}
+                            </div>
+                            <div class="govuk-grid-column-one-half pull-right">
+                              {% if u.dpsRoleCount == 0 %}
+                              <span>No DPS roles</span>
+                              {% elif u.dpsRoleCount == 1 %}
+                              <span>{{u.dpsRoleCount}} DPS role</span>
+                              {% else %}
+                              <span>{{u.dpsRoleCount}} DPS roles</span>
+                              {% endif %}
+                            </div>
+                          </div>
                       </div>
                       </div>
                     </div>

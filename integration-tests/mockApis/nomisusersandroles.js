@@ -10,6 +10,7 @@ const replicateUser = (times) =>
       id: 'BXI',
       name: 'Brixton (HMP)',
     },
+    dpsRoleCount: i,
   }))
 
 module.exports = {
