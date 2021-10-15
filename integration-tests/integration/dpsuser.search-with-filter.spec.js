@@ -114,6 +114,14 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.rows().should('have.length', 3)
     searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
   })
+  it('will shows user details in the results', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 1 })
+    searchWithFilter.rows().should('have.length', 1)
+    searchWithFilter.rows().eq(0).should('include.text', 'Itag\u00a0User0')
+    searchWithFilter.rows().eq(0).should('include.text', 'dps-user@justice.gov.uk')
+    searchWithFilter.rows().eq(0).should('include.text', 'Active')
+    searchWithFilter.rows().eq(0).should('include.text', 'Brixton (HMP)')
+  })
   it('will have a link to maintain the user', () => {
     cy.task('stubDpsUserDetails')
 
