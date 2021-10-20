@@ -15,10 +15,14 @@ const manageUsersApiFactory = (client) => {
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
 
   const createRole = (context, role) => post(context, '/roles', role)
-  const getAllRoles = (context, page, size) => {
+  const getAllRoles = (context, page, size, roleName, roleCode, adminType) => {
+    const adminTypes = adminType === 'ALL' ? '' : adminType
     const query = querystring.stringify({
       page,
       size,
+      roleName,
+      roleCode,
+      adminTypes,
     })
     return client.get(context, `/roles?${query}`).then(processPageResponse(context))
   }

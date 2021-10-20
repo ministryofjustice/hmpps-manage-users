@@ -6,12 +6,18 @@ const viewRolesFactory = (paginationService, pagingApi, getAllRolesApi, maintain
     const pageNumber = (page && parseInt(page, 10)) || 0
     const pageOffset = (offset && parseInt(offset, 10)) || 0
 
+    req.session.searchUrl = req.originalUrl
     req.session.searchResultsUrl = req.originalUrl
 
-    const roles = await getAllRolesApi(res.locals, pageNumber, pageSize, pageOffset)
+    const currentFilter = parseFilter(req.query)
+
+    const { roleCode, roleName, adminTypes } = currentFilter
+
+    const roles = await getAllRolesApi(res.locals, pageNumber, pageSize, roleName, roleCode, adminTypes)
 
     res.render('roles.njk', {
       roles,
+      currentFilter,
       pagination: paginationService.getPagination(
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
@@ -22,6 +28,14 @@ const viewRolesFactory = (paginationService, pagingApi, getAllRolesApi, maintain
   }
 
   return { index }
+}
+
+function parseFilter(query) {
+  return {
+    roleCode: query.roleCode,
+    roleName: query.roleName,
+    adminTypes: query.adminTypes || 'ALL',
+  }
 }
 
 module.exports = {

@@ -21,6 +21,15 @@ describe('view roles factory', () => {
   const pagingApi = jest.fn()
   const getAllRolesApi = jest.fn()
 
+  const standardReq = {
+    params: {},
+    flash: jest.fn(),
+    get: jest.fn().mockReturnValue('localhost'),
+    protocol: 'http',
+    originalUrl: '/',
+    session: {},
+  }
+
   beforeEach(() => {
     paginationService.getPagination.mockReset()
     pagingApi.mockReset()
@@ -36,13 +45,8 @@ describe('view roles factory', () => {
 
     it('should call view Roles results render', async () => {
       const req = {
+        ...standardReq,
         query: {},
-        params: {},
-        flash: jest.fn(),
-        get: jest.fn().mockReturnValue('localhost'),
-        protocol: 'http',
-        originalUrl: '/',
-        session: {},
       }
       const pagination = { offset: 0 }
       paginationService.getPagination.mockReturnValue(pagination)
@@ -55,6 +59,63 @@ describe('view roles factory', () => {
       expect(render).toBeCalledWith('roles.njk', {
         maintainUrl: '/manage-roles',
         roles,
+        currentFilter: {
+          adminTypes: 'ALL',
+          roleCode: undefined,
+          roleName: undefined,
+        },
+        errors: undefined,
+        pagination,
+      })
+    })
+
+    it('should set current filter with single query parameters', async () => {
+      const req = {
+        ...standardReq,
+        query: { roleCode: 'user' },
+      }
+      const pagination = { offset: 0 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockRolesCall()
+      const render = jest.fn()
+      await getAllRoles.index(req, {
+        render,
+        locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
+      })
+      expect(render).toBeCalledWith('roles.njk', {
+        maintainUrl: '/manage-roles',
+        roles,
+        currentFilter: {
+          adminTypes: 'ALL',
+          roleCode: 'user',
+          roleName: undefined,
+        },
+        errors: undefined,
+        pagination,
+      })
+    })
+
+    it('should search with all filters when all set', async () => {
+      const req = {
+        ...standardReq,
+        query: { roleCode: 'user', roleName: 'Admin' },
+      }
+      const pagination = { offset: 0 }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockRolesCall()
+      const render = jest.fn()
+      await getAllRoles.index(req, {
+        render,
+        locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
+      })
+      expect(render).toBeCalledWith('roles.njk', {
+        maintainUrl: '/manage-roles',
+        roles,
+        currentFilter: {
+          adminTypes: 'ALL',
+          roleCode: 'user',
+          roleName: 'Admin',
+        },
         errors: undefined,
         pagination,
       })

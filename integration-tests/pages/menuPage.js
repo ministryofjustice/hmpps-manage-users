@@ -5,6 +5,7 @@ const searchWithFilterDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_
 const authUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
 const manageGroups = () => cy.get('[data-qa="manage_groups_link"]')
+const viewRoles = () => cy.get('[data-qa="view_roles_link"]')
 const manageRoles = () => cy.get('[data-qa="view_roles_link"]')
 const createGroup = () => cy.get('[data-qa="create_groups_link"]')
 const createRole = () => cy.get('[data-qa="create_roles_link"]')
@@ -22,6 +23,7 @@ const menuPage = () =>
     createRole: () => createRole().click(),
     manageRoles: () => manageRoles().click(),
     searchWithFilterDpsUsers,
+    viewRoles,
   })
 
 export default {
