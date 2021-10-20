@@ -67,7 +67,7 @@ describe('create role factory', () => {
   describe('post', () => {
     it('should create role and redirect', async () => {
       const req = {
-        body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DSP_ADM'] },
+        body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
       }
 
@@ -78,13 +78,13 @@ describe('create role factory', () => {
       expect(createRoleApi).toBeCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
-        adminType: ['EXT_ADM', 'DSP_ADM'],
+        adminType: ['EXT_ADM', 'DPS_ADM'],
       })
     })
 
     it('should trim, role name and redirect', async () => {
       const req = {
-        body: { roleCode: 'BOB1', roleName: 'role name ', adminType: ['EXT_ADM', 'DSP_ADM'] },
+        body: { roleCode: 'BOB1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
       }
 
@@ -95,7 +95,7 @@ describe('create role factory', () => {
       expect(createRoleApi).toBeCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
-        adminType: ['EXT_ADM', 'DSP_ADM'],
+        adminType: ['EXT_ADM', 'DPS_ADM'],
       })
     })
 
@@ -118,7 +118,7 @@ describe('create role factory', () => {
 
     it('should uppercase role code and redirect', async () => {
       const req = {
-        body: { roleCode: 'bob1', roleName: 'role name ', adminType: ['EXT_ADM', 'DSP_ADM'] },
+        body: { roleCode: 'bob1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
       }
 
@@ -129,7 +129,7 @@ describe('create role factory', () => {
       expect(createRoleApi).toBeCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
-        adminType: ['EXT_ADM', 'DSP_ADM'],
+        adminType: ['EXT_ADM', 'DPS_ADM'],
       })
     })
 
@@ -173,7 +173,7 @@ describe('create role factory', () => {
 
       createRoleApi.mockRejectedValue(error)
       const req = {
-        body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DSP_ADM'] },
+        body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
         originalUrl: '/some-location',
       }

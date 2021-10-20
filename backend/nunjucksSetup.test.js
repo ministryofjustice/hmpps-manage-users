@@ -203,6 +203,96 @@ describe('toUserSearchFilter', () => {
   })
 })
 
+describe('roleFilter', () => {
+  const app = express()
+  const njk = nunjucksSetup(app, path)
+  it('should show filter headings', () => {
+    const result = njk.getFilter('roleFilter')({}, [], [], '', true)
+    expect(result.heading.text).toBe('Filters')
+    expect(result.selectedFilters.clearLink.text).toBe('Clear filters')
+  })
+
+  describe('role name filter', () => {
+    it('should show current role name filter section', () => {
+      const result = njk.getFilter('roleFilter')({ roleName: 'HWPV' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role name')).toBeTruthy()
+    })
+  })
+  it('should not show current role name filter section when no filter for role name', () => {
+    const result = njk.getFilter('roleFilter')({}, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role name')).toBeFalsy()
+  })
+  it('should have single user tag when role code set in filter', () => {
+    const result = njk.getFilter('roleFilter')({ roleName: 'HWPV' }, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role name').items).toHaveLength(1)
+  })
+  it('role name tag should have text and reset url removing the user', () => {
+    const result = njk.getFilter('roleFilter')({ roleName: 'HWPV', adminTypes: 'ALL' }, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role name').items[0]).toStrictEqual({
+      text: 'HWPV',
+      href: '/manage-roles?adminTypes=ALL',
+    })
+  })
+
+  describe('role code filter', () => {
+    it('should show current role code filter section', () => {
+      const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role code')).toBeTruthy()
+    })
+  })
+  it('should not show current role code filter section when no filter for role code', () => {
+    const result = njk.getFilter('roleFilter')({}, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role code')).toBeFalsy()
+  })
+  it('should have single user tag when role code set in filter', () => {
+    const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV' }, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role code').items).toHaveLength(1)
+  })
+  it('role code tag should have text and reset url removing the user', () => {
+    const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV', adminTypes: 'ALL' }, [], [], '', true)
+    expect(categoryWithHeading(result, 'Role code').items[0]).toStrictEqual({
+      text: 'HWPV',
+      href: '/manage-roles?adminTypes=ALL',
+    })
+  })
+
+  describe('admin type filter', () => {
+    it('should not show current role administrator filter section when status not set in filter (AKA as ALL)', () => {
+      const result = njk.getFilter('roleFilter')({}, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator')).toBeFalsy()
+    })
+    it('should not show current  role administrator filter section when status set to ALL', () => {
+      const result = njk.getFilter('roleFilter')({ adminTypes: 'ALL' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator')).toBeFalsy()
+    })
+    it('should have single  role administrator tag when status set in filter', () => {
+      const result = njk.getFilter('roleFilter')({ adminTypes: 'EXT_ADM' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator').items).toHaveLength(1)
+    })
+    it('role code tag should have text and reset url for removing the EXT_ADM role administrator', () => {
+      const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV', adminTypes: 'EXT_ADM' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator').items[0]).toStrictEqual({
+        text: 'EXT_ADM',
+        href: '/manage-roles?roleCode=HWPV',
+      })
+    })
+    it('role code tag should have text and reset url for removing the DPS_ADM role administrator', () => {
+      const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV', adminTypes: 'DPS_ADM' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator').items[0]).toStrictEqual({
+        text: 'DPS_ADM',
+        href: '/manage-roles?roleCode=HWPV',
+      })
+    })
+    it('role code tag should have text and reset url for removing the DPS_LSA role administrator', () => {
+      const result = njk.getFilter('roleFilter')({ roleCode: 'HWPV', adminTypes: 'DPS_LSA' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Role administrator').items[0]).toStrictEqual({
+        text: 'DPS_LSA',
+        href: '/manage-roles?roleCode=HWPV',
+      })
+    })
+  })
+})
+
 function categoryWithHeading(result, title) {
   const { categories } = result.selectedFilters
   return categories.find((section) => section.heading.text === title)

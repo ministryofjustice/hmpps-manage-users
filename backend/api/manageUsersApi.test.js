@@ -61,7 +61,26 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/roles?page=&size=')
+      expect(client.get).toBeCalledWith(context, '/roles?page=&size=&roleName=&roleCode=&adminTypes=')
+    })
+  })
+
+  describe('allRolesWithFilters', () => {
+    const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.getAllRoles(context, 0, 20, '', '', 'ALL')
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/roles?page=0&size=20&roleName=&roleCode=&adminTypes=')
     })
   })
 
