@@ -10,7 +10,7 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
   cy.signIn()
   cy.task('stubDpsGetRoles', { content: [] })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
-  if (isAdmin) cy.task('stubDpsGetCaseloads')
+  if (isAdmin) cy.task('stubDpsGetPrisons')
   cy.task('stubAuthUserEmails')
 
   const search = DpsUserSearchPage.goTo()

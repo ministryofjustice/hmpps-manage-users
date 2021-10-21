@@ -1,4 +1,4 @@
-const { stubFor, getMatchingRequests } = require('./wiremock')
+const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
 
 const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
@@ -54,4 +54,18 @@ module.exports = {
       },
     })
   },
+  stubDpsGetCaseloads: () =>
+    getFor({
+      urlPath: '/nomisusersandroles/reference-data/caseloads',
+      body: [
+        {
+          id: 'MDI',
+          name: 'Moorland (HMP & YOI)',
+        },
+        {
+          id: 'LEI',
+          name: 'Leeds (HMP)',
+        },
+      ],
+    }),
 }

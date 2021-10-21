@@ -82,13 +82,24 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
     return hasAdminRole ? prisonApi.getRolesAdmin(context) : prisonApi.getRoles(context)
   }
 
-  const caseloads = async (context) => {
+  const prisons = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
     return (await prisonApi.getCaseloads(context))
-      .map((g) => ({
-        text: g.description,
-        value: g.agencyId,
+      .map((prison) => ({
+        text: prison.description,
+        value: prison.agencyId,
+      }))
+      .sort((a, b) => a.text?.localeCompare(b.text))
+  }
+
+  const caseloads = async (context) => {
+    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
+    if (!hasAdminRole) return []
+    return (await nomisUsersAndRolesApi.getCaseloads(context))
+      .map((caseload) => ({
+        text: caseload.name,
+        value: caseload.id,
       }))
       .sort((a, b) => a.text?.localeCompare(b.text))
   }
@@ -97,6 +108,7 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
     searchApi,
     searchableRoles,
     caseloads,
+    prisons,
     findUsersApi,
   }
 }

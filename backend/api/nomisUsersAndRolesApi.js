@@ -16,8 +16,11 @@ const nomisUsersAndRolesFactory = (client) => {
         page,
       })}`,
     )
+  const getCaseloads = (context) => get(context, '/reference-data/caseloads')
+
   return {
     userSearch,
+    getCaseloads,
   }
 }
 

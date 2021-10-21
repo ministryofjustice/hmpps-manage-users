@@ -197,7 +197,7 @@ module.exports = {
       },
       response: { status: 200 },
     }),
-  stubDpsGetCaseloads: () =>
+  stubDpsGetPrisons: () =>
     getFor({
       urlPath: '/api/agencies/type/INST',
       body: [
