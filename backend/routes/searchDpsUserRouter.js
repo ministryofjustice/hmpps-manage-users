@@ -10,11 +10,11 @@ const searchApiFactory = require('./searchApiFactory')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi, oauthApi }) => {
-  const { searchApi, searchableRoles, caseloads } = searchApiFactory(prisonApi, oauthApi)
+  const { searchApi, searchableRoles, prisons } = searchApiFactory(prisonApi, oauthApi)
 
   const { index, results } = searchFactory(
     paginationService,
-    caseloads,
+    prisons,
     searchableRoles,
     searchApi,
     contextProperties.getResponsePagination,

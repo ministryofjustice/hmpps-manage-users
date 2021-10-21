@@ -9,10 +9,11 @@ describe('Search API Factory', () => {
     getCaseloads: jest.fn(),
   }
   const nomisUsersAndRolesApi = {
+    getCaseloads: jest.fn(),
     userSearch: jest.fn(),
   }
   const oauthApi = { userEmails: jest.fn() }
-  const { searchApi, searchableRoles, caseloads, findUsersApi } = searchApiFactory(
+  const { searchApi, searchableRoles, prisons, caseloads, findUsersApi } = searchApiFactory(
     prisonApi,
     oauthApi,
     nomisUsersAndRolesApi,
@@ -245,14 +246,14 @@ describe('Search API Factory', () => {
       })
     })
   })
-  describe('caseloads', () => {
-    it('will get caseloads with admin in context', async () => {
+  describe('prisons', () => {
+    it('will get prisons with admin in context', async () => {
       prisonApi.getCaseloads.mockResolvedValue([
         { description: 'Moorland HMP', agencyId: 'MDI' },
         { description: 'Leeds HMP', agencyId: 'LEI' },
       ])
 
-      const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: true } })
+      const caseloadOptions = await prisons({ user: { maintainAccessAdmin: true } })
 
       expect(prisonApi.getCaseloads).toBeCalledWith({
         user: { maintainAccessAdmin: true },
@@ -263,10 +264,36 @@ describe('Search API Factory', () => {
         { text: 'Moorland HMP', value: 'MDI' },
       ])
     })
-    it('will not get caseload options when admin not in context', async () => {
-      const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: false } })
+    it('will not get prisons options when admin not in context', async () => {
+      const caseloadOptions = await prisons({ user: { maintainAccessAdmin: false } })
 
       expect(prisonApi.getCaseloads).not.toHaveBeenCalled()
+
+      expect(caseloadOptions).toEqual([])
+    })
+  })
+  describe('caseloads', () => {
+    it('will get caseloads with admin in context', async () => {
+      nomisUsersAndRolesApi.getCaseloads.mockResolvedValue([
+        { name: 'Moorland HMP', id: 'MDI' },
+        { name: 'Leeds HMP', id: 'LEI' },
+      ])
+
+      const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: true } })
+
+      expect(nomisUsersAndRolesApi.getCaseloads).toBeCalledWith({
+        user: { maintainAccessAdmin: true },
+      })
+
+      expect(caseloadOptions).toEqual([
+        { text: 'Leeds HMP', value: 'LEI' },
+        { text: 'Moorland HMP', value: 'MDI' },
+      ])
+    })
+    it('will not get caseloads options when admin not in context', async () => {
+      const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: false } })
+
+      expect(nomisUsersAndRolesApi.getCaseloads).not.toHaveBeenCalled()
 
       expect(caseloadOptions).toEqual([])
     })

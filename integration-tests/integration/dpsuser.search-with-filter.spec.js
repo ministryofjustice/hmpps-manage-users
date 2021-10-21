@@ -153,7 +153,7 @@ context('DPS search with filter user functionality', () => {
     searchWithFilter.filterAll({
       user: 'Andy',
       statusText: 'Active',
-      caseloadText: 'Moorland',
+      caseloadText: 'Moorland (HMP & YOI)',
       roleText: ['User Admin', 'User General'],
     })
 

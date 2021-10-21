@@ -78,7 +78,7 @@
 
     {% if showGroupOrPrisonDropdown %}
       {{ govukSelect({label: {
-        text: "Prison" if groupOrPrison === 'caseload' else groupOrPrison,
+        text: "Prison caseload" if groupOrPrison === 'caseload' else groupOrPrison,
         classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
