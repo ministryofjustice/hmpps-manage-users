@@ -230,6 +230,50 @@ module.exports = (app, path) => {
     },
   )
 
+  njkEnv.addFilter('roleFilter', (currentFilter, filterOptionsHtml) => {
+    const hrefBase = '/manage-roles?'
+    const roleNameTags = getRoleNameTags(currentFilter, hrefBase)
+    const roleCodeTags = getRoleCodeTags(currentFilter, hrefBase)
+    const adminTags = getAdminTags(currentFilter, hrefBase)
+    const categories = [
+      {
+        heading: {
+          text: 'Role name',
+        },
+        items: roleNameTags,
+      },
+      {
+        heading: {
+          text: 'Role code',
+        },
+        items: roleCodeTags,
+      },
+      {
+        heading: {
+          text: 'Role administrator',
+        },
+        items: adminTags,
+      },
+    ]
+
+    return {
+      heading: {
+        text: 'Filters',
+      },
+      selectedFilters: {
+        heading: {
+          html: '<div class="moj-action-bar__filter"></div>',
+        },
+        clearLink: {
+          text: 'Clear filters',
+          href: '/manage-roles',
+        },
+        categories: categories.filter((category) => category.items),
+      },
+      optionsHtml: filterOptionsHtml,
+    }
+  })
+
   return njkEnv
 }
 
@@ -301,6 +345,47 @@ function getRoleTags(currentFilter, hrefBase, roles) {
       text: roles.find((r) => r.value === role)?.text,
     }
   })
+}
+
+function getRoleNameTags(currentFilter, hrefBase) {
+  const { roleName, ...newFilter } = currentFilter
+  if (roleName) {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: roleName,
+      },
+    ]
+  }
+  return undefined
+}
+function getRoleCodeTags(currentFilter, hrefBase) {
+  const { roleCode, ...newFilter } = currentFilter
+  if (roleCode) {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: roleCode,
+      },
+    ]
+  }
+  return undefined
+}
+
+function getAdminTags(currentFilter, hrefBase) {
+  const { adminTypes, ...newFilter } = currentFilter
+  if (adminTypes && adminTypes !== 'ALL') {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: toStatusDesctiption(adminTypes),
+      },
+    ]
+  }
+  return undefined
 }
 
 function toStatusDesctiption(status) {

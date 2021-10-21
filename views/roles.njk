@@ -2,7 +2,10 @@
 {%- from "govuk/components/select/macro.njk" import govukSelect -%}
 {%- from "govuk/components/button/macro.njk" import govukButton -%}
 {%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 {%- from "govuk/components/error-summary/macro.njk" import govukErrorSummary -%}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
@@ -24,6 +27,71 @@
  {% endblock %}
 
 {% block content %}
+
+  {% set filterOptionsHtml %}
+    {{ govukInput({
+      label: { text: "Role name", classes: "govuk-label--s" },
+      classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+      value: currentFilter.roleName,
+      id: "roleName",
+      name: "roleName",
+      hint: {
+        text: "Will match the role's name"
+      },
+      errorMessage: errors | findError('roleName')
+    }) }}
+
+    {{ govukInput({
+      label: { text: "Role code", classes: "govuk-label--s" },
+      classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+      value: currentFilter.roleCode,
+      id: "roleCode",
+      name: "roleCode",
+      hint: {
+        text: "Will match the role's code"
+      },
+      errorMessage: errors | findError('roleCode')
+    }) }}
+
+    {{ govukRadios({
+      idPrefix: 'adminTypes',
+      name: 'adminTypes',
+      classes: 'govuk-radios--small govuk-radios--inline',
+      fieldset: {
+        legend: {
+          text: 'Role administrator',
+          classes: 'govuk-label--s'
+        }
+      },
+      hint: {
+        text: 'Display Ext Admin, DPS Admin or DPS LSA administerable roles only'
+      },
+      items: [
+        {
+          value: 'ALL',
+          text: 'All',
+          checked: currentFilter.adminTypes === 'ALL'
+        },
+        {
+          value: 'EXT_ADM',
+          text: 'EXT ADMIN',
+          checked: currentFilter.adminTypes === 'EXT_ADM'
+        },
+        {
+          value: 'DPS_ADM',
+          text: 'DPS ADMIN',
+          checked: currentFilter.adminTypes === 'DPS_ADM'
+        },
+        {
+          value: 'DPS_LSA',
+          text: 'DPS LSA',
+          checked: currentFilter.adminTypes === 'DPS_LSA'
+        }
+      ]
+    }
+    ) }}
+  {% endset %}
+
   {% if errors.length > 0 %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -32,49 +100,81 @@
     }) }}
   {% endif %}
 
-  <div class="govuk-grid-row">
+  <div class="govuk-grid-row govuk-body">
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
     <div class="govuk-grid-row">
-      {{ mojPagination(pagination) }}
-      {% set rows = [] %}
-      {% for r in roles %}
-        {% set roleLink %}
-          <a href="{{ maintainUrl }}/{{ r.roleCode }}" class="govuk-link" data-qa="edit-button-{{ r.roleName }}">{{ r.roleName }}</a>
-        {% endset %}
-        {% set admin %}
-          {%  for a in r.adminType %}
-              {{ govukTag({
-                text: "DPS ADMIN",
-                classes: "govuk-tag--purple"
-              }) if a.adminTypeCode === "DPS_ADM" }}
-              {{ govukTag({
-                text: "DPS LSA",
-                classes: "govuk-tag--blue"
-              }) if a.adminTypeCode === "DPS_LSA" }}
-              {{ govukTag({
-                text: "EXT ADMIN",
-                classes: "govuk-tag--turquoise"
-              }) if a.adminTypeCode === "EXT_ADM" }}
-          {% endfor %}
-        {% endset %}
-        {% set rows = (rows.push([
-          { html: roleLink },
-          { text: r.roleDescription },
-          { html: admin }
-        ]), rows) %}
-      {% endfor %}
-      {{ govukTable({
-        head: [
-          { text: "Role Name" },
-          { text: "Role Description" },
-          { text: "Who can administer the role" }
-        ],
-        rows: rows,
-        attributes: { "data-qa": "roles" }
-      }) }}
-      {{ mojPagination(pagination) }}
+      <div class="govuk-grid-column-full">
+        <div class="moj-filter-layout">
+          <div class="moj-filter-layout__filter">
+            <form id="filter-form" action="{{ rolesUrl }}" novalidate>
+              {{ mojFilter(currentFilter | roleFilter( filterOptionsHtml )) }}
+            </form>
+          </div>
+          <div class="moj-filter-layout__content">
+            <div>
+              <div class="govuk-grid-column-full">
+                <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+                {# {% if results.length %} #}
+                {{ mojPagination(pagination) }}
+                {% set rows = [] %}
+                {% for r in roles %}
+                  {% set cellHtml %}
+                    <div class="govuk-!-margin-bottom-5">
+                      <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                        <div class="govuk-grid-column-three-quarters">
+                          <div class="govuk-body-lead">
+                            <a href="{{ maintainUrl }}/{{ r.roleCode }}" class="govuk-link"
+                               data-qa="edit-button-{{ r.roleName }}">{{ r.roleName }}</a>
+                          </div>
+                          <div class="govuk-body-s">{{ r.roleCode }} </div>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter  pull-right">
+                          {% for a in r.adminType %}
+                            {{ govukTag({
+                              text: "DPS ADMIN",
+                              classes: "govuk-tag--purple"
+                            }) if a.adminTypeCode === "DPS_ADM" }}
+                            {{ govukTag({
+                              text: "DPS LSA",
+                              classes: "govuk-tag--blue"
+                            }) if a.adminTypeCode === "DPS_LSA" }}
+                            {{ govukTag({
+                              text: "EXT ADMIN",
+                              classes: "govuk-tag--turquoise"
+                            }) if a.adminTypeCode === "EXT_ADM" }}
+                          {% endfor %}
+                        </div>
+                          <div class="govuk-grid-column-three-quarters">
+                            {{ r.roleDescription }}
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+                  {% endset %}
+                  {% set rows = (rows.push([
+                    { html: cellHtml }
+                  ]), rows) %}
+
+                {% endfor %}
+                {{ govukTable({
+                  rows: rows,
+                  attributes: { "data-qa": "roles" }
+                }) }}
+                {{ mojPagination(pagination) }}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/js/moj-filter-button-toggle.js"></script>
 {% endblock %}
