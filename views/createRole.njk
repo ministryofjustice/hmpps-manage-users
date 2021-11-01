@@ -5,6 +5,7 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 
 {% set title =  "Create role" %}
@@ -54,13 +55,14 @@
             errorMessage: errors | findError('roleName')
           }) }}
 
-          {{ govukTextarea({label: {
+          {{ govukCharacterCount({label: {
             text: "Role description"
           },
             classes: "govuk-input--width-50",
             value: roleDescription,
             id: "roleDescription",
             name: "roleDescription",
+            maxlength: 1024,
             errorMessage: errors | findError('roleDescription')
           }) }}
 

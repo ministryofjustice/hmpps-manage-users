@@ -28,7 +28,7 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
 
   const post = async (req, res) => {
     const role = req.body
-    role.roleCode = role.roleCode.toUpperCase().trim()
+    role.roleCode = role.roleCode.toUpperCase().trim().replace(/ROLE_/, '')
     role.roleName = role.roleName.trim()
 
     if (role.adminType == null) {

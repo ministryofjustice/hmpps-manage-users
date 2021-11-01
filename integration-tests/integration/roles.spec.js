@@ -206,6 +206,32 @@ context('Roles', () => {
     })
   })
 
+  it('should allow create role', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+
+    menuPage.createRole()
+
+    cy.task('stubAuthCreateRole')
+    CreateRolePage.verifyOnPage()
+    cy.task('stubRoleDetails', {})
+    const createRole = CreateRolePage.verifyOnPage()
+    createRole.createRole('ROLE_AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')
+    RoleDetailsPage.verifyOnPage('Auth Group Manager')
+
+    cy.task('verifyCreateRole').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(JSON.parse(requests[0].body)).to.deep.equal({
+        roleCode: 'AUTH_GROUP_MANAGER',
+        roleName: 'Auth Group Manager',
+        roleDescription: 'Role to be a Group Manager',
+        adminType: ['EXT_ADM'],
+      })
+    })
+  })
+
   const roleDetailsAfterRoleAdminTypeChange = {
     content: {
       roleCode: 'AUTH_GROUP_MANAGER',
