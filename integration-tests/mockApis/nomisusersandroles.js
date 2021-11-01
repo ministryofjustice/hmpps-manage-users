@@ -68,4 +68,149 @@ module.exports = {
         },
       ],
     }),
+  stubGetRoles: ({
+    content = [
+      {
+        code: 'MAINTAIN_ACCESS_ROLES',
+        name: 'Maintain Roles',
+      },
+      {
+        code: 'USER_ADMIN',
+        name: 'User Admin',
+      },
+    ],
+  }) =>
+    getFor({
+      urlPath: '/nomisusersandroles/roles',
+      body: content,
+    }),
+  stubGetRolesIncludingAdminRoles: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/roles\\?admin-roles=true',
+      body: [
+        {
+          code: 'MAINTAIN_ACCESS_ROLES',
+          name: 'Maintain Roles',
+          adminRoleOnly: false,
+        },
+        {
+          code: 'USER_ADMIN',
+          name: 'User Admin',
+          adminRoleOnly: true,
+        },
+        {
+          code: 'ANOTHER_ADMIN_ROLE',
+          name: 'Another admin role',
+          adminRoleOnly: true,
+        },
+        {
+          code: 'ANOTHER_GENERAL_ROLE',
+          name: 'Another general role',
+          adminRoleOnly: false,
+        },
+      ],
+    }),
+  stubUserDetails: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/.*',
+      body: {
+        staffId: '12345',
+        username: 'ITAG_USER',
+        firstName: 'Itag',
+        lastName: 'User',
+      },
+    }),
+  stubUserGetRoles: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/.*/roles',
+      body: {
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        dpsRoles: [
+          {
+            code: 'MAINTAIN_ACCESS_ROLES',
+            name: 'Maintain Roles',
+            adminRoleOnly: false,
+          },
+          {
+            code: 'ANOTHER_GENERAL_ROLE',
+            name: 'Another general role',
+            adminRoleOnly: false,
+          },
+        ],
+      },
+    }),
+  stubDpsUserGetAdminRoles: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/.*/roles',
+      body: {
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        dpsRoles: [
+          {
+            code: 'MAINTAIN_ACCESS_ROLES',
+            name: 'Maintain Roles',
+            adminRoleOnly: false,
+          },
+          {
+            code: 'ANOTHER_GENERAL_ROLE',
+            name: 'Another general role',
+            adminRoleOnly: false,
+          },
+        ],
+      },
+    }),
+  stubDpsAddRoles: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/api/users/.*/access-role',
+      },
+      response: { status: 200 },
+    }),
+  stubDpsRemoveRole: () =>
+    stubFor({
+      request: {
+        method: 'DELETE',
+        urlPattern: '/api/users/.*/caseload/NWEB/access-role/.*',
+      },
+      response: { status: 200 },
+    }),
+  verifyDpsAdminSearch: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/nomisusersandroles/users',
+    }).then((data) => data.body.requests),
+  verifyDpsAddRoles: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/nomisusersandroles/users/.*/roles',
+    }).then((data) => data.body.requests),
+  verifyDpsRemoveRole: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/nomisusersandroles/users/.*/roles',
+    }).then((data) => data.body.requests),
+
+  stubUserCaseloads: (caseloads) =>
+    getFor({
+      urlPath: '/nomisusersandroles/users/.*/caseloads',
+      body: caseloads || {
+        username: 'ITAG_USER',
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        caseloads: [
+          {
+            id: 'MDI',
+            name: 'Moorland',
+          },
+        ],
+      },
+    }),
 }
