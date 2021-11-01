@@ -4,12 +4,15 @@ const config = require('../config')
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 
 module.exports =
-  ({ prisonApi, oauthApi }) =>
+  ({ oauthApi, nomisUsersAndRolesApi }) =>
   async (req, res, next) => {
     if (!req.xhr) {
       if (!req.session.userDetails) {
         req.session.userDetails = await oauthApi.currentUser(res.locals)
-        req.session.allCaseloads = await prisonApi.userCaseLoads(res.locals)
+        req.session.allCaseloads = await nomisUsersAndRolesApi.userCaseLoads(
+          res.locals,
+          req.session.userDetails.username,
+        )
 
         const roles = await oauthApi.currentRoles(res.locals)
         req.session.userRoles = {
@@ -21,8 +24,8 @@ module.exports =
         }
       }
 
-      const caseloads = req.session.allCaseloads
-      const { name, activeCaseLoadId } = req.session.userDetails
+      const { activeCaseload, caseloads } = req.session.allCaseloads
+      const { name } = req.session.userDetails
       const returnUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
       const clientID = config.apis.oauth2.clientId
 
@@ -32,7 +35,7 @@ module.exports =
         ...res.locals.user,
         allCaseloads: caseloads,
         displayName: forenameToInitial(name),
-        activeCaseLoad: caseloads.find((cl) => cl.caseLoadId === activeCaseLoadId),
+        activeCaseLoad: activeCaseload,
         ...req.session.userRoles,
       }
     }

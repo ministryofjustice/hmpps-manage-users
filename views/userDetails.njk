@@ -160,10 +160,10 @@
         {% set rows = [] %}
         {% for userRole in roles %}
           {% set roleLink %}
-            <a href="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove" class="govuk-link" data-qa="remove-button-{{ userRole.roleCode }}">Remove role</a>
+            <a href="{{ staffUrl }}/roles/{{ userRole.code }}/remove" class="govuk-link" data-qa="remove-button-{{ userRole.code }}">Remove role</a>
           {% endset %}
           {% set rows = (rows.push([
-            { text: userRole.roleName },
+            { text: userRole.name },
             { html: roleLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
           ]), rows) %}
         {% endfor %}

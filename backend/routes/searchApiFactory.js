@@ -77,15 +77,16 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
     }
   }
 
-  const searchableRoles = (context) => {
+  const searchableRoles = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
-    return hasAdminRole ? prisonApi.getRolesAdmin(context) : prisonApi.getRoles(context)
+
+    return (await nomisUsersAndRolesApi.getRoles(context, hasAdminRole)).sort((a, b) => a.name?.localeCompare(b.name))
   }
 
   const prisons = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
-    return (await prisonApi.getCaseloads(context))
+    return (await prisonApi.getPrisons(context))
       .map((prison) => ({
         text: prison.description,
         value: prison.agencyId,

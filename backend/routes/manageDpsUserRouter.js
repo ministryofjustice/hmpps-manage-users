@@ -5,28 +5,31 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ prisonApi, oauthApi }) => {
+const controller = ({ oauthApi, nomisUsersAndRolesApi }) => {
   const getUserAndAssignableRolesApi = (context, username, hasAdminRole) =>
-    Promise.all([prisonApi.getUser(context, username), prisonApi.assignableRoles(context, username, hasAdminRole)])
+    Promise.all([
+      nomisUsersAndRolesApi.getUser(context, username),
+      nomisUsersAndRolesApi.assignableRoles(context, username, hasAdminRole),
+    ])
 
-  const getUserAndRolesApi = async (context, username, hasAdminRole) => {
+  const getUserAndRolesApi = async (context, username) => {
     const [user, roles, userEmail] = await Promise.all([
-      prisonApi.getUser(context, username),
-      prisonApi.contextUserRoles(context, username, hasAdminRole),
+      nomisUsersAndRolesApi.getUser(context, username),
+      nomisUsersAndRolesApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
     ])
-    return [{ ...user, email: userEmail.email, verified: userEmail.verified }, roles]
+    return [{ ...user, email: userEmail.email, verified: userEmail.verified }, roles.dpsRoles]
   }
   const getUserApi = async (context, username) => {
     const [user, userEmail] = await Promise.all([
-      prisonApi.getUser(context, username),
+      nomisUsersAndRolesApi.getUser(context, username),
       oauthApi.getUserEmail(context, { username }),
     ])
     return { ...user, email: userEmail.email }
   }
 
-  const saveRolesApi = (context, username, roles) => prisonApi.addUserRoles(context, username, roles)
-  const removeRoleApi = (context, username, role) => prisonApi.removeRole(context, username, role)
+  const saveRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
+  const removeRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeRole(context, username, role)
 
   const changeEmailApi = (context, username, email) => oauthApi.changeDpsEmail(context, username, { email })
 

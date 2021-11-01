@@ -4,11 +4,10 @@ describe('Search API Factory', () => {
   const prisonApi = {
     userSearchAdmin: jest.fn(),
     userSearch: jest.fn(),
-    getRolesAdmin: jest.fn(),
-    getRoles: jest.fn(),
-    getCaseloads: jest.fn(),
+    getPrisons: jest.fn(),
   }
   const nomisUsersAndRolesApi = {
+    getRoles: jest.fn(),
     getCaseloads: jest.fn(),
     userSearch: jest.fn(),
   }
@@ -227,35 +226,83 @@ describe('Search API Factory', () => {
     })
   })
   describe('searchableRoles', () => {
+    it('will filter admin roles with non admin role context', async () => {
+      nomisUsersAndRolesApi.getRoles.mockResolvedValue([
+        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
+        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+      ])
+
+      const roles = await searchableRoles({ user: { maintainAccessAdmin: false } })
+
+      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: false },
+        },
+        false,
+      )
+
+      expect(roles).toEqual([
+        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
+      ])
+    })
+    it('will filter admin roles with non admin role context', async () => {
+      nomisUsersAndRolesApi.getRoles.mockResolvedValue([
+        { code: 'CODE1', name: 'ZZZ1', adminRoleOnly: true },
+        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
+        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+      ])
+
+      const roles = await searchableRoles({ user: { maintainAccessAdmin: true } })
+
+      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: true },
+        },
+        true,
+      )
+
+      expect(roles).toEqual([
+        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
+        { code: 'CODE1', name: 'ZZZ1', adminRoleOnly: true },
+      ])
+    })
     it('will get admin roles with admin role context', async () => {
-      prisonApi.getRolesAdmin.mockResolvedValue([])
+      nomisUsersAndRolesApi.getRoles.mockResolvedValue([])
 
       await searchableRoles({ user: { maintainAccessAdmin: true } })
 
-      expect(prisonApi.getRolesAdmin).toBeCalledWith({
-        user: { maintainAccessAdmin: true },
-      })
+      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: true },
+        },
+        true,
+      )
     })
     it('will get normal roles without admin role context', async () => {
-      prisonApi.getRolesAdmin.mockResolvedValue([])
+      nomisUsersAndRolesApi.getRoles.mockResolvedValue([])
 
       await searchableRoles({ user: { maintainAccessAdmin: false } })
 
-      expect(prisonApi.getRoles).toBeCalledWith({
-        user: { maintainAccessAdmin: false },
-      })
+      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+        {
+          user: { maintainAccessAdmin: false },
+        },
+        false,
+      )
     })
   })
   describe('prisons', () => {
     it('will get prisons with admin in context', async () => {
-      prisonApi.getCaseloads.mockResolvedValue([
+      prisonApi.getPrisons.mockResolvedValue([
         { description: 'Moorland HMP', agencyId: 'MDI' },
         { description: 'Leeds HMP', agencyId: 'LEI' },
       ])
 
       const caseloadOptions = await prisons({ user: { maintainAccessAdmin: true } })
 
-      expect(prisonApi.getCaseloads).toBeCalledWith({
+      expect(prisonApi.getPrisons).toBeCalledWith({
         user: { maintainAccessAdmin: true },
       })
 
@@ -267,7 +314,7 @@ describe('Search API Factory', () => {
     it('will not get prisons options when admin not in context', async () => {
       const caseloadOptions = await prisons({ user: { maintainAccessAdmin: false } })
 
-      expect(prisonApi.getCaseloads).not.toHaveBeenCalled()
+      expect(prisonApi.getPrisons).not.toHaveBeenCalled()
 
       expect(caseloadOptions).toEqual([])
     })
