@@ -168,7 +168,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: '/api/users/.*/access-role',
+        urlPattern: '/nomisusersandroles/users/.*/roles',
       },
       response: { status: 200 },
     }),
@@ -176,29 +176,13 @@ module.exports = {
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/api/users/.*/caseload/NWEB/access-role/.*',
+        urlPattern: '/nomisusersandroles/users/.*/roles',
       },
       response: { status: 200 },
     }),
-  verifyDpsAdminSearch: () =>
-    getMatchingRequests({
-      method: 'GET',
-      urlPathPattern: '/nomisusersandroles/users',
-    }).then((data) => data.body.requests),
-  verifyDpsAddRoles: () =>
-    getMatchingRequests({
-      method: 'POST',
-      urlPathPattern: '/nomisusersandroles/users/.*/roles',
-    }).then((data) => data.body.requests),
-  verifyDpsRemoveRole: () =>
-    getMatchingRequests({
-      method: 'DELETE',
-      urlPathPattern: '/nomisusersandroles/users/.*/roles',
-    }).then((data) => data.body.requests),
-
   stubUserCaseloads: (caseloads) =>
     getFor({
-      urlPath: '/nomisusersandroles/users/.*/caseloads',
+      urlPattern: '/nomisusersandroles/users/.*/caseloads',
       body: caseloads || {
         username: 'ITAG_USER',
         activeCaseload: {
@@ -213,4 +197,14 @@ module.exports = {
         ],
       },
     }),
+  verifyDpsAddRoles: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/nomisusersandroles/users/.*/roles',
+    }).then((data) => data.body.requests),
+  verifyDpsRemoveRole: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
+    }).then((data) => data.body.requests),
 }

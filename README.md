@@ -84,7 +84,7 @@ docker run -p 3001:3000 -d \
 # Cypress Integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the prison, ouath RESTful APIs.
+These tests WireMock to stub the application's dependencies on the Prison, HMPPS Auth, and NOMIS User-roles RESTful APIs.
 
 ## Running the feature tests
 

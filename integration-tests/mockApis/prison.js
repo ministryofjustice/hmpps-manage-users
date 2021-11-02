@@ -111,4 +111,9 @@ module.exports = {
       method: 'GET',
       urlPathPattern: '/api/users/local-administrator/available',
     }).then((data) => data.body.requests),
+  verifyDpsAdminSearch: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/api/users',
+    }).then((data) => data.body.requests),
 }

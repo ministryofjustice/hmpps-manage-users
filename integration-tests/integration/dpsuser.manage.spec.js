@@ -142,7 +142,7 @@ context('DPS user manage functionality', () => {
     cy.task('verifyDpsRemoveRole').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
+      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
     })
   })
 
@@ -181,7 +181,7 @@ context('DPS user manage functionality', () => {
     cy.task('verifyDpsRemoveRole').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/api/users/ITAG_USER5/caseload/NWEB/access-role/ANOTHER_GENERAL_ROLE')
+      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
     })
   })
 
