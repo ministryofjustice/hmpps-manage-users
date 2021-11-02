@@ -19,8 +19,8 @@ const searchFactory = (
       getSearchableRolesApi(res.locals),
     ])
     const roleDropdownValues = searchableRoles.map((r) => ({
-      text: r.name,
-      value: r.code,
+      text: r.roleName,
+      value: r.roleCode,
     }))
     const showGroupOrPrisonDropdown = Boolean(res.locals?.user?.maintainAccessAdmin || !dpsSearch)
 

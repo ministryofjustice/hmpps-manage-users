@@ -36,7 +36,7 @@ describe('search factory', () => {
     }
     beforeEach(() => {
       getCaseloadsApi.mockReset()
-      getSearchableRolesApi.mockResolvedValue([{ name: 'Access Role Admin', code: 'ACCESS_ROLE_ADMIN' }])
+      getSearchableRolesApi.mockResolvedValue([{ roleName: 'Access Role Admin', roleCode: 'ACCESS_ROLE_ADMIN' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'Moorland HMP', value: 'MDI' }])
       findUsersApi.mockResolvedValue({ searchResults: [], number: 0, page: 0 })
       allowDownload.mockReset()

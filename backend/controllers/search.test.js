@@ -80,7 +80,7 @@ describe('search factory', () => {
 
     it('should call search user render', async () => {
       const req = { params: {}, flash: jest.fn() }
-      getSearchableRolesApi.mockResolvedValue([{ name: 'name', code: 'code' }])
+      getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
 
       const render = jest.fn()
@@ -99,7 +99,7 @@ describe('search factory', () => {
 
     it('should set admin to true for maintain DPS users', async () => {
       const req = { params: {}, flash: jest.fn() }
-      getSearchableRolesApi.mockResolvedValue([{ name: 'name', code: 'code' }])
+      getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
 
       const render = jest.fn()
@@ -315,7 +315,7 @@ describe('search factory', () => {
     it('should call search user render', async () => {
       const req = { params: {}, flash: jest.fn() }
       getAssignableGroupsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
-      getSearchableRolesApi.mockResolvedValue([{ name: 'name', code: 'code' }])
+      getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
 
       const render = jest.fn()
       await search.index(req, { render })
