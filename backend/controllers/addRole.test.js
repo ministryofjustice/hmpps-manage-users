@@ -10,7 +10,7 @@ describe('select roles factory', () => {
       const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       getUserAndRoles.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
-        [{ name: 'name', code: 'code' }],
+        [{ roleName: 'name', roleCode: 'code' }],
       ])
 
       const render = jest.fn()

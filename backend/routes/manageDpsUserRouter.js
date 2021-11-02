@@ -18,7 +18,10 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi }) => {
       nomisUsersAndRolesApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
     ])
-    return [{ ...user, email: userEmail.email, verified: userEmail.verified }, roles.dpsRoles]
+    return [
+      { ...user, email: userEmail.email, verified: userEmail.verified },
+      roles.dpsRoles.map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly })),
+    ]
   }
   const getUserApi = async (context, username) => {
     const [user, userEmail] = await Promise.all([

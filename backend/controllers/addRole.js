@@ -11,8 +11,8 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
 
     const [user, assignableRoles] = await getUserAndRoles(res.locals, userId, hasAdminRole)
     const roleDropdownValues = assignableRoles.map((r) => ({
-      text: r.name,
-      value: r.code,
+      text: r.roleName,
+      value: r.roleCode,
       ...(r.roleDescription && {
         hint: {
           text: r.roleDescription,

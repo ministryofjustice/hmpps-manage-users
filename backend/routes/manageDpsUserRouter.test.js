@@ -33,7 +33,7 @@ describe('Manage DPS user router', () => {
       const results = await getUserAndRolesApi({ locals: context })
       expect(results).toEqual([
         { username: 'joe', active: true, email: 'joe@bloggs', verified: false },
-        [{ code: 'role1' }],
+        [{ roleCode: 'role1' }],
       ])
     })
   })

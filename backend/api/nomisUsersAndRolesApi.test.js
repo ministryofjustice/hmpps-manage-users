@@ -164,8 +164,8 @@ describe('nomis users and roles API tests', () => {
 
     it('should return roles from endpoint', () => {
       expect(actual).toEqual([
-        { code: 'not yet assigned admin', adminRoleOnly: true },
-        { code: 'not yet assigned', adminRoleOnly: false },
+        { roleCode: 'not yet assigned admin', adminRoleOnly: true },
+        { roleCode: 'not yet assigned', adminRoleOnly: false },
       ])
     })
     it('should call nomis user roles endpoint', () => {
@@ -196,7 +196,7 @@ describe('nomis users and roles API tests', () => {
     })
 
     it('should return roles from endpoint', () => {
-      expect(actual).toEqual([{ code: 'not yet assigned', adminRoleOnly: false }])
+      expect(actual).toEqual([{ roleCode: 'not yet assigned', adminRoleOnly: false }])
     })
     it('should call nomis user roles endpoint', () => {
       expect(client.get).toBeCalledWith(context, '/users/joe/roles')

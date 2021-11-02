@@ -242,8 +242,8 @@ describe('Search API Factory', () => {
       )
 
       expect(roles).toEqual([
-        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
-        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
+        { roleCode: 'CODE2', roleName: 'AAA1', adminRoleOnly: false },
+        { roleCode: 'CODE3', roleName: 'BBB1', adminRoleOnly: false },
       ])
     })
     it('will filter admin roles with non admin role context', async () => {
@@ -263,9 +263,9 @@ describe('Search API Factory', () => {
       )
 
       expect(roles).toEqual([
-        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
-        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
-        { code: 'CODE1', name: 'ZZZ1', adminRoleOnly: true },
+        { roleCode: 'CODE2', roleName: 'AAA1', adminRoleOnly: false },
+        { roleCode: 'CODE3', roleName: 'BBB1', adminRoleOnly: false },
+        { roleCode: 'CODE1', roleName: 'ZZZ1', adminRoleOnly: true },
       ])
     })
     it('will get admin roles with admin role context', async () => {

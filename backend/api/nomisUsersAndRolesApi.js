@@ -24,19 +24,20 @@ const nomisUsersAndRolesFactory = (client) => {
   const removeRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
   const addRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
-  const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
   const getUser = (context, username) => get(context, `/users/${username}`)
   const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
-  const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
   const userCaseLoads = (context, username) =>
     context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
-
+  const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
+  const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
   const assignableRoles = async (context, username, hasAdminRole) => {
     const [userRoles, allRoles] = await Promise.all([
       contextUserRoles(context, username),
       getRoles(context, hasAdminRole),
     ])
-    return allRoles.filter((r) => !userRoles.dpsRoles.some((userRole) => userRole.code === r.code))
+    return allRoles
+      .filter((r) => !userRoles.dpsRoles.some((userRole) => userRole.code === r.code))
+      .map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly }))
   }
 
   return {
