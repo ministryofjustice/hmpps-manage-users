@@ -133,6 +133,23 @@ describe('create role factory', () => {
       })
     })
 
+    it('should remove ROLE_ from start of role code and redirect', async () => {
+      const req = {
+        body: { roleCode: 'ROLE_bob1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
+        flash: jest.fn(),
+      }
+
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      await createRole.post(req, { redirect, locals })
+      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toBeCalledWith(locals, {
+        roleCode: 'BOB1',
+        roleName: 'role name',
+        adminType: ['EXT_ADM', 'DPS_ADM'],
+      })
+    })
+
     it('should stash the errors and redirect if no name, code and adminType entered', async () => {
       const req = {
         body: { roleCode: '', roleName: '' },
