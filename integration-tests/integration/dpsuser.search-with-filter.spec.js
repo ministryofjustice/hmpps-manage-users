@@ -127,7 +127,8 @@ context('DPS search with filter user functionality', () => {
   })
   it('will have a link to maintain the user', () => {
     cy.task('stubDpsUserDetails')
-
+    cy.task('stubDpsUserGetRoles')
+    cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
     const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
     searchWithFilter.manageLinkForUser('ITAG_USER0').click()
     UserPage.verifyOnPage('Itag User')
