@@ -18,7 +18,7 @@ module.exports = (on) => {
       Promise.all([
         auth.stubSignIn(username, roles),
         auth.stubUserMe({}),
-        prisonApi.stubUserCaseloads(),
+        nomisUsersAndRoles.stubUserCaseloads(),
         tokenverification.stubVerifyToken(true),
       ]),
     stubPrisonApiHealth: (status) => prisonApi.stubHealth(status),
@@ -35,9 +35,9 @@ module.exports = (on) => {
     ...prisonApi,
     ...manageUsersApi,
     ...nomisUsersAndRoles,
-    stubDpsGetRoles: prisonApi.stubGetRoles,
-    stubDpsGetAdminRoles: prisonApi.stubGetRolesIncludingAdminRoles,
-    stubDpsUserDetails: prisonApi.stubUserDetails,
-    stubDpsUserGetRoles: prisonApi.stubUserGetRoles,
+    stubDpsGetRoles: nomisUsersAndRoles.stubGetRoles,
+    stubDpsGetAdminRoles: nomisUsersAndRoles.stubGetRolesIncludingAdminRoles,
+    stubDpsUserDetails: nomisUsersAndRoles.stubUserDetails,
+    stubDpsUserGetRoles: nomisUsersAndRoles.stubUserGetRoles,
   })
 }

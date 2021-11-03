@@ -27,16 +27,16 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
   cy.task('stubDpsGetRoles', {
     content: [
       {
-        roleCode: 'MAINTAIN_ACCESS_ROLES',
-        roleName: 'Maintain Roles',
+        code: 'MAINTAIN_ACCESS_ROLES',
+        name: 'Maintain Roles',
       },
       {
-        roleCode: 'USER_ADMIN',
-        roleName: 'User Admin',
+        code: 'USER_ADMIN',
+        name: 'User Admin',
       },
       {
-        roleCode: 'USER_GENERAL',
-        roleName: 'User General',
+        code: 'USER_GENERAL',
+        name: 'User General',
       },
     ],
   })

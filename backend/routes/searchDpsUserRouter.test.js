@@ -8,7 +8,7 @@ const searchDpsUserRouter = require('./searchDpsUserRouter')
 
 describe('Search DPS user router', () => {
   const apis = {
-    prisonApi: { userSearch: jest.fn(), userSearchAdmin: jest.fn(), getCaseloads: jest.fn() },
+    prisonApi: { userSearch: jest.fn(), userSearchAdmin: jest.fn(), getPrisons: jest.fn() },
     oauthApi: { userEmails: jest.fn() },
   }
   const router = searchDpsUserRouter(apis)
@@ -100,13 +100,13 @@ describe('Search DPS user router', () => {
       expect(results).toEqual([])
     })
     it('should pass the context through to the apis', async () => {
-      apis.prisonApi.getCaseloads.mockResolvedValue([])
+      apis.prisonApi.getPrisons.mockResolvedValue([])
       const context = { user: { maintainAccessAdmin: true } }
       await caseloads(context)
-      expect(apis.prisonApi.getCaseloads).toHaveBeenCalledWith(context)
+      expect(apis.prisonApi.getPrisons).toHaveBeenCalledWith(context)
     })
     it('should map and sort results from prison api', async () => {
-      apis.prisonApi.getCaseloads.mockResolvedValue([
+      apis.prisonApi.getPrisons.mockResolvedValue([
         { agencyId: 'joe', description: 'active' },
         { agencyId: 'fred' },
         { agencyId: 'harry', description: 'field' },

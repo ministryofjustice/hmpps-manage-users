@@ -48,7 +48,7 @@
         classes: 'govuk-!-margin-right-1 ' + phaseNameColour
       }) }}
     {% endif %}
-    {{ user.activeCaseLoad.description }}
+    {{ user.activeCaseLoad.name }}
   </span>
   {% if user.allCaseloads.length > 1 %}
     <a class="location-bar__link" href="{{ dpsUrl }}/change-caseload" data-qa="change-location-link">Change location</a>
