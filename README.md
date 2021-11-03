@@ -51,14 +51,16 @@ tell it where to find the dependent services and other important settings.
 The following environment variables supply these values:
 
 
-| Environment Variable    | Description                                  |
-|------------------------ |:--------------------------------------------:|
-| API_CLIENT_ID           | Client ID for accessing prison-api            |
-| API_CLIENT_SECRET       | Client secret for accessing prison-api        |
-| API_ENDPOINT_URL        | URL to the prison-api                         |
-| OAUTH_ENDPOINT_URL      | URL to the Oauth2 server                     |
-| DPS_ENDPOINT_URL        | DPS Core UI                                  |
-| SESSION_COOKIE_SECRET   | Session cookie secret                        | 
+| Environment Variable          | Description                                  |
+|------------------------       |:--------------------------------------------:|
+| API_CLIENT_ID                 | Client ID for accessing apis                 |
+| API_CLIENT_SECRET             | Client secret for accessing apis             |
+| API_ENDPOINT_URL              | URL to the prison-api                        |
+| MANAGE_USERS_API_ENDPOINT_URL | URL to manage users api                      |
+| NOMIS_USERS_API_ENDPOINT_URL  | URL to NOMIS manage users api                |
+| OAUTH_ENDPOINT_URL            | URL to the Oauth2 server                     |
+| DPS_ENDPOINT_URL              | DPS Core UI                                  |
+| SESSION_COOKIE_SECRET         | Session cookie secret                        | 
 
 
 # Production execution
@@ -82,7 +84,7 @@ docker run -p 3001:3000 -d \
 # Cypress Integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the prison, ouath RESTful APIs.
+These tests WireMock to stub the application's dependencies on the Prison, HMPPS Auth, and NOMIS User-roles RESTful APIs.
 
 ## Running the feature tests
 

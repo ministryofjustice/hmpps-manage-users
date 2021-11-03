@@ -118,4 +118,88 @@ describe('nomis users and roles API tests', () => {
       expect(nomisUsersAndRolesApi.getCaseloads(context)).toEqual(caseloadResponse)
     })
   })
+
+  describe('contextUserRoles', () => {
+    const roles = { username: 'joe', dpsRoles: [{ code: 'CODE1' }] }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = nomisUsersAndRolesApi.contextUserRoles(context, 'joe')
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call nomis user roles endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+    })
+  })
+
+  describe('assignableRoles admin', () => {
+    const userRoles = {
+      username: 'joe',
+      dpsRoles: [
+        { code: 'CODE1', name: 'role name', adminRoleOnly: false },
+        { code: 'CODE2', name: 'role name 2', adminRoleOnly: true },
+      ],
+    }
+    const allRoles = [
+      { code: 'CODE1', adminRoleOnly: false },
+      { code: 'not yet assigned admin', adminRoleOnly: true },
+      { code: 'not yet assigned', adminRoleOnly: false },
+      { code: 'CODE2', name: 'role name 2', adminRoleOnly: true },
+    ]
+    let actual
+
+    beforeEach(async () => {
+      client.get = jest
+        .fn()
+        .mockReturnValueOnce({ then: () => userRoles })
+        .mockReturnValueOnce({ then: () => allRoles })
+      actual = await nomisUsersAndRolesApi.assignableRoles(context, 'joe', true)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual([
+        { roleCode: 'not yet assigned admin', adminRoleOnly: true },
+        { roleCode: 'not yet assigned', adminRoleOnly: false },
+      ])
+    })
+    it('should call nomis user roles endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+    })
+  })
+
+  describe('assignableRoles normal', () => {
+    const userRoles = {
+      username: 'joe',
+      dpsRoles: [
+        { code: 'CODE1', name: 'role name', adminRoleOnly: false },
+        { code: 'CODE2', name: 'role name 2', adminRoleOnly: true },
+      ],
+    }
+    const allRoles = [
+      { code: 'CODE1', adminRoleOnly: false },
+      { code: 'not yet assigned', adminRoleOnly: false },
+    ]
+    let actual
+
+    beforeEach(async () => {
+      client.get = jest
+        .fn()
+        .mockReturnValueOnce({ then: () => userRoles })
+        .mockReturnValueOnce({ then: () => allRoles })
+      actual = await nomisUsersAndRolesApi.assignableRoles(context, 'joe', false)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual([{ roleCode: 'not yet assigned', adminRoleOnly: false }])
+    })
+    it('should call nomis user roles endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+    })
+  })
 })
