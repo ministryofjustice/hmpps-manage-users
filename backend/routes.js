@@ -28,7 +28,7 @@ const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRol
     searchWithFilterDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi }),
   )
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
-  router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi }))
+  router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))
   router.use('/manage-roles', manageRolesRouter({ oauthApi, manageUsersApi }))
 

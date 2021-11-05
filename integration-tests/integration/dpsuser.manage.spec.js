@@ -120,11 +120,12 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
 
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubGetRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
+    addRole.hint('User Admin').should('contain.text', 'Administering users')
 
-    cy.task('stubDpsAddRoles')
+    cy.task('stubDpsAddRoles', {})
     addRole.choose('USER_ADMIN')
     addRole.addRoleButton().click()
 
@@ -151,6 +152,7 @@ context('DPS user manage functionality', () => {
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetAdminRoles')
+    cy.task('stubGetRolesIncludingAdminRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
     results.edit('ITAG_USER5')
@@ -159,9 +161,10 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
 
-    cy.task('stubDpsGetAdminRoles', {})
+    cy.task('stubGetRolesIncludingAdminRoles')
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
+    addRole.hint('User Admin').should('contain.text', 'Administering users')
 
     cy.task('stubDpsAddRoles')
     addRole.choose('USER_ADMIN')

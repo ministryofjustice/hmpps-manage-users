@@ -1,4 +1,4 @@
-const viewRolesFactory = (paginationService, pagingApi, getAllRolesApi, maintainUrl) => {
+const viewRolesFactory = (paginationService, pagingApi, getPagedRolesApi, maintainUrl) => {
   const index = async (req, res) => {
     const { size, page, offset } = req.query
 
@@ -13,7 +13,7 @@ const viewRolesFactory = (paginationService, pagingApi, getAllRolesApi, maintain
 
     const { roleCode, roleName, adminTypes } = currentFilter
 
-    const roles = await getAllRolesApi(res.locals, pageNumber, pageSize, roleName, roleCode, adminTypes)
+    const roles = await getPagedRolesApi(res.locals, pageNumber, pageSize, roleName, roleCode, adminTypes)
 
     res.render('roles.njk', {
       roles,
