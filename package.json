@@ -61,7 +61,7 @@
     "@typescript-eslint/eslint-plugin": "^5.1.0",
     "@typescript-eslint/parser": "^5.1.0",
     "audit-ci": "^5.1.2",
-    "cypress": "^8.6.0",
+    "cypress": "^8.7.0",
     "cypress-multi-reporters": "^1.5.0",
     "dotenv-expand": "^5.1.0",
     "eslint": "^8.0.1",

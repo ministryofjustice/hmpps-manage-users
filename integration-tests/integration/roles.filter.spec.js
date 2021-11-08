@@ -90,7 +90,7 @@ context('Roles', () => {
     })
     rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
 
-    cy.task('stubAllRoles', { totalElements: 3 })
+    cy.task('stubAllRolesPaged', { totalElements: 3 })
     rolesWithFilter.filterAdminType('DPS ADMIN')
     rolesWithFilter.rows().should('have.length', 3)
     rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')

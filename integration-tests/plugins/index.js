@@ -39,5 +39,7 @@ module.exports = (on) => {
     stubDpsGetAdminRoles: nomisUsersAndRoles.stubGetRolesIncludingAdminRoles,
     stubDpsUserDetails: nomisUsersAndRoles.stubUserDetails,
     stubDpsUserGetRoles: nomisUsersAndRoles.stubUserGetRoles,
+    stubManageUserGetAdminRoles: manageUsersApi.stubGetRolesIncludingAdminRoles,
+    stubManageUserGetRoles: manageUsersApi.stubGetRoles,
   })
 }
