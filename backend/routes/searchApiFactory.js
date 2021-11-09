@@ -1,6 +1,6 @@
 const contextProperties = require('../contextProperties')
 
-function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
+function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
   const searchApi = async ({
     locals: context,
     user: nameFilter,
@@ -79,10 +79,7 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
 
   const searchableRoles = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
-
-    return (await nomisUsersAndRolesApi.getRoles(context, hasAdminRole))
-      .map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly }))
-      .sort((a, b) => a.roleName?.localeCompare(b.roleName))
+    return manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' })
   }
 
   const prisons = async (context) => {
@@ -116,5 +113,5 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi) {
   }
 }
 
-module.exports = (prisonApi, oauthApi, nomisUsersAndRolesApi) =>
-  searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi)
+module.exports = (prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi) =>
+  searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi)

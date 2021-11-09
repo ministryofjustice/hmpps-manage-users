@@ -8,11 +8,12 @@ const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi }) => {
+const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const { findUsersApi, searchApi, searchableRoles, caseloads } = searchApiFactory(
     prisonApi,
     oauthApi,
     nomisUsersAndRolesApi,
+    manageUsersApi,
   )
 
   const search = searchFactory(
