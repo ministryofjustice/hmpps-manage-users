@@ -22,10 +22,10 @@ const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRol
   router.use('/', menuRouter())
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
-  router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi }))
+  router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use(
     '/search-with-filter-dps-users',
-    searchWithFilterDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi }),
+    searchWithFilterDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }),
   )
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))

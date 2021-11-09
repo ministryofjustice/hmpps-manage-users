@@ -30,6 +30,8 @@ context('DPS user manage functionality', () => {
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
+    cy.task('stubManageUserGetRoles', {})
+
     cy.task('stubEmail', { verified: false })
 
     results.edit('ITAG_USER5')
@@ -64,6 +66,7 @@ context('DPS user manage functionality', () => {
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
+    cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: false })
 
     results.edit('ITAG_USER5')
@@ -120,7 +123,7 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
 
-    cy.task('stubManageUserGetRoles')
+    cy.task('stubManageUserGetRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.hint('User Admin').should('contain.text', 'Administering users')
@@ -152,7 +155,6 @@ context('DPS user manage functionality', () => {
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetAdminRoles')
-    cy.task('stubManageUserGetAdminRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
     results.edit('ITAG_USER5')
@@ -202,6 +204,7 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should provide breadcrumb link back to search results with filter only', () => {
+    // cy.task('stubManageUserGetRoles', {})
     const userPage = editUser({ nextPage: true, fromSearchFilterPage: true })
 
     userPage.searchBreadcrumb().should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL')
@@ -211,7 +214,7 @@ context('DPS user manage functionality', () => {
   it('Manage your details contain returnTo url for current dps search page', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubManageUserGetRoles', {})
     const search = DpsUserSearchPage.goTo()
     search
       .manageYourDetails()
