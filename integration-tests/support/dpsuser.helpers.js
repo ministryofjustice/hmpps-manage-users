@@ -8,7 +8,8 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
-  cy.task('stubDpsGetRoles', { content: [] })
+  // cy.task('stubDpsGetRoles', { content: [] })
+  cy.task(isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles', { content: [] })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
   if (isAdmin) cy.task('stubDpsGetPrisons')
   cy.task('stubAuthUserEmails')
@@ -24,19 +25,45 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
-  cy.task('stubDpsGetRoles', {
+  const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
+
+  cy.task(stubRoles, {
     content: [
       {
-        code: 'MAINTAIN_ACCESS_ROLES',
-        name: 'Maintain Roles',
+        roleCode: 'MAINTAIN_ACCESS_ROLES',
+        roleName: 'Maintain Roles',
+        roleDescription: 'Maintaining roles for everyone',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+        ],
       },
       {
-        code: 'USER_ADMIN',
-        name: 'User Admin',
+        roleCode: 'USER_ADMIN',
+        roleName: 'User Admin',
+        roleDescription: null,
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+        ],
       },
       {
-        code: 'USER_GENERAL',
-        name: 'User General',
+        roleCode: 'USER_GENERAL',
+        roleName: 'User General',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'DPS_LSA',
+            adminTypeName: 'DPS Local System Administrator',
+          },
+        ],
       },
     ],
   })
@@ -57,7 +84,7 @@ export const goToMainMenuPage = ({ isAdmin = true }) => {
 
 export const editUser = ({ isAdmin = false, fromSearchFilterPage = false, nextPage }) => {
   cy.task('stubDpsUserDetails')
-  cy.task(isAdmin ? 'stubDpsUserGetAdminRoles' : 'stubDpsUserGetRoles')
+  cy.task(isAdmin ? 'stubDpsUserGetAdminRoles' : 'stubUserGetRoles')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
   if (fromSearchFilterPage) {
