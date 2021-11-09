@@ -61,43 +61,6 @@ const stubAllRolesPaged = ({
     },
   })
 
-const stubGetRolesOld = () =>
-  getFor({
-    urlPattern: '/roles\\?adminTypes=DPS_LSA',
-    body: [
-      {
-        roleCode: 'MAINTAIN_ACCESS_ROLES',
-        roleName: 'Maintain Roles',
-        roleDescription: 'Maintaining roles for everyone',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-          {
-            adminTypeCode: 'DPS_LSA',
-            adminTypeName: 'DPS Local System Administrator',
-          },
-        ],
-      },
-      {
-        roleCode: 'USER_ADMIN',
-        roleName: 'User Admin',
-        roleDescription: 'Administering users',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-          {
-            adminTypeCode: 'DPS_LSA',
-            adminTypeName: 'DPS Local System Administrator',
-          },
-        ],
-      },
-    ],
-  })
-
 const stubGetRoles = ({
   content = [
     {
