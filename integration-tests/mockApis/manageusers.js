@@ -201,68 +201,6 @@ const stubGetRolesIncludingAdminRoles = ({
     body: content,
   })
 
-const stubGetRolesIncludingAdminRolesOld = () =>
-  getFor({
-    urlPattern: '/roles\\?adminTypes=DPS_ADM',
-    body: [
-      {
-        roleCode: 'MAINTAIN_ACCESS_ROLES',
-        roleName: 'Maintain Roles',
-        roleDescription: 'Maintaining roles for everyone',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-          {
-            adminTypeCode: 'DPS_LSA',
-            adminTypeName: 'DPS Local System Administrator',
-          },
-        ],
-      },
-      {
-        roleCode: 'USER_ADMIN',
-        roleName: 'User Admin',
-        roleDescription: 'Administering users',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-          {
-            adminTypeCode: 'DPS_LSA',
-            adminTypeName: 'DPS Local System Administrator',
-          },
-        ],
-      },
-      {
-        roleCode: 'ANOTHER_ADMIN_ROLE',
-        roleName: 'Another admin role',
-        roleDescription: 'Some text for another Admin Role',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-        ],
-      },
-      {
-        roleCode: 'ANOTHER_GENERAL_ROLE',
-        roleName: 'Another general role',
-        adminType: [
-          {
-            adminTypeCode: 'DPS_ADM',
-            adminTypeName: 'DPS Central Administrator',
-          },
-          {
-            adminTypeCode: 'EXT_ADM',
-            adminTypeName: 'External Administrator',
-          },
-        ],
-      },
-    ],
-  })
-
 const stubHealth = (status = 200) =>
   stubFor({
     request: {

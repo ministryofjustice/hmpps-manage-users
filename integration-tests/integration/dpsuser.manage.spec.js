@@ -31,7 +31,6 @@ context('DPS user manage functionality', () => {
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubManageUserGetRoles', {})
-
     cy.task('stubEmail', { verified: false })
 
     results.edit('ITAG_USER5')
@@ -163,7 +162,7 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
 
-    cy.task('stubManageUserGetAdminRoles')
+    cy.task('stubManageUserGetAdminRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.hint('User Admin').should('contain.text', 'Administering users')
