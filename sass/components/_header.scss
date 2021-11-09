@@ -37,6 +37,20 @@
         display: inline-block;
       }
     }
+    &__phase-long {
+      display: none;
+      @include govuk-responsive-margin(3, 'left');
+      @include govuk-media-query($from: desktop) {
+        display: inline-block;
+      }
+    }
+    &__phase-short {
+      display: inline-block;
+      @include govuk-responsive-margin(3, 'left');
+      @include govuk-media-query($from: desktop) {
+        display: none;
+      }
+    }
   }
 
   &__link {
@@ -118,18 +132,22 @@
   @include govuk-width-container;
   @include govuk-responsive-margin(3, 'bottom');
   @include govuk-responsive-padding(3, 'top');
-  @include govuk-responsive-padding(3, 'bottom');
-  width: 100%;
   display: flex;
+  justify-content: space-between;
   flex-wrap: wrap;
   border-bottom: 1px solid $govuk-border-colour;
 
   &__location {
+    @include govuk-responsive-padding(3, 'bottom');
     @include govuk-font($size: 19, $weight: 'bold');
-    @include govuk-responsive-margin(3, 'right');
+
+    &__name {
+      @include govuk-responsive-margin(2, 'right');
+    }
   }
 
   &__feedback {
+    @include govuk-responsive-padding(3, 'bottom');
     @include govuk-font($size: 19, $weight: 'normal');
     @include govuk-responsive-margin(3, 'right');
   }
@@ -140,6 +158,11 @@
     @include govuk-font($size: 19, $weight: 'normal');
   }
 
+  .app-phase-banner {
+    border-bottom: 0;
+    padding-bottom: 0;
+    padding-top: 0;
+  }
   @media print {
     display: none;
   }
