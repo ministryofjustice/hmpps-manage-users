@@ -15,7 +15,7 @@ const manageUsersApiFactory = (client) => {
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
 
   const createRole = (context, role) => post(context, '/roles', role)
-  const getAllRoles = (context, page, size, roleName, roleCode, adminType) => {
+  const getPagedRoles = (context, page, size, roleName, roleCode, adminType) => {
     const adminTypes = adminType === 'ALL' ? '' : adminType
     const query = querystring.stringify({
       page,
@@ -24,8 +24,10 @@ const manageUsersApiFactory = (client) => {
       roleCode,
       adminTypes,
     })
-    return client.get(context, `/roles?${query}`).then(processPageResponse(context))
+    return client.get(context, `/roles/paged?${query}`).then(processPageResponse(context))
   }
+  const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
+
   const getRoleDetails = (context, roleCode) => get(context, `/roles/${roleCode}`)
 
   const changeRoleName = (context, roleCode, roleName) => client.put(context, `/roles/${roleCode}`, roleName)
@@ -35,7 +37,8 @@ const manageUsersApiFactory = (client) => {
 
   return {
     createRole,
-    getAllRoles,
+    getPagedRoles,
+    getRoles,
     getRoleDetails,
     changeRoleName,
     changeRoleDescription,

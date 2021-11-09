@@ -20,7 +20,7 @@ context('Roles', () => {
   it('Should display paged results for all roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
-    cy.task('stubAllRoles', {
+    cy.task('stubAllRolesPaged', {
       content: replicateRoles(5),
       totalElements: 21,
       page: 0,
@@ -38,7 +38,7 @@ context('Roles', () => {
   it('Should move between paged result when next page and previous page selected', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
-    cy.task('stubAllRoles', {
+    cy.task('stubAllRolesPaged', {
       content: replicateRoles(5),
       totalElements: 21,
       page: 1,
@@ -80,7 +80,7 @@ context('Roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
 
-    cy.task('stubAllRoles', {})
+    cy.task('stubAllRolesPaged', {})
     cy.task('stubRoleDetails', {})
     cy.visit('/manage-roles')
     const roles = RolesPage.verifyOnPage()
@@ -97,7 +97,7 @@ context('Roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
 
-    cy.task('stubAllRoles', {})
+    cy.task('stubAllRolesPaged', {})
     cy.task('stubRoleDetails', {})
     cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 
@@ -122,7 +122,7 @@ context('Roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
 
-    cy.task('stubAllRoles', {})
+    cy.task('stubAllRolesPaged', {})
     cy.task('stubRoleDetails', {})
     cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 
@@ -147,7 +147,7 @@ context('Roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
 
-    cy.task('stubAllRoles', {})
+    cy.task('stubAllRolesPaged', {})
     cy.task('stubRoleDetails', {})
     cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 

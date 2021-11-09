@@ -21,7 +21,7 @@ context('DPS user functionality', () => {
   it('Should still show the filter if no search results', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', { content: [] })
+    cy.task('stubManageUserGetRoles', {})
     const search = DpsUserSearchPage.goTo()
     cy.task('stubDpsSearch', { totalElements: 0 })
     cy.task('stubAuthUserEmails')
@@ -63,7 +63,7 @@ context('DPS user functionality', () => {
   it('Should allow a user search by role and display results', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubManageUserGetRoles', {})
     const searchRole = DpsUserSearchPage.goTo()
     cy.task('stubDpsSearch', {})
     cy.task('stubAuthUserEmails')
@@ -84,7 +84,7 @@ context('DPS user functionality', () => {
   it('Should allow a user search by caseload and display results', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubManageUserGetAdminRoles', {})
     cy.task('stubDpsGetPrisons')
     const searchRole = DpsUserSearchPage.goTo()
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
@@ -121,7 +121,7 @@ context('DPS user functionality', () => {
   it('Should move between paged result when next page and previous page selected', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubManageUserGetRoles', {})
     cy.task('stubDpsSearch', { totalElements: 21, page: 1, size: 5 })
     cy.task('stubAuthUserEmails')
 
@@ -206,7 +206,7 @@ context('DPS user functionality', () => {
   it('Should filter results by caseload', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubManageUserGetAdminRoles', {})
     cy.task('stubDpsGetPrisons')
     const searchRole = DpsUserSearchPage.goTo()
     cy.task('stubDpsAdminSearch', { totalElements: 21 })
@@ -237,7 +237,7 @@ context('DPS user functionality', () => {
   it('Should hide caseload search for LSAs (non admin)', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.signIn()
-    cy.task('stubDpsGetRoles', {})
+    cy.task('stubManageUserGetRoles', {})
     const searchPage = DpsUserSearchPage.goTo()
     searchPage.caseload().should('not.exist')
   })

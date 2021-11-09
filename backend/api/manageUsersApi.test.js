@@ -54,14 +54,14 @@ describe('manageUsersApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => roles,
       })
-      actual = manageUsersApi.getAllRoles(context)
+      actual = manageUsersApi.getRoles(context, { adminTypes: '' })
     })
 
     it('should return roles from endpoint', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/roles?page=&size=&roleName=&roleCode=&adminTypes=')
+      expect(client.get).toBeCalledWith(context, '/roles?adminTypes=')
     })
   })
 
@@ -73,14 +73,52 @@ describe('manageUsersApi tests', () => {
       client.get = jest.fn().mockReturnValue({
         then: () => roles,
       })
-      actual = manageUsersApi.getAllRoles(context, 0, 20, '', '', 'ALL')
+      actual = manageUsersApi.getRoles(context, { adminTypes: 'DPS_ADM' })
     })
 
     it('should return roles from endpoint', () => {
       expect(actual).toEqual(roles)
     })
     it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/roles?page=0&size=20&roleName=&roleCode=&adminTypes=')
+      expect(client.get).toBeCalledWith(context, '/roles?adminTypes=DPS_ADM')
+    })
+  })
+
+  describe('allPagedRoles', () => {
+    const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.getPagedRoles(context)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/roles/paged?page=&size=&roleName=&roleCode=&adminTypes=')
+    })
+  })
+
+  describe('allPagedRolesWithFilters', () => {
+    const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.getPagedRoles(context, 0, 20, '', '', 'ALL')
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/roles/paged?page=0&size=20&roleName=&roleCode=&adminTypes=')
     })
   })
 

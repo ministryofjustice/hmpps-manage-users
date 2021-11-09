@@ -11,7 +11,7 @@ const { createRoleFactory } = require('../controllers/createRole')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ manageUsersApi }) => {
-  const getAllRolesApi = manageUsersApi.getAllRoles
+  const getPagedRolesApi = manageUsersApi.getPagedRoles
   const getRoleDetailsApi = manageUsersApi.getRoleDetails
   const changeRoleNameApi = (context, role, roleName) => manageUsersApi.changeRoleName(context, role, { roleName })
   const changeRoleDescriptionApi = (context, role, roleDescription) =>
@@ -20,7 +20,12 @@ const controller = ({ manageUsersApi }) => {
     manageUsersApi.changeRoleAdminType(context, role, { adminType })
   const createRoleApi = (context, role) => manageUsersApi.createRole(context, role)
 
-  const { index } = viewRolesFactory(paginationService, contextProperties.getPageable, getAllRolesApi, '/manage-roles')
+  const { index } = viewRolesFactory(
+    paginationService,
+    contextProperties.getPageable,
+    getPagedRolesApi,
+    '/manage-roles',
+  )
 
   const { index: roleDetails } = roleDetailsFactory(getRoleDetailsApi, '/manage-roles')
   const { index: getRoleNameAmendment, post: postRoleNameAmendment } = roleNameAmendmentFactory(

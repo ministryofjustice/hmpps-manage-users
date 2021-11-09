@@ -31,7 +31,7 @@ export const goToViewRoleWithFilterPage = ({ isAdmin = true, totalElements = 21,
   const roleCode = isAdmin ? 'ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
-  cy.task('stubAllRoles', {
+  cy.task('stubAllRolesPaged', {
     content: replicateRoles(5),
     totalElements,
     page: 0,

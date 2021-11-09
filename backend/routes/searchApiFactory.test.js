@@ -11,11 +11,15 @@ describe('Search API Factory', () => {
     getCaseloads: jest.fn(),
     userSearch: jest.fn(),
   }
+  const manageUsersApi = {
+    getRoles: jest.fn(),
+  }
   const oauthApi = { userEmails: jest.fn() }
   const { searchApi, searchableRoles, prisons, caseloads, findUsersApi } = searchApiFactory(
     prisonApi,
     oauthApi,
     nomisUsersAndRolesApi,
+    manageUsersApi,
   )
 
   beforeEach(() => {
@@ -225,74 +229,203 @@ describe('Search API Factory', () => {
       ])
     })
   })
+
   describe('searchableRoles', () => {
     it('will filter admin roles with non admin role context', async () => {
-      nomisUsersAndRolesApi.getRoles.mockResolvedValue([
-        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
-        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+      manageUsersApi.getRoles.mockResolvedValue([
+        {
+          roleCode: 'CODE2',
+          roleName: 'AAA1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE3',
+          roleName: 'BBB1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
       ])
 
       const roles = await searchableRoles({ user: { maintainAccessAdmin: false } })
 
-      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toBeCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },
-        false,
+        { adminTypes: 'DPS_LSA' },
       )
 
       expect(roles).toEqual([
-        { roleCode: 'CODE2', roleName: 'AAA1', adminRoleOnly: false },
-        { roleCode: 'CODE3', roleName: 'BBB1', adminRoleOnly: false },
+        {
+          roleCode: 'CODE2',
+          roleName: 'AAA1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE3',
+          roleName: 'BBB1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
       ])
     })
+
     it('will filter admin roles with non admin role context', async () => {
-      nomisUsersAndRolesApi.getRoles.mockResolvedValue([
-        { code: 'CODE1', name: 'ZZZ1', adminRoleOnly: true },
-        { code: 'CODE3', name: 'BBB1', adminRoleOnly: false },
-        { code: 'CODE2', name: 'AAA1', adminRoleOnly: false },
+      manageUsersApi.getRoles.mockResolvedValue([
+        {
+          roleCode: 'CODE1',
+          roleName: 'ZZZ1',
+          roleDescription: 'Maintaining roles for everyone',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE3',
+          roleName: 'BBB1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE2',
+          roleName: 'AAA1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
       ])
 
       const roles = await searchableRoles({ user: { maintainAccessAdmin: true } })
 
-      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toBeCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
-        true,
+        { adminTypes: 'DPS_ADM' },
       )
 
       expect(roles).toEqual([
-        { roleCode: 'CODE2', roleName: 'AAA1', adminRoleOnly: false },
-        { roleCode: 'CODE3', roleName: 'BBB1', adminRoleOnly: false },
-        { roleCode: 'CODE1', roleName: 'ZZZ1', adminRoleOnly: true },
+        {
+          roleCode: 'CODE1',
+          roleName: 'ZZZ1',
+          roleDescription: 'Maintaining roles for everyone',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE3',
+          roleName: 'BBB1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
+        {
+          roleCode: 'CODE2',
+          roleName: 'AAA1',
+          adminType: [
+            {
+              adminTypeCode: 'DPS_ADM',
+              adminTypeName: 'DPS Central Administrator',
+            },
+            {
+              adminTypeCode: 'DPS_LSA',
+              adminTypeName: 'DPS Local System Administrator',
+            },
+          ],
+        },
       ])
     })
+
     it('will get admin roles with admin role context', async () => {
-      nomisUsersAndRolesApi.getRoles.mockResolvedValue([])
+      manageUsersApi.getRoles.mockResolvedValue([])
 
       await searchableRoles({ user: { maintainAccessAdmin: true } })
 
-      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toBeCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
-        true,
+        { adminTypes: 'DPS_ADM' },
       )
     })
+
     it('will get normal roles without admin role context', async () => {
-      nomisUsersAndRolesApi.getRoles.mockResolvedValue([])
+      manageUsersApi.getRoles.mockResolvedValue([])
 
       await searchableRoles({ user: { maintainAccessAdmin: false } })
 
-      expect(nomisUsersAndRolesApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toBeCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },
-        false,
+        { adminTypes: 'DPS_LSA' },
       )
     })
   })
+
   describe('prisons', () => {
     it('will get prisons with admin in context', async () => {
       prisonApi.getPrisons.mockResolvedValue([
