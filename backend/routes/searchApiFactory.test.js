@@ -242,7 +242,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
@@ -256,7 +256,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
@@ -282,7 +282,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
@@ -296,7 +296,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
@@ -326,7 +326,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
@@ -377,7 +377,7 @@ describe('Search API Factory', () => {
               adminTypeName: 'DPS Central Administrator',
             },
             {
-              adminTypeCode: 'DPS_ADM',
+              adminTypeCode: 'DPS_LSA',
               adminTypeName: 'DPS Local System Administrator',
             },
           ],
