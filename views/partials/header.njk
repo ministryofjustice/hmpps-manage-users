@@ -13,6 +13,20 @@
       <a class="dps-header__link dps-header__title__organisation-name" href="/">HMPPS</a>
 
       <a class="dps-header__link dps-header__title__service-name" href="/">Digital Services</a>
+      {% if phaseName %}
+       <span class="dps-header__title__phase-long">
+        {{ govukTag({
+          text: phaseName,
+          classes: 'govuk-!-margin-right-1 ' + phaseNameColour
+        }) }}
+        </span>
+       <span class="dps-header__title__phase-short">
+        {{ govukTag({
+          text: phaseNameShort,
+          classes: 'govuk-!-margin-right-1 ' + phaseNameColour
+        }) }}
+        </span>
+      {% endif %}
     </div>
 
     <nav aria-label="Account navigation">
@@ -32,25 +46,23 @@
   </div>
 </header>
 <div class="location-bar">
-  {% if feedbackUrl %}
-  <span class="location-bar__feedback">
-    {{ govukTag({
-    text: "Feedback",
-    classes: 'govuk-!-margin-right-1 '
-  }) }}
-
-  This is a new service – your <a class="govuk-link" target="feedback" href="{{ feedbackUrl }}">feedback</a> will help us to improve it.</span>
-  {% endif %}
-  <span class="location-bar__location" data-qa="active-location">
-    {% if phaseName and not feedbackUrl %}
-      {{ govukTag({
-        text: phaseName,
-        classes: 'govuk-!-margin-right-1 ' + phaseNameColour
+    {% if feedbackUrl %}
+    <div class="location-bar__feedback">
+      {{ govukPhaseBanner({
+        classes: "app-phase-banner",
+        tag: {
+          text: "Feedback"
+        },
+        html: 'Provide <a class="govuk-link" target="feedback" href="' + feedbackUrl + '">feedback</a> to help us improve this page.'
       }) }}
+    </div>
     {% endif %}
-    {{ user.activeCaseLoad.name }}
-  </span>
-  {% if user.allCaseloads.length > 1 %}
-    <a class="location-bar__link" href="{{ dpsUrl }}/change-caseload" data-qa="change-location-link">Change location</a>
-  {% endif %}
+  <div class="location-bar__location" >
+    <span class="location-bar__location__name"  data-qa="active-location">
+      {{ user.activeCaseLoad.name }}
+    </span>
+    {% if user.allCaseloads.length > 1 %}
+      <a class="location-bar__link" href="{{ dpsUrl }}/change-caseload" data-qa="change-location-link">Change location</a>
+    {% endif %}
+  </div>
 </div>
