@@ -8,7 +8,6 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
-  // cy.task('stubDpsGetRoles', { content: [] })
   cy.task(isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles', { content: [] })
   cy.task(isAdmin ? 'stubDpsAdminSearch' : 'stubDpsSearch', { totalElements })
   if (isAdmin) cy.task('stubDpsGetPrisons')
@@ -84,7 +83,7 @@ export const goToMainMenuPage = ({ isAdmin = true }) => {
 
 export const editUser = ({ isAdmin = false, fromSearchFilterPage = false, nextPage }) => {
   cy.task('stubDpsUserDetails')
-  cy.task(isAdmin ? 'stubDpsUserGetAdminRoles' : 'stubUserGetRoles')
+  cy.task('stubDpsUserGetRoles')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
   if (fromSearchFilterPage) {
