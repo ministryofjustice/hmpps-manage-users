@@ -153,7 +153,7 @@ context('DPS user manage functionality', () => {
     const results = goToResultsPage({ isAdmin: true })
 
     cy.task('stubDpsUserDetails')
-    cy.task('stubDpsUserGetAdminRoles')
+    cy.task('stubDpsUserGetRoles')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
     results.edit('ITAG_USER5')

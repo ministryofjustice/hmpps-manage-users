@@ -209,6 +209,29 @@ const stubRoleDetails = ({
     body: content,
   })
 
+const stubDpsUserGetRoles = () =>
+  getFor({
+    urlPattern: '/users/.*/roles',
+    body: {
+      activeCaseload: {
+        id: 'MDI',
+        name: 'Moorland',
+      },
+      dpsRoles: [
+        {
+          code: 'MAINTAIN_ACCESS_ROLES',
+          name: 'Maintain Roles',
+          adminRoleOnly: false,
+        },
+        {
+          code: 'ANOTHER_GENERAL_ROLE',
+          name: 'Another general role',
+          adminRoleOnly: false,
+        },
+      ],
+    },
+  })
+
 const stubChangeRoleName = () =>
   stubJson({
     method: 'PUT',
@@ -267,6 +290,7 @@ module.exports = {
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
   stubRoleDetails,
+  stubDpsUserGetRoles,
   verifyAllRoles,
   verifyCreateRole,
   verifyRoleNameUpdate,

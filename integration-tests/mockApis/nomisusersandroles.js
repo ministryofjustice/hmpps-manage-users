@@ -120,50 +120,6 @@ module.exports = {
         lastName: 'User',
       },
     }),
-  stubUserGetRoles: () =>
-    getFor({
-      urlPattern: '/nomisusersandroles/users/.*/roles',
-      body: {
-        activeCaseload: {
-          id: 'MDI',
-          name: 'Moorland',
-        },
-        dpsRoles: [
-          {
-            code: 'MAINTAIN_ACCESS_ROLES',
-            name: 'Maintain Roles',
-            adminRoleOnly: false,
-          },
-          {
-            code: 'ANOTHER_GENERAL_ROLE',
-            name: 'Another general role',
-            adminRoleOnly: false,
-          },
-        ],
-      },
-    }),
-  stubDpsUserGetAdminRoles: () =>
-    getFor({
-      urlPattern: '/nomisusersandroles/users/.*/roles',
-      body: {
-        activeCaseload: {
-          id: 'MDI',
-          name: 'Moorland',
-        },
-        dpsRoles: [
-          {
-            code: 'MAINTAIN_ACCESS_ROLES',
-            name: 'Maintain Roles',
-            adminRoleOnly: false,
-          },
-          {
-            code: 'ANOTHER_GENERAL_ROLE',
-            name: 'Another general role',
-            adminRoleOnly: false,
-          },
-        ],
-      },
-    }),
   stubDpsAddRoles: () =>
     stubFor({
       request: {

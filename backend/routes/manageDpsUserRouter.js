@@ -9,7 +9,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAndAssignableRolesApi = async (context, username, hasAdminRole) => {
     const [user, userRoles, allRoles] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
-      nomisUsersAndRolesApi.contextUserRoles(context, username, hasAdminRole),
+      manageUsersApi.contextUserRoles(context, username),
       manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' }),
     ])
     return [user, allRoles.filter((r) => !userRoles.dpsRoles.some((userRole) => userRole.code === r.roleCode))]
@@ -18,7 +18,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAndRolesApi = async (context, username) => {
     const [user, roles, userEmail] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
-      nomisUsersAndRolesApi.contextUserRoles(context, username),
+      manageUsersApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
     ])
     return [

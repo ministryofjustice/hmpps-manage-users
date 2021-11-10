@@ -166,4 +166,23 @@ describe('manageUsersApi tests', () => {
       expect(client.put).toBeCalledWith(context, '/roles/role1/admintype', roleAdminType)
     })
   })
+
+  describe('contextUserRoles', () => {
+    const roles = { username: 'joe', dpsRoles: [{ code: 'CODE1' }] }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.contextUserRoles(context, 'joe')
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call nomis user roles endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+    })
+  })
 })
