@@ -78,6 +78,7 @@ describe('role amendment factory', () => {
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#adminType', text: 'Select an admin type' }])
     })
+
     it('should stash the role admin types and redirect if no role admin type entered', async () => {
       const req = {
         params: { role: 'role1' },
@@ -90,6 +91,54 @@ describe('role amendment factory', () => {
       await changeRoleAdminType.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeRoleAdminType', [[]])
+    })
+
+    it('should fail gracefully if role name not valid', async () => {
+      const redirect = jest.fn()
+      const role = {
+        roleName: 'role1',
+        roleCode: 'code',
+        adminType: [{ adminTypeName: 'ADM', adminTypeCode: 'DPS_ADM' }],
+      }
+      const error = { ...new Error('This failed'), status: 400, response: { body: { error: 'not valid' } } }
+      getRoleDetailsApi.mockResolvedValue(role)
+      changeRoleAdminTypeApi.mockRejectedValue(error)
+      const req = {
+        params: { role: 'role1' },
+        body: { adminType: ['DPS_ADM', 'DPS_LSA'] },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeRoleAdminType.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#adminType', text: 'not valid' }])
+    })
+
+    it('should fail gracefully if role name not found', async () => {
+      const redirect = jest.fn()
+      const role = {
+        roleName: 'role1',
+        roleCode: 'code',
+        adminType: [{ adminTypeName: 'ADM', adminTypeCode: 'DPS_ADM' }],
+      }
+      const error = {
+        ...new Error('This failed'),
+        status: 404,
+        response: { body: { userMessage: 'Unexpected error: Unable to get role: role1 with reason: notfound' } },
+      }
+      getRoleDetailsApi.mockResolvedValue(role)
+      changeRoleAdminTypeApi.mockRejectedValue(error)
+      const req = {
+        params: { role: 'role1' },
+        body: { adminType: ['DPS_ADM'] },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeRoleAdminType.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('changeRoleErrors', [
+        { href: '#adminType', text: 'Unexpected error: Unable to get role: role1 with reason: notfound' },
+      ])
     })
   })
 })

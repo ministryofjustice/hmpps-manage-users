@@ -111,5 +111,21 @@ describe('role amendment factory', () => {
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
     })
+
+    it('should fail gracefully if role name not found', async () => {
+      const redirect = jest.fn()
+      const error = { ...new Error('This failed'), status: 404, response: { body: { error_description: 'not valid' } } }
+
+      changeRoleNameApi.mockRejectedValue(error)
+      const req = {
+        params: { role: 'role1' },
+        body: { roleName: 'RoleA' },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await changeRoleName.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
+    })
   })
 })
