@@ -42,6 +42,11 @@ const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRo
 
         const errors = [{ href: '#roleName', text: error }]
         stashStateAndRedirectToIndex(req, res, errors, [roleName])
+      } else if (err.status === 404 && err.response && err.response.body) {
+        const { userMessage } = err.response.body
+
+        const errors = [{ href: '#roleName', text: userMessage }]
+        stashStateAndRedirectToIndex(req, res, errors, [roleName])
       } else {
         throw err
       }

@@ -64,6 +64,11 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
 
         const errors = [{ href: '#adminType', text: error }]
         stashStateAndRedirectToIndex(req, res, errors, adminType)
+      } else if (err.status === 404 && err.response && err.response.body) {
+        const { userMessage } = err.response.body
+
+        const errors = [{ href: '#adminType', text: userMessage }]
+        stashStateAndRedirectToIndex(req, res, errors, adminType)
       } else {
         throw err
       }
