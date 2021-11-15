@@ -50,6 +50,8 @@ const searchFactory = (
       ...user,
     }))
 
+    const feedbackSource = `${req.get('host')}/search-with-filter-dps-users`
+
     res.render('searchWithFilter.njk', {
       searchTitle,
       searchUrl,
@@ -67,8 +69,7 @@ const searchFactory = (
       downloadUrl:
         allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
       maintainUrl,
-      feedbackUrl:
-        'https://eu.surveymonkey.com/r/Preview/?sm=TfmN8s6gn0k1b1t8BZAQGkqZiBOohqWKRNXXo0bRD6d_2F5p42M7T5TK6pSvdYcSlo',
+      feedbackUrl: `https://eu.surveymonkey.com/r/6K3YBLK?source=${feedbackSource}`,
     })
   }
 }
