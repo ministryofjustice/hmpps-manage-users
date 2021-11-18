@@ -6,9 +6,10 @@ const adminTypeValues = [
   { value: 'DPS_ADM', text: 'DPS Central Admin', immutable: true },
 ]
 const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi, manageRoleUrl) => {
-  const stashStateAndRedirectToIndex = (req, res, errors, adminType) => {
+  const stashStateAndRedirectToIndex = (req, res, errors, roleAdminType) => {
     req.flash('changeRoleErrors', errors)
-    req.flash('changeRoleAdminType', adminType)
+    const currentFilter = roleAdminType.map((e) => e.adminTypeCode)
+    req.flash('changeRoleAdminType', currentFilter)
     res.redirect(req.originalUrl)
   }
 
@@ -53,7 +54,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
     try {
       const errors = validateRoleAdminType(adminType)
       if (errors.length > 0) {
-        stashStateAndRedirectToIndex(req, res, errors, [adminType])
+        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
       } else {
         await changeRoleAdminTypeApi(res.locals, role, adminType)
         res.redirect(roleUrl)
@@ -63,12 +64,12 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
         const { error } = err.response.body
 
         const errors = [{ href: '#adminType', text: error }]
-        stashStateAndRedirectToIndex(req, res, errors, adminType)
+        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
       } else if (err.status === 404 && err.response && err.response.body) {
         const { userMessage } = err.response.body
 
         const errors = [{ href: '#adminType', text: userMessage }]
-        stashStateAndRedirectToIndex(req, res, errors, adminType)
+        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
       } else {
         throw err
       }
