@@ -79,20 +79,6 @@ describe('role amendment factory', () => {
       expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#adminType', text: 'Select an admin type' }])
     })
 
-    it('should stash the role admin types and redirect if no role admin type entered', async () => {
-      const req = {
-        params: { role: 'role1' },
-        body: {},
-        flash: jest.fn(),
-        originalUrl: '/original',
-      }
-
-      const redirect = jest.fn()
-      await changeRoleAdminType.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('changeRoleAdminType', [[]])
-    })
-
     it('should fail gracefully if role name not valid', async () => {
       const redirect = jest.fn()
       const role = {
