@@ -7,6 +7,7 @@ const RoleDescriptionChangePage = require('../pages/roleDescriptionChangePage')
 const RoleAdminTypeChangePage = require('../pages/roleAdminTypeChangePage')
 
 const CreateRolePage = require('../pages/createRolePage')
+const ErrorPage = require('../pages/errorPage')
 
 context('Roles', () => {
   before(() => {
@@ -169,6 +170,31 @@ context('Roles', () => {
         adminType: ['DPS_ADM', 'EXT_ADM'],
       })
     })
+  })
+
+  it('change role admin type call to nomis fails - error shown', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+
+    cy.task('stubAllRolesPaged', {})
+    cy.task('stubDPSRoleDetails', {})
+    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.changeRoleAdminType()
+
+    cy.task('stubChangeRoleAdminTypeFail')
+    cy.task('stubDPSRoleDetails', {})
+    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+    roleAdminTypeChange.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
+    roleAdminTypeChange.adminTypeCheckbox('DPS Central Admin').should('be.disabled')
+    roleAdminTypeChange.changeRoleAdminType('DPS_LSA')
+
+    const errorPage = ErrorPage.verifyOnPage()
+    errorPage.errorContinue()
+
+    const roleAdminTypeChange2 = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+    roleAdminTypeChange2.errorSummary().should('contain.text', 'There is a problem')
   })
 
   it('should allow create role', () => {
