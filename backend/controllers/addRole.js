@@ -20,10 +20,13 @@ const selectRolesFactory = (getUserAndRoles, saveRoles, searchUrl, manageUrl) =>
       }),
     }))
 
+    const feedbackSource = `${req.get('host')}/select-roles`
+
     res.render('addRole.njk', {
       staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
       roleDropdownValues,
+      feedbackUrl: `https://eu.surveymonkey.com/r/66HQSVJ?source=${feedbackSource}`,
       errors: req.flash('addRoleErrors'),
     })
   }

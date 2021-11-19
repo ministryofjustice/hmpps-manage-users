@@ -7,7 +7,11 @@ describe('select roles factory', () => {
 
   describe('index', () => {
     it('should call addRole render', async () => {
-      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+      }
       getUserAndRoles.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ roleName: 'name', roleCode: 'code' }],
@@ -20,6 +24,7 @@ describe('select roles factory', () => {
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
 
@@ -27,6 +32,7 @@ describe('select roles factory', () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
+        get: jest.fn().mockReturnValue('localhost'),
       }
       getUserAndRoles.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, []])
 
@@ -37,6 +43,7 @@ describe('select roles factory', () => {
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
   })
