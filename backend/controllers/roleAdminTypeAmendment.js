@@ -8,8 +8,7 @@ const adminTypeValues = [
 const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleAdminType) => {
     req.flash('changeRoleErrors', errors)
-    const currentFilter = roleAdminType.map((e) => e.adminTypeCode)
-    req.flash('changeRoleAdminType', currentFilter)
+    req.flash('changeRoleAdminType', roleAdminType)
     res.redirect(req.originalUrl)
   }
 
@@ -19,13 +18,14 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
 
     const roleDetails = await getRoleDetailsApi(res.locals, role)
     const flashRole = req.flash('changeRoleAdminType')
-    const roleAdminType = flashRole != null && flashRole.length > 0 ? flashRole[0] : roleDetails.adminType
+    const roleAdminType =
+      flashRole != null && flashRole.length > 0 ? flashRole[0] : roleDetails.adminType.map((e) => e.adminTypeCode)
 
     res.render('changeRoleAdminType.njk', {
       title: `Change role admin type for ${roleDetails.roleName}`,
       roleUrl,
       adminTypeValues,
-      currentFilter: roleAdminType.map((e) => e.adminTypeCode),
+      currentFilter: roleAdminType,
       errors: req.flash('changeRoleErrors'),
     })
   }
@@ -54,7 +54,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
     try {
       const errors = validateRoleAdminType(adminType)
       if (errors.length > 0) {
-        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
+        stashStateAndRedirectToIndex(req, res, errors, adminType)
       } else {
         await changeRoleAdminTypeApi(res.locals, role, adminType)
         res.redirect(roleUrl)
@@ -64,12 +64,12 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
         const { error } = err.response.body
 
         const errors = [{ href: '#adminType', text: error }]
-        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
+        stashStateAndRedirectToIndex(req, res, errors, [adminType])
       } else if (err.status === 404 && err.response && err.response.body) {
         const { userMessage } = err.response.body
 
         const errors = [{ href: '#adminType', text: userMessage }]
-        stashStateAndRedirectToIndex(req, res, errors, [originalRoleAdminType])
+        stashStateAndRedirectToIndex(req, res, errors, [adminType])
       } else {
         throw err
       }
