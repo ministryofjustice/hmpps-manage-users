@@ -15,6 +15,7 @@ const roleAdminTypeChangePage = (role) =>
       submit().click()
     },
     adminTypeCheckbox,
+    errorSummary: () => cy.get('[data-qa-errors]'),
   })
 
 export default {

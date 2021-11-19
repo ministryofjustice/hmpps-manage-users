@@ -209,6 +209,24 @@ const stubRoleDetails = ({
     body: content,
   })
 
+const stubDPSRoleDetails = ({
+  content = {
+    roleCode: 'AUTH_GROUP_MANAGER',
+    roleName: 'Auth Group Manager',
+    roleDescription: 'Role to be a Group Manager',
+    adminType: [
+      {
+        adminTypeName: 'DPS Central Admin',
+        adminTypeCode: 'DPS_ADM',
+      },
+    ],
+  },
+}) =>
+  getFor({
+    urlPattern: '/roles/(rolecode0|AUTH_GROUP_MANAGER)',
+    body: content,
+  })
+
 const stubDpsUserGetRoles = () =>
   getFor({
     urlPattern: '/users/.*/roles',
@@ -250,6 +268,18 @@ const stubChangeRoleAdminType = () =>
     urlPattern: '/roles/.*/admintype',
   })
 
+const stubChangeRoleAdminTypeFail = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/roles/AUTH_GROUP_MANAGER/admintype',
+    status: 404,
+    body: {
+      status: 404,
+      userMessage: 'Unexpected error: Unable to get role: AUTH_GROUP_MANAGER with reason: notfound',
+      developerMessage: 'Unable to get role: AUTH_GROUP_MANAGER with reason: notfound',
+    },
+  })
+
 const verifyAllRoles = () =>
   getMatchingRequests({
     method: 'GET',
@@ -289,7 +319,9 @@ module.exports = {
   stubChangeRoleName,
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
+  stubChangeRoleAdminTypeFail,
   stubRoleDetails,
+  stubDPSRoleDetails,
   stubDpsUserGetRoles,
   verifyAllRoles,
   verifyCreateRole,

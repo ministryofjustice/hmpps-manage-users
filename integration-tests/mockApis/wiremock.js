@@ -10,7 +10,7 @@ const getMatchingRequests = (body) => superagent.post(`${url}/requests/find`).se
 
 const resetStubs = () => Promise.all([superagent.delete(`${url}/mappings`), superagent.delete(`${url}/requests`)])
 
-const stubJson = ({ body, urlPattern, urlPath, method = 'GET' }) =>
+const stubJson = ({ body, urlPattern, urlPath, method = 'GET', status = 200 }) =>
   stubFor({
     request: {
       method,
@@ -18,7 +18,7 @@ const stubJson = ({ body, urlPattern, urlPath, method = 'GET' }) =>
       urlPath,
     },
     response: {
-      status: 200,
+      status,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
       },
