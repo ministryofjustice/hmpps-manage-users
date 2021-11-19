@@ -171,6 +171,35 @@ context('Roles', () => {
     })
   })
 
+  it('change role admin type call to nomis fails - error shown', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+
+    cy.task('stubAllRolesPaged', {})
+    cy.task('stubDPSRoleDetails', {})
+    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    roleDetails.changeRoleAdminType()
+
+    cy.task('stubChangeRoleAdminTypeFail')
+    cy.task('stubDPSRoleDetails', {})
+    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+    roleAdminTypeChange.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
+    roleAdminTypeChange.changeRoleAdminType('DPS_LSA')
+
+    const roleAdminTypeChange2 = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+    roleAdminTypeChange2
+      .errorSummary()
+      .should('contain.text', 'Unexpected error: Unable to get role: AUTH_GROUP_MANAGER with reason: notfound')
+
+    roleAdminTypeChange2.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
+    roleAdminTypeChange2.adminTypeCheckbox('DPS Local System Administrators (LSA)').should('be.checked')
+
+    roleAdminTypeChange2.cancel()
+    RoleDetailsPage.verifyOnPage('Auth Group Manager')
+  })
+
   it('should allow create role', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
