@@ -3,7 +3,7 @@
 
 generic-service:
   ingress:
-    host: manage-users-preprod.hmpps.service.justice.gov.uk
+    host: manage-users-preprod.hmpps.service.justice.gov.ukn    contextColour: green
 
   env:
     API_ENDPOINT_URL: https://api-preprod.prison.service.justice.gov.uk
