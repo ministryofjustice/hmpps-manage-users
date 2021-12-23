@@ -16,6 +16,16 @@ context('Groups', () => {
     cy.task('reset')
   })
 
+  it('manages groups page has no detectable accessibility issues', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+
+    cy.task('stubAuthAssignableGroups', {})
+    MenuPage.verifyOnPage().manageGroups()
+    cy.injectAxe()
+    cy.checkA11y()
+  })
+
   it('Should display all groups with hyperlinks if 10 or less', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.signIn()

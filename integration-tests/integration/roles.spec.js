@@ -17,6 +17,20 @@ context('Roles', () => {
     cy.task('reset')
   })
 
+  it('manage roles page has no detectable accessibility issues', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+    cy.signIn()
+    cy.task('stubAllRolesPaged', {
+      content: replicateRoles(5),
+      totalElements: 21,
+      page: 0,
+      size: 5,
+    })
+    MenuPage.verifyOnPage().manageRoles()
+    cy.injectAxe()
+    cy.checkA11y()
+  })
+
   it('Should display paged results for all roles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
     cy.signIn()
