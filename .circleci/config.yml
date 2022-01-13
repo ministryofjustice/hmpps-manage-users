@@ -8,7 +8,7 @@ jobs:
   build:
     executor:
       name: hmpps/node
-      tag: 16.13-browsers
+      tag: 14.16-browsers
     steps:
       - checkout
       - restore_cache:
@@ -39,7 +39,7 @@ jobs:
   integration_tests:
     working_directory: ~/app
     docker:
-      - image: cimg/node:16.13-browsers
+      - image: cimg/node:14.16-browsers
     steps:
       - checkout
       - attach_workspace:
