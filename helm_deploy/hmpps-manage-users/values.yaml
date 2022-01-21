@@ -20,6 +20,7 @@ generic-service:
         limit_req_status 429;
     tlsSecretName: hmpps-manage-users-cert
     modsecurity_enabled: true
+    contextColour: green
 
   livenessProbe:
     httpGet:
