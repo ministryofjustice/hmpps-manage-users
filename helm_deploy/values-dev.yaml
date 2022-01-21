@@ -6,7 +6,6 @@ generic-service:
   ingress:
     host: manage-users-dev.hmpps.service.justice.gov.uk
     modsecurity_audit_enabled: true
-    contextColour: green
 
   env:
     API_ENDPOINT_URL: https://api-dev.prison.service.justice.gov.uk
