@@ -1,4 +1,5 @@
-const parse = require('csv-parse')
+import { parse } from 'csv-parse'
+
 const { goToSearchWithFilterPage, goToMainMenuPage } = require('../support/dpsuser.helpers')
 const UserPage = require('../pages/userPage')
 

@@ -1,4 +1,5 @@
-const parse = require('csv-parse')
+import { parse } from 'csv-parse'
+
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')

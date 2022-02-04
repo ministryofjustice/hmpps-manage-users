@@ -1,4 +1,5 @@
-const parse = require('csv-parse')
+import { parse } from 'csv-parse'
+
 const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 
