@@ -1,5 +1,3 @@
-import menuPage from '../pages/menuPage'
-
 const MenuPage = require('../pages/menuPage')
 const RolesPage = require('../pages/rolesPage')
 

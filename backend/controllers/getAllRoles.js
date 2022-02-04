@@ -1,10 +1,9 @@
 const viewRolesFactory = (paginationService, pagingApi, getPagedRolesApi, maintainUrl) => {
   const index = async (req, res) => {
-    const { size, page, offset } = req.query
+    const { size, page } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
-    const pageOffset = (offset && parseInt(offset, 10)) || 0
 
     req.session.searchUrl = req.originalUrl
     req.session.searchResultsUrl = req.originalUrl
