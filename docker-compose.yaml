@@ -37,7 +37,7 @@ services:
     ports:
       - "9091:8080"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9091/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ping" ]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
@@ -50,9 +50,9 @@ services:
     depends_on:
       - hmpps-auth
     ports:
-      - "8082:8080"
+      - "8102:8080"
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:9091/health" ]
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health/ping" ]
     environment:
       - SPRING_PROFILES_ACTIVE=dev
       - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
