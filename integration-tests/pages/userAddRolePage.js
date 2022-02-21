@@ -7,6 +7,7 @@ const userAddRolePage = () =>
     noRoles: () => cy.get('[data-qa="no-roles"]'),
     cancel: () => cy.get('[data-qa="cancel-link"]').click(),
     hint: (text) => cy.contains('label', text).next(),
+    message: () => cy.get('[data-qa="banner-message"]'),
   })
 
 export default {
