@@ -1,9 +1,14 @@
 const { selectRolesFactory } = require('./addRole')
 
 describe('select roles factory', () => {
-  const getUserAndRoles = jest.fn()
+  const getUserRolesAndMessage = jest.fn()
   const saveRoles = jest.fn()
-  const addRole = selectRolesFactory(getUserAndRoles, saveRoles, '/maintain-external-users', '/manage-external-users')
+  const addRole = selectRolesFactory(
+    getUserRolesAndMessage,
+    saveRoles,
+    '/maintain-external-users',
+    '/manage-external-users',
+  )
 
   describe('index', () => {
     it('should call addRole render', async () => {
@@ -12,9 +17,10 @@ describe('select roles factory', () => {
         flash: jest.fn(),
         get: jest.fn().mockReturnValue('localhost'),
       }
-      getUserAndRoles.mockResolvedValue([
+      getUserRolesAndMessage.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
         [{ roleName: 'name', roleCode: 'code' }],
+        { message: 'roles message' },
       ])
 
       const render = jest.fn()
@@ -24,6 +30,7 @@ describe('select roles factory', () => {
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
         feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
@@ -34,7 +41,11 @@ describe('select roles factory', () => {
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
         get: jest.fn().mockReturnValue('localhost'),
       }
-      getUserAndRoles.mockResolvedValue([{ username: 'BOB', firstName: 'Billy', lastName: 'Bob' }, []])
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [],
+        { message: 'roles message' },
+      ])
 
       const render = jest.fn()
       await addRole.index(req, { render })
@@ -43,6 +54,7 @@ describe('select roles factory', () => {
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
         feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
