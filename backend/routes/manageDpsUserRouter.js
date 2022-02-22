@@ -6,13 +6,18 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
-  const getUserAndAssignableRolesApi = async (context, username, hasAdminRole) => {
-    const [user, userRoles, allRoles] = await Promise.all([
+  const getUserAssignableRolesAndMessageApi = async (context, username, hasAdminRole) => {
+    const [user, userRoles, allRoles, bannerMessage] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' }),
+      manageUsersApi.getNotificationBannerMessage(context, 'ROLES'),
     ])
-    return [user, allRoles.filter((r) => !userRoles.dpsRoles.some((userRole) => userRole.code === r.roleCode))]
+    return [
+      user,
+      allRoles.filter((r) => !userRoles.dpsRoles.some((userRole) => userRole.code === r.roleCode)),
+      bannerMessage,
+    ]
   }
 
   const getUserAndRolesApi = async (context, username) => {
@@ -40,7 +45,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const changeEmailApi = (context, username, email) => oauthApi.changeDpsEmail(context, username, { email })
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
-    getUserAndAssignableRolesApi,
+    getUserAssignableRolesAndMessageApi,
     saveRolesApi,
     '/search-dps-users',
     '/manage-dps-users',

@@ -35,6 +35,9 @@ const manageUsersApiFactory = (client) => {
     put(context, `/roles/${role}/description`, roleDescription)
   const changeRoleAdminType = (context, role, adminType) => put(context, `/roles/${role}/admintype`, adminType)
 
+  const getNotificationBannerMessage = (context, notificationType) =>
+    get(context, `/notification/banner/${notificationType}`)
+
   const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
 
   return {
@@ -46,6 +49,7 @@ const manageUsersApiFactory = (client) => {
     changeRoleName,
     changeRoleDescription,
     changeRoleAdminType,
+    getNotificationBannerMessage,
   }
 }
 

@@ -209,6 +209,20 @@ const stubRoleDetails = ({
     body: content,
   })
 
+const stubRoleBannerMessage = () =>
+  getFor({
+    urlPattern: '/notification/banner/ROLES',
+    body: {
+      message: 'Notification banner message',
+    },
+  })
+
+const stubRoleBannerNoMessage = () =>
+  getFor({
+    urlPattern: '/notification/banner/ROLES',
+    body: { message: '' },
+  })
+
 const stubDPSRoleDetails = ({
   content = {
     roleCode: 'AUTH_GROUP_MANAGER',
@@ -320,6 +334,8 @@ module.exports = {
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
   stubChangeRoleAdminTypeFail,
+  stubRoleBannerMessage,
+  stubRoleBannerNoMessage,
   stubRoleDetails,
   stubDPSRoleDetails,
   stubDpsUserGetRoles,

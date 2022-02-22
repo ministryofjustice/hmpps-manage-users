@@ -8,8 +8,8 @@ const { deactivateUserReasonFactory } = require('../controllers/deactivateUserRe
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
-  const getUserAndAssignableRolesApi = (context, userId) =>
-    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId })])
+  const getUserAssignableRolesMessageApi = (context, userId) =>
+    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId }), ''])
 
   const getUserAndGroupsApi = (context, userId) =>
     Promise.all([
@@ -56,7 +56,7 @@ const controller = ({ oauthApi }) => {
   )
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
-    getUserAndAssignableRolesApi,
+    getUserAssignableRolesMessageApi,
     saveRolesApi,
     '/search-external-users',
     '/manage-external-users',
