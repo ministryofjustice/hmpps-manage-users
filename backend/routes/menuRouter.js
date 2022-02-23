@@ -1,13 +1,15 @@
 const express = require('express')
 const { menuFactory } = require('../controllers/menu')
 
-const router = express.Router()
+const router = express.Router({ mergeParams: true })
 
-const controller = () => {
-  const { index } = menuFactory()
+const controller = ({ manageUsersApi }) => {
+  const getMessage = (context) => manageUsersApi.getNotificationBannerMessage(context, 'DPSMENU')
+
+  const { index } = menuFactory(getMessage)
 
   router.get('/', index)
   return router
 }
 
-module.exports = () => controller()
+module.exports = (dependencies) => controller(dependencies)

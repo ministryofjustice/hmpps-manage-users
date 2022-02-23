@@ -117,7 +117,7 @@ context('DPS user manage functionality', () => {
 
   it('should display banner on select roles page', () => {
     const userPage = editUser({})
-    cy.task('stubRoleBannerMessage')
+    cy.task('stubBannerMessage')
     cy.task('stubManageUserGetRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
@@ -126,7 +126,7 @@ context('DPS user manage functionality', () => {
 
   it('should not display banner on select roles page when message is empty', () => {
     const userPage = editUser({})
-    cy.task('stubRoleBannerNoMessage')
+    cy.task('stubBannerNoMessage')
     cy.task('stubManageUserGetRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
@@ -140,7 +140,7 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
 
-    cy.task('stubRoleBannerNoMessage')
+    cy.task('stubBannerNoMessage')
     cy.task('stubManageUserGetRoles', {})
     userPage.addRole().click()
     const addRole = UserAddRolePage.verifyOnPage()
@@ -173,7 +173,7 @@ context('DPS user manage functionality', () => {
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
-    cy.task('stubRoleBannerNoMessage')
+    cy.task('stubBannerNoMessage')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
     results.edit('ITAG_USER5')
@@ -231,6 +231,7 @@ context('DPS user manage functionality', () => {
 
   it('Manage your details contain returnTo url for current dps search page', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     cy.task('stubManageUserGetRoles', {})
     const search = DpsUserSearchPage.goTo()

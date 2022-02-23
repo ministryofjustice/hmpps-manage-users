@@ -19,7 +19,7 @@ const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRol
   router.use(currentUser({ oauthApi, nomisUsersAndRolesApi }))
   router.use(featureSwitches(config))
 
-  router.use('/', menuRouter())
+  router.use('/', menuRouter({ manageUsersApi }))
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
   router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }))

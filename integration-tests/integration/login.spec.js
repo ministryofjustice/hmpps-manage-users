@@ -32,6 +32,7 @@ context('Sign in functionality', () => {
 
   it('Sign out takes user to sign in page', () => {
     cy.task('stubSignIn', {})
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     MenuPage.verifyOnPage()
 
@@ -41,6 +42,7 @@ context('Sign in functionality', () => {
 
   it('Direct access to login callback takes user to sign in page', () => {
     cy.task('stubSignIn', {})
+    cy.task('stubBannerNoMessage')
     cy.visit('/login/callback')
     cy.url().should('include', 'authorize')
     cy.get('h1').should('contain.text', 'Sign in')
@@ -51,6 +53,7 @@ context('Sign in functionality', () => {
 
   it('Token verification failure takes user to sign in page', () => {
     cy.task('stubSignIn', {})
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     MenuPage.verifyOnPage()
     cy.task('stubVerifyToken', false)
@@ -61,6 +64,7 @@ context('Sign in functionality', () => {
 
   it('Token verification failure clears user session', () => {
     cy.task('stubSignIn', {})
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     cy.task('stubVerifyToken', false)
@@ -84,15 +88,40 @@ context('Sign in functionality', () => {
 
   it('Sign in as access roles user', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     MenuPage.verifyOnPage()
   })
 
   it('Sign in and check header of user', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     menuPage.headerUsername().contains('J. Stuart')
     menuPage.headerCaseload().contains('Moorland')
+  })
+
+  it('Sign in with DPS admin role displays notification message', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerMessage')
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.message().should('contain.text', 'Notification banner message')
+  })
+
+  it('Sign in with DPS admin role should not display banner when message is empty', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerNoMessage')
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.message().should('not.exist')
+  })
+
+  it('Sign in without DPS admin role should not display banner', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.message().should('not.exist')
   })
 })

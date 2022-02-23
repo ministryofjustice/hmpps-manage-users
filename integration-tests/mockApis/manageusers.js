@@ -209,17 +209,17 @@ const stubRoleDetails = ({
     body: content,
   })
 
-const stubRoleBannerMessage = () =>
+const stubBannerMessage = () =>
   getFor({
-    urlPattern: '/notification/banner/ROLES',
+    urlPattern: '/notification/banner/.*',
     body: {
       message: 'Notification banner message',
     },
   })
 
-const stubRoleBannerNoMessage = () =>
+const stubBannerNoMessage = () =>
   getFor({
-    urlPattern: '/notification/banner/ROLES',
+    urlPattern: '/notification/banner/.*',
     body: { message: '' },
   })
 
@@ -334,8 +334,8 @@ module.exports = {
   stubChangeRoleDescription,
   stubChangeRoleAdminType,
   stubChangeRoleAdminTypeFail,
-  stubRoleBannerMessage,
-  stubRoleBannerNoMessage,
+  stubBannerMessage,
+  stubBannerNoMessage,
   stubRoleDetails,
   stubDPSRoleDetails,
   stubDpsUserGetRoles,

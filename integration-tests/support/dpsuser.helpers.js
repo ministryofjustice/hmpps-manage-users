@@ -6,6 +6,7 @@ const MenuPage = require('../pages/menuPage')
 
 export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage }) => {
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+  cy.task('stubBannerNoMessage')
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
   cy.task(isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles', { content: [] })
@@ -22,6 +23,7 @@ export const goToResultsPage = ({ isAdmin = false, totalElements = 21, nextPage 
 
 export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, size = 10 }) => {
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+  cy.task('stubBannerNoMessage')
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
   const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
@@ -76,6 +78,7 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
 
 export const goToMainMenuPage = ({ isAdmin = true }) => {
   const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+  cy.task('stubBannerMessage')
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
   return MenuPage.verifyOnPage()
@@ -84,6 +87,7 @@ export const goToMainMenuPage = ({ isAdmin = true }) => {
 export const editUser = ({ isAdmin = false, fromSearchFilterPage = false, nextPage }) => {
   cy.task('stubDpsUserDetails')
   cy.task('stubDpsUserGetRoles')
+  cy.task('stubBannerNoMessage')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
   if (fromSearchFilterPage) {
