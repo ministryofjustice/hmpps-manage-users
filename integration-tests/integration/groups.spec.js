@@ -276,6 +276,7 @@ context('Groups', () => {
 
   it('Manage your details contain returnTo url for current group detail page', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
+    cy.task('stubBannerNoMessage')
     cy.signIn()
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')

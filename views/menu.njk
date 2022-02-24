@@ -1,5 +1,6 @@
 {% extends "./partials/layout.njk" %}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% set title =  "Manage user accounts" %}
 
@@ -22,6 +23,13 @@
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
 
 {% block content %}
+  {% if message.length > 0 and hasMaintainNomisRolesAccess%}
+    {{ govukNotificationBanner({
+      html: message,
+      attributes: { "data-qa": "banner-message" }
+    }) }}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <h1 class="govuk-heading-l">{{ title }}</h1>
 

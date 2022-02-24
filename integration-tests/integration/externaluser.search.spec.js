@@ -30,6 +30,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
       })
+      cy.task('stubBannerNoMessage')
       cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
@@ -47,6 +48,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
       })
+      cy.task('stubBannerNoMessage')
       cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })

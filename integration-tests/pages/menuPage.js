@@ -15,6 +15,7 @@ const menuPage = () =>
     noAdminFunctionsMessage: () => cy.get("[data-qa='no-admin-functions-message']"),
     headerUsername: () => cy.get('[data-qa="logged-in-name"]'),
     headerCaseload: () => cy.get('[data-qa="active-location"]'),
+    message: () => cy.get('[data-qa="banner-message"]'),
     manageAuthUsers: () => authUsers().click(),
     createAuthUser: () => createUser().click(),
     searchDpsUsers: () => dpsUsers().click(),
