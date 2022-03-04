@@ -1,14 +1,14 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@3.11
-  browser-tools: circleci/browser-tools@1.1.1
+  hmpps: ministryofjustice/hmpps@3.14
+  browser-tools: circleci/browser-tools@1.2.4
 
 jobs:
   build:
     executor:
       name: hmpps/node
-      tag: 14.16-browsers
+      tag: 16.14-browsers
     steps:
       - checkout
       - restore_cache:
@@ -39,7 +39,7 @@ jobs:
   integration_tests:
     working_directory: ~/app
     docker:
-      - image: cimg/node:14.16-browsers
+      - image: cimg/node:16.14-browsers
     steps:
       - checkout
       - attach_workspace:
@@ -92,6 +92,7 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_dev
           env: "dev"
+          jira_update: true
           context:
             - hmpps-common-vars
           filters:
@@ -109,6 +110,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_preprod
           env: "preprod"
+          jira_update: true
+          jira_env_type: staging
           context:
             - hmpps-common-vars
             - hmpps-manage-users-preprod
@@ -121,6 +124,8 @@ workflows:
       - hmpps/deploy_env:
           name: deploy_prod
           env: "prod"
+          jira_update: true
+          jira_env_type: production
           context:
             - hmpps-common-vars
             - hmpps-manage-users-prod
