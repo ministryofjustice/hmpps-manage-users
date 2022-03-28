@@ -28,7 +28,6 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, searchUrl, manage
       staffUrl,
       roleDropdownValues,
       message: bannerMessage.message,
-      feedbackUrl: `https://eu.surveymonkey.com/r/66HQSVJ?source=${feedbackSource}`,
       errors: req.flash('addRoleErrors'),
     })
   }
