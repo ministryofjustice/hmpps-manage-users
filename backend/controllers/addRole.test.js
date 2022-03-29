@@ -31,7 +31,6 @@ describe('select roles factory', () => {
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         message: 'roles message',
-        feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
 
@@ -55,7 +54,6 @@ describe('select roles factory', () => {
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         message: 'roles message',
-        feedbackUrl: 'https://eu.surveymonkey.com/r/66HQSVJ?source=localhost/select-roles',
       })
     })
   })

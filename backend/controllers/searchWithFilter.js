@@ -69,7 +69,6 @@ const searchFactory = (
       downloadUrl:
         allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
       maintainUrl,
-      feedbackUrl: `https://eu.surveymonkey.com/r/6K3YBLK?source=${feedbackSource}`,
     })
   }
 }

@@ -73,7 +73,6 @@ describe('search factory', () => {
           results: [],
           downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
           maintainUrl: '/manage-dps-users',
-          feedbackUrl: 'https://eu.surveymonkey.com/r/6K3YBLK?source=localhost/search-with-filter-dps-users',
         })
       })
       it('should call renderer with download url when download is allowed', async () => {
