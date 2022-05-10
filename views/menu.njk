@@ -32,90 +32,91 @@
 
   <div class="govuk-grid-row">
     <h1 class="govuk-heading-l">{{ title }}</h1>
-
-    <div class="govuk-grid-row card-group">
-      {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles%}
-      {% if hasMaintainNomisRolesAccess %}
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="maintain_roles_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
-            </h1>
-            <p class="govuk-body card__description">Search and manage users of DPS and NOMIS</p>
+   <div class="homepage-content">
+      <div class="govuk-grid-row card-group">
+        {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles%}
+        {% if hasMaintainNomisRolesAccess %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="maintain_roles_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
+              </h1>
+              <p class="govuk-body card__description">Search and manage users of DPS and NOMIS</p>
+            </div>
           </div>
-        </div>
-        {% if featureSwitches.dpsUserFilterSearch %}
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="search_with_filter_dps_users">
-            <h1 class="govuk-heading-m card__heading">
-              <span class="govuk-!-padding-right-2">
-              {{ govukTag({
-                text: "BETA"
-              }) }}
-              </span>
-              <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user </a>
-            </h1>
-            <p class="govuk-body card__description">Try out the new version of this service, that has enhanced filtering</p>
+          {% if featureSwitches.dpsUserFilterSearch %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="search_with_filter_dps_users">
+              <h1 class="govuk-heading-m card__heading">
+                <span class="govuk-!-padding-right-2">
+                {{ govukTag({
+                  text: "BETA"
+                }) }}
+                </span>
+                <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user </a>
+              </h1>
+              <p class="govuk-body card__description">Try out the new version of this service, that has enhanced filtering</p>
+            </div>
           </div>
-        </div>
+          {% endif %}
         {% endif %}
-      {% endif %}
-      {% if hasMaintainAuthUsers %}
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="maintain_auth_users_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/search-external-users">Search for an external user</a>
-            </h1>
-            <p class="govuk-body card__description">Search for users that typically do not have a DPS or Delius account</p>
+        {% if hasMaintainAuthUsers %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="maintain_auth_users_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/search-external-users">Search for an external user</a>
+              </h1>
+              <p class="govuk-body card__description">Search for users that typically do not have a DPS or Delius account</p>
+            </div>
           </div>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="create_auth_user_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/create-external-user">Create an external user</a>
-            </h1>
-            <p class="govuk-body card__description">Create an account for people who do not have a DPS or Delius account</p>
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="create_auth_user_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/create-external-user">Create an external user</a>
+              </h1>
+              <p class="govuk-body card__description">Create an account for people who do not have a DPS or Delius account</p>
+            </div>
           </div>
-        </div>
 
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="manage_groups_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/manage-groups">View the groups I administer</a>
-            </h1>
-            <p class="govuk-body card__description">View and make changes to a group which contain users outside of HMPPS</p>
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="manage_groups_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-groups">View the groups I administer</a>
+              </h1>
+              <p class="govuk-body card__description">View and make changes to a group which contain users outside of HMPPS</p>
+            </div>
           </div>
-        </div>
-      {% endif %}
+        {% endif %}
 
-      {% if user and user.maintainAuthUsers %}
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="create_groups_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/manage-groups/create-group">Create a group</a>
-            </h1>
-            <p class="govuk-body card__description">Create a new group which will represent a cohort of users outside of HMPPS</p>
+        {% if user and user.maintainAuthUsers %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="create_groups_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-groups/create-group">Create a group</a>
+              </h1>
+              <p class="govuk-body card__description">Create a new group which will represent a cohort of users outside of HMPPS</p>
+            </div>
           </div>
-        </div>
-      {% endif %}
-      {% if user and user.maintainRoles %}
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="view_roles_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/manage-roles">View roles</a>
-            </h1>
-            <p class="govuk-body card__description">View roles that are available to be assigned to users</p>
+        {% endif %}
+        {% if user and user.maintainRoles %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="view_roles_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-roles">View roles</a>
+              </h1>
+              <p class="govuk-body card__description">View roles that are available to be assigned to users</p>
+            </div>
           </div>
-        </div>
-        <div class="govuk-grid-column-one-third">
-          <div class="card card--clickable" data-qa="create_roles_link">
-            <h1 class="govuk-heading-m card__heading">
-              <a class="govuk-link card__link" href="/manage-roles/create-role">Create a role</a>
-            </h1>
-            <p class="govuk-body card__description">Create a new role that can later be assigned to users</p>
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="create_roles_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/manage-roles/create-role">Create a role</a>
+              </h1>
+              <p class="govuk-body card__description">Create a new role that can later be assigned to users</p>
+            </div>
           </div>
-        </div>
-      {% endif %}
+        {% endif %}
+      </div>
     </div>
     {% else %}
       <p class="govuk-body" data-qa="no-admin-functions-message">
