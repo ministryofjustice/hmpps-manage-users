@@ -62,9 +62,6 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
         totalElements,
         number,
       }
-
-    // now augment with auth email addresses
-
     return {
       searchResults: content,
       totalElements,
