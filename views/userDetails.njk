@@ -71,6 +71,24 @@
                   <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
                 </td>
               {% endif %}
+            {% else %}
+              {% if staff.active %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: "Active account",
+                    classes: "govuk-tag--turquoise",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+              {% else %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: 'Inactive account - ' + staff.accountStatus,
+                    classes: "govuk-tag--pink",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+              {% endif %}
             {% endif %}
           </tr>
           </tbody>
