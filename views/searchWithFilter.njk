@@ -169,7 +169,7 @@
                             <div class="govuk-grid-column-one-half">
                               <span class="govuk-visually-hidden">Status</span>
                                 {{ govukTag({
-                                  text: "Inactive",
+                                  text: u.status,
                                   classes: "govuk-tag--pink"
                                 }) if not u.active }}
                                 {{ govukTag({
