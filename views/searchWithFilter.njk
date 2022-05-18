@@ -38,7 +38,7 @@
       id: "user",
       name: "user",
       hint: { 
-        text: "Will match the user's name or username"
+        text: "Will match the user's name, username or email address"
       },
       errorMessage: errors | findError('user')
     }) }}
@@ -170,7 +170,7 @@
                             <div class="govuk-grid-column-one-half">
                               <span class="govuk-visually-hidden">Status</span>
                                 {{ govukTag({
-                                  text: "Inactive",
+                                  text: u.status,
                                   classes: "govuk-tag--pink"
                                 }) if not u.active }}
                                 {{ govukTag({
