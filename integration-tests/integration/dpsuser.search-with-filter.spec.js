@@ -119,7 +119,7 @@ context('DPS search with filter user functionality', () => {
     const searchWithFilter = goToSearchWithFilterPage({ totalElements: 3 })
     searchWithFilter.rows().should('have.length', 3)
     searchWithFilter.rows().eq(0).should('include.text', 'Itag\u00a0User0')
-    searchWithFilter.rows().eq(0).should('include.text', 'dps-user@justice.gov.uk')
+    searchWithFilter.rows().eq(0).should('include.text', 'ITAG_USER0@gov.uk')
     searchWithFilter.rows().eq(0).should('include.text', 'Active')
     searchWithFilter.rows().eq(0).should('include.text', 'Brixton (HMP)')
     searchWithFilter.rows().eq(0).should('include.text', 'No DPS roles')

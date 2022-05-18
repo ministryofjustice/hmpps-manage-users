@@ -87,36 +87,6 @@ describe('Search API Factory', () => {
         },
       )
     })
-    it('will retrieve emails for each user found and add to results', async () => {
-      prisonApi.userSearchAdmin.mockResolvedValue([
-        { username: 'jane', activeCaseLoadId: 'MDI' },
-        { username: 'jill', activeCaseLoadId: 'MDI' },
-      ])
-      oauthApi.userEmails.mockResolvedValue([{ username: 'jane', email: 'jane@email.com' }])
-
-      const results = await searchApi({
-        locals: {
-          user: { maintainAccessAdmin: true },
-        },
-        pageSize: 20,
-        pageOffset: 40,
-      })
-
-      expect(oauthApi.userEmails).toBeCalledWith(
-        {
-          user: { maintainAccessAdmin: true },
-          requestHeaders: {
-            'page-limit': 20,
-            'page-offset': 40,
-          },
-        },
-        ['jane', 'jill'],
-      )
-      expect(results).toEqual([
-        { username: 'jane', activeCaseLoadId: 'MDI', email: 'jane@email.com' },
-        { username: 'jill', activeCaseLoadId: 'MDI' },
-      ])
-    })
   })
   describe('findUsersApi', () => {
     const noResults = {
@@ -188,45 +158,6 @@ describe('Search API Factory', () => {
           page: 2,
         },
       )
-    })
-    it('will retrieve emails for each user found and add to results', async () => {
-      nomisUsersAndRolesApi.userSearch.mockResolvedValue({
-        content: [
-          { username: 'jane', activeCaseLoadId: 'MDI' },
-          { username: 'jill', activeCaseLoadId: 'MDI' },
-        ],
-        totalPages: 5079,
-        totalElements: 101567,
-        size: 20,
-        number: 0,
-        sort: {
-          empty: false,
-          sorted: true,
-          unsorted: false,
-        },
-        first: true,
-        numberOfElements: 20,
-      })
-      oauthApi.userEmails.mockResolvedValue([{ username: 'jane', email: 'jane@email.com' }])
-
-      const { searchResults } = await findUsersApi({
-        locals: {
-          user: { maintainAccessAdmin: true },
-        },
-        pageSize: 20,
-        pageOffset: 40,
-      })
-
-      expect(oauthApi.userEmails).toBeCalledWith(
-        {
-          user: { maintainAccessAdmin: true },
-        },
-        ['jane', 'jill'],
-      )
-      expect(searchResults).toEqual([
-        { username: 'jane', activeCaseLoadId: 'MDI', email: 'jane@email.com' },
-        { username: 'jill', activeCaseLoadId: 'MDI' },
-      ])
     })
   })
 

@@ -47,6 +47,7 @@ const searchFactory = (
 
     const results = searchResults.map((user) => ({
       usernameAndEmail: mapUsernameAndEmail(user),
+      nomisEmailId: user.email,
       ...user,
     }))
 

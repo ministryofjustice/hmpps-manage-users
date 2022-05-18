@@ -22,6 +22,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -69,6 +70,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -116,6 +118,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -169,6 +172,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -216,6 +220,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     const dpsUserDetails = userDetailsFactory(
@@ -266,6 +271,7 @@ describe('user detail factory', () => {
       showExtraUserDetails: false,
       showGroups: false,
       showUsername: true,
+      nomisEmailId: undefined,
       errors: undefined,
     })
   })
@@ -274,6 +280,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: { searchResultsUrl: '/some-url' },
     }
     const dpsUserDetails = userDetailsFactory(
@@ -332,6 +339,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -356,6 +364,7 @@ describe('user detail factory', () => {
     const req = {
       params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
       flash: jest.fn(),
+      query: { nomisEmail: 'bob@digital.justice.gov.uk' },
       session: {},
     }
     getUserRolesAndGroupsApi.mockResolvedValue([
@@ -444,6 +453,7 @@ describe('user detail factory', () => {
     it('should copy any flash errors over', async () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        query: { nomisEmail: 'bob@digital.justice.gov.uk' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
         session: {},
       }

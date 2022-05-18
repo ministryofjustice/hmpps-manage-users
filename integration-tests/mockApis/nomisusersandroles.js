@@ -4,6 +4,7 @@ const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
     username: `ITAG_USER${i}`,
     active: i % 2 === 0,
+    email: `ITAG_USER${i}@gov.uk`,
     firstName: 'Itag',
     lastName: `User${i}`,
     activeCaseload: {
@@ -118,6 +119,7 @@ module.exports = {
         username: 'ITAG_USER',
         firstName: 'Itag',
         lastName: 'User',
+        email: 'ITAG_USER@gov.uk',
       },
     }),
   stubDpsAddRoles: () =>
