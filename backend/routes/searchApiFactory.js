@@ -62,16 +62,8 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
         totalElements,
         number,
       }
-
-    // now augment with auth email addresses
-    const emails = await oauthApi.userEmails(
-      context,
-      content.map((user) => user.username),
-    )
-    const emailMap = new Map(emails.map((obj) => [obj.username, obj.email]))
-
     return {
-      searchResults: content.map((user) => ({ ...user, email: emailMap.get(user.username) })),
+      searchResults: content,
       totalElements,
       number,
     }

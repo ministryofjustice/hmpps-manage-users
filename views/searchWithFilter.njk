@@ -94,7 +94,7 @@
           idPrefix: 'restrictToActiveGroup',
           name: 'restrictToActiveGroup',
           classes: 'govuk-radios--small govuk-radios--inline',
-          hint: { 
+          hint: {
             text: 'Will match users that currently have their active caseload set to the selected prison'
           },
           fieldset: {
@@ -120,10 +120,10 @@
     {% endif %}
     <div class="govuk-list">
      {{multiSelectFilter({
-       name: 'roleCode', 
+       name: 'roleCode',
        title: 'Role',
        hint: 'Will match users that have all roles that are selected',
-       items: roleDropdownValues  | setChecked(currentFilter.roleCode)     
+       items: roleDropdownValues  | setChecked(currentFilter.roleCode)
       })}}
     </div>
   {% endset %}
@@ -142,7 +142,7 @@
         <div class="moj-filter-layout__content">
             <div>
               <div class="govuk-grid-column-full">
-              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>              
+              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
               {% if results.length %}
                 {{ mojPagination(pagination) }}
 
@@ -240,4 +240,3 @@
     })
   </script>
 {% endblock %}
-
