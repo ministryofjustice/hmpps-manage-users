@@ -23,7 +23,6 @@ const userDetailsFactory = (
     const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
-    const nomisEmailId = req.query.nomisEmail !== 'null' && req.query.searchType === 'beta' ? req.query.nomisEmail : ''
 
     const [user, roles, groups] = await getUserRolesAndGroupsApi(
       res.locals,
@@ -36,11 +35,7 @@ const userDetailsFactory = (
       searchTitle,
       searchResultsUrl,
       searchUrl,
-      staff: {
-        ...user,
-        email: req.query.searchType === undefined ? user.email : nomisEmailId,
-        name: `${user.firstName} ${user.lastName}`,
-      },
+      staff: { ...user, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
       roles,
       groups,

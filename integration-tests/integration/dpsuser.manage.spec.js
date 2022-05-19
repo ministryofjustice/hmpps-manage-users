@@ -28,7 +28,7 @@ context('DPS user manage functionality', () => {
   it('Should leave email blank if no email for user ', () => {
     const results = goToResultsPage({})
 
-    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserDetailsWithOutEmail')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { verified: false })

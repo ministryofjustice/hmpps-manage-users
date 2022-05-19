@@ -46,12 +46,8 @@ const searchFactory = (
     req.session.searchUrl = req.originalUrl
 
     const results = searchResults.map((user) => ({
-      usernameAndEmail: mapUsernameAndEmail(user),
-      nomisEmailId: user.email,
       ...user,
     }))
-
-    const feedbackSource = `${req.get('host')}/search-with-filter-dps-users`
 
     res.render('searchWithFilter.njk', {
       searchTitle,
@@ -100,11 +96,6 @@ function toArrayOrUndefined(maybeArray) {
     return [maybeArray]
   }
   return undefined
-}
-
-function mapUsernameAndEmail(user) {
-  if (user.email) return user.username.toLowerCase() === user.email ? user.email : `${user.username} / ${user.email}`
-  return user.username
 }
 
 module.exports = {

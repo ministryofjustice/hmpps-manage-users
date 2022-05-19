@@ -4,6 +4,7 @@ const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
     username: `ITAG_USER${i}`,
     active: i % 2 === 0,
+    primaryEmail: `ITAG_USER${i}@gov.uk`,
     email: `ITAG_USER${i}@gov.uk`,
     firstName: 'Itag',
     lastName: `User${i}`,
@@ -119,7 +120,18 @@ module.exports = {
         username: 'ITAG_USER',
         firstName: 'Itag',
         lastName: 'User',
-        email: 'ITAG_USER@gov.uk',
+        primaryEmail: `ITAG_USER@gov.uk`,
+        email: `ITAG_USER@gov.uk`,
+      },
+    }),
+  stubUserDetailsWithoutEmail: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/.*',
+      body: {
+        staffId: '12345',
+        username: 'ITAG_USER',
+        firstName: 'Itag',
+        lastName: 'User',
       },
     }),
   stubDpsAddRoles: () =>
