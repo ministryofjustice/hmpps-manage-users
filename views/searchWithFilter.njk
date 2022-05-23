@@ -32,13 +32,13 @@
 
 {% set filterOptionsHtml %}
     {{ govukInput({
-      label: { text: "Name" if dpsSearch else "Name, username or email address", classes: "govuk-label--s" },
+      label: { text: "Name, username or email address", classes: "govuk-label--s" },
       classes: "govuk-input--width-20 govuk-fieldset__legend--s",
       value: currentFilter.user,
       id: "user",
       name: "user",
       hint: { 
-        text: "Will match the user's name, username or email address"
+        text: "Will match the user's name, username or verified email address"
       },
       errorMessage: errors | findError('user')
     }) }}

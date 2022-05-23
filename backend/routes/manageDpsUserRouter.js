@@ -26,8 +26,9 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
       manageUsersApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
     ])
+
     return [
-      { ...user, email: user.primaryEmail, verified: userEmail.verified },
+      { ...user, email: user.primaryEmail, emailToVerify: userEmail.email, verified: userEmail.verified },
       roles.dpsRoles.map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly })),
     ]
   }

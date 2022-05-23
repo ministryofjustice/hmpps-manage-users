@@ -59,6 +59,7 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
+      displayEmailChangeInProgress: false,
       showGroups: true,
       showUsername: true,
       errors: undefined,
@@ -106,8 +107,59 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
+      displayEmailChangeInProgress: false,
       showGroups: true,
       showUsername: false,
+      errors: undefined,
+    })
+  })
+
+  it('should set displayEmailChangeInProgress to true if auth email is not verified and different to nomis', async () => {
+    const req = {
+      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      flash: jest.fn(),
+      session: {},
+    }
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      {
+        username: 'BOB',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        emailToVerify: 'new.bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: false,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+    ])
+    const render = jest.fn()
+    await userDetails.index(req, { render })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      searchTitle: 'Search for an external user',
+      searchResultsUrl: '/search-external-users/results',
+      searchUrl: '/search-external-users',
+      staff: {
+        firstName: 'Billy',
+        lastName: 'Bob',
+        name: 'Billy Bob',
+        username: 'BOB',
+        email: 'bob@digital.justice.gov.uk',
+        emailToVerify: 'new.bob@digital.justice.gov.uk',
+        enabled: true,
+        verified: false,
+        lastLoggedIn: '2020-11-23T11:13:08.387065',
+      },
+      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+      hasMaintainDpsUsersAdmin: false,
+      showEnableDisable: true,
+      showExtraUserDetails: true,
+      displayEmailChangeInProgress: true,
+      showGroups: true,
+      showUsername: true,
       errors: undefined,
     })
   })
@@ -159,6 +211,7 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: false,
       showEnableDisable: true,
       showExtraUserDetails: true,
+      displayEmailChangeInProgress: false,
       showGroups: true,
       showUsername: false,
       errors: undefined,
@@ -206,6 +259,7 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: true,
       showEnableDisable: true,
       showExtraUserDetails: true,
+      displayEmailChangeInProgress: false,
       showGroups: true,
       showUsername: true,
       errors: undefined,
@@ -264,6 +318,7 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
+      displayEmailChangeInProgress: false,
       showGroups: false,
       showUsername: true,
       errors: undefined,
@@ -322,6 +377,7 @@ describe('user detail factory', () => {
       hasMaintainDpsUsersAdmin: false,
       showEnableDisable: false,
       showExtraUserDetails: false,
+      displayEmailChangeInProgress: false,
       showGroups: false,
       showUsername: true,
       errors: undefined,
@@ -483,6 +539,7 @@ describe('user detail factory', () => {
         hasMaintainDpsUsersAdmin: false,
         showEnableDisable: true,
         showExtraUserDetails: true,
+        displayEmailChangeInProgress: false,
         showGroups: true,
         showUsername: true,
         errors: { error: 'some error' },
