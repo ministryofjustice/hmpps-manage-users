@@ -1,4 +1,4 @@
-const { downloadFactory } = require('./searchDownload')
+const { downloadFactory, downloadFactoryBetaSearch } = require('./searchDownload')
 
 describe('download factory', () => {
   const searchApi = jest.fn()
@@ -215,6 +215,146 @@ describe('download factory', () => {
 
       expect(res.writeHead).toBeCalledWith(500, { 'Content-Type': 'text/plain' })
       expect(res.end).toBeCalledWith(expect.any(String))
+    })
+  })
+})
+
+describe('download beta search factory', () => {
+  const findUsersApi = jest.fn()
+  const json2csv = jest.fn()
+  const allowDownload = jest.fn()
+  beforeEach(() => {
+    findUsersApi.mockReset()
+    json2csv.mockReset()
+    allowDownload.mockReset()
+  })
+
+  const mockBetaSearchCall = () => {
+    findUsersApi.mockResolvedValue([
+      {
+        username: 'Andy',
+        firstName: 'Billy',
+        lastName: 'Bob',
+        email: 'bob@digital.justice.gov.uk',
+        activeCaseload: {
+          id: 'BAI',
+          name: 'Belmarsg (HMP)',
+        },
+        dpsRoleCount: 1,
+        staffId: 1,
+      },
+      {
+        username: 'FRED@DIGITAL.JUSTICE.GOV.UK',
+        firstName: 'Billy',
+        lastName: 'Fred',
+        email: 'fred@digital.justice.gov.uk',
+        activeCaseload: {
+          id: 'BAI',
+          name: 'Belmarsg (HMP)',
+        },
+        dpsRoleCount: 2,
+        staffId: 2,
+      },
+      {
+        username: 'noemail',
+        firstName: 'No',
+        lastName: 'Email',
+        staffId: 3,
+      },
+      {
+        username: 'blankemail',
+        firstName: 'Blank',
+        lastName: 'Email',
+        email: '',
+        activeCaseload: {
+          id: 'BAI',
+          name: 'Belmarsg (HMP)',
+        },
+        dpsRoleCount: 4,
+        staffId: 4,
+      },
+    ])
+  }
+  const mockJson2Csv = () => {
+    json2csv.mockReturnValue(
+      `staffId,username,firstName,lastName,email,dpsRoleCount,active,activeCaseload.id,activeCaseload.name
+      1,Andy,Billy,Bob,bob@digital.justice.gov.uk,1,1,BAI,Belmarsg (HMP)
+      2,FRED@DIGITAL.JUSTICE.GOV.UK,Billy,Fred,fred@digital.justice.gov.uk2,2,BAI,Belmarsg (HMP)
+      3,noemail,No,Email,,,,,,,
+      4,blankemail,Blank,Email,,4,4,BAI,Belmarsg (HMP)`,
+    )
+  }
+
+  describe('Download CSV from Beta Search', () => {
+    const download = downloadFactoryBetaSearch(findUsersApi, json2csv, allowDownload)
+
+    it('should call users api', async () => {
+      const standardReq = {
+        flash: jest.fn(),
+        query: {},
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const req = {
+        ...standardReq,
+        query: {
+          user: 'Andy',
+          status: 'INACTIVE',
+          groupCode: 'MDI',
+          roleCode: 'ACCESS_ROLE_ADMIN',
+          restrictToActiveGroup: 'false',
+        },
+      }
+      const locals = { user: { maintainAccessAdmin: true } }
+      mockBetaSearchCall()
+      mockJson2Csv()
+      allowDownload.mockReturnValue(true)
+      await download.downloadBetaResults(req, {
+        locals,
+        header: jest.fn(),
+        attachment: jest.fn(),
+        send: jest.fn(),
+        writeHead: jest.fn(),
+        end: jest.fn(),
+      })
+
+      expect(findUsersApi).toBeCalledWith({
+        locals,
+        user: 'Andy',
+        accessRoles: ['ACCESS_ROLE_ADMIN'],
+        caseload: 'MDI',
+        activeCaseload: undefined,
+        status: 'INACTIVE',
+        size: undefined,
+      })
+    })
+    it('should return the csv', async () => {
+      const req = {
+        query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        protocol: 'http',
+        originalUrl: '/',
+        session: {},
+      }
+      const res = {
+        locals: { user: { maintainAccessAdmin: true } },
+        header: jest.fn(),
+        attachment: jest.fn(),
+        send: jest.fn(),
+        writeHead: jest.fn(),
+        end: jest.fn(),
+      }
+      mockBetaSearchCall()
+      mockJson2Csv()
+      allowDownload.mockReturnValue(true)
+      await download.downloadBetaResults(req, res)
+
+      expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
+      expect(res.attachment).toBeCalledWith('user-search.csv')
+      expect(res.send).toBeCalledWith(expect.any(String))
     })
   })
 })
