@@ -79,7 +79,7 @@ const downloadFactoryBetaSearch = (findUsersApi, allowDownload) => {
       },
       {
         label: 'accountStatus',
-        value: 'accountStatus',
+        value: 'status',
       },
       {
         label: 'lockedFlag',
