@@ -45,6 +45,7 @@ const userDetailsFactory = (
       showGroups: Boolean(removeGroupApi),
       showExtraUserDetails,
       showUsername: user.email !== user.username.toLowerCase(),
+      displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
     })
   }
 
