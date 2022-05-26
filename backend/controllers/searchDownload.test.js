@@ -241,6 +241,9 @@ describe('download beta search factory', () => {
           name: 'Belmarsg (HMP)',
         },
         dpsRoleCount: 1,
+        expired: false,
+        accountStatus: 'OPEN',
+        locked: false,
         staffId: 1,
       },
       {
@@ -252,6 +255,9 @@ describe('download beta search factory', () => {
           id: 'BAI',
           name: 'Belmarsg (HMP)',
         },
+        expired: true,
+        accountStatus: 'EXPIRED_GRACE',
+        locked: false,
         dpsRoleCount: 2,
         staffId: 2,
       },
@@ -260,6 +266,9 @@ describe('download beta search factory', () => {
         firstName: 'No',
         lastName: 'Email',
         staffId: 3,
+        expired: true,
+        accountStatus: 'LOCKED_EXPIRED',
+        locked: true,
       },
       {
         username: 'blankemail',
@@ -271,17 +280,20 @@ describe('download beta search factory', () => {
           name: 'Belmarsg (HMP)',
         },
         dpsRoleCount: 4,
+        expired: false,
+        accountStatus: 'LOCKED',
+        locked: true,
         staffId: 4,
       },
     ])
   }
   const mockJson2Csv = () => {
     json2csv.mockReturnValue(
-      `staffId,username,firstName,lastName,email,dpsRoleCount,active,activeCaseload.id,activeCaseload.name
-      1,Andy,Billy,Bob,bob@digital.justice.gov.uk,1,1,BAI,Belmarsg (HMP)
-      2,FRED@DIGITAL.JUSTICE.GOV.UK,Billy,Fred,fred@digital.justice.gov.uk2,2,BAI,Belmarsg (HMP)
-      3,noemail,No,Email,,,,,,,
-      4,blankemail,Blank,Email,,4,4,BAI,Belmarsg (HMP)`,
+      `staffId,username,firstName,lastName,email,dpsRoleCount,active,activeCaseload.id,expired,locked,accountStatus
+      1,Andy,Billy,Bob,bob@digital.justice.gov.uk,1,1,BAI,false,false,OPEN
+      2,FRED@DIGITAL.JUSTICE.GOV.UK,Billy,Fred,fred@digital.justice.gov.uk2,2,BAI,true,false,EXPIRED_GRACE
+      3,noemail,No,Email,,,,,,true,true,LOCKED_EXPIRED
+      4,blankemail,Blank,Email,,4,4,BAI,false,true,LOCKED`,
     )
   }
 

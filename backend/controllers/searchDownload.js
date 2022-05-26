@@ -79,18 +79,15 @@ const downloadFactoryBetaSearch = (findUsersApi, allowDownload) => {
       },
       {
         label: 'accountStatus',
-        value: 'ACTIVE',
-        default: 'ACTIVE',
+        value: 'accountStatus',
       },
       {
         label: 'lockedFlag',
-        value: 'FALSE',
-        default: 'FALSE',
+        value: 'locked',
       },
       {
         label: 'expiredFlag',
-        value: 'FALSE',
-        default: 'FALSE',
+        value: 'expired',
       },
       {
         label: 'active',
