@@ -57,15 +57,49 @@ const downloadFactoryBetaSearch = (findUsersApi, allowDownload) => {
       page,
     })
     const fields = [
-      'staffId',
-      'username',
-      'firstName',
-      'lastName',
-      'email',
-      'dpsRoleCount',
-      'active',
-      'activeCaseload.id',
-      'activeCaseload.name',
+      {
+        label: 'staffId',
+        value: 'staffId',
+      },
+      {
+        label: 'username',
+        value: 'username',
+      },
+      {
+        label: 'firstName',
+        value: 'firstName',
+      },
+      {
+        label: 'lastName',
+        value: 'lastName',
+      },
+      {
+        label: 'activeCaseLoadId',
+        value: 'activeCaseload.id',
+      },
+      {
+        label: 'accountStatus',
+        value: 'ACTIVE',
+        default: 'ACTIVE',
+      },
+      {
+        label: 'lockedFlag',
+        value: 'FALSE',
+        default: 'FALSE',
+      },
+      {
+        label: 'expiredFlag',
+        value: 'FALSE',
+        default: 'FALSE',
+      },
+      {
+        label: 'active',
+        value: 'active',
+      },
+      {
+        label: 'email',
+        value: 'email',
+      },
     ]
 
     const json2csvParser = new Parser({ fields })
