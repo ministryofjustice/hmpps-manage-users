@@ -64,7 +64,8 @@ const searchFactory = (
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
       downloadUrl:
-        allowDownload(res) && `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}`,
+        allowDownload(res) &&
+        `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}&size=${totalElements}`,
       maintainUrl,
     })
   }
@@ -100,4 +101,5 @@ function toArrayOrUndefined(maybeArray) {
 
 module.exports = {
   searchFactory,
+  parseFilter,
 }

@@ -71,7 +71,8 @@ describe('search factory', () => {
             restrictToActiveGroup: true,
           },
           results: [],
-          downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+          downloadUrl:
+            '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
           maintainUrl: '/manage-dps-users',
         })
       })
@@ -88,7 +89,8 @@ describe('search factory', () => {
         expect(render).toBeCalledWith(
           'searchWithFilter.njk',
           expect.objectContaining({
-            downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+            downloadUrl:
+              '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
           }),
         )
       })
@@ -105,7 +107,8 @@ describe('search factory', () => {
         expect(render).toBeCalledWith(
           'searchWithFilter.njk',
           expect.not.objectContaining({
-            downloadUrl: '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=',
+            downloadUrl:
+              '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
           }),
         )
       })
@@ -135,7 +138,7 @@ describe('search factory', () => {
               restrictToActiveGroup: false,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&activeCaseload=',
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&activeCaseload=&size=undefined',
           }),
         )
       })
@@ -157,9 +160,10 @@ describe('search factory', () => {
               status: 'INACTIVE',
               user: 'Andy',
               restrictToActiveGroup: true,
+              size: undefined,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=&groupCode=&activeCaseload=',
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=&groupCode=&activeCaseload=&size=undefined',
           }),
         )
       })
@@ -189,7 +193,7 @@ describe('search factory', () => {
               restrictToActiveGroup: true,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&activeCaseload=MDI&activeCaseload=BXI',
+              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&activeCaseload=MDI&activeCaseload=BXI&size=undefined',
           }),
         )
       })
