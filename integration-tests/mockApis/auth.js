@@ -493,6 +493,12 @@ const stubDpsUserChangeEmail = () =>
     urlPattern: '/auth/api/prisonuser/[^/]*/email',
   })
 
+const stubSyncDpsEmail = () =>
+  stubJson({
+    method: 'POST',
+    urlPattern: '/auth/api/prisonuser/[^/]*/email/sync',
+  })
+
 const stubAuthCreateUser = () =>
   stubJson({
     method: 'POST',
@@ -626,6 +632,7 @@ module.exports = {
   stubAuthUserEnable,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
+  stubSyncDpsEmail,
   stubAuthCreateUser,
   stubError,
   stubHealth,
