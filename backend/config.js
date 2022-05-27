@@ -54,7 +54,7 @@ module.exports = {
     password: process.env.REDIS_PASSWORD,
   },
   featureSwitches: {
-    dpsUserFilterSearch: process.env.FEATURE_DPS_USER_FILTER_SEARCH !== 'false',
+    dummySwitch: process.env.DUMMY_SWITCH !== 'false',
   },
   phaseName: process.env.SYSTEM_PHASE,
 }

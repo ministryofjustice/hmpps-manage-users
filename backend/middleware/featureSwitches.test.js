@@ -10,11 +10,11 @@ describe('Feature switches', () => {
   })
 
   it('should set switches into res.locals', async () => {
-    const controller = featureSwitches({ featureSwitches: { dpsUserFilterSearch: true } })
+    const controller = featureSwitches({ featureSwitches: { dummySwitch: true } })
     controller(req, res, () => {})
 
     expect(res.locals.featureSwitches).toEqual({
-      dpsUserFilterSearch: true,
+      dummySwitch: true,
     })
   })
 })

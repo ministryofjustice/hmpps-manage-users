@@ -19,7 +19,6 @@ generic-service:
     TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
     SYSTEM_PHASE: DEV
-    FEATURE_DPS_USER_FILTER_SEARCH: true
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:

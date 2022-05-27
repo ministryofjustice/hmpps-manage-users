@@ -12,7 +12,7 @@ const roleCheckbox = (text) => cy.contains('label', text).prev()
 const roleCheckboxLabel = (text) => cy.get('label').contains(text)
 
 const dpsUserSearchWithFilterPage = () =>
-  page('Search for a DPS user (BETA)', {
+  page('Search for a DPS user', {
     filter: () => cy.get('[class="moj-filter"]'),
     filterUser: (text) => {
       if (text) userFilterInput().type(text)

@@ -15,7 +15,7 @@
   <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
 {% endblock %}
 
-{% set title = "Search for a DPS user (BETA)" if dpsSearch else  "Search for an external user " %}
+{% set title = "Search for a NOMIS/DPS user" if dpsSearch else  "Search for an external user" %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({

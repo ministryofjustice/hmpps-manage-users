@@ -33,7 +33,6 @@ generic-service:
   env:
     NODE_ENV: production
     TOKENVERIFICATION_API_ENABLED: true
-    FEATURE_DPS_USER_FILTER_SEARCH: false
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
