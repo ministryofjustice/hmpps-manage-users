@@ -1,6 +1,7 @@
 const { userDetailsFactory } = require('./userDetails')
 
 describe('user detail factory', () => {
+  const render = jest.fn()
   const getUserRolesAndGroupsApi = jest.fn()
   const removeRoleApi = jest.fn()
   const removeGroupApi = jest.fn()
@@ -18,206 +19,115 @@ describe('user detail factory', () => {
     true,
   )
 
+  const req = {
+    params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+    flash: jest.fn(),
+    session: {},
+  }
+  const userStub = {
+    username: 'BOB',
+    firstName: 'Billy',
+    lastName: 'Bob',
+    email: 'bob@digital.justice.gov.uk',
+    enabled: true,
+    verified: true,
+    lastLoggedIn: '2020-11-23T11:13:08.387065',
+  }
+  const rolesStub = [{ roleName: 'roleName1', roleCode: 'roleCode1' }]
+  const groupsStub = [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }]
+  const expectedUserDetails = {
+    searchTitle: 'Search for an external user',
+    searchResultsUrl: '/search-external-users/results',
+    searchUrl: '/search-external-users',
+    staff: {
+      firstName: 'Billy',
+      lastName: 'Bob',
+      name: 'Billy Bob',
+      username: 'BOB',
+      email: 'bob@digital.justice.gov.uk',
+      enabled: true,
+      verified: true,
+      lastLoggedIn: '2020-11-23T11:13:08.387065',
+    },
+    staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+    roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+    groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+    hasMaintainDpsUsersAdmin: false,
+    showEnableDisable: true,
+    showExtraUserDetails: true,
+    displayEmailChangeInProgress: false,
+    showGroups: true,
+    showUsername: true,
+    errors: undefined,
+  }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('should call userDetail render', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-    ])
-    const render = jest.fn()
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
     await userDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchResultsUrl: '/search-external-users/results',
-      searchUrl: '/search-external-users',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      hasMaintainDpsUsersAdmin: false,
-      showEnableDisable: true,
-      showExtraUserDetails: true,
-      showGroups: true,
-      showUsername: true,
-      errors: undefined,
-    })
+    expect(render).toBeCalledWith('userDetails.njk', expectedUserDetails)
   })
 
   it('should set showUsername to false if email same as username', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
     getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+      { ...userStub, username: 'BOB@DIGITAL.JUSTICE.GOV.UK', email: 'bob@digital.justice.gov.uk' },
+      rolesStub,
+      groupsStub,
     ])
-    const render = jest.fn()
     await userDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchResultsUrl: '/search-external-users/results',
-      searchUrl: '/search-external-users',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      hasMaintainDpsUsersAdmin: false,
-      showEnableDisable: true,
-      showExtraUserDetails: true,
-      showGroups: true,
+      ...expectedUserDetails,
+      staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
       showUsername: false,
-      errors: undefined,
+    })
+  })
+
+  it('should set displayEmailChangeInProgress to true if auth email is not verified and different to nomis', async () => {
+    getUserRolesAndGroupsApi.mockResolvedValue([
+      { ...userStub, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
+      rolesStub,
+      groupsStub,
+    ])
+    await userDetails.index(req, { render })
+    expect(render).toBeCalledWith('userDetails.njk', {
+      ...expectedUserDetails,
+      staff: { ...expectedUserDetails.staff, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
+      displayEmailChangeInProgress: true,
     })
   })
 
   it('should only have groups set to showRemove when group manager is member of group', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
     getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      userStub,
+      rolesStub,
       [
         { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
         { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
       ],
     ])
-    const render = jest.fn()
     await userDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchResultsUrl: '/search-external-users/results',
-      searchUrl: '/search-external-users',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB@DIGITAL.JUSTICE.GOV.UK',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
+      ...expectedUserDetails,
       groups: [
         { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
         { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
       ],
-      hasMaintainDpsUsersAdmin: false,
-      showEnableDisable: true,
-      showExtraUserDetails: true,
-      showGroups: true,
-      showUsername: false,
-      errors: undefined,
     })
   })
 
   it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-    ])
-    const render = jest.fn()
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
     await userDetails.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
     expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchResultsUrl: '/search-external-users/results',
-      searchUrl: '/search-external-users',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+      ...expectedUserDetails,
       hasMaintainDpsUsersAdmin: true,
-      showEnableDisable: true,
-      showExtraUserDetails: true,
-      showGroups: true,
-      showUsername: true,
-      errors: undefined,
     })
   })
 
   it('should pass through show fields if not set', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
     const dpsUserDetails = userDetailsFactory(
       getUserRolesAndGroupsApi,
       removeRoleApi,
@@ -229,148 +139,39 @@ describe('user detail factory', () => {
       'Search for an external user',
       false,
     )
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-    ])
-    const render = jest.fn()
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
     await dpsUserDetails.index(req, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchResultsUrl: '/search-external-users/results',
-      searchUrl: '/search-external-users',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      hasMaintainDpsUsersAdmin: false,
+      ...expectedUserDetails,
+      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
       showEnableDisable: false,
       showExtraUserDetails: false,
       showGroups: false,
-      showUsername: true,
-      errors: undefined,
     })
   })
 
   it('should copy the search results url through from the session', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
+    const searchResultsReq = {
+      ...req,
       session: { searchResultsUrl: '/some-url' },
     }
-    const dpsUserDetails = userDetailsFactory(
-      getUserRolesAndGroupsApi,
-      removeRoleApi,
-      undefined,
-      undefined,
-      undefined,
-      '/search-external-users',
-      '/manage-external-users',
-      'Search for an external user',
-      false,
-    )
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-    ])
-    const render = jest.fn()
-    await dpsUserDetails.index(req, { render })
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+    await userDetails.index(searchResultsReq, { render })
     expect(render).toBeCalledWith('userDetails.njk', {
-      searchTitle: 'Search for an external user',
-      searchUrl: '/search-external-users',
+      ...expectedUserDetails,
       searchResultsUrl: '/some-url',
-      staff: {
-        firstName: 'Billy',
-        lastName: 'Bob',
-        name: 'Billy Bob',
-        username: 'BOB',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2' }],
-      hasMaintainDpsUsersAdmin: false,
-      showEnableDisable: false,
-      showExtraUserDetails: false,
-      showGroups: false,
-      showUsername: true,
-      errors: undefined,
     })
   })
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-    ])
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
     const locals = { user: { maintainAuthUsers: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
     expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
   })
 
   it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
-    const req = {
-      params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-      flash: jest.fn(),
-      session: {},
-    }
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      {
-        username: 'BOB',
-        firstName: 'Billy',
-        lastName: 'Bob',
-        email: 'bob@digital.justice.gov.uk',
-        enabled: true,
-        verified: true,
-        lastLoggedIn: '2020-11-23T11:13:08.387065',
-      },
-      [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-      [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-    ])
+    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
     const locals = { user: { maintainAccessAdmin: true } }
     await userDetails.index(req, { render: jest.fn(), locals })
     expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
@@ -378,11 +179,11 @@ describe('user detail factory', () => {
 
   describe('remove role', () => {
     it('should remove role and redirect', async () => {
-      const req = { params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const reqWithRoles = { params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
-      await userDetails.removeRole(req, { redirect, locals })
+      await userDetails.removeRole(reqWithRoles, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
     })
@@ -404,11 +205,11 @@ describe('user detail factory', () => {
 
   describe('remove group', () => {
     it('should remove group and redirect', async () => {
-      const req = { params: { group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const reqWithGroup = { params: { group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
 
       const redirect = jest.fn()
       const locals = jest.fn()
-      await userDetails.removeGroup(req, { redirect, locals })
+      await userDetails.removeGroup(reqWithGroup, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeGroupApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
     })
@@ -442,49 +243,14 @@ describe('user detail factory', () => {
     })
 
     it('should copy any flash errors over', async () => {
-      const req = {
-        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      const reqWithError = {
+        ...req,
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
-        session: {},
       }
-      getUserRolesAndGroupsApi.mockResolvedValue([
-        {
-          username: 'BOB',
-          firstName: 'Billy',
-          lastName: 'Bob',
-          email: 'bob@digital.justice.gov.uk',
-          enabled: true,
-          verified: true,
-          lastLoggedIn: '2020-11-23T11:13:08.387065',
-        },
-        [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-        [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      ])
-
-      const render = jest.fn()
-      await userDetails.index(req, { render })
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await userDetails.index(reqWithError, { render })
       expect(render).toBeCalledWith('userDetails.njk', {
-        searchTitle: 'Search for an external user',
-        searchResultsUrl: '/search-external-users/results',
-        searchUrl: '/search-external-users',
-        staff: {
-          firstName: 'Billy',
-          lastName: 'Bob',
-          name: 'Billy Bob',
-          username: 'BOB',
-          email: 'bob@digital.justice.gov.uk',
-          enabled: true,
-          verified: true,
-          lastLoggedIn: '2020-11-23T11:13:08.387065',
-        },
-        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
-        groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-        hasMaintainDpsUsersAdmin: false,
-        showEnableDisable: true,
-        showExtraUserDetails: true,
-        showGroups: true,
-        showUsername: true,
+        ...expectedUserDetails,
         errors: { error: 'some error' },
       })
     })
@@ -492,8 +258,6 @@ describe('user detail factory', () => {
 
   describe('enable user', () => {
     it('should enable user and redirect', async () => {
-      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
-
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
@@ -504,8 +268,6 @@ describe('user detail factory', () => {
 
   describe('disable user', () => {
     it('should disable user and redirect', async () => {
-      const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
-
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })

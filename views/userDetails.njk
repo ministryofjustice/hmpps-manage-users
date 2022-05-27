@@ -94,24 +94,28 @@
           </tbody>
         </table>
 
+        {% set userDetails = [] %}
+        {% set changeEmailLink = {
+          html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+          classes: 'govuk-!-width-one-quarter',
+          format: "numeric"
+        } if showExtraUserDetails or hasMaintainDpsUsersAdmin else {} %}
+
         {% if showExtraUserDetails %}
-          {% set userDetails = [] %}
           {% if showUsername %}
-            {% set userDetails = (userDetails.push([
-              {text: "Username"},
-              {text: staff.username},
-              {text: ''}
-            ]), userDetails) %}
+            {% set userDetails = userDetails.concat([
+              [
+                {text: "Username"},
+                {text: staff.username},
+                {text: ''}
+              ]
+            ]) %}
           {% endif %}
           {% set userDetails = userDetails.concat([
             [
               {text: ("Email" if showUsername else "Username / email")},
               {text: staff.email},
-              {
-                html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-                classes: 'govuk-!-width-one-quarter',
-                format: "numeric"
-              }
+              changeEmailLink
             ],
             [
               {text: "Verified"},
@@ -127,41 +131,47 @@
               {text: "Last logged in"},
               {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
               {text: ''}
-            ]]) %}
+            ]
+          ]) %}
 
-          {{ govukTable({
-            caption: "Account details",
-            rows: userDetails,
-            attributes: { "data-qa": "user-details" }
-          }) }}
         {% else %}
-          {% set staffEmail = {
-            html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-            classes: 'govuk-!-width-one-quarter',
-            format: "numeric"
-          } if hasMaintainDpsUsersAdmin else {} %}
-          {{ govukTable({
-            caption: "Account details",
-            rows: [
+          {% set userDetails = userDetails.concat([
+            [
+              {text: "Username"},
+              {text: staff.username},
+              {text: ''}
+            ],
+            [
+              {text: "Email"},
+              {text: staff.email},
+              changeEmailLink
+            ]
+          ]) %}
+
+          {% if displayEmailChangeInProgress %}
+            {% set userDetails = userDetails.concat([
               [
-                {text: "Username"},
-                {text: staff.username},
+                {text: "Email change awaiting verification"},
+                {text: staff.emailToVerify},
                 {text: ''}
-              ],
-              [
-                {text: "Email"},
-                {text: staff.email},
-                staffEmail
-              ],
+              ]
+            ]) %}
+          {% else %}
+            {% set userDetails = userDetails.concat([
               [
                 {text: "Verified"},
                 {text: staff.verified | formatYesNo()},
                 {text: ''}
               ]
-            ],
-            attributes: { "data-qa": "user-details" }
-          }) }}
+            ]) %}
+          {% endif %}
         {% endif %}
+
+        {{ govukTable({
+          caption: "Account details",
+          rows: userDetails,
+          attributes: { "data-qa": "user-details" }
+        }) }}
 
         {% if staff.inactiveReason %}
           {{ govukTable({

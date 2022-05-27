@@ -31,11 +31,11 @@ module.exports = {
     },
     prison: {
       url: process.env.API_ENDPOINT_URL || 'http://localhost:8080',
-      timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 30),
+      timeoutSeconds: toInt(process.env.PRISON_API_ENDPOINT_TIMEOUT_SECONDS, 30),
     },
     manageusers: {
       url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
-      timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 10),
+      timeoutSeconds: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_SECONDS, 10),
     },
     tokenverification: {
       url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
@@ -44,7 +44,7 @@ module.exports = {
     },
     nomisUsersAndRoles: {
       url: process.env.NOMIS_USERS_API_ENDPOINT_URL || 'http://localhost:8082',
-      timeoutSeconds: toInt(process.env.API_ENDPOINT_TIMEOUT_SECONDS, 30),
+      timeoutSeconds: toInt(process.env.NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS, 30),
     },
   },
 
@@ -54,7 +54,7 @@ module.exports = {
     password: process.env.REDIS_PASSWORD,
   },
   featureSwitches: {
-    dpsUserFilterSearch: process.env.FEATURE_DPS_USER_FILTER_SEARCH !== 'false',
+    dpsUserOldSearch: process.env.FEATURE_DPS_USER_OLD_SEARCH !== 'false',
   },
   phaseName: process.env.SYSTEM_PHASE,
 }

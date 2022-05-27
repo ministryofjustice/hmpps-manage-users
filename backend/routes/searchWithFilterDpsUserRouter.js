@@ -1,15 +1,14 @@
 const express = require('express')
-const json2csv = require('json2csv')
 const { searchFactory } = require('../controllers/searchWithFilter')
 const paginationService = require('../services/paginationService')
-const { downloadFactory } = require('../controllers/searchDownload')
+const { downloadFactoryBetaSearch } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
 const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
-  const { findUsersApi, searchApi, searchableRoles, caseloads } = searchApiFactory(
+  const { findUsersApi, searchableRoles, caseloads } = searchApiFactory(
     prisonApi,
     oauthApi,
     nomisUsersAndRolesApi,
@@ -23,15 +22,14 @@ const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi
     findUsersApi,
     '/search-with-filter-dps-users',
     '/manage-dps-users',
-    'Search for a DPS user (BETA)',
+    'Search for a DPS user',
     true,
     allowDownload,
   )
-
-  const { downloadResults } = downloadFactory(searchApi, json2csv.parse, allowDownload)
+  const { downloadBetaResults } = downloadFactoryBetaSearch(findUsersApi, allowDownload)
 
   router.get('/', search)
-  router.get('/download', downloadResults)
+  router.get('/download', downloadBetaResults)
   return router
 }
 

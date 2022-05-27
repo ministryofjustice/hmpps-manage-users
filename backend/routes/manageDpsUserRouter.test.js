@@ -30,14 +30,21 @@ describe('Manage DPS user router', () => {
       apis.nomisUsersAndRolesApi.getUser.mockResolvedValue({
         username: 'joe',
         active: true,
-        primaryEmail: 'joe@bloggs',
+        primaryEmail: 'joe@nomis',
       })
       apis.manageUsersApi.contextUserRoles.mockResolvedValue({ username: 'joe', dpsRoles: [{ code: 'role1' }] })
-      apis.oauthApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@bloggs', verified: false })
+      apis.oauthApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@auth', verified: false })
       const context = { user: 'bob' }
       const results = await getUserAndRolesApi({ locals: context })
       expect(results).toEqual([
-        { username: 'joe', active: true, primaryEmail: 'joe@bloggs', email: 'joe@bloggs', verified: false },
+        {
+          username: 'joe',
+          active: true,
+          primaryEmail: 'joe@nomis',
+          email: 'joe@nomis',
+          emailToVerify: 'joe@auth',
+          verified: false,
+        },
         [{ roleCode: 'role1' }],
       ])
     })
