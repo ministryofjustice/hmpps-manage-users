@@ -20,7 +20,7 @@ describe('search factory', () => {
       findUsersApi,
       '/search-with-filter-dps-users',
       '/manage-dps-users',
-      'Search for a DPS user (BETA)',
+      'Search for a DPS user',
       true,
       allowDownload,
     )
@@ -54,7 +54,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith('searchWithFilter.njk', {
-          searchTitle: 'Search for a DPS user (BETA)',
+          searchTitle: 'Search for a DPS user',
           searchUrl: '/search-with-filter-dps-users',
           groupOrPrisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
           roleDropdownValues: [{ text: 'Access Role Admin', value: 'ACCESS_ROLE_ADMIN' }],
@@ -207,7 +207,7 @@ describe('search factory', () => {
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
 
         expect(req.session.searchResultsUrl).toEqual(req.originalUrl)
-        expect(req.session.searchTitle).toEqual('Search for a DPS user (BETA)')
+        expect(req.session.searchTitle).toEqual('Search for a DPS user')
         expect(req.session.searchUrl).toEqual(req.originalUrl)
       })
     })

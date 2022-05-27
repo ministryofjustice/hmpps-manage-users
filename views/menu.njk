@@ -37,27 +37,27 @@
         {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles%}
         {% if hasMaintainNomisRolesAccess %}
           <div class="govuk-grid-column-one-third">
-            <div class="card card--clickable" data-qa="maintain_roles_link">
-              <h1 class="govuk-heading-m card__heading">
-                <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
-              </h1>
-              <p class="govuk-body card__description">Search and manage users of DPS and NOMIS</p>
-            </div>
-          </div>
-          {% if featureSwitches.dpsUserFilterSearch %}
-          <div class="govuk-grid-column-one-third">
             <div class="card card--clickable" data-qa="search_with_filter_dps_users">
               <h1 class="govuk-heading-m card__heading">
-                <span class="govuk-!-padding-right-2">
-                {{ govukTag({
-                  text: "BETA"
-                }) }}
-                </span>
-                <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user </a>
+                <a class="govuk-link card__link" href="/search-with-filter-dps-users">Search for a DPS user</a>
               </h1>
-              <p class="govuk-body card__description">Try out the new version of this service, that has enhanced filtering</p>
+              <p class="govuk-body card__description">Enhanced searching and managing of DPS and NOMIS users</p>
             </div>
           </div>
+          {% if featureSwitches.dpsUserOldSearch %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="maintain_roles_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
+                </h1>
+                <p class="govuk-body card__description">
+                  <span class="govuk-!-padding-right-2">
+                  {{ govukTag({
+                    text: "DEPRECATED"
+                  }) }}
+                </span>This version will be shortly removed</p>
+              </div>
+            </div>
           {% endif %}
         {% endif %}
         {% if hasMaintainAuthUsers %}
