@@ -22,7 +22,7 @@ const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi
     findUsersApi,
     '/search-with-filter-dps-users',
     '/manage-dps-users',
-    'Search for a DPS user (BETA)',
+    'Search for a DPS user',
     true,
     allowDownload,
   )

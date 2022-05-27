@@ -159,7 +159,7 @@ describe('search factory', () => {
         session: {
           searchResultsUrl:
             '/search-with-filter-dps-users?user=local&status=ACTIVE&groupCode=&restrictToActiveGroup=true&roleCode=',
-          searchTitle: 'Search for a DPS user (BETA)',
+          searchTitle: 'Search for a DPS user',
           searchUrl:
             '/search-with-filter-dps-users?user=local&status=ACTIVE&groupCode=&restrictToActiveGroup=true&roleCode=',
         },
