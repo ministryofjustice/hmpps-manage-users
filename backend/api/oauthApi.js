@@ -80,6 +80,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const createGroup = (context, group) => post(context, '/api/groups', group)
   const deleteChildGroup = (context, group) => del(context, `/api/groups/child/${group}`)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
+  const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -168,6 +169,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     createGroup,
     deleteChildGroup,
     changeDpsEmail,
+    syncDpsEmail,
   }
 }
 

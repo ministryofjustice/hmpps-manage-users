@@ -10,6 +10,7 @@ context('DPS search with filter user functionality', () => {
 
   beforeEach(() => {
     cy.task('reset')
+    cy.task('stubSyncDpsEmail')
   })
 
   it('Should show menu option for search page', () => {
