@@ -19,6 +19,19 @@ const nomisUsersAndRolesFactory = (client) => {
         page,
       })}`,
     )
+
+  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload }) =>
+    get(
+      context,
+      `/users/download?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+      })}`,
+    )
+
   const getCaseloads = (context) => get(context, '/reference-data/caseloads')
 
   const removeRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
@@ -39,6 +52,7 @@ const nomisUsersAndRolesFactory = (client) => {
     addRole,
     addUserRoles,
     userCaseLoads,
+    downloadUserSearch,
   }
 }
 
