@@ -34,9 +34,9 @@ const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
   return { downloadResults }
 }
 
-const downloadFactoryBetaSearch = (findUsersApi, allowDownload) => {
+const downloadFactoryBetaSearch = (downloadUserSearch, allowDownload) => {
   const downloadBetaResults = async (req, res) => {
-    const { size, page, offset, ...parameters } = req.query
+    const { ...parameters } = req.query
 
     if (!allowDownload(res)) {
       res.writeHead(403, { 'Content-Type': 'text/plain' })
@@ -46,15 +46,13 @@ const downloadFactoryBetaSearch = (findUsersApi, allowDownload) => {
 
     const caseload = currentFilter.groupCode && currentFilter.groupCode[0]
     const { roleCode: accessRoles } = currentFilter
-    const { searchResults } = await findUsersApi({
+    const { searchResults } = await downloadUserSearch({
       locals: res.locals,
       user: parameters.user,
       caseload,
       accessRoles,
       activeCaseload: currentFilter.restrictToActiveGroup ? caseload : undefined,
       status: currentFilter.status,
-      size,
-      page,
     })
     const fields = [
       {

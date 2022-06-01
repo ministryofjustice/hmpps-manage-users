@@ -267,7 +267,7 @@ context('DPS search with filter user functionality', () => {
     }
     // A workaround for https://github.com/cypress-io/cypress/issues/14857
     let csv
-    cy.intercept('GET', '*/download*', (req) => {
+    cy.intercept('GET', '*/user-download*', (req) => {
       req.reply((res) => {
         csv = res.body
         res.headers.location = '/'
