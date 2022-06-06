@@ -64,8 +64,7 @@ const searchFactory = (
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
       downloadUrl:
-        allowDownload(res) &&
-        `/search-with-filter-dps-users/download?${toDownloadParameters(currentFilter)}&size=${totalElements}`,
+        allowDownload(res) && `/search-with-filter-dps-users/user-download?${toDownloadParameters(currentFilter)}`,
       maintainUrl,
     })
   }

@@ -69,6 +69,30 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
     }
   }
 
+  const downloadNomisUserDetails = async ({
+    locals: context,
+    user: nameFilter,
+    accessRoles,
+    status,
+    caseload,
+    activeCaseload,
+  }) => {
+    const result = await nomisUsersAndRolesApi.downloadUserSearch(context, {
+      nameFilter,
+      accessRoles,
+      caseload,
+      activeCaseload,
+      status,
+    })
+    if (result.length === 0)
+      return {
+        searchResults: result,
+      }
+    return {
+      searchResults: result,
+    }
+  }
+
   const searchableRoles = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     return manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' })
@@ -102,6 +126,7 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
     caseloads,
     prisons,
     findUsersApi,
+    downloadNomisUserDetails,
   }
 }
 
