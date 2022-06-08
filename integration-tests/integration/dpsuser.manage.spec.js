@@ -13,6 +13,7 @@ context('DPS user manage functionality', () => {
 
   beforeEach(() => {
     cy.task('reset')
+    cy.task('stubSyncDpsEmail')
   })
 
   it('Should display details for a user ', () => {

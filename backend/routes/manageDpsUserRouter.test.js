@@ -11,7 +11,7 @@ const manageDpsUserRouter = require('./manageDpsUserRouter')
 
 describe('Manage DPS user router', () => {
   const apis = {
-    oauthApi: { getUserEmail: jest.fn() },
+    oauthApi: { getUserEmail: jest.fn(), syncDpsEmail: jest.fn() },
     nomisUsersAndRolesApi: { getUser: jest.fn() },
     manageUsersApi: { contextUserRoles: jest.fn() },
   }
@@ -35,7 +35,7 @@ describe('Manage DPS user router', () => {
       apis.manageUsersApi.contextUserRoles.mockResolvedValue({ username: 'joe', dpsRoles: [{ code: 'role1' }] })
       apis.oauthApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@auth', verified: false })
       const context = { user: 'bob' }
-      const results = await getUserAndRolesApi({ locals: context })
+      const results = await getUserAndRolesApi({ locals: context }, 'joe')
       expect(results).toEqual([
         {
           username: 'joe',
@@ -47,8 +47,10 @@ describe('Manage DPS user router', () => {
         },
         [{ roleCode: 'role1' }],
       ])
+      expect(apis.oauthApi.syncDpsEmail).toBeCalledWith({ locals: context }, 'joe')
     })
   })
+
   describe('getUserApi', () => {
     it('should map the email info onto the user', async () => {
       apis.nomisUsersAndRolesApi.getUser.mockResolvedValue({ username: 'joe', active: true })

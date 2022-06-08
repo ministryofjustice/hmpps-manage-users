@@ -8,7 +8,7 @@ const searchApiFactory = require('./searchApiFactory')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
-  const { findUsersApi, searchableRoles, caseloads } = searchApiFactory(
+  const { findUsersApi, searchableRoles, caseloads, downloadNomisUserDetails } = searchApiFactory(
     prisonApi,
     oauthApi,
     nomisUsersAndRolesApi,
@@ -22,14 +22,14 @@ const controller = ({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi
     findUsersApi,
     '/search-with-filter-dps-users',
     '/manage-dps-users',
-    'Search for a DPS user (BETA)',
+    'Search for a DPS user',
     true,
     allowDownload,
   )
-  const { downloadBetaResults } = downloadFactoryBetaSearch(findUsersApi, allowDownload)
+  const { downloadBetaResults } = downloadFactoryBetaSearch(downloadNomisUserDetails, allowDownload)
 
   router.get('/', search)
-  router.get('/download', downloadBetaResults)
+  router.get('/user-download', downloadBetaResults)
   return router
 }
 

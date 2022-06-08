@@ -20,7 +20,7 @@ describe('search factory', () => {
       findUsersApi,
       '/search-with-filter-dps-users',
       '/manage-dps-users',
-      'Search for a DPS user (BETA)',
+      'Search for a DPS user',
       true,
       allowDownload,
     )
@@ -54,7 +54,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith('searchWithFilter.njk', {
-          searchTitle: 'Search for a DPS user (BETA)',
+          searchTitle: 'Search for a DPS user',
           searchUrl: '/search-with-filter-dps-users',
           groupOrPrisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
           roleDropdownValues: [{ text: 'Access Role Admin', value: 'ACCESS_ROLE_ADMIN' }],
@@ -72,7 +72,7 @@ describe('search factory', () => {
           },
           results: [],
           downloadUrl:
-            '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
+            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
           maintainUrl: '/manage-dps-users',
         })
       })
@@ -90,7 +90,7 @@ describe('search factory', () => {
           'searchWithFilter.njk',
           expect.objectContaining({
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
+              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
           }),
         )
       })
@@ -108,7 +108,7 @@ describe('search factory', () => {
           'searchWithFilter.njk',
           expect.not.objectContaining({
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=&status=ALL&roleCode=&groupCode=&activeCaseload=&size=undefined',
+              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&size=undefined',
           }),
         )
       })
@@ -138,7 +138,7 @@ describe('search factory', () => {
               restrictToActiveGroup: false,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&activeCaseload=&size=undefined',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false',
           }),
         )
       })
@@ -163,7 +163,7 @@ describe('search factory', () => {
               size: undefined,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=&groupCode=&activeCaseload=&size=undefined',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true',
           }),
         )
       })
@@ -193,7 +193,7 @@ describe('search factory', () => {
               restrictToActiveGroup: true,
             },
             downloadUrl:
-              '/search-with-filter-dps-users/download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&activeCaseload=MDI&activeCaseload=BXI&size=undefined',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true',
           }),
         )
       })
@@ -207,7 +207,7 @@ describe('search factory', () => {
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
 
         expect(req.session.searchResultsUrl).toEqual(req.originalUrl)
-        expect(req.session.searchTitle).toEqual('Search for a DPS user (BETA)')
+        expect(req.session.searchTitle).toEqual('Search for a DPS user')
         expect(req.session.searchUrl).toEqual(req.originalUrl)
       })
     })
