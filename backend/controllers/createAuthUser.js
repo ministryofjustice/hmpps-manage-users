@@ -1,9 +1,16 @@
 const { validateCreate } = require('./authUserValidation')
 const { trimObjValues } = require('../utils')
 
-const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, searchUrl, manageUrl, maintainTitle) => {
+const createAuthUserFactory = (
+  getAssignableGroupsApi,
+  createAuthUser,
+  createUrl,
+  searchUrl,
+  manageUrl,
+  maintainTitle,
+) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
-    req.flash('createUserErrors', errors)
+    req.flash('createAuthUserErrors', errors)
     req.flash('user', user)
     res.redirect(req.originalUrl)
   }
@@ -18,12 +25,12 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, search
       selected: g.groupCode === user.groupCode,
     }))
 
-    res.render('createUser.njk', {
+    res.render('createAuthUser.njk', {
       maintainTitle,
       maintainUrl: createUrl,
       ...user,
       groupDropdownValues,
-      errors: req.flash('createUserErrors'),
+      errors: req.flash('createAuthUserErrors'),
     })
   }
 
@@ -37,10 +44,10 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, search
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        const userId = await createUser(res.locals, user)
+        const userId = await createAuthUser(res.locals, user)
 
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
-        res.render('createUserSuccess.njk', {
+        res.render('createAuthUserSuccess.njk', {
           email: user.email,
           detailsLink: `${manageUrl}/${userId}/details`,
         })
@@ -67,5 +74,5 @@ const createUserFactory = (getAssignableGroupsApi, createUser, createUrl, search
 }
 
 module.exports = {
-  createUserFactory,
+  createAuthUserFactory,
 }
