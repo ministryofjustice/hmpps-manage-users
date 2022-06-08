@@ -64,16 +64,10 @@ const searchFactory = (
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
       downloadUrl:
-        allowDownload(res) && `/search-with-filter-dps-users/user-download?${toDownloadParameters(currentFilter)}`,
+        allowDownload(res) && `/search-with-filter-dps-users/user-download?${querystring.stringify(currentFilter)}`,
       maintainUrl,
     })
   }
-}
-
-function toDownloadParameters(currentFilter) {
-  const { restrictToActiveGroup, ...params } = currentFilter
-  params.activeCaseload = restrictToActiveGroup && params.groupCode ? params.groupCode : undefined
-  return querystring.stringify(params)
 }
 
 function parseFilter(query) {

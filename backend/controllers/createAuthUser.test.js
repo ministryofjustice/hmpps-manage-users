@@ -1,11 +1,11 @@
-const { createUserFactory } = require('./createUser')
+const { createAuthUserFactory } = require('./createAuthUser')
 
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()
-  const createUserApi = jest.fn()
-  const createUser = createUserFactory(
+  const createAuthUserApi = jest.fn()
+  const createAuthUser = createAuthUserFactory(
     getAssignableGroupsApi,
-    createUserApi,
+    createAuthUserApi,
     '/create-external-users',
     '/search-external-users',
     '/manage-external-users',
@@ -18,8 +18,8 @@ describe('create user factory', () => {
       getAssignableGroupsApi.mockResolvedValue([{ groupName: 'name', groupCode: 'code' }])
 
       const render = jest.fn()
-      await createUser.index(req, { render })
-      expect(render).toBeCalledWith('createUser.njk', {
+      await createAuthUser.index(req, { render })
+      expect(render).toBeCalledWith('createAuthUser.njk', {
         maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
         groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
@@ -32,8 +32,8 @@ describe('create user factory', () => {
       getAssignableGroupsApi.mockResolvedValue([{ groupName: 'name', groupCode: 'code' }])
 
       const render = jest.fn()
-      await createUser.index(req, { render })
-      expect(render).toBeCalledWith('createUser.njk', {
+      await createAuthUser.index(req, { render })
+      expect(render).toBeCalledWith('createAuthUser.njk', {
         errors: { error: 'some error' },
         maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
@@ -55,16 +55,16 @@ describe('create user factory', () => {
         flash: jest.fn(),
         session: {},
       }
-      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      createAuthUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createUserSuccess.njk', {
+      await createAuthUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createAuthUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createUserApi).toBeCalledWith(locals, {
+      expect(createAuthUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -84,16 +84,16 @@ describe('create user factory', () => {
         flash: jest.fn(),
         session: {},
       }
-      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      createAuthUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createUserSuccess.njk', {
+      await createAuthUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createAuthUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createUserApi).toBeCalledWith(locals, {
+      expect(createAuthUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -114,16 +114,16 @@ describe('create user factory', () => {
         session: {},
       }
 
-      createUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      createAuthUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createUserSuccess.njk', {
+      await createAuthUser.post(req, { render, locals })
+      expect(render).toBeCalledWith('createAuthUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createUserApi).toBeCalledWith(locals, {
+      expect(createAuthUserApi).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -146,7 +146,7 @@ describe('create user factory', () => {
 
       const render = jest.fn()
       const locals = jest.fn()
-      await createUser.post(req, { render, locals })
+      await createAuthUser.post(req, { render, locals })
       expect(req.session).toEqual({
         searchResultsUrl: '/search-external-users/results?user=bob@digital.justice.gov.uk',
       })
@@ -156,9 +156,9 @@ describe('create user factory', () => {
       const req = { params: {}, body: {}, flash: jest.fn(), originalUrl: '/original' }
 
       const redirect = jest.fn()
-      await createUser.post(req, { redirect })
+      await createAuthUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createUserErrors', [
+      expect(req.flash).toBeCalledWith('createAuthUserErrors', [
         {
           href: '#email',
           text: 'Enter an email address',
@@ -178,15 +178,15 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
 
-      createUserApi.mockRejectedValue(error)
+      createAuthUserApi.mockRejectedValue(error)
       const req = {
         body: { email: 'bob@digital.justice.gov.uk' },
         flash: jest.fn(),
         originalUrl: '/some-location',
       }
-      await createUser.post(req, { redirect })
+      await createAuthUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createUserErrors', [
+      expect(req.flash).toBeCalledWith('createAuthUserErrors', [
         {
           href: '#firstName',
           text: 'Enter a first name',
@@ -206,7 +206,7 @@ describe('create user factory', () => {
         response: { body: { error_description: 'Email already exists' } },
       }
 
-      createUserApi.mockRejectedValue(error)
+      createAuthUserApi.mockRejectedValue(error)
       const req = {
         params: {},
         body: {
@@ -218,9 +218,9 @@ describe('create user factory', () => {
         flash: jest.fn(),
         originalUrl: '/some-location',
       }
-      await createUser.post(req, { redirect })
+      await createAuthUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createUserErrors', [
+      expect(req.flash).toBeCalledWith('createAuthUserErrors', [
         {
           href: '#email',
           text: 'Email already exists',
