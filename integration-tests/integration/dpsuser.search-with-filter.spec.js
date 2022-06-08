@@ -285,4 +285,13 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
+  it('Hide download link and show restriction message', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 2000000 })
+    searchWithFilter
+      .getHideDownloadLinkMessage()
+      .should(
+        'contain.text',
+        'More than 20000 results returned, please refine your search if you want to download the results',
+      )
+  })
 })
