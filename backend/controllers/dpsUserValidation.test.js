@@ -50,12 +50,12 @@ describe('DPS create validation', () => {
     expect(validateDpsUserCreate('un', 'b@d.com', 'ca4', 'de3', 'default', true)).toEqual(
       expect.arrayContaining([
         { href: '#firstName', text: 'First name must be consist of letters only' },
-        { href: '#lastName', text: 'Last name must be consist of letters only' },
+        { href: '#lastName', text: 'Last name must be consist of letters or an apostrophe only' },
       ]),
     )
   })
   it('should pass validation', () => {
-    expect(validateDpsUserCreate('JBLOGGS_ADM', 'joe+bloggs@joe.com', 'joe', 'joe', 'MDI', true)).toEqual([])
+    expect(validateDpsUserCreate('JBLOGGS_ADM', 'joe+bloggs@joe.com', 'joe', "B'loggs", 'MDI', true)).toEqual([])
   })
   it('should pass validation with microsoft special quote', () => {
     expect(validateDpsUserCreate('JBLOGGS_ADM', 'joe.b’loggs@joe.com', 'joe', 'joe', 'MDI', true)).toEqual([])

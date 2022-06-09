@@ -1,6 +1,7 @@
 import { validateEmailFormat } from './userValidation'
 
 const isAlphaString = (str: string) => str.match(/^[A-Za-z]+$/)
+const isAlphaStringOrApostrophe = (str: string) => str.match(/^[A-Za-z']+$/)
 
 const validateDpsUserCreate = (
   username: string,
@@ -46,8 +47,8 @@ const validateDpsUserCreate = (
     errors.push({ href: '#lastName', text: 'Last name must be 2 characters or more' })
   } else if (lastName.length > 35) {
     errors.push({ href: '#lastName', text: 'Last name must be 35 characters or less' })
-  } else if (!isAlphaString(lastName)) {
-    errors.push({ href: '#lastName', text: 'Last name must be consist of letters only' })
+  } else if (!isAlphaStringOrApostrophe(lastName)) {
+    errors.push({ href: '#lastName', text: 'Last name must be consist of letters or an apostrophe only' })
   }
 
   if (errors.length) return errors
