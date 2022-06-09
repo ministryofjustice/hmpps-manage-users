@@ -37,6 +37,9 @@ const nomisUsersAndRolesFactory = (client) => {
   const removeRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
   const addRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
+  const createAdminUser = (context, user) => post(context, `/users/admin-account`, user)
+  const createGeneralUser = (context, user) => post(context, `/users/general-account`, user)
+  const createLocalAdminUser = (context, user) => post(context, `/users/local-admin-account`, user)
   const getUser = (context, username) => get(context, `/users/${username}`)
   const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
   const userCaseLoads = (context, username) =>
@@ -45,6 +48,9 @@ const nomisUsersAndRolesFactory = (client) => {
 
   return {
     getRoles,
+    createAdminUser,
+    createLocalAdminUser,
+    createGeneralUser,
     getUser,
     userSearch,
     getCaseloads,
