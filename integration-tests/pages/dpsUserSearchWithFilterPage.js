@@ -58,6 +58,7 @@ const dpsUserSearchWithFilterPage = () =>
     getPaginationList: () => cy.get('.moj-pagination__list'),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
     getHideDownloadLinkMessage: () => cy.get('[data-qa="exceed-download-limit"]'),
+    getDownloadLinkMessage: () => cy.get('[data-qa="download"]'),
     download: () => cy.get('a[data-qa="download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
     caseload,

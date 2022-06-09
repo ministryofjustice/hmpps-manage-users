@@ -64,18 +64,13 @@ const searchFactory = (
         { totalElements, page: number, size },
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
-      downloadUrl: checkRecords(allowDownload, totalElements, res, currentFilter),
+      downloadUrl:
+        allowDownload(res) && `/search-with-filter-dps-users/user-download?${querystring.stringify(currentFilter)}`,
+      hideDownloadLink: allowDownload(res) && totalElements > config.downloadRecordLimit ? true : undefined,
       maintainUrl,
       downloadRecordLimit: config.downloadRecordLimit,
     })
   }
-}
-
-function checkRecords(allowDownload, totalElements, res, currentFilter) {
-  if (totalElements < config.downloadRecordLimit) {
-    return allowDownload(res) && `/search-with-filter-dps-users/user-download?${querystring.stringify(currentFilter)}`
-  }
-  return undefined
 }
 
 function parseFilter(query) {
