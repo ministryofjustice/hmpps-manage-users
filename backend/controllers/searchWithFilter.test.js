@@ -1,4 +1,5 @@
 const { searchFactory } = require('./searchWithFilter')
+const config = require('../config')
 
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
@@ -38,10 +39,11 @@ describe('search factory', () => {
       getCaseloadsApi.mockReset()
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'Access Role Admin', roleCode: 'ACCESS_ROLE_ADMIN' }])
       getCaseloadsApi.mockResolvedValue([{ text: 'Moorland HMP', value: 'MDI' }])
-      findUsersApi.mockResolvedValue({ searchResults: [], number: 0, page: 0 })
+      findUsersApi.mockResolvedValue({ searchResults: [], totalElements: 0, number: 0, page: 0 })
       allowDownload.mockReset()
       allowDownload.mockReturnValue(true)
       paginationService.getPagination.mockReturnValue(pagination)
+      config.downloadRecordLimit = 100
     })
 
     describe('rendering', () => {
@@ -74,6 +76,7 @@ describe('search factory', () => {
           downloadUrl:
             '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
           maintainUrl: '/manage-dps-users',
+          downloadRecordLimit: 100,
         })
       })
       it('should call renderer with download url when download is allowed', async () => {
