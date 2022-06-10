@@ -57,4 +57,5 @@ module.exports = {
     dpsUserOldSearch: process.env.FEATURE_DPS_USER_OLD_SEARCH !== 'false',
   },
   phaseName: process.env.SYSTEM_PHASE,
+  downloadRecordLimit: toInt(process.env.DPS_SEARCH_DOWNLOAD_LINK_LIMIT, 20000),
 }

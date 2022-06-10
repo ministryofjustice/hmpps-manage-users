@@ -285,4 +285,24 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
+  it('Hide download link and show restriction message', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 2000000 })
+    searchWithFilter
+      .getHideDownloadLinkMessage()
+      .should(
+        'contain.text',
+        'More than 20000 results returned, please refine your search if you want to download the results',
+      )
+  })
+
+  it('When non-admin is logged in, should not show download link and  download restriction message', () => {
+    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false, totalElements: 2000000 })
+    searchWithFilter
+      .getHideDownloadLinkMessage()
+      .should(
+        'not.exist',
+        'More than 20000 results returned, please refine your search if you want to download the results',
+      )
+    searchWithFilter.getDownloadLinkMessage().should('not.exist', 'Download results')
+  })
 })
