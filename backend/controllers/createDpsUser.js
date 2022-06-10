@@ -43,7 +43,6 @@ const createDpsUserFactory = (
       const currentUserTypeDesc = userTypeValues.find((u) => u.value === user.userType)?.text
       res.render('createDpsUser.njk', {
         title: `Create a DPS ${currentUserTypeDesc} user`,
-        // maintainUrl: createDpsUserUrl,
         showCaseloadDropdown,
         ...user,
         caseloadDropdownValues,
@@ -71,7 +70,6 @@ const createDpsUserFactory = (
         const userDetails = await currentUser.api(res.locals, user)
 
         res.render('createDpsUserSuccess.njk', {
-          // email: user.email,
           detailsLink: `${manageUrl}/${userDetails.username}/details`,
         })
       } catch (err) {

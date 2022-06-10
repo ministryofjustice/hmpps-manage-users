@@ -45,7 +45,6 @@ describe('create user factory', () => {
           .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
           .mockReturnValueOnce({ error: 'some error' }),
       }
-      // const req = { params: {}, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
       getCaseloads.mockResolvedValue([{ id: 'MDI', name: 'Moorland HMP' }])
 
       const redirect = jest.fn()

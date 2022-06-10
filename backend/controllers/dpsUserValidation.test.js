@@ -24,16 +24,16 @@ describe('DPS create validation', () => {
   it('should disallow fields that are too long', () => {
     expect(
       validateDpsUserCreate(
-        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+        'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
         'joe@bloggs.com',
-        'ccccccccccccccccccccccccccccccccccccccccccccccccccc',
-        'dddddddddddddddddddddddddddddddddddddddddddddddddddd',
+        'cccccccccccccccccccccccccccccccccccc',
+        'dddddddddddddddddddddddddddddddddddd',
         'default',
         true,
       ),
     ).toEqual(
       expect.arrayContaining([
-        { href: '#username', text: 'Username must be 35 characters or less' },
+        { href: '#username', text: 'Username must be 30 characters or less' },
         { href: '#firstName', text: 'First name must be 35 characters or less' },
         { href: '#lastName', text: 'Last name must be 35 characters or less' },
       ]),

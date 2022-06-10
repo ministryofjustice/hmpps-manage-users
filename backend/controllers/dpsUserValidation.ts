@@ -34,7 +34,7 @@ const validateDpsUserCreate = (
   if (username.length < 2) {
     errors.push({ href: '#username', text: 'Username must be 2 characters or more' })
   } else if (username.length > 30) {
-    errors.push({ href: '#username', text: 'Username must be 35 characters or less' })
+    errors.push({ href: '#username', text: 'Username must be 30 characters or less' })
   }
   if (firstName.length < 2) {
     errors.push({ href: '#firstName', text: 'First name must be 2 characters or more' })
