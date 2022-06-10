@@ -1,4 +1,5 @@
 const querystring = require('querystring')
+const config = require('../config')
 
 const size = 20
 
@@ -65,7 +66,9 @@ const searchFactory = (
       ),
       downloadUrl:
         allowDownload(res) && `/search-with-filter-dps-users/user-download?${querystring.stringify(currentFilter)}`,
+      hideDownloadLink: allowDownload(res) && totalElements > config.downloadRecordLimit ? true : undefined,
       maintainUrl,
+      downloadRecordLimit: config.downloadRecordLimit,
     })
   }
 }

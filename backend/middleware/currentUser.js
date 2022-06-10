@@ -21,6 +21,7 @@ module.exports =
           maintainAuthUsers: hasRole(roles, 'MAINTAIN_OAUTH_USERS'),
           groupManager: hasRole(roles, 'AUTH_GROUP_MANAGER'),
           maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
+          createDPSUsers: hasRole(roles, 'CREATE_USER'),
         }
       }
 
