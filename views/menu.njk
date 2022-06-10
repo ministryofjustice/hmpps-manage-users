@@ -21,6 +21,8 @@
 {% set hasMaintainNomisRolesAccess = user and (user.maintainAccess or user.maintainAccessAdmin) %}
 {% set hasMaintainAuthUsers = user and (user.maintainAuthUsers or user.groupManager) %}
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
+{% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
+
 
 {% block content %}
   {% if message.length > 0 and hasMaintainNomisRolesAccess%}
@@ -34,7 +36,7 @@
     <h1 class="govuk-heading-l">{{ title }}</h1>
    <div class="homepage-content">
       <div class="govuk-grid-row card-group">
-        {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles%}
+        {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers %}
         {% if hasMaintainNomisRolesAccess %}
           <div class="govuk-grid-column-one-third">
             <div class="card card--clickable" data-qa="search_with_filter_dps_users">
@@ -59,6 +61,16 @@
               </div>
             </div>
           {% endif %}
+        {% endif %}
+        {% if hasCreateDPSUsers %}
+          <div class="govuk-grid-column-one-third">
+            <div class="card card--clickable" data-qa="create_dps_user_link">
+              <h1 class="govuk-heading-m card__heading">
+                <a class="govuk-link card__link" href="/create-user">Create a DPS user</a>
+              </h1>
+              <p class="govuk-body card__description">Create an account for a DPS user</p>
+            </div>
+          </div>
         {% endif %}
         {% if hasMaintainAuthUsers %}
           <div class="govuk-grid-column-one-third">
