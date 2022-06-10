@@ -1,11 +1,6 @@
 const searchApiFactory = require('./searchApiFactory')
 
 describe('Search API Factory', () => {
-  const prisonApi = {
-    userSearchAdmin: jest.fn(),
-    userSearch: jest.fn(),
-    getPrisons: jest.fn(),
-  }
   const nomisUsersAndRolesApi = {
     getRoles: jest.fn(),
     getCaseloads: jest.fn(),
@@ -15,79 +10,12 @@ describe('Search API Factory', () => {
     getRoles: jest.fn(),
   }
   const oauthApi = { userEmails: jest.fn() }
-  const { searchApi, searchableRoles, prisons, caseloads, findUsersApi } = searchApiFactory(
-    prisonApi,
-    oauthApi,
-    nomisUsersAndRolesApi,
-    manageUsersApi,
-  )
+  const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(oauthApi, nomisUsersAndRolesApi, manageUsersApi)
 
   beforeEach(() => {
     jest.resetAllMocks()
   })
 
-  describe('searchApi', () => {
-    it('will call admin search with admin role context', async () => {
-      prisonApi.userSearchAdmin.mockResolvedValue([])
-
-      await searchApi({
-        locals: { user: { maintainAccessAdmin: true } },
-        user: 'jane',
-        groupCode: 'MDI',
-        roleCode: 'OMIC_ADMIN',
-        activeCaseload: 'LEI',
-        status: 'ACTIVE',
-        pageSize: 20,
-        pageOffset: 40,
-      })
-
-      expect(prisonApi.userSearchAdmin).toBeCalledWith(
-        {
-          user: { maintainAccessAdmin: true },
-          requestHeaders: {
-            'page-limit': 20,
-            'page-offset': 40,
-          },
-        },
-        {
-          nameFilter: 'jane',
-          roleFilter: 'OMIC_ADMIN',
-          status: 'ACTIVE',
-          caseload: 'MDI',
-          activeCaseload: 'LEI',
-        },
-      )
-    })
-    it('will call normal search without admin role context and not pass caseload filter', async () => {
-      prisonApi.userSearch.mockResolvedValue([])
-
-      await searchApi({
-        locals: { user: { maintainAccessAdmin: false } },
-        user: 'jane',
-        groupCode: 'MDI',
-        roleCode: 'OMIC_ADMIN',
-        activeCaseload: 'LEI',
-        status: 'ACTIVE',
-        pageSize: 20,
-        pageOffset: 40,
-      })
-
-      expect(prisonApi.userSearch).toBeCalledWith(
-        {
-          user: { maintainAccessAdmin: false },
-          requestHeaders: {
-            'page-limit': 20,
-            'page-offset': 40,
-          },
-        },
-        {
-          nameFilter: 'jane',
-          roleFilter: 'OMIC_ADMIN',
-          status: 'ACTIVE',
-        },
-      )
-    })
-  })
   describe('findUsersApi', () => {
     const noResults = {
       content: [],
@@ -357,32 +285,6 @@ describe('Search API Factory', () => {
     })
   })
 
-  describe('prisons', () => {
-    it('will get prisons with admin in context', async () => {
-      prisonApi.getPrisons.mockResolvedValue([
-        { description: 'Moorland HMP', agencyId: 'MDI' },
-        { description: 'Leeds HMP', agencyId: 'LEI' },
-      ])
-
-      const caseloadOptions = await prisons({ user: { maintainAccessAdmin: true } })
-
-      expect(prisonApi.getPrisons).toBeCalledWith({
-        user: { maintainAccessAdmin: true },
-      })
-
-      expect(caseloadOptions).toEqual([
-        { text: 'Leeds HMP', value: 'LEI' },
-        { text: 'Moorland HMP', value: 'MDI' },
-      ])
-    })
-    it('will not get prisons options when admin not in context', async () => {
-      const caseloadOptions = await prisons({ user: { maintainAccessAdmin: false } })
-
-      expect(prisonApi.getPrisons).not.toHaveBeenCalled()
-
-      expect(caseloadOptions).toEqual([])
-    })
-  })
   describe('caseloads', () => {
     it('will get caseloads with admin in context', async () => {
       nomisUsersAndRolesApi.getCaseloads.mockResolvedValue([

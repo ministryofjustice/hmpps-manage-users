@@ -13,11 +13,10 @@ Ensure that you have these installed using your system package manager and/or np
 
 # Dependent services when running locally
 
-When running locally this service needs to use several other supporting services which
+When running locally this service needs to use other supporting services which
 need to be running and available at known locations.
 
-- prison-api        port: 8080
-- Oauth2 Server    port: 9090
+- HMPPS Auth (port: 9090)
 
 For simplicity, the easiest way to make these services available is to clone the prison-api
 repository and to run the docker compose file in the root directory to bring up local 
@@ -51,16 +50,15 @@ tell it where to find the dependent services and other important settings.
 The following environment variables supply these values:
 
 
-| Environment Variable          | Description                                  |
-|------------------------       |:--------------------------------------------:|
-| API_CLIENT_ID                 | Client ID for accessing apis                 |
-| API_CLIENT_SECRET             | Client secret for accessing apis             |
-| API_ENDPOINT_URL              | URL to the prison-api                        |
-| MANAGE_USERS_API_ENDPOINT_URL | URL to manage users api                      |
-| NOMIS_USERS_API_ENDPOINT_URL  | URL to NOMIS manage users api                |
-| OAUTH_ENDPOINT_URL            | URL to the Oauth2 server                     |
-| DPS_ENDPOINT_URL              | DPS Core UI                                  |
-| SESSION_COOKIE_SECRET         | Session cookie secret                        | 
+| Environment Variable          |           Description            |
+|-------------------------------|:--------------------------------:|
+| API_CLIENT_ID                 |   Client ID for accessing apis   |
+| API_CLIENT_SECRET             | Client secret for accessing apis |
+| MANAGE_USERS_API_ENDPOINT_URL |     URL to manage users api      |
+| NOMIS_USERS_API_ENDPOINT_URL  |  URL to NOMIS manage users api   |
+| OAUTH_ENDPOINT_URL            |     URL to the Oauth2 server     |
+| DPS_ENDPOINT_URL              |           DPS Core UI            |
+| SESSION_COOKIE_SECRET         |      Session cookie secret       | 
 
 
 # Production execution
@@ -84,7 +82,7 @@ docker run -p 3001:3000 -d \
 # Cypress Integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the Prison, HMPPS Auth, and NOMIS User-roles RESTful APIs.
+These tests WireMock to stub the application's dependencies on the HMPPS Manage Users, HMPPS Auth and NOMIS User-roles RESTful APIs.
 
 ## Running the feature tests
 
@@ -113,7 +111,7 @@ the reqest log at `localhost:9191/__admin/requests/` and a JSON representation o
 ### Starting feature tests node instance
 
 A separate node instance needs to be started for the feature tests. This will run on port 3008 and won't conflict
-with any of the api services, e.g. prison-api or oauth.
+with any of the api services, e.g. hmpps-manage-users-api or hmpps-auth.
 
 ```npm run start-feature:dev```
 

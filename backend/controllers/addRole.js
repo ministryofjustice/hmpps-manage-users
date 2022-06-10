@@ -1,4 +1,4 @@
-const selectRolesFactory = (getUserRolesAndMessage, saveRoles, searchUrl, manageUrl) => {
+const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -20,8 +20,6 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, searchUrl, manage
         },
       }),
     }))
-
-    const feedbackSource = `${req.get('host')}/select-roles`
 
     res.render('addRole.njk', {
       staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },

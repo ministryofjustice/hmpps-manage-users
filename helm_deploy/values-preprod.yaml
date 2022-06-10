@@ -6,7 +6,6 @@ generic-service:
     host: manage-users-preprod.hmpps.service.justice.gov.uk
 
   env:
-    API_ENDPOINT_URL: https://api-preprod.prison.service.justice.gov.uk
     MANAGE_USERS_API_ENDPOINT_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
     OAUTH_ENDPOINT_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital-preprod.prison.service.justice.gov.uk

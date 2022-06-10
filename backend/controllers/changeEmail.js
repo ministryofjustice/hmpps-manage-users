@@ -12,7 +12,7 @@ function mapDescription(error, errorDescription) {
   }
 }
 
-const changeEmailFactory = (getUserApi, changeEmail, searchUrl, manageUrl) => {
+const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
     req.flash('changeEmail', email)

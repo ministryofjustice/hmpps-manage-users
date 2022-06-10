@@ -29,10 +29,6 @@ module.exports = {
       clientId: process.env.API_CLIENT_ID || 'manage-user-accounts-ui',
       clientSecret: process.env.API_CLIENT_SECRET || 'clientsecret',
     },
-    prison: {
-      url: process.env.API_ENDPOINT_URL || 'http://localhost:8080',
-      timeoutSeconds: toInt(process.env.PRISON_API_ENDPOINT_TIMEOUT_SECONDS, 30),
-    },
     manageusers: {
       url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
       timeoutSeconds: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_SECONDS, 10),
@@ -53,9 +49,7 @@ module.exports = {
     port: process.env.REDIS_PORT || 6379,
     password: process.env.REDIS_PASSWORD,
   },
-  featureSwitches: {
-    dpsUserOldSearch: process.env.FEATURE_DPS_USER_OLD_SEARCH !== 'false',
-  },
+  featureSwitches: {},
   phaseName: process.env.SYSTEM_PHASE,
   downloadRecordLimit: toInt(process.env.DPS_SEARCH_DOWNLOAD_LINK_LIMIT, 20000),
 }
