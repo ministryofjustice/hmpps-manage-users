@@ -205,9 +205,13 @@
                   }) }}
                 {{ mojPagination(pagination) }}
                 {% if downloadUrl %}
-                  <div class="pull-right">
-                    <a href="{{ downloadUrl }}" class="govuk-link" data-qa="download" download="user-search.csv" type="text/csv">Download results</a>
-                  </div>
+                  {% if hideDownloadLink %}
+                     <p class="govuk-body" data-qa="exceed-download-limit"><b>More than {{ downloadRecordLimit }} results returned, please refine your search if you want to download the results</b></p>
+                    {% else %}
+                     <div class="pull-right">
+                        <a href="{{ downloadUrl }}" class="govuk-link" data-qa="download" download="user-search.csv" type="text/csv">Download results</a>
+                     </div>
+                  {% endif %}
                 {% endif %}
               {% else %}
                 <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
