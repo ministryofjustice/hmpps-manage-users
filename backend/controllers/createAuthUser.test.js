@@ -174,7 +174,7 @@ describe('create user factory', () => {
       ])
     })
 
-    it('should fail gracefully if email no valid', async () => {
+    it('should fail gracefully if email not valid', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
 

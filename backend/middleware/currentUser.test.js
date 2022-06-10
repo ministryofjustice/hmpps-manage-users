@@ -34,6 +34,7 @@ describe('Current user', () => {
     expect(oauthApi.currentRoles).toHaveBeenCalled()
     expect(req.session.userDetails).toEqual({ name: 'Bob Smith', activeCaseLoadId: 'MDI' })
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: false,
@@ -64,6 +65,7 @@ describe('Current user', () => {
         name: 'Moorland',
       },
       displayName: 'B. Smith',
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: false,
@@ -81,6 +83,7 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: true,
       maintainAccess: false,
       maintainAccessAdmin: false,
@@ -96,6 +99,7 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: true,
       maintainAccessAdmin: false,
@@ -111,6 +115,7 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: true,
@@ -126,10 +131,27 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: false,
       maintainAuthUsers: true,
+      maintainRoles: false,
+    })
+  })
+
+  it('should set create dps user', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'CREATE_USER' }])
+    const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: true,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
       maintainRoles: false,
     })
   })
@@ -141,6 +163,7 @@ describe('Current user', () => {
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
       groupManager: false,
       maintainAccess: false,
       maintainAccessAdmin: false,
@@ -157,12 +180,14 @@ describe('Current user', () => {
       { roleCode: 'AUTH_GROUP_MANAGER' },
       { roleCode: 'MAINTAIN_ACCESS_ROLES' },
       { roleCode: 'ROLES_ADMIN' },
+      { roleCode: 'CREATE_USER' },
     ])
     const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
 
     await controller(req, res, () => {})
 
     expect(req.session.userRoles).toEqual({
+      createDPSUsers: true,
       groupManager: true,
       maintainAccess: true,
       maintainAccessAdmin: true,

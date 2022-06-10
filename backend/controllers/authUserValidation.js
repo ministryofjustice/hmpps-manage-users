@@ -1,3 +1,5 @@
+const { validateEmailFormat } = require('./userValidation')
+
 const validateSearch = (user) => {
   if (!user || !user.trim()) {
     return [{ href: '#user', text: 'Enter a username or email address' }]
@@ -6,26 +8,6 @@ const validateSearch = (user) => {
     return [{ href: '#user', text: 'Username can only include letters, numbers and _' }]
   }
   return []
-}
-
-const validateEmailFormat = (email) => {
-  const errors = []
-  if (!email.match(/.*@.*\..*/)) {
-    errors.push({
-      href: '#email',
-      text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
-    })
-  }
-  if (!email.match(/^[0-9A-Za-z@.'’_\-+]*$/)) {
-    errors.push({
-      href: '#email',
-      text: "Email address can only contain 0-9, a-z, @, ', _, ., - and + characters",
-    })
-  }
-  if (email.length > 240) {
-    errors.push({ href: '#email', text: 'Email address must be 240 characters or less' })
-  }
-  return errors
 }
 
 const validateCreate = ({ email, firstName, lastName, groupCode }, groupManager) => {
