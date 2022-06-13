@@ -17,15 +17,8 @@ When running locally this service needs to use other supporting services which
 need to be running and available at known locations.
 
 - HMPPS Auth (port: 9090)
-
-For simplicity, the easiest way to make these services available is to clone the prison-api
-repository and to run the docker compose file in the root directory to bring up local 
-versions of all three. This starts the services at the above default ports on your
-machine.
-
-```
-docker-compose pull && docker-compose up
-```
+- HMPPS Manage Users API (port: 9091)
+- NOMIS User Roles API (port: 8082)
 
 # Running hmpps-manage-users locally
 
