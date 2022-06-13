@@ -78,7 +78,7 @@ describe('create user factory', () => {
           .mockReturnValueOnce({ error: 'some error' }),
         session: {},
       }
-      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM' })
+      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
 
       const render = jest.fn()
       const locals = jest.fn()
@@ -94,6 +94,7 @@ describe('create user factory', () => {
       })
       expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
+        email: 'bob@digital.justice.gov.uk',
       })
     })
 
@@ -112,7 +113,7 @@ describe('create user factory', () => {
         session: {},
       }
 
-      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM' })
+      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
 
       const render = jest.fn()
       const locals = jest.fn()
@@ -128,6 +129,7 @@ describe('create user factory', () => {
       })
       expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
+        email: 'bob@digital.justice.gov.uk',
       })
     })
 

@@ -25,7 +25,7 @@ const createUserFactory = (createDpsUserUrl) => {
     const userTypeValues = [
       { value: 'DPS_ADM', text: 'Central Admin' },
       { value: 'DPS_GEN', text: 'General User' },
-      { value: 'DPS_LSA', text: 'Local System Administrators (LSA)' },
+      { value: 'DPS_LSA', text: 'Local System Administrator (LSA)' },
     ]
 
     res.render('createUser.njk', {
