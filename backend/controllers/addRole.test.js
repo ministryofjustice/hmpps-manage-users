@@ -3,12 +3,7 @@ const { selectRolesFactory } = require('./addRole')
 describe('select roles factory', () => {
   const getUserRolesAndMessage = jest.fn()
   const saveRoles = jest.fn()
-  const addRole = selectRolesFactory(
-    getUserRolesAndMessage,
-    saveRoles,
-    '/maintain-external-users',
-    '/manage-external-users',
-  )
+  const addRole = selectRolesFactory(getUserRolesAndMessage, saveRoles, '/manage-external-users')
 
   describe('index', () => {
     it('should call addRole render', async () => {

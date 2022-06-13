@@ -61,6 +61,7 @@ const dpsUserSearchWithFilterPage = () =>
     getDownloadLinkMessage: () => cy.get('[data-qa="download"]'),
     download: () => cy.get('a[data-qa="download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
+    manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     caseload,
     paginationLink: (pageNumber) => cy.get('a').contains(pageNumber),
     searchForRole: (text) => {

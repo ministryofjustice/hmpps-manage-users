@@ -9,7 +9,7 @@ const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => ({
 describe('change email factory', () => {
   const getUserApi = jest.fn()
   const saveEmail = jest.fn()
-  const changeEmail = changeEmailFactory(getUserApi, saveEmail, '/maintain-external-users', '/manage-external-users')
+  const changeEmail = changeEmailFactory(getUserApi, saveEmail, '/manage-external-users')
 
   describe('index', () => {
     it('should call changeEmail render', async () => {

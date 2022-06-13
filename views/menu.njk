@@ -46,21 +46,6 @@
               <p class="govuk-body card__description">Enhanced searching and managing of DPS and NOMIS users</p>
             </div>
           </div>
-          {% if featureSwitches.dpsUserOldSearch %}
-            <div class="govuk-grid-column-one-third">
-              <div class="card card--clickable" data-qa="maintain_roles_link">
-                <h1 class="govuk-heading-m card__heading">
-                  <a class="govuk-link card__link" href="/search-dps-users">Search for a DPS user</a>
-                </h1>
-                <p class="govuk-body card__description">
-                  <span class="govuk-!-padding-right-2">
-                  {{ govukTag({
-                    text: "DEPRECATED"
-                  }) }}
-                </span>This version will be shortly removed</p>
-              </div>
-            </div>
-          {% endif %}
         {% endif %}
         {% if hasCreateDPSUsers %}
           <div class="govuk-grid-column-one-third">

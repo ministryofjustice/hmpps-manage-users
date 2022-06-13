@@ -1,6 +1,7 @@
 const { userDetailsFactory } = require('./userDetails')
 
 describe('user detail factory', () => {
+  const defaultSearchUrl = '/search-external-users'
   const render = jest.fn()
   const getUserRolesAndGroupsApi = jest.fn()
   const removeRoleApi = jest.fn()
@@ -13,7 +14,7 @@ describe('user detail factory', () => {
     removeGroupApi,
     enableUserApi,
     disableUserApi,
-    '/search-external-users',
+    defaultSearchUrl,
     '/manage-external-users',
     'Search for an external user',
     true,
@@ -22,7 +23,7 @@ describe('user detail factory', () => {
   const req = {
     params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
     flash: jest.fn(),
-    session: {},
+    session: { searchResultsUrl: '/search-external-users/results' },
   }
   const userStub = {
     username: 'BOB',
@@ -65,116 +66,127 @@ describe('user detail factory', () => {
     jest.clearAllMocks()
   })
 
-  it('should call userDetail render', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    await userDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', expectedUserDetails)
-  })
-
-  it('should set showUsername to false if email same as username', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      { ...userStub, username: 'BOB@DIGITAL.JUSTICE.GOV.UK', email: 'bob@digital.justice.gov.uk' },
-      rolesStub,
-      groupsStub,
-    ])
-    await userDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
-      showUsername: false,
+  describe('index', () => {
+    it('should call userDetail render', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', expectedUserDetails)
     })
-  })
 
-  it('should set displayEmailChangeInProgress to true if auth email is not verified and different to nomis', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      { ...userStub, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
-      rolesStub,
-      groupsStub,
-    ])
-    await userDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      staff: { ...expectedUserDetails.staff, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
-      displayEmailChangeInProgress: true,
+    it('should set showUsername to false if email same as username', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([
+        { ...userStub, username: 'BOB@DIGITAL.JUSTICE.GOV.UK', email: 'bob@digital.justice.gov.uk' },
+        rolesStub,
+        groupsStub,
+      ])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
+        showUsername: false,
+      })
     })
-  })
 
-  it('should only have groups set to showRemove when group manager is member of group', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([
-      userStub,
-      rolesStub,
-      [
-        { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
-        { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
-      ],
-    ])
-    await userDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      groups: [
-        { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
-        { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
-      ],
+    it('should set displayEmailChangeInProgress to true if auth email is not verified and different to nomis', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([
+        { ...userStub, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
+        rolesStub,
+        groupsStub,
+      ])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        staff: { ...expectedUserDetails.staff, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
+        displayEmailChangeInProgress: true,
+      })
     })
-  })
 
-  it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    await userDetails.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      hasMaintainDpsUsersAdmin: true,
+    it('should only have groups set to showRemove when group manager is member of group', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([
+        userStub,
+        rolesStub,
+        [
+          { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
+          { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
+        ],
+      ])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        groups: [
+          { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
+          { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
+        ],
+      })
     })
-  })
 
-  it('should pass through show fields if not set', async () => {
-    const dpsUserDetails = userDetailsFactory(
-      getUserRolesAndGroupsApi,
-      removeRoleApi,
-      undefined,
-      undefined,
-      undefined,
-      '/search-external-users',
-      '/manage-external-users',
-      'Search for an external user',
-      false,
-    )
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    await dpsUserDetails.index(req, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
-      showEnableDisable: false,
-      showExtraUserDetails: false,
-      showGroups: false,
+    it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await userDetails.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        hasMaintainDpsUsersAdmin: true,
+      })
     })
-  })
 
-  it('should copy the search results url through from the session', async () => {
-    const searchResultsReq = {
-      ...req,
-      session: { searchResultsUrl: '/some-url' },
-    }
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    await userDetails.index(searchResultsReq, { render })
-    expect(render).toBeCalledWith('userDetails.njk', {
-      ...expectedUserDetails,
-      searchResultsUrl: '/some-url',
+    it('should pass through show fields if not set', async () => {
+      const dpsUserDetails = userDetailsFactory(
+        getUserRolesAndGroupsApi,
+        removeRoleApi,
+        undefined,
+        undefined,
+        undefined,
+        '/search-external-users',
+        '/manage-external-users',
+        'Search for an external user',
+        false,
+      )
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await dpsUserDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+        showEnableDisable: false,
+        showExtraUserDetails: false,
+        showGroups: false,
+      })
     })
-  })
 
-  it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    const locals = { user: { maintainAuthUsers: true } }
-    await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
-  })
+    it('should copy the search results url through from the session', async () => {
+      const searchResultsReq = {
+        ...req,
+        session: { searchResultsUrl: '/some-url' },
+      }
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await userDetails.index(searchResultsReq, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        searchResultsUrl: '/some-url',
+      })
+    })
 
-  it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
-    getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-    const locals = { user: { maintainAccessAdmin: true } }
-    await userDetails.index(req, { render: jest.fn(), locals })
-    expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
+    it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      const locals = { user: { maintainAuthUsers: true } }
+      await userDetails.index(req, { render: jest.fn(), locals })
+      expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
+    })
+
+    it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      const locals = { user: { maintainAccessAdmin: true } }
+      await userDetails.index(req, { render: jest.fn(), locals })
+      expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
+    })
+
+    it('uses default search results url when nothing provided through session', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
+      await userDetails.index({ ...req, session: {} }, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        searchResultsUrl: defaultSearchUrl,
+      })
+    })
   })
 
   describe('remove role', () => {

@@ -22,7 +22,7 @@ const userDetailsFactory = (
 
     const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
-    const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : `${searchUrl}/results`
+    const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
 
     const [user, roles, groups] = await getUserRolesAndGroupsApi(
       res.locals,

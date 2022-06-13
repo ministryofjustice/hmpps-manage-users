@@ -1,41 +1,4 @@
-const contextProperties = require('../contextProperties')
-
-function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
-  const searchApi = async ({
-    locals: context,
-    user: nameFilter,
-    roleCode,
-    status,
-    groupCode,
-    activeCaseload,
-    pageSize: size,
-    pageOffset: offset,
-  }) => {
-    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
-
-    contextProperties.setRequestPagination(context, { offset, size })
-    const searchResults = await (hasAdminRole
-      ? prisonApi.userSearchAdmin(context, {
-          nameFilter,
-          roleFilter: roleCode,
-          status,
-          caseload: groupCode,
-          activeCaseload,
-        })
-      : prisonApi.userSearch(context, { nameFilter, roleFilter: roleCode, status }))
-
-    if (searchResults.length === 0) return searchResults
-
-    // now augment with auth email addresses
-    const emails = await oauthApi.userEmails(
-      context,
-      searchResults.map((user) => user.username),
-    )
-    const emailMap = new Map(emails.map((obj) => [obj.username, obj.email]))
-
-    return searchResults.map((user) => ({ ...user, email: emailMap.get(user.username) }))
-  }
-
+function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
   const findUsersApi = async ({
     locals: context,
     user: nameFilter,
@@ -98,17 +61,6 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
     return manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' })
   }
 
-  const prisons = async (context) => {
-    const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
-    if (!hasAdminRole) return []
-    return (await prisonApi.getPrisons(context))
-      .map((prison) => ({
-        text: prison.description,
-        value: prison.agencyId,
-      }))
-      .sort((a, b) => a.text?.localeCompare(b.text))
-  }
-
   const caseloads = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
@@ -121,14 +73,12 @@ function searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsers
   }
 
   return {
-    searchApi,
     searchableRoles,
     caseloads,
-    prisons,
     findUsersApi,
     downloadNomisUserDetails,
   }
 }
 
-module.exports = (prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi) =>
-  searchApiFacade(prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi)
+module.exports = (oauthApi, nomisUsersAndRolesApi, manageUsersApi) =>
+  searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi)

@@ -277,7 +277,6 @@ context('DPS search with filter user functionality', () => {
 
     const results = goToSearchWithFilterPage({})
 
-    cy.task('stubDpsAdminSearch', { totalElements: 21, page: 0, size: 10000 })
     results.download().click()
     cy.wait('@csvDownload').then(() => {
       parse(csv, {}, (err, output) => {

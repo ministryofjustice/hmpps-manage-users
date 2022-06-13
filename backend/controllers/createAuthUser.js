@@ -46,6 +46,7 @@ const createAuthUserFactory = (
       try {
         const userId = await createAuthUser(res.locals, user)
 
+        req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
         res.render('createAuthUserSuccess.njk', {
           email: user.email,

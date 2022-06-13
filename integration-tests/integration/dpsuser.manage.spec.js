@@ -2,9 +2,8 @@ const UserPage = require('../pages/userPage')
 const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
-const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 
-const { goToResultsPage, editUser } = require('../support/dpsuser.helpers')
+const { editUser, goToSearchWithFilterPage } = require('../support/dpsuser.helpers')
 
 context('DPS user manage functionality', () => {
   before(() => {
@@ -27,14 +26,14 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should leave email blank if no email for user ', () => {
-    const results = goToResultsPage({})
+    const results = goToSearchWithFilterPage({})
 
     cy.task('stubDpsUserDetailsWithOutEmail')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { verified: false })
 
-    results.edit('ITAG_USER5')
+    results.manageLinkForUser('ITAG_USER5').click()
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(2).should('contain', 'No')
@@ -42,7 +41,7 @@ context('DPS user manage functionality', () => {
       .userRows()
       .eq(1)
       .then(($cell) => {
-        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email')
+        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email Change email')
       })
   })
 
@@ -62,14 +61,14 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should show unverified if email is unverified ', () => {
-    const results = goToResultsPage({})
+    const results = goToSearchWithFilterPage({})
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: false })
 
-    results.edit('ITAG_USER5')
+    results.manageLinkForUser('ITAG_USER5').click()
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(2).should('contain', 'No')
@@ -77,7 +76,7 @@ context('DPS user manage functionality', () => {
       .userRows()
       .eq(1)
       .then(($cell) => {
-        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk')
+        expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk Change email')
       })
   })
 
@@ -107,7 +106,6 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should cancel a change user email address', () => {
-    cy.task('stubDpsAdminSearch', { totalElements: 21 })
     const userPage = editUser({ isAdmin: true })
 
     userPage.changeEmailLink().click()
@@ -170,14 +168,14 @@ context('DPS user manage functionality', () => {
   })
 
   it('As an admin user should add and remove a role from a user', () => {
-    const results = goToResultsPage({ isAdmin: true })
+    const results = goToSearchWithFilterPage({})
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubBannerNoMessage')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
-    results.edit('ITAG_USER5')
+    results.manageLinkForUser('ITAG_USER5').click()
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
@@ -210,24 +208,10 @@ context('DPS user manage functionality', () => {
     })
   })
 
-  it('Should provide breadcrumb link back to search results and start search', () => {
-    const userPage = editUser({ nextPage: true })
-
-    userPage.searchBreadcrumb().should('have.attr', 'href', '/search-dps-users')
-    userPage
-      .searchResultsBreadcrumb()
-      .should(
-        'have.attr',
-        'href',
-        '/search-dps-users/results?user=sometext%40somewhere.com&status=ALL&roleCode=&offset=10',
-      )
-  })
-
-  it('Should provide breadcrumb link back to search results with filter only', () => {
-    const userPage = editUser({ nextPage: true, fromSearchFilterPage: true })
+  it('Should provide breadcrumb link back to search results', () => {
+    const userPage = editUser({})
 
     userPage.searchBreadcrumb().should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL')
-    userPage.searchResultsBreadcrumb().should('not.exist')
   })
 
   it('Manage your details contain returnTo url for current dps search page', () => {
@@ -235,11 +219,11 @@ context('DPS user manage functionality', () => {
     cy.task('stubBannerNoMessage')
     cy.signIn()
     cy.task('stubManageUserGetRoles', {})
-    const search = DpsUserSearchPage.goTo()
+    const search = goToSearchWithFilterPage({})
     search
       .manageYourDetails()
       .should('contain', 'Manage your details')
       .and('have.attr', 'href')
-      .and('contains', '%2Fsearch-dps-users')
+      .and('contains', '%2Fsearch-with-filter-dps-users')
   })
 })

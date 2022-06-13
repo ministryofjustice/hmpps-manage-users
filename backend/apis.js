@@ -1,17 +1,9 @@
 const config = require('./config')
 const clientFactory = require('./api/oauthEnabledClient')
-const { prisonApiFactory } = require('./api/prisonApi')
 const { oauthApiFactory } = require('./api/oauthApi')
 const { manageUsersApiFactory } = require('./api/manageUsersApi')
 const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
 const { nomisUsersAndRolesFactory } = require('./api/nomisUsersAndRolesApi')
-
-const prisonApi = prisonApiFactory(
-  clientFactory({
-    baseUrl: config.apis.prison.url,
-    timeout: config.apis.prison.timeoutSeconds * 1000,
-  }),
-)
 
 const oauthApi = oauthApiFactory(
   clientFactory({
@@ -42,7 +34,6 @@ const nomisUsersAndRolesApi = nomisUsersAndRolesFactory(
   }),
 )
 module.exports = {
-  prisonApi,
   oauthApi,
   manageUsersApi,
   tokenVerificationApi,
