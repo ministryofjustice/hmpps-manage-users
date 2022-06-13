@@ -134,6 +134,35 @@ module.exports = {
         lastName: 'User',
       },
     }),
+  stubDpsCreateLocalAdminUser: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/nomisusersandroles/users/local-admin-account',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          username: 'USER_LAA',
+          staffId: 100,
+          firstName: 'Firstlaa',
+          lastName: 'Lastlaa',
+          activeCaseloadId: 'MDI',
+          accountStatus: 'EXPIRED',
+          accountType: 'ADMIN',
+          primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+          dpsRoleCodes: [],
+          accountNonLocked: true,
+          credentialsNonExpired: false,
+          enabled: true,
+          admin: true,
+          active: false,
+        },
+      },
+    }),
   stubDpsAddRoles: () =>
     stubFor({
       request: {
@@ -167,6 +196,11 @@ module.exports = {
         ],
       },
     }),
+  verifyDpsCreateLocalAdminUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/nomisusersandroles/users/local-admin-account',
+    }).then((data) => data.body.requests),
   verifyDpsAddRoles: () =>
     getMatchingRequests({
       method: 'POST',

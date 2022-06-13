@@ -70,6 +70,7 @@ const createDpsUserFactory = (
         const userDetails = await currentUser.api(res.locals, user)
 
         res.render('createDpsUserSuccess.njk', {
+          email: `${userDetails.primaryEmail}`,
           detailsLink: `${manageUrl}/${userDetails.username}/details`,
         })
       } catch (err) {

@@ -4,6 +4,7 @@ const dpsUsers = () => cy.get('[data-qa="maintain_roles_link"]')
 const searchWithFilterDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_users"]')
 const authUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
+const createDpsUser = () => cy.get('[data-qa="create_dps_user_link"]')
 const manageGroups = () => cy.get('[data-qa="manage_groups_link"]')
 const viewRoles = () => cy.get('[data-qa="view_roles_link"]')
 const manageRoles = () => cy.get('[data-qa="view_roles_link"]')
@@ -17,6 +18,7 @@ const menuPage = () =>
     headerCaseload: () => cy.get('[data-qa="active-location"]'),
     message: () => cy.get('[data-qa="banner-message"]'),
     manageAuthUsers: () => authUsers().click(),
+    createDpsUser: () => createDpsUser().click(),
     createAuthUser: () => createUser().click(),
     searchDpsUsers: () => dpsUsers().click(),
     createGroup: () => createGroup().click(),
