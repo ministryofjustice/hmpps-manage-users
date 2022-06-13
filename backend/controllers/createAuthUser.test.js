@@ -148,6 +148,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createAuthUser.post(req, { render, locals })
       expect(req.session).toEqual({
+        searchUrl: '/search-external-users',
         searchResultsUrl: '/search-external-users/results?user=bob@digital.justice.gov.uk',
       })
     })
