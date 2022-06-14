@@ -5,6 +5,7 @@ const emailField = () => cy.get('#email')
 const firstNameField = () => cy.get('#firstName')
 const lastNameField = () => cy.get('#lastName')
 const caseloadField = () => cy.get('#defaultCaseloadId')
+const caseloadLabel = () => cy.get('label[for="defaultCaseloadId"]')
 const submit = () => cy.get('button[type="submit"]')
 
 const dpsUserCreatePage = (title) =>
@@ -19,6 +20,7 @@ const dpsUserCreatePage = (title) =>
     },
     submit,
     caseloadField,
+    caseloadLabel,
     errorSummary: () => cy.get('[data-qa-errors]'),
   })
 

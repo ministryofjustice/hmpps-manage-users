@@ -2,17 +2,8 @@ const { createDpsUserFactory } = require('./createDpsUser')
 
 describe('create user factory', () => {
   const getCaseloads = jest.fn()
-  const createDpsAdminUser = jest.fn()
-  const createDpsGeneralUser = jest.fn()
-  const createDpsLocalAdminUser = jest.fn()
-  const createDpsUser = createDpsUserFactory(
-    getCaseloads,
-    createDpsAdminUser,
-    createDpsGeneralUser,
-    createDpsLocalAdminUser,
-    '/create-user',
-    '/manage-dps-users',
-  )
+  const createUser = jest.fn()
+  const createDpsUser = createDpsUserFactory(getCaseloads, createUser, '/create-user', '/manage-dps-users')
 
   describe('index', () => {
     it('should call create user render', async () => {
@@ -31,6 +22,7 @@ describe('create user factory', () => {
       expect(render).toBeCalledWith('createDpsUser.njk', {
         title: 'Create a DPS General user',
         userType: 'DPS_GEN',
+        caseloadTitle: 'Select a default caseload',
         showCaseloadDropdown: true,
         caseloadDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
         errors: undefined,
@@ -54,6 +46,7 @@ describe('create user factory', () => {
         errors: { error: 'some error' },
         title: 'Create a DPS General user',
         userType: 'DPS_GEN',
+        caseloadTitle: 'Select a default caseload',
         showCaseloadDropdown: true,
         caseloadDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
       })
@@ -78,13 +71,13 @@ describe('create user factory', () => {
           .mockReturnValueOnce({ error: 'some error' }),
         session: {},
       }
-      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
+      createUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
 
       const render = jest.fn()
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
 
-      expect(createDpsGeneralUser).toBeCalledWith(locals, {
+      expect(createUser).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_ADM',
         firstName: 'bob',
@@ -113,13 +106,13 @@ describe('create user factory', () => {
         session: {},
       }
 
-      createDpsGeneralUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
+      createUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
 
       const render = jest.fn()
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
 
-      expect(createDpsGeneralUser).toBeCalledWith(locals, {
+      expect(createUser).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_ADM',
         firstName: 'bob',
@@ -197,7 +190,7 @@ describe('create user factory', () => {
         response: { body: { userMessage: 'something went wrong' } },
       }
 
-      createDpsGeneralUser.mockRejectedValue(error)
+      createUser.mockRejectedValue(error)
       const req = {
         body: {
           email: 'bob@digital.justice.gov.uk',
@@ -227,7 +220,7 @@ describe('create user factory', () => {
         response: { body: { userMessage: 'Username already exists' } },
       }
 
-      createDpsGeneralUser.mockRejectedValue(error)
+      createUser.mockRejectedValue(error)
       const req = {
         params: {},
         body: {

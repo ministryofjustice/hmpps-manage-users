@@ -1,14 +1,7 @@
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues } = require('../utils')
 
-const createDpsUserFactory = (
-  getCaseloads,
-  createDpsAdminUser,
-  createDpsGeneralUser,
-  createDpsLocalAdminUser,
-  createUserUrl,
-  manageUrl,
-) => {
+const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
     res.redirect(createUserUrl)
   }
@@ -18,11 +11,14 @@ const createDpsUserFactory = (
     req.flash('user', user)
     res.redirect(req.originalUrl)
   }
-  const userTypeValues = [
-    { value: 'DPS_ADM', text: 'Central Admin', api: createDpsAdminUser },
-    { value: 'DPS_GEN', text: 'General', api: createDpsGeneralUser },
-    { value: 'DPS_LSA', text: 'Local System Administrator (LSA)', api: createDpsLocalAdminUser },
-  ]
+  const userTypes = new Map()
+  userTypes.set('DPS_ADM', 'Central Admin')
+  userTypes.set('DPS_GEN', 'General')
+  userTypes.set('DPS_LSA', 'Local System Administrator (LSA)')
+
+  const caseloadText = (user) => {
+    return `Select a default ${user.userType === 'DPS_LSA' ? 'local admin group' : 'caseload'}`
+  }
 
   const index = async (req, res) => {
     const flashUser = req.flash('user')
@@ -40,11 +36,12 @@ const createDpsUserFactory = (
 
       const showCaseloadDropdown = Boolean(user.userType !== 'DPS_ADM')
 
-      const currentUserTypeDesc = userTypeValues.find((u) => u.value === user.userType)?.text
+      const currentUserTypeDesc = userTypes.get(user.userType)
       res.render('createDpsUser.njk', {
         title: `Create a DPS ${currentUserTypeDesc} user`,
         showCaseloadDropdown,
         ...user,
+        caseloadTitle: caseloadText(user),
         caseloadDropdownValues,
         errors: req.flash('createDpsUserErrors'),
       })
@@ -60,14 +57,14 @@ const createDpsUserFactory = (
       user.lastName,
       user.defaultCaseloadId,
       user.userType !== 'DPS_ADM',
+      caseloadText(user),
     )
 
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        const currentUser = userTypeValues.find((u) => u.value === user.userType)
-        const userDetails = await currentUser.api(res.locals, user)
+        const userDetails = await createDpsUser(res.locals, user)
 
         res.render('createDpsUserSuccess.njk', {
           email: `${userDetails.primaryEmail}`,
@@ -79,10 +76,8 @@ const createDpsUserFactory = (
           const errorDetails = [{ text: userMessage }]
           stashStateAndRedirectToIndex(req, res, errorDetails, [user])
         } else if (err.status === 409 && err.response && err.response.body) {
-          // username already exists
-          const { userMessage } = err.response.body
-          const emailError = [{ href: '#username', text: userMessage }]
-          stashStateAndRedirectToIndex(req, res, emailError, [user])
+          const usernameError = [{ href: '#username', text: 'Username already exists' }]
+          stashStateAndRedirectToIndex(req, res, usernameError, [user])
         } else {
           throw err
         }

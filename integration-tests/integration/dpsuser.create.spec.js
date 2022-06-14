@@ -34,13 +34,36 @@ context('DPS user create functionality', () => {
   it('Should show DPS General user create page if user type selected', () => {
     const dpsUserCreatePage = goToCreateDpsUser('General')
     dpsUserCreatePage.caseloadField().should('not.be.null')
+    dpsUserCreatePage.caseloadLabel().should('contain.text', 'Select a default caseload')
   })
   it('Should show DPS Local Admin user create page if user type selected', () => {
     const dpsUserCreatePage = goToCreateDpsUser('Local System Administrator (LSA)')
     dpsUserCreatePage.caseloadField().should('not.be.null')
+    dpsUserCreatePage.caseloadLabel().should('contain.text', 'Select a default local admin group')
   })
 
-  it('Should show errors if no data selected', () => {
+  it('Should show errors if no data selected for Central admin user', () => {
+    const dpsUserCreatePage = goToCreateDpsUser('Central Admin')
+    dpsUserCreatePage.submit().click()
+    const createDpsPageAfterSubmit = DpsUserCreatePage.verifyOnPage('Create a DPS Central Admin user')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a username')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter an email address')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a first name')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a last name')
+    createDpsPageAfterSubmit.errorSummary().should('not.contain.text', 'Select a default')
+  })
+  it('Should show errors if no data selected for General user', () => {
+    const dpsUserCreatePage = goToCreateDpsUser('General')
+    dpsUserCreatePage.submit().click()
+    const createDpsPageAfterSubmit = DpsUserCreatePage.verifyOnPage('Create a DPS General user')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a username')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter an email address')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a first name')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a last name')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Select a default caseload')
+  })
+
+  it('Should show errors if no data selected for LSA', () => {
     const dpsUserCreatePage = goToCreateDpsUser('Local System Administrator (LSA)')
     dpsUserCreatePage.submit().click()
     const createDpsPageAfterSubmit = DpsUserCreatePage.verifyOnPage(
@@ -50,11 +73,11 @@ context('DPS user create functionality', () => {
     createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter an email address')
     createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a first name')
     createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Enter a last name')
-    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Select a default caseload')
+    createDpsPageAfterSubmit.errorSummary().should('contain.text', 'Select a default local admin group')
   })
 
   it('Should create a user', () => {
-    cy.task('stubDpsCreateLocalAdminUser')
+    cy.task('stubDpsCreateUser')
     const dpsUserCreatePage = goToCreateDpsUser('Local System Administrator (LSA)')
     dpsUserCreatePage.create(
       'USER_LAA',
@@ -64,7 +87,7 @@ context('DPS user create functionality', () => {
       'Moorland (HMP & YOI)',
     )
 
-    cy.task('verifyDpsCreateLocalAdminUser').should((requests) => {
+    cy.task('verifyDpsCreateUser').should((requests) => {
       expect(requests).to.have.lengthOf(1)
       expect(JSON.parse(requests[0].body)).to.deep.equal({
         userType: 'DPS_LSA', // don't need to send this
