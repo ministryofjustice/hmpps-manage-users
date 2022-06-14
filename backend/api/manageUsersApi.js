@@ -14,6 +14,7 @@ const manageUsersApiFactory = (client) => {
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
 
+  const createUser = (context, user) => post(context, '/users', user)
   const createRole = (context, role) => post(context, '/roles', role)
   const getPagedRoles = (context, page, size, roleName, roleCode, adminType) => {
     const adminTypes = adminType === 'ALL' ? '' : adminType
@@ -41,6 +42,7 @@ const manageUsersApiFactory = (client) => {
   const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
 
   return {
+    createUser,
     createRole,
     contextUserRoles,
     getPagedRoles,

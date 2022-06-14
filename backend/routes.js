@@ -22,7 +22,7 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
 
   router.use('/', menuRouter({ manageUsersApi }))
   router.use('/create-user', creatUserRouter())
-  router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi }))
+  router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
   router.use(
