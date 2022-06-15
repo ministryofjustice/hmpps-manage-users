@@ -3,7 +3,6 @@ const express = require('express')
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')
 const searchExternalUserRouter = require('./routes/searchExternalUserRouter')
-const searchDpsUserRouter = require('./routes/searchDpsUserRouter')
 const searchWithFilterDpsUserRouter = require('./routes/searchWithFilterDpsUserRouter')
 const createAuthUserRouter = require('./routes/createAuthUserRouter')
 const creatUserRouter = require('./routes/createUserRouter')
@@ -15,7 +14,7 @@ const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config')
 
-const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRolesApi }) => {
+const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ oauthApi, nomisUsersAndRolesApi }))
@@ -23,13 +22,12 @@ const configureRoutes = ({ oauthApi, prisonApi, manageUsersApi, nomisUsersAndRol
 
   router.use('/', menuRouter({ manageUsersApi }))
   router.use('/create-user', creatUserRouter())
-  router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi }))
+  router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
-  router.use('/search-dps-users', searchDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use(
     '/search-with-filter-dps-users',
-    searchWithFilterDpsUserRouter({ prisonApi, oauthApi, nomisUsersAndRolesApi, manageUsersApi }),
+    searchWithFilterDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }),
   )
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))

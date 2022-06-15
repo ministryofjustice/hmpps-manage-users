@@ -58,7 +58,6 @@ const controller = ({ oauthApi }) => {
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAssignableRolesMessageApi,
     saveRolesApi,
-    '/search-external-users',
     '/manage-external-users',
   )
 
@@ -66,7 +65,7 @@ const controller = ({ oauthApi }) => {
     index: getEmail,
     post: postEmail,
     success: emailSuccess,
-  } = changeEmailFactory(getUserApi, changeEmailApi, '/search-external-users', '/manage-external-users')
+  } = changeEmailFactory(getUserApi, changeEmailApi, '/manage-external-users')
 
   const {
     index: userDetails,

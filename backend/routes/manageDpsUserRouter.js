@@ -51,7 +51,6 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAssignableRolesAndMessageApi,
     saveRolesApi,
-    '/search-dps-users',
     '/manage-dps-users',
   )
 
@@ -61,7 +60,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     undefined,
     undefined,
     undefined,
-    '/search-dps-users',
+    '/search-with-filter-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
     false,
@@ -71,7 +70,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     index: getEmail,
     post: postEmail,
     success: emailSuccess,
-  } = changeEmailFactory(getUserApi, changeEmailApi, '/search-dps-users', '/manage-dps-users')
+  } = changeEmailFactory(getUserApi, changeEmailApi, '/manage-dps-users')
 
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)

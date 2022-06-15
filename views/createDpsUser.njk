@@ -77,12 +77,12 @@
           {% if showCaseloadDropdown %}
             <div class="govuk-list">
               {{ govukSelect({label: {
-                text: "Select a default caseload"
+                text: caseloadTitle
               },
                 idPrefix: 'defaultCaseloadId',
                 name: 'defaultCaseloadId',
                 id: 'defaultCaseloadId',
-                items: caseloadDropdownValues | addBlankOptions('Select a caseload') | setSelected(defaultCaseloadId),
+                items: caseloadDropdownValues | setSelected(defaultCaseloadId) | addBlankOptions(caseloadTitle) ,
                 errorMessage: errors | findError('defaultCaseloadId')
               }) }}
             </div>

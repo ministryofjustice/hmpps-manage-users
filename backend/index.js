@@ -66,7 +66,6 @@ app.use(
 
 const health = healthFactory(
   config.apis.oauth2.url,
-  config.apis.prison.url,
   config.apis.manageusers.url,
   config.apis.tokenverification.url,
   config.apis.nomisUsersAndRoles.url,

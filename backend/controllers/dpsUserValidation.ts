@@ -10,6 +10,7 @@ const validateDpsUserCreate = (
   lastName: string,
   defaultCaseloadId: string,
   validateCaseload: boolean,
+  caseloadText: string,
 ) => {
   const errors = []
 
@@ -26,7 +27,7 @@ const validateDpsUserCreate = (
     errors.push({ href: '#lastName', text: 'Enter a last name' })
   }
   if (validateCaseload && (!defaultCaseloadId || defaultCaseloadId === '--')) {
-    errors.push({ href: '#defaultCaseloadId', text: 'Select a default caseload' })
+    errors.push({ href: '#defaultCaseloadId', text: caseloadText })
   }
 
   if (errors.length) return errors

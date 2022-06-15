@@ -1,5 +1,35 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
+const stubDpsCreateUser = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/users',
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        username: 'USER_LAA',
+        staffId: 100,
+        firstName: 'Firstlaa',
+        lastName: 'Lastlaa',
+        activeCaseloadId: 'MDI',
+        accountStatus: 'EXPIRED',
+        accountType: 'ADMIN',
+        primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+        dpsRoleCodes: [],
+        accountNonLocked: true,
+        credentialsNonExpired: false,
+        enabled: true,
+        admin: true,
+        active: false,
+      },
+    },
+  })
+
 const stubAllRolesPaged = ({
   content = [
     {
@@ -293,6 +323,11 @@ const stubChangeRoleAdminTypeFail = () =>
       developerMessage: 'Unable to get role: AUTH_GROUP_MANAGER with reason: notfound',
     },
   })
+const verifyDpsCreateUser = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/users',
+  }).then((data) => data.body.requests)
 
 const verifyAllRoles = () =>
   getMatchingRequests({
@@ -325,6 +360,7 @@ const verifyRoleAdminTypeUpdate = () =>
   }).then((data) => data.body.requests)
 
 module.exports = {
+  stubDpsCreateUser,
   stubGetRoles,
   stubGetRolesIncludingAdminRoles,
   stubAllRolesPaged,
@@ -339,6 +375,7 @@ module.exports = {
   stubRoleDetails,
   stubDPSRoleDetails,
   stubDpsUserGetRoles,
+  verifyDpsCreateUser,
   verifyAllRoles,
   verifyCreateRole,
   verifyRoleNameUpdate,
