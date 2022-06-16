@@ -6,7 +6,10 @@ const nomisUsersAndRolesFactory = (client) => {
   const put = (context, path, data) => client.put(context, path, data).then((response) => response.body)
   const del = (context, path, data) => client.del(context, path, data).then((response) => response.body)
 
-  const userSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0 }) =>
+  const userSearch = (
+    context,
+    { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0, inclusiveRoles },
+  ) =>
     get(
       context,
       `/users?${querystring.stringify({
@@ -17,10 +20,11 @@ const nomisUsersAndRolesFactory = (client) => {
         activeCaseload,
         size,
         page,
+        inclusiveRoles,
       })}`,
     )
 
-  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload }) =>
+  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload, inclusiveRoles }) =>
     get(
       context,
       `/users/download?${querystring.stringify({
@@ -29,6 +33,7 @@ const nomisUsersAndRolesFactory = (client) => {
         status,
         caseload,
         activeCaseload,
+        inclusiveRoles,
       })}`,
     )
 
