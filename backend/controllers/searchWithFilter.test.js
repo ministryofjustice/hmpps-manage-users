@@ -71,10 +71,11 @@ describe('search factory', () => {
             status: 'ALL',
             user: undefined,
             restrictToActiveGroup: true,
+            inclusiveRoles: undefined,
           },
           results: [],
           downloadUrl:
-            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
+            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           maintainUrl: '/manage-dps-users',
           downloadRecordLimit: 100,
         })
@@ -93,7 +94,7 @@ describe('search factory', () => {
           'searchWithFilter.njk',
           expect.objectContaining({
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           }),
         )
       })
@@ -125,6 +126,7 @@ describe('search factory', () => {
             groupCode: 'MDI',
             roleCode: 'ACCESS_ROLE_ADMIN',
             restrictToActiveGroup: 'false',
+            inclusiveRoles: 'true',
           },
         }
 
@@ -139,9 +141,10 @@ describe('search factory', () => {
               status: 'INACTIVE',
               user: 'Andy',
               restrictToActiveGroup: false,
+              inclusiveRoles: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false&inclusiveRoles=true',
           }),
         )
       })
@@ -149,7 +152,14 @@ describe('search factory', () => {
       it('should set list current filters to undefined when no values', async () => {
         const req = {
           ...standardReq,
-          query: { user: 'Andy', status: 'INACTIVE', groupCode: '', roleCode: '', restrictToActiveGroup: '' },
+          query: {
+            user: 'Andy',
+            status: 'INACTIVE',
+            groupCode: '',
+            roleCode: '',
+            restrictToActiveGroup: '',
+            inclusiveRoles: '',
+          },
         }
 
         const render = jest.fn()
@@ -164,9 +174,10 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: true,
               size: undefined,
+              inclusiveRoles: '',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           }),
         )
       })
@@ -180,6 +191,7 @@ describe('search factory', () => {
             groupCode: ['MDI', 'BXI'],
             roleCode: ['ACCESS_ROLE_ADMIN', 'ACCESS_ROLE_GENERAL'],
             restrictToActiveGroup: 'true',
+            inclusiveRoles: 'true',
           },
         }
 
@@ -194,9 +206,10 @@ describe('search factory', () => {
               status: 'INACTIVE',
               user: 'Andy',
               restrictToActiveGroup: true,
+              inclusiveRoles: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true&inclusiveRoles=true',
           }),
         )
       })

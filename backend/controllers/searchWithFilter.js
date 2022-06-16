@@ -41,6 +41,7 @@ const searchFactory = (
       status: currentFilter.status,
       size,
       page,
+      inclusiveRoles: currentFilter.inclusiveRoles,
     })
     req.session.searchResultsUrl = req.originalUrl
     req.session.searchTitle = searchTitle
@@ -82,6 +83,7 @@ function parseFilter(query) {
     roleCode,
     groupCode,
     restrictToActiveGroup: query.restrictToActiveGroup !== 'false',
+    inclusiveRoles: query.inclusiveRoles,
   }
 }
 
