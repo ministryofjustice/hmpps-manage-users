@@ -2,6 +2,7 @@ const MenuPage = require('../pages/menuPage')
 const UserPage = require('../pages/userPage')
 const AuthUserCreatePage = require('../pages/authUserCreatePage')
 const AuthUserCreateSuccessPage = require('../pages/authUserCreateSuccessPage')
+const { editUser } = require('../support/dpsuser.helpers')
 
 function createUser() {
   const createPage = AuthUserCreatePage.verifyOnPage()
@@ -15,7 +16,7 @@ function createUser() {
   cy.task('verifyAuthCreateUser').should((requests) => {
     expect(requests).to.have.lengthOf(1)
 
-    expect(JSON.parse(requests[0].body)).to.deep.equal({
+    expect(JSON.parse(requests[0].body)).to.deep.include({
       email: 'emailnoone@justice.gov.uk',
       firstName: 'first',
       lastName: 'last',
@@ -62,5 +63,19 @@ context('External user create functionality', () => {
 
     createPage.errorSummary().should('contain.text', 'Select a group')
     createUser()
+  })
+
+  it('Should check for CSRF token', () => {
+    goToCreateUser()
+
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: '/create-external-user',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
   })
 })

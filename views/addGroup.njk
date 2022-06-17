@@ -29,6 +29,8 @@
           </p>
         {% endif %}
         <form method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
           <div class="govuk-list">
             {{ govukSelect({
               idPrefix: 'group',

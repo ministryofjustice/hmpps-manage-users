@@ -59,174 +59,208 @@ context('External user manage functionality', () => {
     userPage.userRows().eq(0).should('contain', 'Username / email')
   })
 
-  it('Should add and remove a role from a user', () => {
-    const userPage = editUser()
+  describe('Add and remove a role from a user', () => {
+    it('Should add and remove a role from a user', () => {
+      const userPage = editUser()
 
-    userPage.roleRows().should('have.length', 2)
-    userPage.roleRows().eq(0).should('contain', 'Global Search')
+      userPage.roleRows().should('have.length', 2)
+      userPage.roleRows().eq(0).should('contain', 'Global Search')
 
-    cy.task('stubAuthAssignableRoles')
-    userPage.addRole().click()
-    const addRole = UserAddRolePage.verifyOnPage()
-    addRole.hint('Global Search').should('contain.text', 'Is allowed to search')
+      cy.task('stubAuthAssignableRoles')
+      userPage.addRole().click()
+      const addRole = UserAddRolePage.verifyOnPage()
+      addRole.hint('Global Search').should('contain.text', 'Is allowed to search')
 
-    cy.task('stubAuthAddRoles')
-    addRole.choose('LICENCE_VARY')
-    addRole.choose('LICENCE_RO')
-    addRole.addRoleButton().click()
+      cy.task('stubAuthAddRoles')
+      addRole.choose('LICENCE_VARY')
+      addRole.choose('LICENCE_RO')
+      addRole.addRoleButton().click()
 
-    cy.task('verifyAddRoles').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
+      cy.task('verifyAddRoles').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-      expect(JSON.parse(requests[0].body)).to.deep.equal(['LICENCE_RO', 'LICENCE_VARY'])
+        expect(JSON.parse(requests[0].body)).to.deep.equal(['LICENCE_RO', 'LICENCE_VARY'])
+      })
+
+      UserPage.verifyOnPage('Auth Adm')
+
+      cy.task('stubAuthRemoveRole')
+      userPage.removeRole('GLOBAL_SEARCH').click()
+
+      cy.task('verifyRemoveRole').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal(
+          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/roles/GLOBAL_SEARCH',
+        )
+      })
     })
 
-    UserPage.verifyOnPage('Auth Adm')
+    it('Should cancel an add role', () => {
+      const userPage = editUser()
 
-    cy.task('stubAuthRemoveRole')
-    userPage.removeRole('GLOBAL_SEARCH').click()
+      cy.task('stubAuthAssignableRoles')
+      userPage.addRole().click()
+      const addRole = UserAddRolePage.verifyOnPage()
 
-    cy.task('verifyRemoveRole').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/roles/GLOBAL_SEARCH')
-    })
-  })
-
-  it('Should cancel an add role', () => {
-    const userPage = editUser()
-
-    cy.task('stubAuthAssignableRoles')
-    userPage.addRole().click()
-    const addRole = UserAddRolePage.verifyOnPage()
-
-    addRole.cancel()
-    UserPage.verifyOnPage('Auth Adm')
-  })
-
-  it('Should add and remove a group from a user', () => {
-    const userPage = editUser()
-
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
-
-    cy.task('stubAuthAssignableGroups', {})
-    userPage.addGroup().click()
-    const addGroup = UserAddGroupPage.verifyOnPage()
-
-    cy.task('stubAuthAddGroup')
-    addGroup.type('SOCU North West')
-    addGroup.addGroupButton().click()
-
-    cy.task('verifyAddGroup').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal(
-        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
-      )
+      addRole.cancel()
+      UserPage.verifyOnPage('Auth Adm')
     })
 
-    UserPage.verifyOnPage('Auth Adm')
+    it('Should check for CSRF token', () => {
+      editUser()
 
-    cy.task('stubAuthRemoveGroup')
-    userPage.removeGroup('SITE_1_GROUP_1').click()
-
-    cy.task('verifyRemoveGroup').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal(
-        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1',
-      )
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-roles',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
     })
   })
 
-  it('Should cancel an add group', () => {
-    const userPage = editUser()
+  describe('Add and remove a group from a user', () => {
+    it('Should add and remove a group from a user', () => {
+      const userPage = editUser()
 
-    cy.task('stubAuthAssignableGroups', {})
-    userPage.addGroup().click()
-    const addGroup = UserAddGroupPage.verifyOnPage()
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-    addGroup.cancel()
-    UserPage.verifyOnPage('Auth Adm')
-  })
+      cy.task('stubAuthAssignableGroups', {})
+      userPage.addGroup().click()
+      const addGroup = UserAddGroupPage.verifyOnPage()
 
-  it('Remove a group from a user not available for group managers if not a member of group', () => {
-    const userPage = editUser('AUTH_GROUP_MANAGER')
+      cy.task('stubAuthAddGroup')
+      addGroup.type('SOCU North West')
+      addGroup.addGroupButton().click()
 
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+      cy.task('verifyAddGroup').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-    userPage.removeGroup('SITE_1_GROUP_1').should('not.exist')
-  })
+        expect(requests[0].url).to.equal(
+          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
+        )
+      })
 
-  it('Remove a group from a user available for group managers when member of group', () => {
-    const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+      UserPage.verifyOnPage('Auth Adm')
 
-    cy.task('stubAuthRemoveGroup')
-    userPage.removeGroup('SITE_1_GROUP_1').click()
-    userPage.removeGroup('SITE_1_GROUP_2').should('not.exist')
-  })
+      cy.task('stubAuthRemoveGroup')
+      userPage.removeGroup('SITE_1_GROUP_1').click()
 
-  it('Remove last group, group manager receive error when trying to remove users last group', () => {
-    const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+      cy.task('verifyRemoveGroup').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-    cy.task('stubAuthGroupManagerRemoveLastGroup')
-    userPage.removeGroup('SITE_1_GROUP_1').click()
-    userPage
-      .errorSummary()
-      .should(
-        'contain.text',
-        'You are not allowed to remove the last group from this user, please deactivate their account instead',
-      )
-  })
-
-  it('Add a group to a user available for group managers', () => {
-    const userPage = editUser('AUTH_GROUP_MANAGER')
-
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
-
-    cy.task('stubAuthAssignableGroups', {})
-    userPage.addGroup().click()
-    const addGroup = UserAddGroupPage.verifyOnPage()
-
-    cy.task('stubAuthAddGroup')
-    addGroup.type('SOCU North West')
-    addGroup.addGroupButton().click()
-
-    cy.task('verifyAddGroup').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal(
-        '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
-      )
+        expect(requests[0].url).to.equal(
+          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1',
+        )
+      })
     })
-  })
 
-  it('Add a group to a user not in group managers groups displays error', () => {
-    const userPage = editUser('AUTH_GROUP_MANAGER')
+    it('Should cancel an add group', () => {
+      const userPage = editUser()
 
-    userPage.groupRows().should('have.length', 2)
-    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+      cy.task('stubAuthAssignableGroups', {})
+      userPage.addGroup().click()
+      const addGroup = UserAddGroupPage.verifyOnPage()
 
-    cy.task('stubAuthAssignableGroups', {})
-    userPage.addGroup().click()
-    const addGroup = UserAddGroupPage.verifyOnPage()
+      addGroup.cancel()
+      UserPage.verifyOnPage('Auth Adm')
+    })
 
-    cy.task('stubAuthAddGroupGroupManagerCannotMaintainUser')
-    addGroup.type('SOCU North West')
-    addGroup.addGroupButton().click()
-    addGroup
-      .errorSummary()
-      .should(
-        'contain.text',
-        'You are not able to maintain this user anymore, user does not belong to any groups you manage',
-      )
+    it('Remove a group from a user not available for group managers if not a member of group', () => {
+      const userPage = editUser('AUTH_GROUP_MANAGER')
+
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+      userPage.removeGroup('SITE_1_GROUP_1').should('not.exist')
+    })
+
+    it('Remove a group from a user available for group managers when member of group', () => {
+      const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+      cy.task('stubAuthRemoveGroup')
+      userPage.removeGroup('SITE_1_GROUP_1').click()
+      userPage.removeGroup('SITE_1_GROUP_2').should('not.exist')
+    })
+
+    it('Remove last group, group manager receive error when trying to remove users last group', () => {
+      const userPage = editUser('AUTH_GROUP_MANAGER', [{ groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' }])
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+      cy.task('stubAuthGroupManagerRemoveLastGroup')
+      userPage.removeGroup('SITE_1_GROUP_1').click()
+      userPage
+        .errorSummary()
+        .should(
+          'contain.text',
+          'You are not allowed to remove the last group from this user, please deactivate their account instead',
+        )
+    })
+
+    it('Add a group to a user available for group managers', () => {
+      const userPage = editUser('AUTH_GROUP_MANAGER')
+
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+      cy.task('stubAuthAssignableGroups', {})
+      userPage.addGroup().click()
+      const addGroup = UserAddGroupPage.verifyOnPage()
+
+      cy.task('stubAuthAddGroup')
+      addGroup.type('SOCU North West')
+      addGroup.addGroupButton().click()
+
+      cy.task('verifyAddGroup').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal(
+          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
+        )
+      })
+    })
+
+    it('Add a group to a user not in group managers groups displays error', () => {
+      const userPage = editUser('AUTH_GROUP_MANAGER')
+
+      userPage.groupRows().should('have.length', 2)
+      userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+
+      cy.task('stubAuthAssignableGroups', {})
+      userPage.addGroup().click()
+      const addGroup = UserAddGroupPage.verifyOnPage()
+
+      cy.task('stubAuthAddGroupGroupManagerCannotMaintainUser')
+      addGroup.type('SOCU North West')
+      addGroup.addGroupButton().click()
+      addGroup
+        .errorSummary()
+        .should(
+          'contain.text',
+          'You are not able to maintain this user anymore, user does not belong to any groups you manage',
+        )
+    })
+
+    it('Should check for CSRF token', () => {
+      editUser()
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-group',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
   })
 
   it('Should display message if no roles to add', () => {
@@ -272,62 +306,78 @@ context('External user manage functionality', () => {
       )
   })
 
-  it('Should enable and disable a user', () => {
-    const userPage = editUser()
+  describe('Enable and disable a user', () => {
+    it('Should enable and disable a user', () => {
+      const userPage = editUser()
 
-    userPage.enabled().should('contain.text', ' Active')
-    cy.task('stubAuthUserDisable')
-    cy.task('stubAuthGetUsername', false)
-    userPage.enableLink().should('have.text', 'Deactivate account').click()
+      userPage.enabled().should('contain.text', ' Active')
+      cy.task('stubAuthUserDisable')
+      cy.task('stubAuthGetUsername', false)
+      userPage.enableLink().should('have.text', 'Deactivate account').click()
 
-    const deactivatePage = deactivateUserReasonPage.verifyOnPage()
-    deactivatePage.deactivateUser('Left')
+      const deactivatePage = deactivateUserReasonPage.verifyOnPage()
+      deactivatePage.deactivateUser('Left')
 
-    cy.task('verifyUserDisable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
+      cy.task('verifyUserDisable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
+        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
+      })
+
+      userPage.enabled().should('contain.text', ' Inactive')
+      userPage.inactiveReason().eq(0).should('contain', 'Left')
+      cy.task('stubAuthUserEnable')
+      userPage.enableLink().should('have.text', 'Activate account').click()
+
+      cy.task('verifyUserEnable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
+      })
     })
 
-    userPage.enabled().should('contain.text', ' Inactive')
-    userPage.inactiveReason().eq(0).should('contain', 'Left')
-    cy.task('stubAuthUserEnable')
-    userPage.enableLink().should('have.text', 'Activate account').click()
+    it('Should throw error when reason fails validation when disable a user', () => {
+      const userPage = editUser()
 
-    cy.task('verifyUserEnable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
+      userPage.enabled().should('contain.text', ' Active')
+      cy.task('stubAuthUserDisable')
+      cy.task('stubAuthGetUsername', false)
+      userPage.enableLink().should('have.text', 'Deactivate account').click()
+
+      const deactivatePage = deactivateUserReasonPage.verifyOnPage()
+      deactivatePage.deactivateUser()
+      deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
+      deactivatePage.deactivateUser('a')
+      deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
+      deactivatePage.deactivateUser('Left')
+
+      cy.task('verifyUserDisable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
+      })
+
+      userPage.enabled().should('contain.text', ' Inactive')
+      cy.task('stubAuthUserEnable')
+      userPage.enableLink().should('have.text', 'Activate account').click()
+
+      cy.task('verifyUserEnable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
+      })
     })
-  })
 
-  it('Should throw error when reason fails validation when disable a user', () => {
-    const userPage = editUser()
+    it('Should check for CSRF token', () => {
+      editUser()
 
-    userPage.enabled().should('contain.text', ' Active')
-    cy.task('stubAuthUserDisable')
-    cy.task('stubAuthGetUsername', false)
-    userPage.enableLink().should('have.text', 'Deactivate account').click()
-
-    const deactivatePage = deactivateUserReasonPage.verifyOnPage()
-    deactivatePage.deactivateUser()
-    deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
-    deactivatePage.deactivateUser('a')
-    deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
-    deactivatePage.deactivateUser('Left')
-
-    cy.task('verifyUserDisable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
-    })
-
-    userPage.enabled().should('contain.text', ' Inactive')
-    cy.task('stubAuthUserEnable')
-    userPage.enableLink().should('have.text', 'Activate account').click()
-
-    cy.task('verifyUserEnable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-      expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate/reason',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
     })
   })
 
