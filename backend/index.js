@@ -28,7 +28,6 @@ const errorHandler = require('./middleware/errorHandler')
 const log = require('./log')
 
 const sixtyDaysInSeconds = 5184000
-const testMode = process.env.NODE_ENV === 'test'
 
 const app = express()
 
@@ -105,15 +104,13 @@ app.use((req, res, next) => {
 })
 
 // CSRF protection
-if (!testMode) {
-  app.use(csurf())
-  app.use((req, res, next) => {
-    if (typeof req.csrfToken === 'function') {
-      res.locals.csrfToken = req.csrfToken()
-    }
-    next()
-  })
-}
+app.use(csurf())
+app.use((req, res, next) => {
+  if (typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken()
+  }
+  next()
+})
 
 app.use(routes({ ...apis }))
 
