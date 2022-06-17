@@ -1,4 +1,4 @@
-const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
+const { stubFor, getFor, getMatchingRequests, stubJson } = require('./wiremock')
 
 const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
@@ -112,7 +112,7 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: () =>
+  stubUserDetails: (enabled = true) =>
     getFor({
       urlPattern: '/nomisusersandroles/users/.*',
       body: {
@@ -122,6 +122,7 @@ module.exports = {
         lastName: 'User',
         primaryEmail: `ITAG_USER@gov.uk`,
         email: `ITAG_USER@gov.uk`,
+        enabled,
       },
     }),
   stubUserDetailsWithoutEmail: () =>
@@ -133,6 +134,17 @@ module.exports = {
         firstName: 'Itag',
         lastName: 'User',
       },
+    }),
+  stubDpsUserEnable: () =>
+    stubJson({
+      method: 'PUT',
+      urlPattern: '/nomisusersandroles/users/.*/unlock-user',
+    }),
+
+  stubDpsUserDisable: () =>
+    stubJson({
+      method: 'PUT',
+      urlPattern: '/nomisusersandroles/users/.*/lock-user',
     }),
   stubDpsAddRoles: () =>
     stubFor({
@@ -176,5 +188,16 @@ module.exports = {
     getMatchingRequests({
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
+    }).then((data) => data.body.requests),
+  verifyDpsUserEnable: () =>
+    getMatchingRequests({
+      method: 'PUT',
+      urlPathPattern: '/nomisusersandroles/users/.*/unlock-user',
+    }).then((data) => data.body.requests),
+
+  verifyDpsUserDisable: () =>
+    getMatchingRequests({
+      method: 'PUT',
+      urlPathPattern: '/nomisusersandroles/users/.*/lock-user',
     }).then((data) => data.body.requests),
 }

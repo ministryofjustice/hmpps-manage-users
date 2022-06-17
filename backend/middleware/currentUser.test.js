@@ -40,6 +40,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -71,6 +72,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -89,6 +91,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -105,6 +108,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -121,6 +125,7 @@ describe('Current user', () => {
       maintainAccessAdmin: true,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -137,6 +142,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: true,
       maintainRoles: false,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -153,6 +159,23 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: false,
+      manageDPSUserAccount: false,
+    })
+  })
+  it('should set maintain dps user', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }])
+    const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainRoles: false,
+      manageDPSUserAccount: true,
     })
   })
 
@@ -169,6 +192,7 @@ describe('Current user', () => {
       maintainAccessAdmin: false,
       maintainAuthUsers: false,
       maintainRoles: true,
+      manageDPSUserAccount: false,
     })
   })
 
@@ -181,6 +205,7 @@ describe('Current user', () => {
       { roleCode: 'MAINTAIN_ACCESS_ROLES' },
       { roleCode: 'ROLES_ADMIN' },
       { roleCode: 'CREATE_USER' },
+      { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' },
     ])
     const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
 
@@ -193,6 +218,7 @@ describe('Current user', () => {
       maintainAccessAdmin: true,
       maintainAuthUsers: true,
       maintainRoles: true,
+      manageDPSUserAccount: true,
     })
   })
 

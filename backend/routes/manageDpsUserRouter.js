@@ -43,6 +43,9 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     return { ...user, email: userEmail.email }
   }
 
+  const enableUserApi = (context, username) => nomisUsersAndRolesApi.enableUser(context, { username })
+  const disableUserApi = (context, username) => nomisUsersAndRolesApi.disableUser(context, { username })
+
   const saveRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
   const removeRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeRole(context, username, role)
 
@@ -54,16 +57,23 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     '/manage-dps-users',
   )
 
-  const { index: userDetails, removeRole } = userDetailsFactory(
+  const {
+    index: userDetails,
+    removeRole,
+    enableUser,
+    disableUser,
+  } = userDetailsFactory(
     getUserAndRolesApi,
     removeRoleApi,
     undefined,
-    undefined,
-    undefined,
+    enableUserApi,
+    disableUserApi,
     '/search-with-filter-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
     false,
+    false,
+    'deactivate',
   )
 
   const {
@@ -79,6 +89,8 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   router.get('/change-email', getEmail)
   router.post('/change-email', postEmail)
   router.get('/change-email-success', emailSuccess)
+  router.get('/activate', enableUser)
+  router.get('/deactivate', disableUser)
 
   return router
 }
