@@ -46,4 +46,20 @@ context('Select DPS user to create functionality', () => {
 
     DpsUserCreatePage.verifyOnPage('Create a DPS Central Admin user')
   })
+
+  it('Should check for CSRF token', () => {
+    cy.task('stubDpsGetCaseloads')
+
+    goToSelectUserType()
+
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: 'create-user',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
+  })
 })

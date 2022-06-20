@@ -83,6 +83,7 @@ const controller = ({ oauthApi }) => {
     '/manage-external-users',
     'Search for an external user',
     true,
+    true,
   )
 
   const { index: deactivateUser, post: postDeactivateUser } = deactivateUserReasonFactory(

@@ -9,33 +9,27 @@ const bodyParser = require('body-parser')
 const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
 const helmet = require('helmet')
+const csurf = require('csurf')
 const noCache = require('nocache')
+
 require('express-async-errors')
 
 const apis = require('./apis')
-
 const ensureHttps = require('./middleware/ensureHttps')
-
 const healthFactory = require('./services/healthCheck')
-
 const setupAuth = require('./setupAuth')
-
 const routes = require('./routes')
-
 const setupWebSession = require('./setupWebSession')
 const config = require('./config')
-
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./nunjucksSetup')
 const phaseNameSetup = require('./phaseNameSetup')
-
 const errorHandler = require('./middleware/errorHandler')
-
 const log = require('./log')
 
-const app = express()
-
 const sixtyDaysInSeconds = 5184000
+
+const app = express()
 
 app.set('trust proxy', 1) // trust first proxy
 app.set('view engine', 'njk')
@@ -108,6 +102,16 @@ app.use((req, res, next) => {
   req.session.nowInMinutes = Math.floor(Date.now() / 60e3)
   next()
 })
+
+// CSRF protection
+app.use(csurf())
+app.use((req, res, next) => {
+  if (typeof req.csrfToken === 'function') {
+    res.locals.csrfToken = req.csrfToken()
+  }
+  next()
+})
+
 app.use(routes({ ...apis }))
 
 app.use(errorHandler)

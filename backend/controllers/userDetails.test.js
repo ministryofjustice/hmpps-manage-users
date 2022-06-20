@@ -18,6 +18,7 @@ describe('user detail factory', () => {
     '/manage-external-users',
     'Search for an external user',
     true,
+    true,
   )
 
   const req = {
@@ -51,6 +52,7 @@ describe('user detail factory', () => {
       lastLoggedIn: '2020-11-23T11:13:08.387065',
     },
     staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+    canAutoEnableDisableUser: true,
     roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
     groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     hasMaintainDpsUsersAdmin: false,
@@ -140,12 +142,14 @@ describe('user detail factory', () => {
         '/manage-external-users',
         'Search for an external user',
         false,
+        false,
       )
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await dpsUserDetails.index(req, { render })
       expect(render).toBeCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+        canAutoEnableDisableUser: false,
         showEnableDisable: false,
         showExtraUserDetails: false,
         showGroups: false,
