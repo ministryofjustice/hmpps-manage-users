@@ -5,25 +5,24 @@ const size = 20
 
 const searchFactory = (
   paginationService,
-  getAssignableGroupsOrPrisonsApi,
+  getAssignablePrisonsApi,
   getSearchableRolesApi,
   findUsersApi,
   searchUrl,
   maintainUrl,
   searchTitle,
-  dpsSearch,
   allowDownload,
 ) => {
   return async (req, res) => {
-    const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
-      getAssignableGroupsOrPrisonsApi(res.locals),
+    const [prisonDropdownValues, searchableRoles] = await Promise.all([
+      getAssignablePrisonsApi(res.locals),
       getSearchableRolesApi(res.locals),
     ])
     const roleDropdownValues = searchableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
     }))
-    const showGroupOrPrisonDropdown = Boolean(res.locals?.user?.maintainAccessAdmin || !dpsSearch)
+    const showPrisonDropdown = Boolean(res.locals?.user?.maintainAccessAdmin)
 
     const currentFilter = parseFilter(req.query)
 
@@ -51,14 +50,12 @@ const searchFactory = (
       ...user,
     }))
 
-    res.render('searchWithFilter.njk', {
+    res.render('searchDpsUsers.njk', {
       searchTitle,
       searchUrl,
-      groupOrPrisonDropdownValues,
+      prisonDropdownValues,
       roleDropdownValues,
-      showGroupOrPrisonDropdown,
-      dpsSearch,
-      groupOrPrison: dpsSearch ? 'caseload' : 'group',
+      showPrisonDropdown,
       currentFilter,
       results,
       pagination: paginationService.getPagination(

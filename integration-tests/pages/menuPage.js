@@ -1,6 +1,6 @@
 const page = require('./page')
 
-const searchWithFilterDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_users"]')
+const searchDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_users"]')
 const authUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
 const createDpsUser = () => cy.get('[data-qa="create_dps_user_link"]')
@@ -23,7 +23,7 @@ const menuPage = () =>
     manageGroups: () => manageGroups().click(),
     createRole: () => createRole().click(),
     manageRoles: () => manageRoles().click(),
-    searchWithFilterDpsUsers,
+    searchDpsUsers,
     viewRoles,
   })
 

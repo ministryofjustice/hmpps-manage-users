@@ -1,5 +1,5 @@
 const express = require('express')
-const { searchFactory } = require('../controllers/searchWithFilter')
+const { searchFactory } = require('../controllers/searchDpsUsers')
 const paginationService = require('../services/paginationService')
 const { downloadFactoryBetaSearch } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
@@ -22,7 +22,6 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     '/search-with-filter-dps-users',
     '/manage-dps-users',
     'Search for a DPS user',
-    true,
     allowDownload,
   )
   const { downloadBetaResults } = downloadFactoryBetaSearch(downloadNomisUserDetails, allowDownload)

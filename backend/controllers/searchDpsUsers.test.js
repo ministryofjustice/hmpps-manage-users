@@ -1,4 +1,4 @@
-const { searchFactory } = require('./searchWithFilter')
+const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config')
 
 describe('search factory', () => {
@@ -22,7 +22,6 @@ describe('search factory', () => {
       '/search-with-filter-dps-users',
       '/manage-dps-users',
       'Search for a DPS user',
-      true,
       allowDownload,
     )
 
@@ -55,15 +54,13 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render })
-        expect(render).toBeCalledWith('searchWithFilter.njk', {
+        expect(render).toBeCalledWith('searchDpsUsers.njk', {
           searchTitle: 'Search for a DPS user',
           searchUrl: '/search-with-filter-dps-users',
-          groupOrPrisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
+          prisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
           roleDropdownValues: [{ text: 'Access Role Admin', value: 'ACCESS_ROLE_ADMIN' }],
           errors: undefined,
-          dpsSearch: true,
-          groupOrPrison: 'caseload',
-          showGroupOrPrisonDropdown: false,
+          showPrisonDropdown: false,
           pagination,
           currentFilter: {
             groupCode: undefined,
@@ -91,7 +88,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             downloadUrl:
               '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
@@ -109,7 +106,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.not.objectContaining({
             downloadUrl:
               '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&size=undefined',
@@ -133,7 +130,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: ['MDI'],
@@ -165,7 +162,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: undefined,
@@ -198,7 +195,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: ['MDI', 'BXI'],

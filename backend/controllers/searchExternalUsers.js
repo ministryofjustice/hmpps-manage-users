@@ -5,40 +5,35 @@ const mapUsernameAndEmail = (u) => {
 
 const searchFactory = (
   paginationService,
-  getAssignableGroupsOrPrisonsApi,
+  getAssignableGroups,
   getSearchableRolesApi,
   searchApi,
   pagingApi,
   searchUrl,
   maintainUrl,
   searchTitle,
-  dpsSearch,
   allowDownload,
 ) => {
   const index = async (req, res) => {
-    const [groupOrPrisonDropdownValues, searchableRoles] = await Promise.all([
-      getAssignableGroupsOrPrisonsApi(res.locals),
+    const [groupDropdownValues, searchableRoles] = await Promise.all([
+      getAssignableGroups(res.locals),
       getSearchableRolesApi(res.locals),
     ])
     const roleDropdownValues = searchableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
     }))
-    const showGroupOrPrisonDropdown = Boolean(res.locals?.user?.maintainAccessAdmin || !dpsSearch)
 
-    res.render('search.njk', {
+    res.render('searchExternalUsers.njk', {
       searchTitle,
       searchUrl,
-      groupOrPrisonDropdownValues,
+      groupDropdownValues,
       roleDropdownValues,
-      showGroupOrPrisonDropdown,
-      dpsSearch,
-      groupOrPrison: dpsSearch ? 'caseload' : 'group',
     })
   }
 
   const results = async (req, res) => {
-    const { user, groupCode, roleCode, activeCaseload, size, status, page, offset } = req.query
+    const { user, groupCode, roleCode, size, status, page, offset } = req.query
 
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
@@ -49,27 +44,23 @@ const searchFactory = (
     delete req.session.searchTitle
     delete req.session.searchUrl
 
-    const [searchResults, caseloads] = await Promise.all([
-      searchApi({
-        locals: res.locals,
-        user,
-        groupCode,
-        roleCode,
-        activeCaseload: activeCaseload ?? groupCode,
-        status,
-        pageNumber,
-        pageSize,
-        pageOffset,
-      }),
-      res.locals?.user?.maintainAccessAdmin ? getAssignableGroupsOrPrisonsApi({ ...res.locals }) : [],
-    ])
+    const searchResults = await searchApi({
+      locals: res.locals,
+      user,
+      groupCode,
+      roleCode,
+      status,
+      pageNumber,
+      pageSize,
+      pageOffset,
+    })
 
     const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
       usernameAndEmail: mapUsernameAndEmail(u),
       ...u,
     }))
 
-    res.render(dpsSearch ? 'dpsSearchResults.njk' : 'externalSearchResults.njk', {
+    res.render('externalSearchResults.njk', {
       searchTitle,
       searchUrl,
       maintainUrl,
@@ -78,17 +69,11 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
-      status,
-      groupCode,
-      roleCode,
-      activeCaseload: activeCaseload ?? groupCode,
       username: user,
       errors: req.flash('errors'),
-      caseloads,
       downloadUrl:
         allowDownload(res) &&
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
-      dpsSearch,
     })
   }
 
