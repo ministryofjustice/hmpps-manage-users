@@ -22,6 +22,7 @@ module.exports =
           groupManager: hasRole(roles, 'AUTH_GROUP_MANAGER'),
           maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
           createDPSUsers: hasRole(roles, 'CREATE_USER'),
+          manageDPSUserAccount: hasRole(roles, 'MANAGE_NOMIS_USER_ACCOUNT'),
         }
       }
 

@@ -258,4 +258,48 @@ context('DPS user manage functionality', () => {
       .and('have.attr', 'href')
       .and('contains', '%2Fsearch-with-filter-dps-users')
   })
+
+  it('Should enable and disable a user', () => {
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+    })
+    userPage.enabled().should('contain.text', ' Active')
+    cy.task('stubDpsUserDisable')
+    cy.task('stubDpsUserDetails', false)
+    userPage.enableLink().should('have.text', 'Deactivate account').click()
+
+    cy.task('verifyDpsUserDisable').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+
+      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+    })
+
+    userPage.enabled().should('contain.text', ' Inactive')
+    cy.task('stubDpsUserEnable')
+    cy.task('stubDpsUserDetails')
+    userPage.enableLink().should('have.text', 'Activate account').click()
+
+    cy.task('verifyDpsUserEnable').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/unlock-user')
+    })
+    userPage.enabled().should('contain.text', ' Active')
+  })
+
+  it('Should not allow activate(unlock) DPS user if no role', () => {
+    const userPage = editUser({ isAdmin: true, userEnabled: false })
+
+    userPage.enabled().should('contain.text', ' Inactive')
+    userPage.enableLink().should('not.exist')
+  })
+
+  it('Should not allow deactivate(lock) DPS user if no role', () => {
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
+    })
+    cy.task('stubDpsUserDetails')
+
+    userPage.enabled().should('contain.text', ' Active')
+    userPage.enableLink().should('not.exist')
+  })
 })
