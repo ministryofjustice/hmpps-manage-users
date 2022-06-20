@@ -73,7 +73,6 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     'Search for a DPS user',
     false,
     false,
-    'deactivate',
   )
 
   const {

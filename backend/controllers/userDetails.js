@@ -9,7 +9,6 @@ const userDetailsFactory = (
   defaultSearchTitle,
   showExtraUserDetails,
   canAutoEnableDisableUser,
-  deactivateUrl,
 ) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
     req.flash('deleteGroupErrors', errors)
@@ -19,7 +18,6 @@ const userDetailsFactory = (
   const index = async (req, res) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}`
-    const deactivateUserUrl = `${staffUrl}/${deactivateUrl}`
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
     const hasManageDPSUserAccount = Boolean(res.locals && res.locals.user && res.locals.user.manageDPSUserAccount)
@@ -41,11 +39,11 @@ const userDetailsFactory = (
       searchUrl,
       staff: { ...user, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
-      deactivateUserUrl,
       roles,
       groups,
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
+      canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
       showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
       showGroups: Boolean(removeGroupApi),
       showExtraUserDetails,

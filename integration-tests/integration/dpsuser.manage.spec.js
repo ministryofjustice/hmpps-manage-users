@@ -262,8 +262,9 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should not allow deactivate(lock) DPS user if no role', () => {
-    const userPage = editUser({ isAdmin: true })
-    cy.task('stubDpsUserDetails')
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
+    })
     cy.task('stubDpsUserDetails')
 
     userPage.enabled().should('contain.text', ' Active')
