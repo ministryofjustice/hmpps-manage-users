@@ -48,12 +48,12 @@ const validateDpsUserCreate = (
   } else if (!isAlphaStringOrSpecialChars(firstName)) {
     errors.push({
       href: '#firstName',
-      text: 'First name must be consist of letters, an apostrophe, hyphen & apostrophe only',
+      text: 'First name must be consist of letters, an forward apostrophe, hyphen & apostrophe only',
     })
   } else if (!isAlphaStringOrSpecialChars(lastName)) {
     errors.push({
       href: '#lastName',
-      text: 'Last name must be consist of letters, an apostrophe, hyphen & apostrophe only',
+      text: 'Last name must be consist of letters, an forward apostrophe, hyphen & apostrophe only',
     })
   }
 

@@ -50,7 +50,10 @@ describe('DPS create validation', () => {
   it('should validate specific characters allowed for First name field with alphabetical strings', () => {
     expect(validateDpsUserCreate('un', 'b@d.com', 'ca4', 'de3', 'default', true, 'Select a default caseload')).toEqual(
       expect.arrayContaining([
-        { href: '#firstName', text: 'First name must be consist of letters, an apostrophe, hyphen & apostrophe only' },
+        {
+          href: '#firstName',
+          text: 'First name must be consist of letters, an forward apostrophe, hyphen & apostrophe only',
+        },
       ]),
     )
   })
@@ -58,7 +61,10 @@ describe('DPS create validation', () => {
   it('should validate specific characters allowed for Last name field with alphabetical strings', () => {
     expect(validateDpsUserCreate('un', 'b@d.com', 'ca', 'de3', 'default', true, 'Select a default caseload')).toEqual(
       expect.arrayContaining([
-        { href: '#lastName', text: 'Last name must be consist of letters, an apostrophe, hyphen & apostrophe only' },
+        {
+          href: '#lastName',
+          text: 'Last name must be consist of letters, an forward apostrophe, hyphen & apostrophe only',
+        },
       ]),
     )
   })
