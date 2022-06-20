@@ -1,7 +1,6 @@
 import { validateEmailFormat } from './userValidation'
 
-const isAlphaString = (str: string) => str.match(/^[A-Za-z]+$/)
-const isAlphaStringOrApostrophe = (str: string) => str.match(/^[A-Za-z']+$/)
+const isAlphaStringOrSpecialChars = (str: string) => str.match(/^[A-Za-z'’-]+$/)
 
 const validateDpsUserCreate = (
   username: string,
@@ -41,15 +40,21 @@ const validateDpsUserCreate = (
     errors.push({ href: '#firstName', text: 'First name must be 2 characters or more' })
   } else if (firstName.length > 35) {
     errors.push({ href: '#firstName', text: 'First name must be 35 characters or less' })
-  } else if (!isAlphaString(firstName)) {
-    errors.push({ href: '#firstName', text: 'First name must be consist of letters only' })
   }
   if (lastName.length < 2) {
     errors.push({ href: '#lastName', text: 'Last name must be 2 characters or more' })
   } else if (lastName.length > 35) {
     errors.push({ href: '#lastName', text: 'Last name must be 35 characters or less' })
-  } else if (!isAlphaStringOrApostrophe(lastName)) {
-    errors.push({ href: '#lastName', text: 'Last name must be consist of letters or an apostrophe only' })
+  } else if (!isAlphaStringOrSpecialChars(firstName)) {
+    errors.push({
+      href: '#firstName',
+      text: 'First name must be consist of letters, an apostrophe, hyphen & apostrophe only',
+    })
+  } else if (!isAlphaStringOrSpecialChars(lastName)) {
+    errors.push({
+      href: '#lastName',
+      text: 'Last name must be consist of letters, an apostrophe, hyphen & apostrophe only',
+    })
   }
 
   if (errors.length) return errors
