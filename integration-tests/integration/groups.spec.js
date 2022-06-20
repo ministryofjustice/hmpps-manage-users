@@ -73,22 +73,39 @@ context('Groups', () => {
     groupDetails.childGroups().should('have.length', 1)
   })
 
-  it('should allow change group name', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+  describe('Change group name', () => {
+    it('should allow change group name', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
+      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.changeGroupName()
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.changeGroupName()
 
-    cy.task('stubAuthChangeGroupName')
-    cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterGroupNameChange)
-    const groupNameChange = GroupNameChangePage.verifyOnPage()
-    groupNameChange.changeName('Name Change')
+      cy.task('stubAuthChangeGroupName')
+      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterGroupNameChange)
+      const groupNameChange = GroupNameChangePage.verifyOnPage()
+      groupNameChange.changeName('Name Change')
 
-    GroupDetailsPage.verifyOnPage('New Group Name')
+      GroupDetailsPage.verifyOnPage('New Group Name')
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-groups/SITE_1_GROUP_2/change-group-name',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
   })
 
   it('should display error when delete group if child groups exist', () => {
@@ -147,83 +164,134 @@ context('Groups', () => {
     GroupsPage.verifyOnPage()
   })
 
-  it('should allow change child group name', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+  describe('Change child group name', () => {
+    it('should allow change child group name', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
+      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.changeChildGroupName()
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.changeChildGroupName()
 
-    cy.task('stubAuthChangeChildGroupName')
-    cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterChildGroupNameChange)
-    const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
-    childGroupNameChange.changeName('New group name')
+      cy.task('stubAuthChangeChildGroupName')
+      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterChildGroupNameChange)
+      const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
+      childGroupNameChange.changeName('New group name')
 
-    const groupDetailsPage = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetailsPage.childGroups().eq(0).should('contain.text', 'New group name')
-  })
+      const groupDetailsPage = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetailsPage.childGroups().eq(0).should('contain.text', 'New group name')
+    })
 
-  it('should allow create child group', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
-
-    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.createChildGroup()
-
-    cy.task('stubAuthCreateChildGroup')
-    CreateChildGroupPage.verifyOnPage()
-    cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterCreateChildGroup)
-    const createChildGroup = CreateChildGroupPage.verifyOnPage()
-    createChildGroup.createGroup('BOB', 'Bob Group')
-
-    const groupDetailsPage = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetailsPage.childGroups().should('have.length', 2)
-
-    cy.task('verifyCreateChildGroup').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        groupCode: 'BOB',
-        groupName: 'Bob Group',
-        parentGroupCode: 'SITE_1_GROUP_2',
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-groups/SITE_1_GROUP_2/change-child-group-name/CHILD_1',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })
 
-  it('should allow create group', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
-    const menuPage = MenuPage.verifyOnPage()
+  describe('Create child group', () => {
+    it('should allow create child group', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
-    menuPage.createGroup()
+      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    cy.task('stubAuthCreateGroup')
-    CreateGroupPage.verifyOnPage()
-    cy.task('stubAuthAssignableGroupDetails', {})
-    const createGroup = CreateGroupPage.verifyOnPage()
-    createGroup.createGroup('BO$', '')
-    createGroup.errorSummary().should('contain.text', 'Enter a group name')
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.createChildGroup()
 
-    createGroup.createGroup('BO$', 'Bob Group')
-    createGroup.errorSummary().should('contain.text', 'Group code can only contain 0-9, A-Z and _ characters')
+      cy.task('stubAuthCreateChildGroup')
+      CreateChildGroupPage.verifyOnPage()
+      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterCreateChildGroup)
+      const createChildGroup = CreateChildGroupPage.verifyOnPage()
+      createChildGroup.createGroup('BOB', 'Bob Group')
 
-    createGroup.createGroup('', '')
-    createGroup.createGroup('BOB', 'Bob Group')
-    GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      const groupDetailsPage = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetailsPage.childGroups().should('have.length', 2)
 
-    cy.task('verifyCreateGroup').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
+      cy.task('verifyCreateChildGroup').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        groupCode: 'BOB',
-        groupName: 'Bob Group',
+        expect(JSON.parse(requests[0].body)).to.deep.include({
+          groupCode: 'BOB',
+          groupName: 'Bob Group',
+          parentGroupCode: 'SITE_1_GROUP_2',
+        })
+      })
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-groups/SITE_1_GROUP_2/create-child-group',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+
+  describe('Create group', () => {
+    it('should allow create group', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
+
+      cy.task('stubAuthAssignableGroupDetails', {})
+      menuPage.createGroup()
+
+      cy.task('stubAuthCreateGroup')
+      CreateGroupPage.verifyOnPage()
+      cy.task('stubAuthAssignableGroupDetails', {})
+      const createGroup = CreateGroupPage.verifyOnPage()
+      createGroup.createGroup('BO$', '')
+      createGroup.errorSummary().should('contain.text', 'Enter a group name')
+
+      createGroup.createGroup('BO$', 'Bob Group')
+      createGroup.errorSummary().should('contain.text', 'Group code can only contain 0-9, A-Z and _ characters')
+
+      createGroup.createGroup('', '')
+      createGroup.createGroup('BOB', 'Bob Group')
+      GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+
+      cy.task('verifyCreateGroup').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(JSON.parse(requests[0].body)).to.deep.include({
+          groupCode: 'BOB',
+          groupName: 'Bob Group',
+        })
+      })
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.signIn()
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-groups/create-group',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })

@@ -93,170 +93,220 @@ context('Roles', () => {
     roleDetails.adminType().should('have.length', 1)
   })
 
-  it('should allow change role name', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
+  describe('change role name', () => {
+    it('should allow change role name', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
 
-    cy.task('stubAllRolesPaged', {})
-    cy.task('stubRoleDetails', {})
-    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+      cy.task('stubAllRolesPaged', {})
+      cy.task('stubRoleDetails', {})
+      cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 
-    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.changeRoleName()
+      const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+      roleDetails.changeRoleName()
 
-    cy.task('stubChangeRoleName')
-    cy.task('stubRoleDetails', roleDetailsAfterRoleNameChange)
-    const roleNameChange = RoleNameChangePage.verifyOnPage('Auth Group Manager')
-    roleNameChange.changeName('Name Change')
+      cy.task('stubChangeRoleName')
+      cy.task('stubRoleDetails', roleDetailsAfterRoleNameChange)
+      const roleNameChange = RoleNameChangePage.verifyOnPage('Auth Group Manager')
+      roleNameChange.changeName('Name Change')
 
-    RoleDetailsPage.verifyOnPage('New Role Name')
-    cy.task('verifyRoleNameUpdate').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        roleName: 'Name Change',
+      RoleDetailsPage.verifyOnPage('New Role Name')
+      cy.task('verifyRoleNameUpdate').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal({
+          roleName: 'Name Change',
+        })
+      })
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+
+      cy.task('stubChangeRoleName')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: 'manage-roles/ROLES_ADMIN/change-role-name',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })
 
-  it('should allow change role description', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
+  describe('change role description', () => {
+    it('should allow change role description', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
 
-    cy.task('stubAllRolesPaged', {})
-    cy.task('stubRoleDetails', {})
-    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+      cy.task('stubAllRolesPaged', {})
+      cy.task('stubRoleDetails', {})
+      cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 
-    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.changeRoleDescription()
+      const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+      roleDetails.changeRoleDescription()
 
-    cy.task('stubChangeRoleDescription')
-    cy.task('stubRoleDetails', roleDetailsAfterRoleDescriptionChange)
-    const roleDescriptionChange = RoleDescriptionChangePage.verifyOnPage('Auth Group Manager')
-    roleDescriptionChange.changeDescription('Description Change')
+      cy.task('stubChangeRoleDescription')
+      cy.task('stubRoleDetails', roleDetailsAfterRoleDescriptionChange)
+      const roleDescriptionChange = RoleDescriptionChangePage.verifyOnPage('Auth Group Manager')
+      roleDescriptionChange.changeDescription('Description Change')
 
-    RoleDetailsPage.verifyOnPage('Role Description Change Name')
-    cy.task('verifyRoleDescriptionUpdate').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        roleDescription: 'Description Change',
+      RoleDetailsPage.verifyOnPage('Role Description Change Name')
+      cy.task('verifyRoleDescriptionUpdate').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal({
+          roleDescription: 'Description Change',
+        })
+      })
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+
+      cy.task('stubChangeRoleDescription')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: 'manage-roles/ROLES_ADMIN/change-role-description',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })
 
-  it('should allow change role admin type', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
+  describe('change role admin type', () => {
+    it('should allow change role admin type', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
 
-    cy.task('stubAllRolesPaged', {})
-    cy.task('stubRoleDetails', {})
-    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+      cy.task('stubAllRolesPaged', {})
+      cy.task('stubRoleDetails', {})
+      cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
 
-    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.changeRoleAdminType()
+      const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+      roleDetails.changeRoleAdminType()
 
-    cy.task('stubChangeRoleAdminType')
-    cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
-    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
-    roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.checked').should('be.disabled')
-    roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.disabled')
-    roleAdminTypeChange.changeRoleAdminType('DPS_ADM')
+      cy.task('stubChangeRoleAdminType')
+      cy.task('stubRoleDetails', roleDetailsAfterRoleAdminTypeChange)
+      const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+      roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.checked').should('be.disabled')
+      roleAdminTypeChange.adminTypeCheckbox('External Administrators').should('be.disabled')
+      roleAdminTypeChange.changeRoleAdminType('DPS_ADM')
 
-    RoleDetailsPage.verifyOnPage('Role Name For Admin Type Change')
+      RoleDetailsPage.verifyOnPage('Role Name For Admin Type Change')
 
-    cy.task('verifyRoleAdminTypeUpdate').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        adminType: ['DPS_ADM', 'EXT_ADM'],
+      cy.task('verifyRoleAdminTypeUpdate').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal({
+          adminType: ['DPS_ADM', 'EXT_ADM'],
+        })
+      })
+    })
+
+    it('change role admin type call to nomis fails - error shown', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+
+      cy.task('stubAllRolesPaged', {})
+      cy.task('stubDPSRoleDetails', {})
+      cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+
+      const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
+      roleDetails.changeRoleAdminType()
+
+      cy.task('stubChangeRoleAdminTypeFail')
+      cy.task('stubDPSRoleDetails', {})
+      const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+      roleAdminTypeChange.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
+      roleAdminTypeChange.changeRoleAdminType('DPS_LSA')
+
+      const roleAdminTypeChange2 = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
+      roleAdminTypeChange2
+        .errorSummary()
+        .should('contain.text', 'Unexpected error: Unable to get role: AUTH_GROUP_MANAGER with reason: notfound')
+
+      roleAdminTypeChange2.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
+      roleAdminTypeChange2.adminTypeCheckbox('DPS Local System Administrators (LSA)').should('be.checked')
+
+      roleAdminTypeChange2.cancel()
+      RoleDetailsPage.verifyOnPage('Auth Group Manager')
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+
+      cy.task('stubChangeRoleAdminType')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: 'manage-roles/ROLES_ADMIN/change-role-admintype',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })
 
-  it('change role admin type call to nomis fails - error shown', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
+  describe('create role', () => {
+    it('should allow create role', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
 
-    cy.task('stubAllRolesPaged', {})
-    cy.task('stubDPSRoleDetails', {})
-    cy.visit('/manage-roles/AUTH_GROUP_MANAGER')
+      menuPage.createRole()
 
-    const roleDetails = RoleDetailsPage.verifyOnPage('Auth Group Manager')
-    roleDetails.changeRoleAdminType()
+      cy.task('stubAuthCreateRole')
+      CreateRolePage.verifyOnPage()
+      cy.task('stubRoleDetails', {})
+      const createRole = CreateRolePage.verifyOnPage()
+      createRole.createRole('BO$', '', '', '')
+      createRole.errorSummary().should('contain.text', 'Enter a role name')
+      createRole.errorSummary().should('contain.text', 'Select an admin type')
 
-    cy.task('stubChangeRoleAdminTypeFail')
-    cy.task('stubDPSRoleDetails', {})
-    const roleAdminTypeChange = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
-    roleAdminTypeChange.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
-    roleAdminTypeChange.changeRoleAdminType('DPS_LSA')
+      createRole.createRole('BO$', 'Bob Role', 'Bob Description', 'EXT_ADM')
+      createRole.errorSummary().should('contain.text', 'Role code can only contain 0-9, A-Z and _ characters')
+      createRole.adminTypeCheckbox('External Administrators').should('be.checked')
 
-    const roleAdminTypeChange2 = RoleAdminTypeChangePage.verifyOnPage('Auth Group Manager')
-    roleAdminTypeChange2
-      .errorSummary()
-      .should('contain.text', 'Unexpected error: Unable to get role: AUTH_GROUP_MANAGER with reason: notfound')
+      createRole.createRole('', '')
+      createRole.createRole('AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')
+      RoleDetailsPage.verifyOnPage('Auth Group Manager')
 
-    roleAdminTypeChange2.adminTypeCheckbox('DPS Central Admin').should('be.checked').should('be.disabled')
-    roleAdminTypeChange2.adminTypeCheckbox('DPS Local System Administrators (LSA)').should('be.checked')
+      cy.task('verifyCreateRole').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
 
-    roleAdminTypeChange2.cancel()
-    RoleDetailsPage.verifyOnPage('Auth Group Manager')
-  })
-
-  it('should allow create role', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
-    const menuPage = MenuPage.verifyOnPage()
-
-    menuPage.createRole()
-
-    cy.task('stubAuthCreateRole')
-    CreateRolePage.verifyOnPage()
-    cy.task('stubRoleDetails', {})
-    const createRole = CreateRolePage.verifyOnPage()
-    createRole.createRole('BO$', '', '', '')
-    createRole.errorSummary().should('contain.text', 'Enter a role name')
-    createRole.errorSummary().should('contain.text', 'Select an admin type')
-
-    createRole.createRole('BO$', 'Bob Role', 'Bob Description', 'EXT_ADM')
-    createRole.errorSummary().should('contain.text', 'Role code can only contain 0-9, A-Z and _ characters')
-    createRole.adminTypeCheckbox('External Administrators').should('be.checked')
-
-    createRole.createRole('', '')
-    createRole.createRole('AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')
-    RoleDetailsPage.verifyOnPage('Auth Group Manager')
-
-    cy.task('verifyCreateRole').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        roleCode: 'AUTH_GROUP_MANAGER',
-        roleName: 'Auth Group Manager',
-        roleDescription: 'Role to be a Group Manager',
-        adminType: ['EXT_ADM'],
+        expect(JSON.parse(requests[0].body)).to.deep.include({
+          roleCode: 'AUTH_GROUP_MANAGER',
+          roleName: 'Auth Group Manager',
+          roleDescription: 'Role to be a Group Manager',
+          adminType: ['EXT_ADM'],
+        })
       })
     })
-  })
 
-  it('should allow create role', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
-    cy.signIn()
-    const menuPage = MenuPage.verifyOnPage()
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
 
-    menuPage.createRole()
+      cy.task('stubAuthCreateRole')
 
-    cy.task('stubAuthCreateRole')
-    CreateRolePage.verifyOnPage()
-    cy.task('stubRoleDetails', {})
-    const createRole = CreateRolePage.verifyOnPage()
-    createRole.createRole('ROLE_AUTH_GROUP_MANAGER', 'Auth Group Manager', 'Role to be a Group Manager', 'EXT_ADM')
-    RoleDetailsPage.verifyOnPage('Auth Group Manager')
-
-    cy.task('verifyCreateRole').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
-        roleCode: 'AUTH_GROUP_MANAGER',
-        roleName: 'Auth Group Manager',
-        roleDescription: 'Role to be a Group Manager',
-        adminType: ['EXT_ADM'],
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: 'manage-roles/create-role',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
       })
     })
   })

@@ -8,6 +8,7 @@ function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
     activeCaseload,
     size,
     page,
+    inclusiveRoles,
   }) => {
     const { content, totalElements, number } = await nomisUsersAndRolesApi.userSearch(context, {
       nameFilter,
@@ -17,6 +18,7 @@ function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
       status,
       size,
       page,
+      inclusiveRoles,
     })
 
     if (content.length === 0)
@@ -39,6 +41,7 @@ function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
     status,
     caseload,
     activeCaseload,
+    inclusiveRoles,
   }) => {
     const result = await nomisUsersAndRolesApi.downloadUserSearch(context, {
       nameFilter,
@@ -46,6 +49,7 @@ function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
       caseload,
       activeCaseload,
       status,
+      inclusiveRoles,
     })
     if (result.length === 0)
       return {
