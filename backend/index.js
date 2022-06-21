@@ -1,3 +1,5 @@
+import setUpWebSecurity from './middleware/setUpWebSecurity'
+
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
 // In particular, applicationinsights automatically collects bunyan logs
@@ -8,7 +10,6 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
-const helmet = require('helmet')
 const csurf = require('csurf')
 const noCache = require('nocache')
 
@@ -37,20 +38,7 @@ app.set('view engine', 'njk')
 nunjucksSetup(app, path)
 phaseNameSetup(app, config)
 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        // Hash allows inline script pulled in from https://github.com/alphagov/govuk-frontend/blob/master/src/govuk/template.njk
-        scriptSrc: ["'self'", 'code.jquery.com', "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='"],
-        styleSrc: ["'self'", 'code.jquery.com'],
-        fontSrc: ["'self'"],
-      },
-    },
-    crossOriginEmbedderPolicy: true,
-  }),
-)
+app.use(setUpWebSecurity())
 
 app.use(
   hsts({
