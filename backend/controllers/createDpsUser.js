@@ -1,5 +1,5 @@
 const { validateDpsUserCreate } = require('./dpsUserValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues, removeForwardApostrophe } = require('../utils')
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
@@ -85,10 +85,6 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
   }
 
   return { index, post }
-}
-
-function removeForwardApostrophe(str) {
-  return str !== undefined ? str.replace('’', "'") : undefined
 }
 
 module.exports = {
