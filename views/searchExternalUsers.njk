@@ -75,13 +75,11 @@
   {{ super() }}
   <script src="/assets/accessible-autocomplete.min.js"></script>
   <script>
-    {%- if showGroupDropdown %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#groupCode'),
       showAllValues: true,
       preserveNullOptions: true,
     })
-    {%- endif %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#roleCode'),
       showAllValues: true,

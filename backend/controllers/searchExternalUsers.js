@@ -69,6 +69,9 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
+      status,
+      groupCode,
+      roleCode,
       username: user,
       errors: req.flash('errors'),
       downloadUrl:

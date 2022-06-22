@@ -2,7 +2,6 @@ const MenuPage = require('../pages/menuPage')
 const UserPage = require('../pages/userPage')
 const AuthUserCreatePage = require('../pages/authUserCreatePage')
 const AuthUserCreateSuccessPage = require('../pages/authUserCreateSuccessPage')
-const { editUser } = require('../support/dpsuser.helpers')
 
 function createUser() {
   const createPage = AuthUserCreatePage.verifyOnPage()
