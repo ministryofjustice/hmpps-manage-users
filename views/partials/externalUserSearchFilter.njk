@@ -16,14 +16,6 @@
         {text: 'All', value:'ALL'}
       ] | setSelected(status)
     }) }}
-    {{ govukSelect({label: {
-      text: "Active caseload"
-    },
-      idPrefix: 'activeCaseload',
-      name: 'activeCaseload',
-      id: 'activeCaseload',
-      items: caseloads | addDefaultSelectedValue('Any', true) | setSelected(activeCaseload)
-    }) if dpsSearch and user.maintainAccessAdmin }}
     {{ govukButton({
       text: "Filter",
       type: "submit",

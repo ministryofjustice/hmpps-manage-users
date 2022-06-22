@@ -3,7 +3,7 @@ const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 
-const { editUser, goToSearchWithFilterPage } = require('../support/dpsuser.helpers')
+const { editUser, goToSearchPage } = require('../support/dpsuser.helpers')
 
 context('DPS user manage functionality', () => {
   before(() => {
@@ -26,7 +26,7 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should leave email blank if no email for user ', () => {
-    const results = goToSearchWithFilterPage({})
+    const results = goToSearchPage({})
 
     cy.task('stubDpsUserDetailsWithOutEmail')
     cy.task('stubDpsUserGetRoles')
@@ -61,7 +61,7 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should show unverified if email is unverified ', () => {
-    const results = goToSearchWithFilterPage({})
+    const results = goToSearchPage({})
 
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
@@ -185,7 +185,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('As an admin user should add and remove a role from a user', () => {
-      const results = goToSearchWithFilterPage({})
+      const results = goToSearchPage({})
 
       cy.task('stubDpsUserDetails')
       cy.task('stubDpsUserGetRoles')
@@ -251,7 +251,7 @@ context('DPS user manage functionality', () => {
     cy.task('stubBannerNoMessage')
     cy.signIn()
     cy.task('stubManageUserGetRoles', {})
-    const search = goToSearchWithFilterPage({})
+    const search = goToSearchPage({})
     search
       .manageYourDetails()
       .should('contain', 'Manage your details')

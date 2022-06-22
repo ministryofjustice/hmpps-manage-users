@@ -1,6 +1,6 @@
 const { Parser } = require('json2csv')
 const logger = require('../log')
-const { parseFilter } = require('./searchWithFilter')
+const { parseFilter } = require('./searchDpsUsers')
 
 const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
   const downloadResults = async (req, res) => {
