@@ -4,15 +4,7 @@
 
 {% block head %}
 
-  {% if googleTagManagerId %}
-    <!-- Google Tag Manager -->
-    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-          new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-        j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-        'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-      })(window,document,'script','dataLayer','{{ googleTagManagerId }}');</script>
-    <!-- End Google Tag Manager -->
-  {% endif %}
+  {% include "../tagManager/headContent.njk" %}
 
   <!--[if !IE 8]><!-->
   <script src="https://code.jquery.com/jquery-1.12.4.min.js"
@@ -23,7 +15,7 @@
           integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
           crossorigin="anonymous"></script>
 
-  <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet">
+  <link href="https://code.jquery.com/ui/1.12.1/themes/ui-lightness/jquery-ui.css" rel="stylesheet" crossorigin>
   <link href="/stylesheets/application.css" rel="stylesheet" />
   <title>{% block pageTitle %}{% if errors.length %}Error: {% endif %}{{ title }} - Digital Prison Services{% endblock %}</title>
   <!--<![endif]-->
@@ -35,12 +27,7 @@
 {% endblock %}
 
 {% block bodyStart %}
-  {% if googleTagManagerId %}
-    <!-- Google Tag Manager (noscript) -->
-    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ googleTagManagerId }}"
-                      height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-    <!-- End Google Tag Manager (noscript) -->
-  {% endif %}
+  {% include "../tagManager/bodyContent.njk" %}
 {% endblock %}
 
 {% block header %}
@@ -55,9 +42,9 @@
   {# Run JavaScript at end of the
 <body>, to avoid blocking the initial render. #}
   <script src="/assets/govuk/all.js"></script>
-  <script>window.GOVUKFrontend.initAll()</script>
   <script src="/assets/moj/all.js"></script>
-  <script>window.MOJFrontend.initAll()</script>
+  <script src="/js/govuk-frontend-init.js"></script>
+  <script src="/js/moj-frontend-init.js"></script>
 
   {# Javascript block for individual pages #}
   {% block pageScripts %}
