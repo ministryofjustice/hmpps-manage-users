@@ -53,13 +53,12 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
     const errors = validateDpsUserCreate(
       user.username,
       user.email,
-      user.firstName,
-      user.lastName,
+      (user.firstName = removeForwardApostrophe(user.firstName)),
+      (user.lastName = removeForwardApostrophe(user.lastName)),
       user.defaultCaseloadId,
       user.userType !== 'DPS_ADM',
       caseloadText(user),
     )
-
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
@@ -86,6 +85,10 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
   }
 
   return { index, post }
+}
+
+function removeForwardApostrophe(str) {
+  return str !== undefined ? str.replace('’', "'") : undefined
 }
 
 module.exports = {
