@@ -40,20 +40,20 @@ const validateDpsUserCreate = (
     errors.push({ href: '#firstName', text: 'First name must be 2 characters or more' })
   } else if (firstName.length > 35) {
     errors.push({ href: '#firstName', text: 'First name must be 35 characters or less' })
+  } else if (!isAlphaStringOrSpecialChars(firstName)) {
+    errors.push({
+      href: '#firstName',
+      text: 'First name must be consist of letters, an apostrophe & hyphen only',
+    })
   }
   if (lastName.length < 2) {
     errors.push({ href: '#lastName', text: 'Last name must be 2 characters or more' })
   } else if (lastName.length > 35) {
     errors.push({ href: '#lastName', text: 'Last name must be 35 characters or less' })
-  } else if (!isAlphaStringOrSpecialChars(firstName)) {
-    errors.push({
-      href: '#firstName',
-      text: 'First name must be consist of letters, an forward apostrophe, standard apostrophe & hyphen only',
-    })
   } else if (!isAlphaStringOrSpecialChars(lastName)) {
     errors.push({
       href: '#lastName',
-      text: 'Last name must be consist of letters, an forward apostrophe, standard apostrophe & hyphen only',
+      text: 'Last name must be consist of letters, an apostrophe & hyphen only',
     })
   }
 

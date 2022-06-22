@@ -52,7 +52,7 @@ describe('DPS create validation', () => {
       expect.arrayContaining([
         {
           href: '#firstName',
-          text: 'First name must be consist of letters, an forward apostrophe, standard apostrophe & hyphen only',
+          text: 'First name must be consist of letters, an apostrophe & hyphen only',
         },
       ]),
     )
@@ -63,7 +63,7 @@ describe('DPS create validation', () => {
       expect.arrayContaining([
         {
           href: '#lastName',
-          text: 'Last name must be consist of letters, an forward apostrophe, standard apostrophe & hyphen only',
+          text: 'Last name must be consist of letters, an apostrophe & hyphen only',
         },
       ]),
     )
