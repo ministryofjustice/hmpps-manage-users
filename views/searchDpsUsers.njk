@@ -15,20 +15,19 @@
   <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
 {% endblock %}
 
-{% set title = "Search for a DPS user" if dpsSearch else  "Search for an external user " %}
+{% set title = "Search for a DPS user" %}
 
- {% block beforeContent %}
-   {{ govukBreadcrumbs({
-     items: [
-       { text: "Home", href: homeUrl },
-       { text: "Manage user accounts", href: '/' },
-       { text: title }
-     ]
-   }) }}
- {% endblock %}
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
 
 {% block content %}
-
 
 {% set filterOptionsHtml %}
     {{ govukInput({
@@ -76,15 +75,15 @@
     }
     )}}
 
-    {% if showGroupOrPrisonDropdown %}
+    {% if showPrisonDropdown %}
       {{ govukSelect({label: {
-        text: "Prison caseload" if groupOrPrison === 'caseload' else groupOrPrison,
+        text: "Prison caseload",
         classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
         name: 'groupCode',
         id: 'groupCode',
-        items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison) | setSelected(currentFilter.groupCode[0]),
+        items: prisonDropdownValues | addBlankOptions('Select a caseload') | setSelected(currentFilter.groupCode[0]),
         formGroup: {
           classes: 'govuk-!-margin-bottom-3'
         },
@@ -136,7 +135,7 @@
         <div class="moj-filter-layout">
         <div class="moj-filter-layout__filter">
         <form id="filter-form" action="{{ searchUrl }}" novalidate>
-          {{ mojFilter(currentFilter | toUserSearchFilter(groupOrPrisonDropdownValues, roleDropdownValues, filterOptionsHtml, showGroupOrPrisonDropdown))}}
+          {{ mojFilter(currentFilter | toUserSearchFilter(prisonDropdownValues, roleDropdownValues, filterOptionsHtml, showPrisonDropdown))}}
         </form>
         </div>
         <div class="moj-filter-layout__content">
@@ -236,7 +235,7 @@
   <script src="/js/moj-filter-button-toggle.js"></script>
 
   <script>
-    {%- if showGroupOrPrisonDropdown %}
+    {%- if showPrisonDropdown %}
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: document.querySelector('#groupCode'),
       showAllValues: true,

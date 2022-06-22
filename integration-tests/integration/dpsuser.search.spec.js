@@ -1,6 +1,6 @@
 import { parse } from 'csv-parse'
 
-const { goToSearchWithFilterPage, goToMainMenuPage } = require('../support/dpsuser.helpers')
+const { goToSearchPage, goToMainMenuPage } = require('../support/dpsuser.helpers')
 const UserPage = require('../pages/userPage')
 
 context('DPS search with filter user functionality', () => {
@@ -15,128 +15,128 @@ context('DPS search with filter user functionality', () => {
 
   it('Should show menu option for search page', () => {
     const menu = goToMainMenuPage({})
-    menu.searchWithFilterDpsUsers().should('exist')
+    menu.searchDpsUsers().should('exist')
   })
 
   it('Should show filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
-    searchWithFilter.filter().should('exist')
+    const search = goToSearchPage({})
+    search.filter().should('exist')
   })
 
   it('can add and remove user filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
+    const search = goToSearchPage({})
 
-    searchWithFilter.filterUser('Andy')
-    searchWithFilter.filterWithTag('Andy').should('exist')
-    searchWithFilter.userFilterInput().should('have.value', 'Andy')
+    search.filterUser('Andy')
+    search.filterWithTag('Andy').should('exist')
+    search.userFilterInput().should('have.value', 'Andy')
 
-    searchWithFilter.filterWithTag('Andy').click()
-    searchWithFilter.filterWithTag('Andy').should('not.exist')
-    searchWithFilter.userFilterInput().should('have.value', '')
+    search.filterWithTag('Andy').click()
+    search.filterWithTag('Andy').should('not.exist')
+    search.userFilterInput().should('have.value', '')
   })
 
   it('can change default ALL status to active or inactive only', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
-    searchWithFilter.statusFilterRadioButton('All').should('be.checked')
+    const search = goToSearchPage({})
+    search.statusFilterRadioButton('All').should('be.checked')
 
-    searchWithFilter.filterStatus('Inactive')
-    searchWithFilter.statusFilterRadioButton('Inactive').should('be.checked')
-    searchWithFilter.filterWithTag('Inactive').should('exist')
+    search.filterStatus('Inactive')
+    search.statusFilterRadioButton('Inactive').should('be.checked')
+    search.filterWithTag('Inactive').should('exist')
 
-    searchWithFilter.filterStatus('Active')
-    searchWithFilter.statusFilterRadioButton('Active').should('be.checked')
-    searchWithFilter.filterWithTag('Active').should('exist')
+    search.filterStatus('Active')
+    search.statusFilterRadioButton('Active').should('be.checked')
+    search.filterWithTag('Active').should('exist')
 
-    searchWithFilter.filterStatus('All')
-    searchWithFilter.statusFilterRadioButton('All').should('be.checked')
-    searchWithFilter.filterWithTag('All').should('not.exist')
+    search.filterStatus('All')
+    search.statusFilterRadioButton('All').should('be.checked')
+    search.filterWithTag('All').should('not.exist')
   })
 
   it('can add and remove a single caseload filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
+    const search = goToSearchPage({})
 
-    searchWithFilter.filterCaseload('Moorland')
-    searchWithFilter.filterWithTag('Moorland').should('exist')
-    searchWithFilter.filterWithTag('Active caseload only').should('exist')
-    searchWithFilter.activeCaseloadFilterRadioButton('Yes').should('be.checked')
+    search.filterCaseload('Moorland')
+    search.filterWithTag('Moorland').should('exist')
+    search.filterWithTag('Active caseload only').should('exist')
+    search.activeCaseloadFilterRadioButton('Yes').should('be.checked')
 
-    searchWithFilter.filterWithTag('Active caseload only').click()
-    searchWithFilter.filterWithTag('Active caseload only').should('not.exist')
-    searchWithFilter.activeCaseloadFilterRadioButton('Yes').should('not.be.checked')
+    search.filterWithTag('Active caseload only').click()
+    search.filterWithTag('Active caseload only').should('not.exist')
+    search.activeCaseloadFilterRadioButton('Yes').should('not.be.checked')
 
-    searchWithFilter.filterWithTag('Moorland').click()
-    searchWithFilter.filterWithTag('Moorland').should('not.exist')
-    searchWithFilter.activeCaseloadFilterRadioButton('Yes').should('be.checked')
+    search.filterWithTag('Moorland').click()
+    search.filterWithTag('Moorland').should('not.exist')
+    search.activeCaseloadFilterRadioButton('Yes').should('be.checked')
   })
   it('can not see caseload filter when not an admin', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false })
+    const search = goToSearchPage({ isAdmin: false })
 
-    searchWithFilter.caseload().should('not.exist')
+    search.caseload().should('not.exist')
   })
   it('can add and remove a single role filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
+    const search = goToSearchPage({})
 
-    searchWithFilter.filterRole('User Admin')
-    searchWithFilter.filterWithTag('User Admin').should('exist')
+    search.filterRole('User Admin')
+    search.filterWithTag('User Admin').should('exist')
 
-    searchWithFilter.filterWithTag('User Admin').click()
-    searchWithFilter.filterWithTag('User Admin').should('not.exist')
+    search.filterWithTag('User Admin').click()
+    search.filterWithTag('User Admin').should('not.exist')
   })
   it('can search for a role to filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({})
+    const search = goToSearchPage({})
 
-    searchWithFilter.role('Maintain Roles').should('be.visible')
-    searchWithFilter.role('User Admin').should('be.visible')
-    searchWithFilter.role('User General').should('be.visible')
+    search.role('Maintain Roles').should('be.visible')
+    search.role('User Admin').should('be.visible')
+    search.role('User General').should('be.visible')
 
-    searchWithFilter.searchForRole('User')
-    searchWithFilter.role('Maintain Roles').should('not.be.visible')
-    searchWithFilter.role('User Admin').should('be.visible')
-    searchWithFilter.role('User General').should('be.visible')
+    search.searchForRole('User')
+    search.role('Maintain Roles').should('not.be.visible')
+    search.role('User Admin').should('be.visible')
+    search.role('User General').should('be.visible')
 
-    searchWithFilter.searchForRole('Maintain')
-    searchWithFilter.role('Maintain Roles').should('be.visible')
-    searchWithFilter.role('User Admin').should('not.be.visible')
-    searchWithFilter.role('User General').should('not.be.visible')
+    search.searchForRole('Maintain')
+    search.role('Maintain Roles').should('be.visible')
+    search.role('User Admin').should('not.be.visible')
+    search.role('User General').should('not.be.visible')
 
-    searchWithFilter.searchForRole('')
-    searchWithFilter.role('Maintain Roles').should('be.visible')
-    searchWithFilter.role('User Admin').should('be.visible')
-    searchWithFilter.role('User General').should('be.visible')
+    search.searchForRole('')
+    search.role('Maintain Roles').should('be.visible')
+    search.role('User Admin').should('be.visible')
+    search.role('User General').should('be.visible')
   })
   it('will shows result before and after filtering', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
-    searchWithFilter.rows().should('have.length', 5)
-    searchWithFilter.rows().eq(0).should('include.text', 'Itag\u00a0User0')
-    searchWithFilter.rows().eq(1).should('include.text', 'Itag\u00a0User1')
-    searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
+    const search = goToSearchPage({ totalElements: 5 })
+    search.rows().should('have.length', 5)
+    search.rows().eq(0).should('include.text', 'Itag\u00a0User0')
+    search.rows().eq(1).should('include.text', 'Itag\u00a0User1')
+    search.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
 
     cy.task('stubDpsFindUsers', { totalElements: 3 })
-    searchWithFilter.filterCaseload('Moorland')
-    searchWithFilter.rows().should('have.length', 3)
-    searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
+    search.filterCaseload('Moorland')
+    search.rows().should('have.length', 3)
+    search.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
   })
   it('will show user details in the results', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 3 })
-    searchWithFilter.rows().should('have.length', 3)
-    searchWithFilter.rows().eq(0).should('include.text', 'Itag\u00a0User0')
-    searchWithFilter.rows().eq(0).should('include.text', 'ITAG_USER0@gov.uk')
-    searchWithFilter.rows().eq(0).should('include.text', 'Active')
-    searchWithFilter.rows().eq(0).should('include.text', 'Brixton (HMP)')
-    searchWithFilter.rows().eq(0).should('include.text', 'No DPS roles')
-    searchWithFilter.rows().eq(1).should('include.text', '1 DPS role')
-    searchWithFilter.rows().eq(2).should('include.text', '2 DPS roles')
+    const search = goToSearchPage({ totalElements: 3 })
+    search.rows().should('have.length', 3)
+    search.rows().eq(0).should('include.text', 'Itag\u00a0User0')
+    search.rows().eq(0).should('include.text', 'ITAG_USER0@gov.uk')
+    search.rows().eq(0).should('include.text', 'Active')
+    search.rows().eq(0).should('include.text', 'Brixton (HMP)')
+    search.rows().eq(0).should('include.text', 'No DPS roles')
+    search.rows().eq(1).should('include.text', '1 DPS role')
+    search.rows().eq(2).should('include.text', '2 DPS roles')
   })
   it('will have a link to maintain the user', () => {
     cy.task('stubDpsUserDetails')
     cy.task('stubDpsUserGetRoles')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
-    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 5 })
-    searchWithFilter.manageLinkForUser('ITAG_USER0').click()
+    const search = goToSearchPage({ totalElements: 5 })
+    search.manageLinkForUser('ITAG_USER0').click()
     UserPage.verifyOnPage('Itag User')
   })
   it('will call the find users api when admin is logged in and no filter', () => {
-    goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
+    goToSearchPage({ isAdmin: true, totalElements: 29 })
     cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
@@ -153,8 +153,8 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('will call the find users api when admin is logged in and has filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: true, totalElements: 29 })
-    searchWithFilter.filterAll({
+    const search = goToSearchPage({ isAdmin: true, totalElements: 29 })
+    search.filterAll({
       user: 'Andy',
       statusText: 'Active',
       caseloadText: 'Moorland (HMP & YOI)',
@@ -177,7 +177,7 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('will call the find users api when non-admin is logged in and no filter', () => {
-    goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
+    goToSearchPage({ isAdmin: false, totalElements: 29 })
     cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(1)
 
@@ -194,8 +194,8 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('will call the find users api when non-admin is logged in with filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false, totalElements: 29 })
-    searchWithFilter.filterAllNonAdmin({
+    const search = goToSearchPage({ isAdmin: false, totalElements: 29 })
+    search.filterAllNonAdmin({
       user: 'Andy',
       statusText: 'Active',
       roleText: 'User Admin',
@@ -217,22 +217,22 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('will allow paging through results while maintain the filter', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 101, size: 20 })
-    searchWithFilter.filterAll({
+    const search = goToSearchPage({ totalElements: 101, size: 20 })
+    search.filterAll({
       user: 'Andy',
       statusText: 'Active',
       caseloadText: 'Moorland',
       roleText: 'User Admin',
     })
 
-    searchWithFilter.rows().should('have.length', 20)
-    searchWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
+    search.rows().should('have.length', 20)
+    search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
 
-    searchWithFilter.paginationLink('5').click()
-    searchWithFilter.filterWithTag('Andy').should('exist')
-    searchWithFilter.filterWithTag('Active').should('exist')
-    searchWithFilter.filterWithTag('Moorland').should('exist')
-    searchWithFilter.filterWithTag('User Admin').should('exist')
+    search.paginationLink('5').click()
+    search.filterWithTag('Andy').should('exist')
+    search.filterWithTag('Active').should('exist')
+    search.filterWithTag('Moorland').should('exist')
+    search.filterWithTag('User Admin').should('exist')
 
     cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(3)
@@ -280,7 +280,7 @@ context('DPS search with filter user functionality', () => {
       })
     }).as('csvDownload')
 
-    const results = goToSearchWithFilterPage({})
+    const results = goToSearchPage({})
 
     results.download().click()
     cy.wait('@csvDownload').then(() => {
@@ -290,8 +290,8 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('Hide download link and show restriction message', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ totalElements: 2000000 })
-    searchWithFilter
+    const search = goToSearchPage({ totalElements: 2000000 })
+    search
       .getHideDownloadLinkMessage()
       .should(
         'contain.text',
@@ -300,13 +300,13 @@ context('DPS search with filter user functionality', () => {
   })
 
   it('When non-admin is logged in, should not show download link and  download restriction message', () => {
-    const searchWithFilter = goToSearchWithFilterPage({ isAdmin: false, totalElements: 2000000 })
-    searchWithFilter
+    const search = goToSearchPage({ isAdmin: false, totalElements: 2000000 })
+    search
       .getHideDownloadLinkMessage()
       .should(
         'not.exist',
         'More than 20000 results returned, please refine your search if you want to download the results',
       )
-    searchWithFilter.getDownloadLinkMessage().should('not.exist', 'Download results')
+    search.getDownloadLinkMessage().should('not.exist', 'Download results')
   })
 })

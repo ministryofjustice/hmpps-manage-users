@@ -3,7 +3,7 @@ const express = require('express')
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')
 const searchExternalUserRouter = require('./routes/searchExternalUserRouter')
-const searchWithFilterDpsUserRouter = require('./routes/searchWithFilterDpsUserRouter')
+const searchDpsUserRouter = require('./routes/searchDpsUserRouter')
 const createAuthUserRouter = require('./routes/createAuthUserRouter')
 const creatUserRouter = require('./routes/createUserRouter')
 const createDpsUserRouter = require('./routes/createDpsUserRouter')
@@ -25,10 +25,7 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
   router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
-  router.use(
-    '/search-with-filter-dps-users',
-    searchWithFilterDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }),
-  )
+  router.use('/search-with-filter-dps-users', searchDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi }))

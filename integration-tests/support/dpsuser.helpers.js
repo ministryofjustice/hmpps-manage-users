@@ -1,13 +1,12 @@
-const DpsUserSearchWithFilterPage = require('../pages/dpsUserSearchWithFilterPage')
+const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserPage = require('../pages/userPage')
 const MenuPage = require('../pages/menuPage')
 
-export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, size = 10, roleCodes = null }) => {
+export const goToSearchPage = ({ isAdmin = true, totalElements = 21, size = 10, roleCodes = null }) => {
   const basicRoleCode = isAdmin
     ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
     : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
   const userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
-
   cy.task('stubBannerNoMessage')
   cy.task('stubSignIn', { roles: userRoleCodes })
   cy.signIn()
@@ -57,7 +56,7 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
   if (isAdmin) cy.task('stubDpsGetCaseloads')
   cy.task('stubAuthUserEmails')
 
-  return DpsUserSearchWithFilterPage.goTo()
+  return DpsUserSearchPage.goTo()
 }
 
 export const goToMainMenuPage = ({ isAdmin = true }) => {
@@ -74,6 +73,6 @@ export const editUser = ({ isAdmin = false, roleCodes = null, userEnabled = true
   cy.task('stubBannerNoMessage')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
-  goToSearchWithFilterPage({ isAdmin, roleCodes }).filterUser('ITAG_USER5').manageLinkForUser('ITAG_USER5').click()
+  goToSearchPage({ isAdmin, roleCodes }).filterUser('ITAG_USER5').manageLinkForUser('ITAG_USER5').click()
   return UserPage.verifyOnPage('Itag User')
 }

@@ -23,7 +23,7 @@
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
     {% block searchFilter %}
-      {% include "./partials/searchFilter.njk" %}
+      {% include "./partials/externalUserSearchFilter.njk" %}
     {% endblock %}
 
     {% if results.length %}
