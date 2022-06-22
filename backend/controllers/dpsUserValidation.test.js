@@ -82,7 +82,7 @@ describe('DPS create validation', () => {
     ).toEqual([])
   })
 
-  it('should pass fist and last name validation with ', () => {
+  it('should pass first and last name validation with ', () => {
     expect(
       validateDpsUserCreate(
         'JBLOGGS_ADM',
@@ -96,7 +96,7 @@ describe('DPS create validation', () => {
     ).toEqual([])
   })
 
-  it('should pass fist and last name validation with', () => {
+  it('should pass first and last name validation with', () => {
     expect(
       validateDpsUserCreate(
         'JBLOGGS_ADM',
