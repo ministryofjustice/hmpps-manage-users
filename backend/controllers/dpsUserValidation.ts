@@ -43,7 +43,7 @@ const validateDpsUserCreate = (
   } else if (!isAlphaStringOrSpecialChars(firstName)) {
     errors.push({
       href: '#firstName',
-      text: 'First name must be consist of letters, an apostrophe & hyphen only',
+      text: 'First name must consist of letters, an apostrophe & a hyphen only',
     })
   }
   if (lastName.length < 2) {
@@ -53,7 +53,7 @@ const validateDpsUserCreate = (
   } else if (!isAlphaStringOrSpecialChars(lastName)) {
     errors.push({
       href: '#lastName',
-      text: 'Last name must be consist of letters, an apostrophe & hyphen only',
+      text: 'Last name must consist of letters, an apostrophe & a hyphen only',
     })
   }
 
