@@ -16,3 +16,13 @@
   background: #f0f4f5;
   margin-bottom: -40px;
 }
+
+.link-button {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  color: $govuk-link-colour;
+}

@@ -83,7 +83,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
 
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
-  router.get('/roles/:role/remove', removeRole)
+  router.post('/roles/:role/remove', removeRole)
   router.get('/details', userDetails)
   router.get('/change-email', getEmail)
   router.post('/change-email', postEmail)

@@ -13,20 +13,6 @@ services:
       - SPRING_PROFILES_ACTIVE=dev
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
 
-  prison-api:
-    image: quay.io/hmpps/prison-api:latest
-    networks:
-      - hmpps
-    container_name: prison-api_mhaa
-    depends_on:
-      - hmpps-auth
-    ports:
-      - "8080:8080"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-    environment:
-      - SPRING_PROFILES_ACTIVE=nomis-hsqldb
-
   manage-users-api:
     image: quay.io/hmpps/hmpps-manage-users-api:latest
     networks:
