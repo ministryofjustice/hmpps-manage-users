@@ -81,7 +81,7 @@
                     attributes: { "data-qa": "enabled" }
                   }) }}
                 </td>
-                {% if showEnableDisable %}
+                {% if showEnableDisable and staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
                     <a href="{{ staffUrl }}/deactivate" class="govuk-link" data-qa="enable-button">Deactivate account</a>
                   </td>
@@ -94,7 +94,7 @@
                     attributes: { "data-qa": "enabled" }
                   }) }}
                 </td>
-                {% if showEnableDisable %}
+                {% if showEnableDisable and not staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
                     <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
                   </td>
