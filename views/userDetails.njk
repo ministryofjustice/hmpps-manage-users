@@ -199,7 +199,13 @@
         {% set rows = [] %}
         {% for userRole in roles %}
           {% set roleLink %}
-            <a href="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove" class="govuk-link" data-qa="remove-button-{{ userRole.roleCode }}">Remove role</a>
+            <form method="post" action="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+              <button type="submit" name="remove-button-{{ userRole.roleCode }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ userRole.roleCode }}">
+                Remove role
+              </button>
+            </form>
+{#            <a href="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove" class="link-button" data-qa="remove-button-{{ userRole.roleCode }}">Remove role</a>#}
           {% endset %}
           {% set rows = (rows.push([
             { text: userRole.roleName },

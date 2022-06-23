@@ -184,6 +184,23 @@ context('DPS user manage functionality', () => {
       })
     })
 
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+      editUser({})
+      cy.task('stubDpsRemoveRole')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-dps-users/ITAG_USER5/roles/MAINTAIN_ACCESS_ROLES/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+
     it('As an admin user should add and remove a role from a user', () => {
       const results = goToSearchPage({})
 
