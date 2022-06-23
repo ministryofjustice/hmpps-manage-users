@@ -102,7 +102,7 @@ context('DPS user create functionality', () => {
     })
     cy.task('stubEmail', { email: 'test.localadminuser@digital.justice.gov.uk', verified: false })
     cy.task('stubDpsUserGetRoles')
-    cy.task('stubUserDetails')
+    cy.task('stubUserDetails', {})
     cy.task('stubSyncDpsEmail')
     const successPage = DpsUserCreateSuccessPage.verifyOnPage()
     successPage.email().should('contain.text', 'test.localadminuser@digital.justice.gov.uk')
