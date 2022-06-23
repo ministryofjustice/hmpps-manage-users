@@ -91,6 +91,43 @@ describe('create user factory', () => {
       })
     })
 
+    it('should create user and redirect with forward apostrophe', async () => {
+      const req = {
+        params: {},
+        body: {
+          email: 'bob@digital.justice.gov.uk',
+          username: 'BOB_OSHEA',
+          firstName: 'O’Shea',
+          lastName: 'O’Mark-Lewis',
+          userType: 'DPS_GEN',
+          defaultCaseloadId: 'MDI',
+        },
+        flash: jest
+          .fn()
+          .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
+          .mockReturnValueOnce({ error: 'some error' }),
+        session: {},
+      }
+      createUser.mockResolvedValue({ username: 'BOB_OSHEA', primaryEmail: 'bob@digital.justice.gov.uk' })
+
+      const render = jest.fn()
+      const locals = jest.fn()
+      await createDpsUser.post(req, { render, locals })
+
+      expect(createUser).toBeCalledWith(locals, {
+        email: 'bob@digital.justice.gov.uk',
+        username: 'BOB_OSHEA',
+        firstName: "O'Shea",
+        lastName: "O'Mark-Lewis",
+        defaultCaseloadId: 'MDI',
+        userType: 'DPS_GEN',
+      })
+      expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
+        detailsLink: '/manage-dps-users/BOB_OSHEA/details',
+        email: 'bob@digital.justice.gov.uk',
+      })
+    })
+
     it('should trim fields, create user and redirect', async () => {
       const req = {
         params: { userId: 'BOB_ADM' },
