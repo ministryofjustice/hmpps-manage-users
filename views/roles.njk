@@ -9,11 +9,6 @@
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% block header %}
-  {{ super() }}
-  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
-{% endblock %}
-
 {% set title = "Manage roles" %}
 
  {% block beforeContent %}
@@ -172,8 +167,6 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
-  <script src="/assets/accessible-autocomplete.min.js"></script>
+{% block pageScripts %}
   <script src="/js/moj-filter-button-toggle.js"></script>
 {% endblock %}
