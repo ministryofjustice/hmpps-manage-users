@@ -128,7 +128,7 @@ context('DPS search with filter user functionality', () => {
     search.rows().eq(2).should('include.text', '2 DPS roles')
   })
   it('will have a link to maintain the user', () => {
-    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserDetails', {})
     cy.task('stubDpsUserGetRoles')
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
     const search = goToSearchPage({ totalElements: 5 })

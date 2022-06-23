@@ -67,8 +67,8 @@ export const goToMainMenuPage = ({ isAdmin = true }) => {
   return MenuPage.verifyOnPage()
 }
 
-export const editUser = ({ isAdmin = false, roleCodes = null, userEnabled = true }) => {
-  cy.task('stubDpsUserDetails', userEnabled)
+export const editUser = ({ isAdmin = false, roleCodes = null, active = true, enabled = true }) => {
+  cy.task('stubDpsUserDetails', { active, enabled })
   cy.task('stubDpsUserGetRoles')
   cy.task('stubBannerNoMessage')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
