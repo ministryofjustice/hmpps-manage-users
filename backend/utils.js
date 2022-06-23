@@ -41,6 +41,10 @@ const forenameToInitial = (name) => {
   return `${name.charAt()}. ${name.split(' ').pop()}`
 }
 
+function removeForwardApostrophe(str) {
+  return str !== undefined ? str.replace('’', "'") : undefined
+}
+
 module.exports = {
   capitalize,
   pascalToString,
@@ -49,4 +53,5 @@ module.exports = {
   hyphenatedStringToCamel,
   trimObjValues,
   forenameToInitial,
+  removeForwardApostrophe,
 }
