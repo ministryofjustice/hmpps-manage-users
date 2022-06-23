@@ -63,7 +63,7 @@ context('DPS user manage functionality', () => {
   it('Should show unverified if email is unverified ', () => {
     const results = goToSearchPage({})
 
-    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserDetails', {})
     cy.task('stubDpsUserGetRoles')
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: false })
@@ -187,7 +187,7 @@ context('DPS user manage functionality', () => {
     it('As an admin user should add and remove a role from a user', () => {
       const results = goToSearchPage({})
 
-      cy.task('stubDpsUserDetails')
+      cy.task('stubDpsUserDetails', {})
       cy.task('stubDpsUserGetRoles')
       cy.task('stubBannerNoMessage')
       cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
@@ -259,13 +259,13 @@ context('DPS user manage functionality', () => {
       .and('contains', '%2Fsearch-with-filter-dps-users')
   })
 
-  it('Should enable and disable a user', () => {
+  it('Should disable a user', () => {
     const userPage = editUser({
       roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
     })
     userPage.enabled().should('contain.text', ' Active')
     cy.task('stubDpsUserDisable')
-    cy.task('stubDpsUserDetails', false)
+    cy.task('stubDpsUserDetails', { active: false })
     userPage.enableLink().should('have.text', 'Deactivate account').click()
 
     cy.task('verifyDpsUserDisable').should((requests) => {
@@ -273,21 +273,50 @@ context('DPS user manage functionality', () => {
 
       expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
     })
+    userPage.enabled().should('contain.text', ' Inactive')
+  })
 
+  it('Should enable a user', () => {
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: false,
+      enabled: false,
+    })
     userPage.enabled().should('contain.text', ' Inactive')
     cy.task('stubDpsUserEnable')
-    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserDetails', {})
     userPage.enableLink().should('have.text', 'Activate account').click()
 
     cy.task('verifyDpsUserEnable').should((requests) => {
       expect(requests).to.have.lengthOf(1)
+
       expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/unlock-user')
     })
     userPage.enabled().should('contain.text', ' Active')
   })
 
+  it('Should not allow deactivate(lock) DPS user if user already disabled', () => {
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: true,
+      enabled: false,
+    })
+    userPage.enabled().should('contain.text', ' Active')
+    userPage.enableLink().should('not.exist')
+  })
+
+  it('Should not allow activate(unlock) DPS user if user already enabled', () => {
+    const userPage = editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: false,
+      enabled: true,
+    })
+    userPage.enabled().should('contain.text', ' Inactive')
+    userPage.enableLink().should('not.exist')
+  })
+
   it('Should not allow activate(unlock) DPS user if no role', () => {
-    const userPage = editUser({ isAdmin: true, userEnabled: false })
+    const userPage = editUser({ isAdmin: false, enabled: false, active: false })
 
     userPage.enabled().should('contain.text', ' Inactive')
     userPage.enableLink().should('not.exist')
@@ -297,7 +326,7 @@ context('DPS user manage functionality', () => {
     const userPage = editUser({
       roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
     })
-    cy.task('stubDpsUserDetails')
+    cy.task('stubDpsUserDetails', {})
 
     userPage.enabled().should('contain.text', ' Active')
     userPage.enableLink().should('not.exist')

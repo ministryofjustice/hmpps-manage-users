@@ -112,7 +112,7 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: (active = true) =>
+  stubUserDetails: ({ active = true, enabled = true }) =>
     getFor({
       urlPattern: '/nomisusersandroles/users/.*',
       body: {
@@ -123,6 +123,7 @@ module.exports = {
         primaryEmail: `ITAG_USER@gov.uk`,
         email: `ITAG_USER@gov.uk`,
         active,
+        enabled,
         accountStatus: active ? 'OPEN' : 'LOCKED',
       },
     }),
