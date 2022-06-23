@@ -61,14 +61,8 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
+{% block pageScripts %}
+  <meta name="autocompleteElements" content="group"/>
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script>
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#group'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-  </script>
+  <script src="/js/autocomplete.js"></script>
 {% endblock %}
