@@ -29,7 +29,7 @@ context('External user manage functionality', () => {
     cy.task('reset')
   })
 
-  it('Should view a user', () => {
+  it('Should display details for a user', () => {
     const userPage = editUser()
 
     userPage.userRows().eq(0).should('contain', 'AUTH_ADM')
@@ -37,6 +37,13 @@ context('External user manage functionality', () => {
     userPage.userRows().eq(0).should('contain', 'Username')
     userPage.userRows().eq(1).should('contain', 'Email')
     userPage.userRows().eq(0).should('not.contain', 'Username / email')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Global Search')
+    userPage.roleRows().eq(1).should('contain', 'Licence Responsible Officer')
+    userPage.groupRows().should('have.length', 2)
+    userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
+    userPage.groupRows().eq(1).should('contain', 'Site 1 - Group 2')
+    userPage.caseloadRows().should('not.exist')
   })
 
   it('Should be able to return to search page', () => {

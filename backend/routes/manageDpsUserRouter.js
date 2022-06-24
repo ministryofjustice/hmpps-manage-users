@@ -30,7 +30,13 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     ])
 
     return [
-      { ...user, email: user.primaryEmail, emailToVerify: userEmail.email, verified: userEmail.verified },
+      {
+        ...user,
+        email: user.primaryEmail,
+        emailToVerify: userEmail.email,
+        verified: userEmail.verified,
+        activeCaseload: roles.activeCaseload,
+      },
       roles.dpsRoles.map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly })),
     ]
   }

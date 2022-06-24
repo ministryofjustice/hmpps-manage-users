@@ -260,6 +260,21 @@
             attributes: { "data-qa": "add-group-button" }
           }) }}
         {% endif %}
+
+        {% if showCaseloads %}
+          {{ govukTable({
+            caption: "Caseloads",
+            attributes: { "data-qa": "user-caseloads" },
+            rows: [
+              [
+                { text: "Active caseload" },
+                { text: staff.activeCaseload.name },
+                { text: "", classes: 'govuk-!-width-one-quarter' }
+              ]
+            ]
+          }) }}
+        {% endif %}
+
         <p class="govuk-body">
           <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
         </p>

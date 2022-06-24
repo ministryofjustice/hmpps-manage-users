@@ -46,6 +46,7 @@ const userDetailsFactory = (
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
       showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
       showGroups: Boolean(removeGroupApi),
+      showCaseloads: Boolean(user.activeCaseload),
       showExtraUserDetails,
       showUsername: user.email !== user.username.toLowerCase(),
       displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,

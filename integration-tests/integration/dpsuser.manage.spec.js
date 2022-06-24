@@ -15,7 +15,7 @@ context('DPS user manage functionality', () => {
     cy.task('stubSyncDpsEmail')
   })
 
-  it('Should display details for a user ', () => {
+  it('Should display details for a user', () => {
     const userPage = editUser({})
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
@@ -23,6 +23,19 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
+    userPage.caseloadRows().should('have.length', 1)
+    userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+  })
+
+  it('Should not display caseload details for a user with no caseloads', () => {
+    const userPage = editUser({ activeCaseload: false })
+    userPage.userRows().eq(0).should('contain', 'ITAG_USER')
+    userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
+    userPage.userRows().eq(2).should('contain', 'Yes')
+    userPage.roleRows().should('have.length', 2)
+    userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+    userPage.roleRows().eq(1).should('contain', 'Another general role')
+    userPage.caseloadRows().should('not.exist')
   })
 
   it('Should leave email blank if no email for user ', () => {
