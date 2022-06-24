@@ -124,8 +124,8 @@
           {% endif %}
           {% set userDetails = userDetails.concat([
             [
-              {text: ("Email" if showUsername else "Username / email")},
-              {text: staff.email},
+              {text: ("Email" if showUsername else "Username / email"), classes: 'govuk-!-width-one-quarter' },
+              {text: staff.email, classes: 'govuk-!-width-one-half' },
               changeEmailLink
             ],
             [
@@ -153,8 +153,8 @@
               {text: ''}
             ],
             [
-              {text: "Email"},
-              {text: staff.email},
+              {text: "Email", classes: 'govuk-!-width-one-quarter' },
+              {text: staff.email, classes: 'govuk-!-width-one-half' },
               changeEmailLink
             ]
           ]) %}
@@ -267,8 +267,8 @@
             attributes: { "data-qa": "user-caseloads" },
             rows: [
               [
-                { text: "Active caseload" },
-                { text: staff.activeCaseload.name },
+                { text: "Active caseload" , classes: 'govuk-!-width-one-quarter' },
+                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  },
                 { text: "", classes: 'govuk-!-width-one-quarter' }
               ]
             ]
