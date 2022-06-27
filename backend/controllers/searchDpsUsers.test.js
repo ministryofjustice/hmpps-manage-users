@@ -69,10 +69,11 @@ describe('search factory', () => {
             user: undefined,
             restrictToActiveGroup: true,
             inclusiveRoles: undefined,
+            showOnlyLSAs: undefined,
           },
           results: [],
           downloadUrl:
-            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
+            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=&showOnlyLSAs=',
           maintainUrl: '/manage-dps-users',
           downloadRecordLimit: 100,
         })
@@ -91,7 +92,7 @@ describe('search factory', () => {
           'searchDpsUsers.njk',
           expect.objectContaining({
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
+              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=&showOnlyLSAs=',
           }),
         )
       })
@@ -124,6 +125,7 @@ describe('search factory', () => {
             roleCode: 'ACCESS_ROLE_ADMIN',
             restrictToActiveGroup: 'false',
             inclusiveRoles: 'true',
+            showOnlyLSAs: 'true',
           },
         }
 
@@ -139,9 +141,10 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: false,
               inclusiveRoles: 'true',
+              showOnlyLSAs: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false&inclusiveRoles=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false&inclusiveRoles=true&showOnlyLSAs=true',
           }),
         )
       })
@@ -156,6 +159,7 @@ describe('search factory', () => {
             roleCode: '',
             restrictToActiveGroup: '',
             inclusiveRoles: '',
+            showOnlyLSAs: '',
           },
         }
 
@@ -172,9 +176,10 @@ describe('search factory', () => {
               restrictToActiveGroup: true,
               size: undefined,
               inclusiveRoles: '',
+              showOnlyLSAs: '',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=&showOnlyLSAs=',
           }),
         )
       })
@@ -189,6 +194,7 @@ describe('search factory', () => {
             roleCode: ['ACCESS_ROLE_ADMIN', 'ACCESS_ROLE_GENERAL'],
             restrictToActiveGroup: 'true',
             inclusiveRoles: 'true',
+            showOnlyLSAs: 'true',
           },
         }
 
@@ -204,9 +210,10 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: true,
               inclusiveRoles: 'true',
+              showOnlyLSAs: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true&inclusiveRoles=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true&inclusiveRoles=true&showOnlyLSAs=true',
           }),
         )
       })
