@@ -234,7 +234,7 @@
                 <form method="post" action="{{ staffUrl }}/groups/{{ userGroup.groupCode }}/remove">
                   <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
                   <button type="submit" name="remove-button-{{ userGroup.groupCode }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ userGroup.groupCode }}">
-                    Remove role
+                    Remove group
                   </button>
                 </form>
               {% endset %}
