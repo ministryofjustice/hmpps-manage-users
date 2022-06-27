@@ -8,7 +8,7 @@ const nomisUsersAndRolesFactory = (client) => {
 
   const userSearch = (
     context,
-    { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0, inclusiveRoles },
+    { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0, inclusiveRoles, showOnlyLSAs },
   ) =>
     get(
       context,
@@ -21,10 +21,14 @@ const nomisUsersAndRolesFactory = (client) => {
         size,
         page,
         inclusiveRoles,
+        showOnlyLSAs,
       })}`,
     )
 
-  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload, inclusiveRoles }) =>
+  const downloadUserSearch = (
+    context,
+    { nameFilter, accessRoles, status, caseload, activeCaseload, inclusiveRoles, showOnlyLSAs },
+  ) =>
     get(
       context,
       `/users/download?${querystring.stringify({
@@ -34,6 +38,7 @@ const nomisUsersAndRolesFactory = (client) => {
         caseload,
         activeCaseload,
         inclusiveRoles,
+        showOnlyLSAs,
       })}`,
     )
 

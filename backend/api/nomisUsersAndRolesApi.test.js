@@ -73,10 +73,11 @@ describe('nomis users and roles API tests', () => {
         size: 30,
         page: 3,
         inclusiveRoles: true,
+        showOnlyLSAs: true,
       })
       expect(client.get).toBeCalledWith(
         context,
-        '/users?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&size=30&page=3&inclusiveRoles=true',
+        '/users?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&size=30&page=3&inclusiveRoles=true&showOnlyLSAs=true',
       )
       expect(actual).toEqual(userResponse)
     })
@@ -84,7 +85,7 @@ describe('nomis users and roles API tests', () => {
       const actual = nomisUsersAndRolesApi.userSearch(context, {})
       expect(client.get).toBeCalledWith(
         context,
-        '/users?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&size=20&page=0&inclusiveRoles=',
+        '/users?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&size=20&page=0&inclusiveRoles=&showOnlyLSAs=',
       )
       expect(actual).toEqual(userResponse)
     })
