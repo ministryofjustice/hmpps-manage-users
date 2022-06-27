@@ -205,7 +205,6 @@
                 Remove role
               </button>
             </form>
-{#            <a href="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove" class="link-button" data-qa="remove-button-{{ userRole.roleCode }}">Remove role</a>#}
           {% endset %}
           {% set rows = (rows.push([
             { text: userRole.roleName },
@@ -232,7 +231,12 @@
           {% for userGroup in groups %}
             {% if userGroup.showRemove %}
               {% set groupLink %}
-                <a href="{{ staffUrl }}/groups/{{ userGroup.groupCode }}/remove" class="govuk-link" data-qa="remove-button-{{ userGroup.groupCode }}">Remove from group</a>
+                <form method="post" action="{{ staffUrl }}/groups/{{ userGroup.groupCode }}/remove">
+                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                  <button type="submit" name="remove-button-{{ userGroup.groupCode }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ userGroup.groupCode }}">
+                    Remove role
+                  </button>
+                </form>
               {% endset %}
               {% set rows = (rows.push([
                 { text: userGroup.groupName },
