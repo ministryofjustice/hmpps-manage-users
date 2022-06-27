@@ -97,7 +97,7 @@ const controller = ({ oauthApi }) => {
   router.post('/roles/:role/remove', removeRole)
   router.get('/select-group', selectGroup)
   router.post('/select-group', postGroup)
-  router.get('/groups/:group/remove', removeGroup)
+  router.post('/groups/:group/remove', removeGroup)
   router.get('/change-email', getEmail)
   router.get('/change-email-success', emailSuccess)
   router.post('/change-email', postEmail)

@@ -166,6 +166,19 @@ context('External user manage functionality', () => {
       })
     })
 
+    it('Should check for CSRF token on remove group', () => {
+      editUser()
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+
     it('Should cancel an add group', () => {
       const userPage = editUser()
 
