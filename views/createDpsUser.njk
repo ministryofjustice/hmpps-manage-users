@@ -35,6 +35,7 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-half">
         <form method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
           <input type='hidden' name='userType' value='{{ userType }}'/>
 
           {{ govukInput({label: {
@@ -108,16 +109,9 @@
 {% endblock %}
 
 {% if showCaseloadDropdown %}
-  {% block bodyEnd %}
-    {{ super() }}
+  {% block pageScripts %}
+    <meta name="autocompleteElements" content="defaultCaseloadId"/>
     <script src="/assets/accessible-autocomplete.min.js"></script>
-    <script>
-      accessibleAutocomplete.enhanceSelectElement({
-        selectElement: document.querySelector('#defaultCaseloadId'),
-        showAllValues: true,
-        preserveNullOptions: true,
-
-      })
-    </script>
+    <script src="/js/autocomplete.js"></script>
   {% endblock %}
 {% endif %}

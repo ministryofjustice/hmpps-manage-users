@@ -6,7 +6,10 @@ const nomisUsersAndRolesFactory = (client) => {
   const put = (context, path, data) => client.put(context, path, data).then((response) => response.body)
   const del = (context, path, data) => client.del(context, path, data).then((response) => response.body)
 
-  const userSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0 }) =>
+  const userSearch = (
+    context,
+    { nameFilter, accessRoles, status, caseload, activeCaseload, size = 20, page = 0, inclusiveRoles },
+  ) =>
     get(
       context,
       `/users?${querystring.stringify({
@@ -17,10 +20,11 @@ const nomisUsersAndRolesFactory = (client) => {
         activeCaseload,
         size,
         page,
+        inclusiveRoles,
       })}`,
     )
 
-  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload }) =>
+  const downloadUserSearch = (context, { nameFilter, accessRoles, status, caseload, activeCaseload, inclusiveRoles }) =>
     get(
       context,
       `/users/download?${querystring.stringify({
@@ -29,6 +33,7 @@ const nomisUsersAndRolesFactory = (client) => {
         status,
         caseload,
         activeCaseload,
+        inclusiveRoles,
       })}`,
     )
 
@@ -38,6 +43,8 @@ const nomisUsersAndRolesFactory = (client) => {
   const addRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
   const getUser = (context, username) => get(context, `/users/${username}`)
+  const enableUser = (context, { username }) => put(context, `/users/${username}/unlock-user`)
+  const disableUser = (context, { username }) => put(context, `/users/${username}/lock-user`)
   const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
   const userCaseLoads = (context, username) =>
     context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
@@ -47,6 +54,8 @@ const nomisUsersAndRolesFactory = (client) => {
     getRoles,
     getUser,
     userSearch,
+    enableUser,
+    disableUser,
     getCaseloads,
     removeRole,
     addRole,

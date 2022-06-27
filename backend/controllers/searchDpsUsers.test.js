@@ -1,4 +1,4 @@
-const { searchFactory } = require('./searchWithFilter')
+const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config')
 
 describe('search factory', () => {
@@ -22,7 +22,6 @@ describe('search factory', () => {
       '/search-with-filter-dps-users',
       '/manage-dps-users',
       'Search for a DPS user',
-      true,
       allowDownload,
     )
 
@@ -55,15 +54,13 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render })
-        expect(render).toBeCalledWith('searchWithFilter.njk', {
+        expect(render).toBeCalledWith('searchDpsUsers.njk', {
           searchTitle: 'Search for a DPS user',
           searchUrl: '/search-with-filter-dps-users',
-          groupOrPrisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
+          prisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
           roleDropdownValues: [{ text: 'Access Role Admin', value: 'ACCESS_ROLE_ADMIN' }],
           errors: undefined,
-          dpsSearch: true,
-          groupOrPrison: 'caseload',
-          showGroupOrPrisonDropdown: false,
+          showPrisonDropdown: false,
           pagination,
           currentFilter: {
             groupCode: undefined,
@@ -71,10 +68,11 @@ describe('search factory', () => {
             status: 'ALL',
             user: undefined,
             restrictToActiveGroup: true,
+            inclusiveRoles: undefined,
           },
           results: [],
           downloadUrl:
-            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
+            '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           maintainUrl: '/manage-dps-users',
           downloadRecordLimit: 100,
         })
@@ -90,10 +88,10 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           }),
         )
       })
@@ -108,7 +106,7 @@ describe('search factory', () => {
         const render = jest.fn()
         await search(req, { render })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.not.objectContaining({
             downloadUrl:
               '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&size=undefined',
@@ -125,13 +123,14 @@ describe('search factory', () => {
             groupCode: 'MDI',
             roleCode: 'ACCESS_ROLE_ADMIN',
             restrictToActiveGroup: 'false',
+            inclusiveRoles: 'true',
           },
         }
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: ['MDI'],
@@ -139,9 +138,10 @@ describe('search factory', () => {
               status: 'INACTIVE',
               user: 'Andy',
               restrictToActiveGroup: false,
+              inclusiveRoles: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false&inclusiveRoles=true',
           }),
         )
       })
@@ -149,13 +149,20 @@ describe('search factory', () => {
       it('should set list current filters to undefined when no values', async () => {
         const req = {
           ...standardReq,
-          query: { user: 'Andy', status: 'INACTIVE', groupCode: '', roleCode: '', restrictToActiveGroup: '' },
+          query: {
+            user: 'Andy',
+            status: 'INACTIVE',
+            groupCode: '',
+            roleCode: '',
+            restrictToActiveGroup: '',
+            inclusiveRoles: '',
+          },
         }
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: undefined,
@@ -164,9 +171,10 @@ describe('search factory', () => {
               user: 'Andy',
               restrictToActiveGroup: true,
               size: undefined,
+              inclusiveRoles: '',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=',
           }),
         )
       })
@@ -180,13 +188,14 @@ describe('search factory', () => {
             groupCode: ['MDI', 'BXI'],
             roleCode: ['ACCESS_ROLE_ADMIN', 'ACCESS_ROLE_GENERAL'],
             restrictToActiveGroup: 'true',
+            inclusiveRoles: 'true',
           },
         }
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
         expect(render).toBeCalledWith(
-          'searchWithFilter.njk',
+          'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
               groupCode: ['MDI', 'BXI'],
@@ -194,9 +203,10 @@ describe('search factory', () => {
               status: 'INACTIVE',
               user: 'Andy',
               restrictToActiveGroup: true,
+              inclusiveRoles: 'true',
             },
             downloadUrl:
-              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true',
+              '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true&inclusiveRoles=true',
           }),
         )
       })

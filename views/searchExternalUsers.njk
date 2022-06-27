@@ -9,7 +9,7 @@
   <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
 {% endblock %}
 
-{% set title = "Search for a DPS user" if dpsSearch else  "Search for an external user " %}
+{% set title = "Search for an external user " %}
 
  {% block beforeContent %}
    {{ govukBreadcrumbs({
@@ -27,10 +27,10 @@
     <h1 class="govuk-heading-l">{{ title }}</h1>
 
     <div class="govuk-grid-row">
-      <div class="govuk-grid-column-{{ "one-half" if dpsSearch else "two-thirds" }}">
+      <div class="govuk-grid-column-two-thirds">
         <form method="GET" action="{{ searchUrl }}/results">
           {{ govukInput({
-            label: { text: "Name or username" if dpsSearch else "Name, username or email address" },
+            label: { text: "Name, username or email address" },
             classes: "govuk-input--width-20",
             value: username,
             id: "user",
@@ -38,19 +38,17 @@
             errorMessage: errors | findError('user')
           }) }}
           <input type='hidden' name='status' value='ALL' />
-          {% if showGroupOrPrisonDropdown %}
           <div class="govuk-list">
             {{ govukSelect({label: {
-              text: "Select a " + groupOrPrison
+              text: "Select a group"
             },
               idPrefix: 'groupCode',
               name: 'groupCode',
               id: 'groupCode',
-              items: groupOrPrisonDropdownValues | addBlankOptions('Select a ' + groupOrPrison),
+              items: groupDropdownValues | addBlankOptions('Select a group'),
               errorMessage: errors | findError('groupCode')
             }) }}
           </div>
-          {% endif %}
           <div class="govuk-list">
             {{ govukSelect({label: {
               text: "Select a role"
@@ -73,21 +71,8 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
+{% block pageScripts %}
+  <meta name="autocompleteElements" content="groupCode,roleCode"/>
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script>
-    {%- if showGroupOrPrisonDropdown %}
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#groupCode'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-    {%- endif %}
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#roleCode'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-  </script>
+  <script src="/js/autocomplete.js"></script>
 {% endblock %}

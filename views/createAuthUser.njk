@@ -35,6 +35,8 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <form method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
           {{ govukInput({label: {
             text: "Email address"
           },
@@ -93,14 +95,8 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
+{% block pageScripts %}
+  <meta name="autocompleteElements" content="groupCode"/>
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script>
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#groupCode'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-  </script>
+  <script src="/js/autocomplete.js"></script>
 {% endblock %}

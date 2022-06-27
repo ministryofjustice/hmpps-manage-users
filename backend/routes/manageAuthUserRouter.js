@@ -83,6 +83,7 @@ const controller = ({ oauthApi }) => {
     '/manage-external-users',
     'Search for an external user',
     true,
+    true,
   )
 
   const { index: deactivateUser, post: postDeactivateUser } = deactivateUserReasonFactory(
@@ -93,7 +94,7 @@ const controller = ({ oauthApi }) => {
 
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
-  router.get('/roles/:role/remove', removeRole)
+  router.post('/roles/:role/remove', removeRole)
   router.get('/select-group', selectGroup)
   router.post('/select-group', postGroup)
   router.get('/groups/:group/remove', removeGroup)

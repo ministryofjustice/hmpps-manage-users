@@ -9,11 +9,6 @@
 {%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 {%- from "govuk/components/tag/macro.njk" import govukTag -%}
 
-{% block header %}
-  {{ super() }}
-  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
-{% endblock %}
-
 {% set title = "Manage roles" %}
 
  {% block beforeContent %}
@@ -115,7 +110,6 @@
             <div>
               <div class="govuk-grid-column-full">
                 <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
-                {# {% if results.length %} #}
                 {{ mojPagination(pagination) }}
                 {% set rows = [] %}
                 {% for r in roles %}
@@ -173,8 +167,6 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
-  <script src="/assets/accessible-autocomplete.min.js"></script>
+{% block pageScripts %}
   <script src="/js/moj-filter-button-toggle.js"></script>
 {% endblock %}

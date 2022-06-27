@@ -42,6 +42,8 @@
         {% else %}
           {% if groupValues.length > 10 %}
             <form method="POST" action="{{ maintainUrl }}">
+              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
               <div class="govuk-list">
                 <input type='hidden' name='status' value='ALL' />
                 {{ govukSelect({label: {
@@ -81,14 +83,8 @@
   </div>
 {% endblock %}
 
-{% block bodyEnd %}
-  {{ super() }}
+{% block pageScripts %}
+  <meta name="autocompleteElements" content="groupCode"/>
   <script src="/assets/accessible-autocomplete.min.js"></script>
-  <script>
-    accessibleAutocomplete.enhanceSelectElement({
-      selectElement: document.querySelector('#groupCode'),
-      showAllValues: true,
-      preserveNullOptions: true,
-    })
-  </script>
+  <script src="/js/autocomplete.js"></script>
 {% endblock %}

@@ -271,14 +271,16 @@ const stubDPSRoleDetails = ({
     body: content,
   })
 
-const stubDpsUserGetRoles = () =>
+const stubDpsUserGetRoles = (activeCaseload = true) =>
   getFor({
     urlPattern: '/users/.*/roles',
     body: {
-      activeCaseload: {
-        id: 'MDI',
-        name: 'Moorland',
-      },
+      ...(activeCaseload && {
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+      }),
       dpsRoles: [
         {
           code: 'MAINTAIN_ACCESS_ROLES',

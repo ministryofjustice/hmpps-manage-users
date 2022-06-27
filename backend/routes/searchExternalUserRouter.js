@@ -1,6 +1,6 @@
 const express = require('express')
 const json2csv = require('json2csv')
-const { searchFactory } = require('../controllers/search')
+const { searchFactory } = require('../controllers/searchExternalUsers')
 const paginationService = require('../services/paginationService')
 const contextProperties = require('../contextProperties')
 const { downloadFactory } = require('../controllers/searchDownload')
@@ -34,7 +34,6 @@ const controller = ({ oauthApi }) => {
     '/search-external-users',
     '/manage-external-users',
     'Search for an external user',
-    false,
     allowDownload,
   )
 

@@ -1,11 +1,14 @@
-const DpsUserSearchWithFilterPage = require('../pages/dpsUserSearchWithFilterPage')
+const DpsUserSearchPage = require('../pages/dpsUserSearchPage')
 const UserPage = require('../pages/userPage')
 const MenuPage = require('../pages/menuPage')
 
-export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, size = 10 }) => {
-  const roleCode = isAdmin ? 'MAINTAIN_ACCESS_ROLES_ADMIN' : 'MAINTAIN_ACCESS_ROLES'
+export const goToSearchPage = ({ isAdmin = true, totalElements = 21, size = 10, roleCodes = null }) => {
+  const basicRoleCode = isAdmin
+    ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
+    : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
+  const userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
   cy.task('stubBannerNoMessage')
-  cy.task('stubSignIn', { roles: [{ roleCode }] })
+  cy.task('stubSignIn', { roles: userRoleCodes })
   cy.signIn()
   const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
 
@@ -53,7 +56,7 @@ export const goToSearchWithFilterPage = ({ isAdmin = true, totalElements = 21, s
   if (isAdmin) cy.task('stubDpsGetCaseloads')
   cy.task('stubAuthUserEmails')
 
-  return DpsUserSearchWithFilterPage.goTo()
+  return DpsUserSearchPage.goTo()
 }
 
 export const goToMainMenuPage = ({ isAdmin = true }) => {
@@ -64,12 +67,18 @@ export const goToMainMenuPage = ({ isAdmin = true }) => {
   return MenuPage.verifyOnPage()
 }
 
-export const editUser = ({ isAdmin = false }) => {
-  cy.task('stubDpsUserDetails')
-  cy.task('stubDpsUserGetRoles')
+export const editUser = ({
+  isAdmin = false,
+  roleCodes = null,
+  active = true,
+  enabled = true,
+  activeCaseload = true,
+}) => {
+  cy.task('stubDpsUserDetails', { active, enabled })
+  cy.task('stubDpsUserGetRoles', activeCaseload)
   cy.task('stubBannerNoMessage')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
-  goToSearchWithFilterPage({ isAdmin }).filterUser('ITAG_USER5').manageLinkForUser('ITAG_USER5').click()
+  goToSearchPage({ isAdmin, roleCodes }).filterUser('ITAG_USER5').manageLinkForUser('ITAG_USER5').click()
   return UserPage.verifyOnPage('Itag User')
 }

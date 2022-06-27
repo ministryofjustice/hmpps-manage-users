@@ -47,11 +47,24 @@ describe('DPS create validation', () => {
       ]),
     )
   })
-  it('should validate specific characters allowed for alphabetical strings', () => {
+  it('should validate specific characters allowed for First name field with alphabetical strings', () => {
     expect(validateDpsUserCreate('un', 'b@d.com', 'ca4', 'de3', 'default', true, 'Select a default caseload')).toEqual(
       expect.arrayContaining([
-        { href: '#firstName', text: 'First name must be consist of letters only' },
-        { href: '#lastName', text: 'Last name must be consist of letters or an apostrophe only' },
+        {
+          href: '#firstName',
+          text: 'First name must consist of letters, an apostrophe & a hyphen only',
+        },
+      ]),
+    )
+  })
+
+  it('should validate specific characters allowed for Last name field with alphabetical strings', () => {
+    expect(validateDpsUserCreate('un', 'b@d.com', 'ca', 'de3', 'default', true, 'Select a default caseload')).toEqual(
+      expect.arrayContaining([
+        {
+          href: '#lastName',
+          text: 'Last name must consist of letters, an apostrophe & a hyphen only',
+        },
       ]),
     )
   })
@@ -61,6 +74,34 @@ describe('DPS create validation', () => {
         'JBLOGGS_ADM',
         'joe+bloggs@joe.com',
         'joe',
+        "B'loggs",
+        'MDI',
+        true,
+        'Select a default caseload',
+      ),
+    ).toEqual([])
+  })
+
+  it('should pass first and last name validation with ', () => {
+    expect(
+      validateDpsUserCreate(
+        'JBLOGGS_ADM',
+        'joe+bloggs@joe.com',
+        'O’Shea',
+        "B'loggs-Paul",
+        'MDI',
+        true,
+        'Select a default caseload',
+      ),
+    ).toEqual([])
+  })
+
+  it('should pass first and last name validation with', () => {
+    expect(
+      validateDpsUserCreate(
+        'JBLOGGS_ADM',
+        'joe+bloggs@joe.com',
+        'Sarah-Louise',
         "B'loggs",
         'MDI',
         true,

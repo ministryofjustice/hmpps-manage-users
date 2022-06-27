@@ -31,11 +31,13 @@ context('DPS user create functionality', () => {
     const dpsUserCreatePage = goToCreateDpsUser('Central Admin')
     dpsUserCreatePage.caseloadField().should('not.exist')
   })
+
   it('Should show DPS General user create page if user type selected', () => {
     const dpsUserCreatePage = goToCreateDpsUser('General')
     dpsUserCreatePage.caseloadField().should('not.be.null')
     dpsUserCreatePage.caseloadLabel().should('contain.text', 'Select a default caseload')
   })
+
   it('Should show DPS Local Admin user create page if user type selected', () => {
     const dpsUserCreatePage = goToCreateDpsUser('Local System Administrator (LSA)')
     dpsUserCreatePage.caseloadField().should('not.be.null')
@@ -89,7 +91,7 @@ context('DPS user create functionality', () => {
 
     cy.task('verifyDpsCreateUser').should((requests) => {
       expect(requests).to.have.lengthOf(1)
-      expect(JSON.parse(requests[0].body)).to.deep.equal({
+      expect(JSON.parse(requests[0].body)).to.deep.include({
         userType: 'DPS_LSA', // don't need to send this
         username: 'USER_LAA',
         email: 'test.localadminuser@digital.justice.gov.uk',
@@ -100,11 +102,27 @@ context('DPS user create functionality', () => {
     })
     cy.task('stubEmail', { email: 'test.localadminuser@digital.justice.gov.uk', verified: false })
     cy.task('stubDpsUserGetRoles')
-    cy.task('stubUserDetails')
+    cy.task('stubUserDetails', {})
     cy.task('stubSyncDpsEmail')
     const successPage = DpsUserCreateSuccessPage.verifyOnPage()
     successPage.email().should('contain.text', 'test.localadminuser@digital.justice.gov.uk')
     successPage.userDetailsLink().click()
     UserPage.verifyOnPage('Itag User') // stub returns this first and last name
+  })
+
+  it('Should check for CSRF token', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
+    cy.task('stubDpsGetCaseloads')
+    cy.signIn()
+
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: 'create-dps-user',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
   })
 })

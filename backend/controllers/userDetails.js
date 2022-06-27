@@ -8,6 +8,7 @@ const userDetailsFactory = (
   manageUrl,
   defaultSearchTitle,
   showExtraUserDetails,
+  canAutoEnableDisableUser,
 ) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
     req.flash('deleteGroupErrors', errors)
@@ -19,6 +20,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${userId}`
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
     const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
+    const hasManageDPSUserAccount = Boolean(res.locals && res.locals.user && res.locals.user.manageDPSUserAccount)
 
     const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
@@ -41,8 +43,10 @@ const userDetailsFactory = (
       groups,
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
-      showEnableDisable: Boolean(enableUserApi && disableUserApi),
+      canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
+      showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
       showGroups: Boolean(removeGroupApi),
+      showCaseloads: Boolean(user.activeCaseload),
       showExtraUserDetails,
       showUsername: user.email !== user.username.toLowerCase(),
       displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,

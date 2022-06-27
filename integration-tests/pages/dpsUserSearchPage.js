@@ -11,14 +11,14 @@ const roleSearch = () => cy.get('[id="roleCode-search"]')
 const roleCheckbox = (text) => cy.contains('label', text).prev()
 const roleCheckboxLabel = (text) => cy.get('label').contains(text)
 
-const dpsUserSearchWithFilterPage = () =>
+const dpsUserSearchPage = () =>
   page('Search for a DPS user', {
     filter: () => cy.get('[class="moj-filter"]'),
     filterUser: (text) => {
       if (text) userFilterInput().type(text)
       else userFilterInput().clear()
       applyFilters().click()
-      return dpsUserSearchWithFilterPage()
+      return dpsUserSearchPage()
     },
     filterWithTag,
     userFilterInput,
@@ -67,15 +67,15 @@ const dpsUserSearchWithFilterPage = () =>
     searchForRole: (text) => {
       if (text) roleSearch().clear().type(text)
       else roleSearch().clear()
-      return dpsUserSearchWithFilterPage()
+      return dpsUserSearchPage()
     },
     role: (text) => roleCheckboxLabel(text),
   })
 
 export default {
-  verifyOnPage: dpsUserSearchWithFilterPage,
+  verifyOnPage: dpsUserSearchPage,
   goTo: () => {
     cy.visit('/search-with-filter-dps-users')
-    return dpsUserSearchWithFilterPage()
+    return dpsUserSearchPage()
   },
 }

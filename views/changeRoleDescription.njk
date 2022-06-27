@@ -18,6 +18,8 @@
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
         <form method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
           {{ govukTextarea({
             value: currentRoleDescription,
             id: "roleDescription",
