@@ -53,6 +53,8 @@ const downloadFactoryBetaSearch = (downloadUserSearch, allowDownload) => {
       accessRoles,
       activeCaseload: currentFilter.restrictToActiveGroup ? caseload : undefined,
       status: currentFilter.status,
+      inclusiveRoles: currentFilter.inclusiveRoles,
+      showOnlyLSAs: currentFilter.showOnlyLSAs,
     })
     const fields = [
       {
