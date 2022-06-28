@@ -160,7 +160,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/nomisusersandroles/users/.*/roles',
+        urlPattern: '/nomisusersandroles/users/.*/roles/.*',
       },
       response: { status: 200 },
     }),
