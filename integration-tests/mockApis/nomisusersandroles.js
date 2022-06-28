@@ -181,6 +181,41 @@ module.exports = {
         ],
       },
     }),
+  stubDownload: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/download\\?.*',
+      body: [
+        {
+          username: 'LOCKED_USER',
+          staffId: 7,
+          firstName: 'User',
+          lastName: 'Locked',
+          active: false,
+          status: 'LOCKED',
+          locked: true,
+          expired: false,
+          activeCaseload: null,
+          dpsRoleCount: 0,
+          email: null,
+        },
+        {
+          username: 'ITAG_USER',
+          staffId: 1,
+          firstName: 'Itag',
+          lastName: 'User',
+          active: true,
+          status: 'OPEN',
+          locked: false,
+          expired: false,
+          activeCaseload: {
+            id: 'MDI',
+            name: 'Moorland Closed (HMP & YOI)',
+          },
+          dpsRoleCount: 0,
+          email: 'multiple.user.test@digital.justice.gov.uk',
+        },
+      ],
+    }),
   verifyDpsAddRoles: () =>
     getMatchingRequests({
       method: 'POST',
