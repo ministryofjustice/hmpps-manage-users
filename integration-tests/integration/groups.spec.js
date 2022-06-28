@@ -127,6 +127,8 @@ context('Groups', () => {
     cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
+
     cy.visit('/manage-groups')
 
     cy.visit('/manage-groups/DOES_NOT_EXIST')
@@ -139,6 +141,8 @@ context('Groups', () => {
     cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
+
     cy.visit('/manage-groups')
 
     cy.visit('/manage-groups/DOES_NOT_EXIST/delete/children/none')
