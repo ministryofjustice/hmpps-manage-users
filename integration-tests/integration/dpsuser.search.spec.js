@@ -255,6 +255,8 @@ context('DPS search with filter user functionality', () => {
     })
   })
   it('Should allow a user to download all results', () => {
+    cy.task('stubDownload')
+
     const validateCsv = (list) => {
       expect(list, 'number of records').to.have.length(22)
       expect(list[0], 'header row').to.deep.equal([
