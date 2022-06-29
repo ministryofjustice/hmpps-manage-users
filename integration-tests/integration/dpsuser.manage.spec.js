@@ -383,7 +383,7 @@ context('DPS user manage functionality', () => {
     })
   })
 
-  it('Should check for CSRF token on deactivate(unlock) user', () => {
+  it('Should check for CSRF token on deactivate(lock) user', () => {
     editUser({
       roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
       active: true,
@@ -392,7 +392,7 @@ context('DPS user manage functionality', () => {
     // Attempt to submit form without CSRF token:
     cy.request({
       method: 'POST',
-      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
+      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate',
       body: {},
       failOnStatusCode: false,
     }).then((response) => {
