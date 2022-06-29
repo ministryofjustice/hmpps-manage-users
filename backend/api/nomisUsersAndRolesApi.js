@@ -66,6 +66,7 @@ const nomisUsersAndRolesFactory = (client) => {
     addRole,
     addUserRoles,
     userCaseLoads,
+    getUserCaseloads,
     downloadUserSearch,
   }
 }

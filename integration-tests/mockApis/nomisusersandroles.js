@@ -178,6 +178,14 @@ module.exports = {
             id: 'MDI',
             name: 'Moorland',
           },
+          {
+            id: 'LEI',
+            name: 'Leeds (HMP)',
+          },
+          {
+            id: 'PVI',
+            name: 'Pentonville (HMP)',
+          },
         ],
       },
     }),

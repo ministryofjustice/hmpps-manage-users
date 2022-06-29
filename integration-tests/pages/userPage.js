@@ -5,6 +5,7 @@ const userPage = (user) =>
     userRows: () => cy.get('[data-qa="user-details"] tbody tr'),
     roleRows: () => cy.get('[data-qa="user-roles"] tbody tr'),
     groupRows: () => cy.get('[data-qa="user-groups"] tbody tr'),
+    activeCaseloadRow: () => cy.get('[data-qa="user-active-caseload"] tbody tr'),
     caseloadRows: () => cy.get('[data-qa="user-caseloads"] tbody tr'),
     addRole: () => cy.get('[data-qa="add-role-button"]'),
     addGroup: () => cy.get('[data-qa="add-group-button"]'),

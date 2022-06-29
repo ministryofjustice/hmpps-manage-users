@@ -277,16 +277,28 @@
 
         {% if showCaseloads %}
           {{ govukTable({
-            caption: "Caseloads",
-            attributes: { "data-qa": "user-caseloads" },
+            caption: "Active Caseload",
+            attributes: { "data-qa": "user-active-caseload" },
             rows: [
               [
-                { text: "Active caseload" , classes: 'govuk-!-width-one-quarter' },
-                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  },
-                { text: "", classes: 'govuk-!-width-one-quarter' }
+                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  }
               ]
             ]
           }) }}
+
+          {% set rows = [] %}
+          {% for caseload in caseloads %}
+              {% set rows = (rows.push([
+                { text: caseload.name }
+              ]), rows) %}
+          {% endfor %}
+
+          {{ govukTable({
+            caption: "All Caseloads",
+            rows: rows,
+            attributes: { "data-qa": "user-caseloads" }
+          }) }}
+
         {% endif %}
 
         <p class="govuk-body">

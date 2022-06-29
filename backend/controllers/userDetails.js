@@ -26,7 +26,7 @@ const userDetailsFactory = (
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
 
-    const [user, roles, groups] = await getUserRolesAndGroupsApi(
+    const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
       res.locals,
       userId,
       hasMaintainDpsUsersAdmin,
@@ -41,6 +41,7 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
+      caseloads,
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),

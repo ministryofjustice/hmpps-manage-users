@@ -23,10 +23,11 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAndRolesApi = async (context, username) => {
     await oauthApi.syncDpsEmail(context, username)
 
-    const [user, roles, userEmail] = await Promise.all([
+    const [user, roles, userEmail, userCaseloads] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
+      nomisUsersAndRolesApi.getUserCaseloads(context, username),
     ])
 
     return [
@@ -38,6 +39,8 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
         activeCaseload: roles.activeCaseload,
       },
       roles.dpsRoles.map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly })),
+      null, // no groups for DPS users
+      userCaseloads.caseloads,
     ]
   }
 
