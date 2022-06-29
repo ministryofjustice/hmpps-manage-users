@@ -69,7 +69,12 @@
                   }) }}
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                  <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
+                  <form method="post" action="{{ staffUrl }}/activate">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <button type="submit" name="activate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="activate-button">
+                      Activate account
+                    </button>
+                  </form>
                 </td>
               {% endif %}
             {% else %}
@@ -83,7 +88,12 @@
                 </td>
                 {% if showEnableDisable and staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                    <a href="{{ staffUrl }}/deactivate" class="govuk-link" data-qa="enable-button">Deactivate account</a>
+                    <form method="post" action="{{ staffUrl }}/deactivate">
+                      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                      <button type="submit" name="deactivate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="deactivate-button">
+                        Deactivate account
+                      </button>
+                    </form>
                   </td>
                 {% endif %}
               {% else %}

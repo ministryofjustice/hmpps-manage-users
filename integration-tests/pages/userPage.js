@@ -13,6 +13,8 @@ const userPage = (user) =>
     searchResultsBreadcrumb: () => cy.get('a[href*="results"]'),
     searchBreadcrumb: () => cy.get('a[href*="search-"]'),
     enableLink: () => cy.get('[data-qa="enable-button"]'),
+    activateLink: () => cy.get('[data-qa="activate-button"]'),
+    deactivateLink: () => cy.get('[data-qa="deactivate-button"]'),
     changeEmailLink: () => cy.get('[data-qa="amend-link"]'),
     searchLink: () => cy.get('[data-qa="search-link"]'),
     enabled: () => cy.get('[data-qa="enabled"]'),
