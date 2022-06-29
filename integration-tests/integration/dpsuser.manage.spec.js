@@ -296,7 +296,9 @@ context('DPS user manage functionality', () => {
     userPage.enabled().should('contain.text', ' Active')
     cy.task('stubDpsUserDisable')
     cy.task('stubDpsUserDetails', { active: false })
-    userPage.enableLink().should('have.text', 'Deactivate account').click()
+    userPage.enableLink().should('not.exist')
+    userPage.activateLink().should('not.exist')
+    userPage.deactivateLink().should('be.visible').click()
 
     cy.task('verifyDpsUserDisable').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -315,7 +317,9 @@ context('DPS user manage functionality', () => {
     userPage.enabled().should('contain.text', ' Inactive')
     cy.task('stubDpsUserEnable')
     cy.task('stubDpsUserDetails', {})
-    userPage.enableLink().should('have.text', 'Activate account').click()
+    userPage.activateLink().should('not.exist')
+    userPage.deactivateLink().should('not.exist')
+    userPage.enableLink().should('be.visible').click()
 
     cy.task('verifyDpsUserEnable').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -360,5 +364,39 @@ context('DPS user manage functionality', () => {
 
     userPage.enabled().should('contain.text', ' Active')
     userPage.enableLink().should('not.exist')
+  })
+
+  it('Should check for CSRF token on activate(unlock) user', () => {
+    editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: false,
+      enabled: false,
+    })
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
+  })
+
+  it('Should check for CSRF token on deactivate(lock) user', () => {
+    editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: true,
+      enabled: true,
+    })
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
   })
 })

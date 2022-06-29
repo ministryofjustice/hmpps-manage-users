@@ -347,7 +347,9 @@ context('External user manage functionality', () => {
       userPage.enabled().should('contain.text', ' Inactive')
       userPage.inactiveReason().eq(0).should('contain', 'Left')
       cy.task('stubAuthUserEnable')
-      userPage.enableLink().should('have.text', 'Activate account').click()
+      userPage.enableLink().should('not.exist')
+      userPage.deactivateLink().should('not.exist')
+      userPage.activateLink().should('be.visible').click()
 
       cy.task('verifyUserEnable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
@@ -378,7 +380,9 @@ context('External user manage functionality', () => {
 
       userPage.enabled().should('contain.text', ' Inactive')
       cy.task('stubAuthUserEnable')
-      userPage.enableLink().should('have.text', 'Activate account').click()
+      userPage.enableLink().should('not.exist')
+      userPage.deactivateLink().should('not.exist')
+      userPage.activateLink().should('be.visible').click()
 
       cy.task('verifyUserEnable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
@@ -386,7 +390,21 @@ context('External user manage functionality', () => {
       })
     })
 
-    it('Should check for CSRF token', () => {
+    it('Should check for CSRF token activate user', () => {
+      editUser()
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+
+    it('Should check for CSRF token- deactivate reason', () => {
       editUser()
 
       // Attempt to submit form without CSRF token:
