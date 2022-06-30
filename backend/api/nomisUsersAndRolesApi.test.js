@@ -90,6 +90,7 @@ describe('nomis users and roles API tests', () => {
       expect(actual).toEqual(userResponse)
     })
   })
+
   describe('getCaseloads', () => {
     const caseloadResponse = [
       {
@@ -118,6 +119,34 @@ describe('nomis users and roles API tests', () => {
     })
     it('will return the caseloads', () => {
       expect(nomisUsersAndRolesApi.getCaseloads(context)).toEqual(caseloadResponse)
+    })
+  })
+
+  describe('getUserCaseloads', () => {
+    const userCaseloadResponse = [
+      {
+        id: 'AKI',
+        name: 'Acklington (HMP)',
+      },
+      {
+        id: 'ALI',
+        name: 'Albany (HMP)',
+      },
+      {
+        id: 'ACI',
+        name: 'Altcourse (HMP)',
+      },
+    ]
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userCaseloadResponse,
+      })
+    })
+    it('will call /users/{username}/caseloads endpoint', () => {
+      const actual = nomisUsersAndRolesApi.getUserCaseloads(context, 'TEST_USER')
+
+      expect(client.get).toBeCalledWith(context, '/users/TEST_USER/caseloads')
+      expect(actual).toEqual(userCaseloadResponse)
     })
   })
 })

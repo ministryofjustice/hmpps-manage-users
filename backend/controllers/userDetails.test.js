@@ -37,6 +37,10 @@ describe('user detail factory', () => {
   }
   const rolesStub = [{ roleName: 'roleName1', roleCode: 'roleCode1' }]
   const groupsStub = [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }]
+  const caseloadsStub = [
+    { id: 'MDI', name: 'Moorland (HMP)' },
+    { id: 'PVI', name: 'Pentonville (HMP)' },
+  ]
   const expectedUserDetails = {
     searchTitle: 'Search for an external user',
     searchResultsUrl: '/search-external-users/results',
@@ -87,6 +91,24 @@ describe('user detail factory', () => {
         ...expectedUserDetails,
         staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
         showUsername: false,
+      })
+    })
+
+    it('should set caseloads, if returned', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub, caseloadsStub])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        caseloads: [
+          {
+            id: 'MDI',
+            name: 'Moorland (HMP)',
+          },
+          {
+            id: 'PVI',
+            name: 'Pentonville (HMP)',
+          },
+        ],
       })
     })
 

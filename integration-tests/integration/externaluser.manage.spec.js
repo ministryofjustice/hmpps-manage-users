@@ -43,6 +43,7 @@ context('External user manage functionality', () => {
     userPage.groupRows().should('have.length', 2)
     userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
     userPage.groupRows().eq(1).should('contain', 'Site 1 - Group 2')
+    userPage.activeCaseloadRow().should('not.exist')
     userPage.caseloadRows().should('not.exist')
   })
 

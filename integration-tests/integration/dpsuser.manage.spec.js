@@ -23,8 +23,12 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
-    userPage.caseloadRows().should('have.length', 1)
+    userPage.activeCaseloadRow().should('have.length', 1)
+    userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+    userPage.caseloadRows().should('have.length', 3)
     userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+    userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(2).should('contain', 'Pentonville')
   })
 
   it('Should not display caseload details for a user with no caseloads', () => {
@@ -35,6 +39,7 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
+    userPage.activeCaseloadRow().should('not.exist')
     userPage.caseloadRows().should('not.exist')
   })
 
