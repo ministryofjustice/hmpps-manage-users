@@ -60,7 +60,7 @@ describe('Manage DPS user router', () => {
           },
         },
         [{ roleCode: 'role1' }],
-        null,
+        undefined,
         [
           { id: 'MDI', name: 'Moorland' },
           { id: 'PVI', name: 'Pentonville' },

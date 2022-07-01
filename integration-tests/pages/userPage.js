@@ -11,6 +11,7 @@ const userPage = (user) =>
     addGroup: () => cy.get('[data-qa="add-group-button"]'),
     removeRole: (role) => cy.get(`[data-qa="remove-button-${role}"]`),
     removeGroup: (group) => cy.get(`[data-qa="remove-button-${group}"]`),
+    removeUserCaseload: (caseload) => cy.get(`[data-qa="remove-button-${caseload}"]`),
     searchResultsBreadcrumb: () => cy.get('a[href*="results"]'),
     searchBreadcrumb: () => cy.get('a[href*="search-"]'),
     enableLink: () => cy.get('[data-qa="enable-button"]'),

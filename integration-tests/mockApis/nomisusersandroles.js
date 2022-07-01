@@ -189,6 +189,14 @@ module.exports = {
         ],
       },
     }),
+  stubDpsRemoveUserCaseload: () =>
+    stubFor({
+      request: {
+        method: 'DELETE',
+        urlPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+      },
+      response: { status: 200 },
+    }),
   stubDownload: () =>
     getFor({
       urlPattern: '/nomisusersandroles/users/download\\?.*',
@@ -234,12 +242,16 @@ module.exports = {
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
     }).then((data) => data.body.requests),
+  verifyDpsRemoveUserCaseload: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+    }).then((data) => data.body.requests),
   verifyDpsUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/nomisusersandroles/users/.*/unlock-user',
     }).then((data) => data.body.requests),
-
   verifyDpsUserDisable: () =>
     getMatchingRequests({
       method: 'PUT',
