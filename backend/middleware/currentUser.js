@@ -9,7 +9,7 @@ module.exports =
     if (!req.xhr) {
       if (!req.session.userDetails) {
         req.session.userDetails = await oauthApi.currentUser(res.locals)
-        req.session.allCaseloads = await nomisUsersAndRolesApi.userCaseLoads(
+        req.session.allCaseloads = await nomisUsersAndRolesApi.currentUserCaseloads(
           res.locals,
           req.session.userDetails.username,
         )
