@@ -288,8 +288,20 @@
 
           {% set rows = [] %}
           {% for caseload in caseloads %}
-              {% set rows = (rows.push([
-                { text: caseload.name }
+            {% set caseloadLink %}
+              {% if caseload.id != staff.activeCaseload.id %}
+                <form method="post" action="{{ staffUrl }}/caseloads/{{ caseload.id }}/remove">
+                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                  <button type="submit" name="remove-button-{{ caseload.id }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ caseload.id }}">
+                    Remove caseload
+                  </button>
+                </form>
+              {% endif %}
+            {% endset %}
+
+            {% set rows = (rows.push([
+                { text: caseload.name },
+                { html: caseloadLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
               ]), rows) %}
           {% endfor %}
 

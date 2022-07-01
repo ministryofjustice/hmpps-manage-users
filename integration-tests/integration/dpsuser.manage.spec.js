@@ -275,6 +275,54 @@ context('DPS user manage functionality', () => {
     })
   })
 
+  describe('Remove a caseload from a user', () => {
+    it('Should remove a caseload from a user', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().should('have.length', 1)
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+
+      cy.task('verifyDpsRemoveUserCaseload')
+      userPage.removeUserCaseload('LEI').click()
+
+      cy.task('verifyDpsRemoveUserCaseload').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/caseloads/LEI')
+      })
+    })
+
+    it('Active caseload does not have a remove link', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+
+      cy.task('stubDpsRemoveUserCaseload')
+      userPage.removeUserCaseload('MDI').should('not.exist')
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+      editUser({})
+      cy.task('stubDpsRemoveUserCaseload')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-dps-users/ITAG_USER5/caseloads/LEI/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+
   it('Should provide breadcrumb link back to search results', () => {
     const userPage = editUser({})
 

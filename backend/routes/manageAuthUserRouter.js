@@ -77,6 +77,7 @@ const controller = ({ oauthApi }) => {
     getUserRolesAndGroupsApi,
     removeRoleApi,
     removeGroupApi,
+    undefined,
     enableUserApi,
     disableUserApi,
     '/search-external-users',

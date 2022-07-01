@@ -2,6 +2,7 @@ const userDetailsFactory = (
   getUserRolesAndGroupsApi,
   removeRoleApi,
   removeGroupApi,
+  removeUserCaseloadApi,
   enableUserApi,
   disableUserApi,
   defaultSearchUrl,
@@ -96,6 +97,23 @@ const userDetailsFactory = (
     }
   }
 
+  const removeUserCaseload = async (req, res) => {
+    const { userId, caseload } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
+
+    try {
+      await removeUserCaseloadApi(res.locals, userId, caseload)
+      res.redirect(`${staffUrl}/details`)
+    } catch (error) {
+      if (error.status === 400) {
+        // caseload already removed
+        res.redirect(req.originalUrl)
+      } else {
+        throw error
+      }
+    }
+  }
+
   const enableUser = async (req, res) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}`
@@ -112,7 +130,7 @@ const userDetailsFactory = (
     res.redirect(`${staffUrl}/details`)
   }
 
-  return { index, removeRole, removeGroup, enableUser, disableUser }
+  return { index, removeRole, removeGroup, removeUserCaseload, enableUser, disableUser }
 }
 
 module.exports = {
