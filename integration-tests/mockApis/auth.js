@@ -151,6 +151,19 @@ const stubAuthGetUsername = (enabled = true) =>
     },
   })
 
+const stubAuthUserFail = (username) =>
+  getFor({
+    urlPattern: `/auth/api/authuser/id/${username}`,
+    response: {
+      body: {
+        error: 'Not Found',
+        error_description: `Account for username ${username} not found`,
+        field: 'username',
+      },
+    },
+    status: 404,
+  })
+
 const stubAuthGetUserWithEmail = (enabled = true) =>
   getFor({
     urlPattern: '/auth/api/authuser/id/[^/]*',
@@ -290,6 +303,19 @@ const stubAuthAssignableGroupDetails = ({
   getFor({
     urlPattern: '/auth/api/groups/.*',
     body: content,
+  })
+
+const stubAuthAssignableGroupDetailsFail = (groupName) =>
+  getFor({
+    urlPattern: `/auth/api/groups/${groupName}`,
+    response: {
+      body: {
+        error: 'Not Found',
+        error_description: `Unable to get group: ${groupName} with reason: notfound`,
+        field: 'group',
+      },
+    },
+    status: 404,
   })
 
 const stubAuthGroupDetailsNoChildren = ({
@@ -620,6 +646,7 @@ module.exports = {
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
+  stubAuthAssignableGroupDetailsFail,
   stubAuthChangeGroupName,
   stubAuthChangeChildGroupName,
   stubAuthCreateChildGroup,
@@ -634,6 +661,7 @@ module.exports = {
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
   stubAuthCreateUser,
+  stubAuthUserFail,
   stubError,
   stubHealth,
   verifyAddRoles,

@@ -2,6 +2,7 @@ const userDetailsFactory = (
   getUserRolesAndGroupsApi,
   removeRoleApi,
   removeGroupApi,
+  removeUserCaseloadApi,
   enableUserApi,
   disableUserApi,
   defaultSearchUrl,
@@ -26,7 +27,7 @@ const userDetailsFactory = (
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
     const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
 
-    const [user, roles, groups] = await getUserRolesAndGroupsApi(
+    const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
       res.locals,
       userId,
       hasMaintainDpsUsersAdmin,
@@ -41,6 +42,7 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
+      caseloads,
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
@@ -95,6 +97,23 @@ const userDetailsFactory = (
     }
   }
 
+  const removeUserCaseload = async (req, res) => {
+    const { userId, caseload } = req.params
+    const staffUrl = `${manageUrl}/${userId}`
+
+    try {
+      await removeUserCaseloadApi(res.locals, userId, caseload)
+      res.redirect(`${staffUrl}/details`)
+    } catch (error) {
+      if (error.status === 400) {
+        // caseload already removed
+        res.redirect(req.originalUrl)
+      } else {
+        throw error
+      }
+    }
+  }
+
   const enableUser = async (req, res) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}`
@@ -111,7 +130,7 @@ const userDetailsFactory = (
     res.redirect(`${staffUrl}/details`)
   }
 
-  return { index, removeRole, removeGroup, enableUser, disableUser }
+  return { index, removeRole, removeGroup, removeUserCaseload, enableUser, disableUser }
 }
 
 module.exports = {

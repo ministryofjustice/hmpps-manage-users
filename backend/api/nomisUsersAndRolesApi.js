@@ -4,7 +4,7 @@ const nomisUsersAndRolesFactory = (client) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
   const post = (context, path, data) => client.post(context, path, data).then((response) => response.body)
   const put = (context, path, data) => client.put(context, path, data).then((response) => response.body)
-  const del = (context, path, data) => client.del(context, path, data).then((response) => response.body)
+  const del = (context, path) => client.del(context, path).then((response) => response.body)
 
   const userSearch = (
     context,
@@ -51,6 +51,8 @@ const nomisUsersAndRolesFactory = (client) => {
   const enableUser = (context, { username }) => put(context, `/users/${username}/unlock-user`)
   const disableUser = (context, { username }) => put(context, `/users/${username}/lock-user`)
   const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
+  const removeUserCaseload = (context, username, caseloadId) =>
+    del(context, `/users/${username}/caseloads/${caseloadId}`)
   const userCaseLoads = (context, username) =>
     context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
   const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
@@ -66,6 +68,8 @@ const nomisUsersAndRolesFactory = (client) => {
     addRole,
     addUserRoles,
     userCaseLoads,
+    getUserCaseloads,
+    removeUserCaseload,
     downloadUserSearch,
   }
 }

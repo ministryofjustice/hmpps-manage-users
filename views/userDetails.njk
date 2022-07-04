@@ -69,7 +69,12 @@
                   }) }}
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                  <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
+                  <form method="post" action="{{ staffUrl }}/activate">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <button type="submit" name="activate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="activate-button">
+                      Activate account
+                    </button>
+                  </form>
                 </td>
               {% endif %}
             {% else %}
@@ -83,7 +88,12 @@
                 </td>
                 {% if showEnableDisable and staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                    <a href="{{ staffUrl }}/deactivate" class="govuk-link" data-qa="enable-button">Deactivate account</a>
+                    <form method="post" action="{{ staffUrl }}/deactivate">
+                      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                      <button type="submit" name="deactivate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="deactivate-button">
+                        Deactivate account
+                      </button>
+                    </form>
                   </td>
                 {% endif %}
               {% else %}
@@ -267,16 +277,40 @@
 
         {% if showCaseloads %}
           {{ govukTable({
-            caption: "Caseloads",
-            attributes: { "data-qa": "user-caseloads" },
+            caption: "Active Caseload",
+            attributes: { "data-qa": "user-active-caseload" },
             rows: [
               [
-                { text: "Active caseload" , classes: 'govuk-!-width-one-quarter' },
-                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  },
-                { text: "", classes: 'govuk-!-width-one-quarter' }
+                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  }
               ]
             ]
           }) }}
+
+          {% set rows = [] %}
+          {% for caseload in caseloads %}
+            {% set caseloadLink %}
+              {% if caseload.id != staff.activeCaseload.id %}
+                <form method="post" action="{{ staffUrl }}/caseloads/{{ caseload.id }}/remove">
+                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                  <button type="submit" name="remove-button-{{ caseload.id }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ caseload.id }}">
+                    Remove caseload
+                  </button>
+                </form>
+              {% endif %}
+            {% endset %}
+
+            {% set rows = (rows.push([
+                { text: caseload.name },
+                { html: caseloadLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+              ]), rows) %}
+          {% endfor %}
+
+          {{ govukTable({
+            caption: "All Caseloads",
+            rows: rows,
+            attributes: { "data-qa": "user-caseloads" }
+          }) }}
+
         {% endif %}
 
         <p class="govuk-body">

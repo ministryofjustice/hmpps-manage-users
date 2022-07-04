@@ -23,10 +23,11 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAndRolesApi = async (context, username) => {
     await oauthApi.syncDpsEmail(context, username)
 
-    const [user, roles, userEmail] = await Promise.all([
+    const [user, roles, userEmail, userCaseloads] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       oauthApi.getUserEmail(context, { username }),
+      nomisUsersAndRolesApi.getUserCaseloads(context, username),
     ])
 
     return [
@@ -38,6 +39,8 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
         activeCaseload: roles.activeCaseload,
       },
       roles.dpsRoles.map((r) => ({ roleCode: r.code, roleName: r.name, adminRoleOnly: r.adminRoleOnly })),
+      undefined, // no groups for DPS users
+      userCaseloads.caseloads,
     ]
   }
 
@@ -51,6 +54,9 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
 
   const enableUserApi = (context, username) => nomisUsersAndRolesApi.enableUser(context, { username })
   const disableUserApi = (context, username) => nomisUsersAndRolesApi.disableUser(context, { username })
+
+  const removeUserCaseloadApi = (context, username, caseload) =>
+    nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
 
   const saveRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
   const removeRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeRole(context, username, role)
@@ -66,12 +72,14 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const {
     index: userDetails,
     removeRole,
+    removeUserCaseload,
     enableUser,
     disableUser,
   } = userDetailsFactory(
     getUserAndRolesApi,
     removeRoleApi,
     undefined,
+    removeUserCaseloadApi,
     enableUserApi,
     disableUserApi,
     '/search-with-filter-dps-users',
@@ -90,12 +98,13 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
   router.post('/roles/:role/remove', removeRole)
+  router.post('/caseloads/:caseload/remove', removeUserCaseload)
   router.get('/details', userDetails)
   router.get('/change-email', getEmail)
   router.post('/change-email', postEmail)
   router.get('/change-email-success', emailSuccess)
   router.get('/activate', enableUser)
-  router.get('/deactivate', disableUser)
+  router.post('/deactivate', disableUser)
 
   return router
 }

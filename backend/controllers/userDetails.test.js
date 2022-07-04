@@ -6,12 +6,28 @@ describe('user detail factory', () => {
   const getUserRolesAndGroupsApi = jest.fn()
   const removeRoleApi = jest.fn()
   const removeGroupApi = jest.fn()
+  const removeUserCaseloadApi = jest.fn()
   const enableUserApi = jest.fn()
   const disableUserApi = jest.fn()
+
+  const dpsUserDetails = userDetailsFactory(
+    getUserRolesAndGroupsApi,
+    removeRoleApi,
+    undefined,
+    removeUserCaseloadApi,
+    enableUserApi,
+    disableUserApi,
+    '/search-with-filter-dps-users',
+    '/manage-dps-users',
+    'Search for a DPS user',
+    false,
+    false,
+  )
   const userDetails = userDetailsFactory(
     getUserRolesAndGroupsApi,
     removeRoleApi,
     removeGroupApi,
+    removeUserCaseloadApi,
     enableUserApi,
     disableUserApi,
     defaultSearchUrl,
@@ -37,6 +53,10 @@ describe('user detail factory', () => {
   }
   const rolesStub = [{ roleName: 'roleName1', roleCode: 'roleCode1' }]
   const groupsStub = [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }]
+  const caseloadsStub = [
+    { id: 'MDI', name: 'Moorland (HMP)' },
+    { id: 'PVI', name: 'Pentonville (HMP)' },
+  ]
   const expectedUserDetails = {
     searchTitle: 'Search for an external user',
     searchResultsUrl: '/search-external-users/results',
@@ -56,6 +76,7 @@ describe('user detail factory', () => {
     canAutoEnableDisableUser: true,
     roles: [{ roleName: 'roleName1', roleCode: 'roleCode1' }],
     groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
+    caseloads: undefined,
     hasMaintainDpsUsersAdmin: false,
     showEnableDisable: true,
     showExtraUserDetails: true,
@@ -87,6 +108,24 @@ describe('user detail factory', () => {
         ...expectedUserDetails,
         staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
         showUsername: false,
+      })
+    })
+
+    it('should set caseloads, if returned', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub, caseloadsStub])
+      await userDetails.index(req, { render })
+      expect(render).toBeCalledWith('userDetails.njk', {
+        ...expectedUserDetails,
+        caseloads: [
+          {
+            id: 'MDI',
+            name: 'Moorland (HMP)',
+          },
+          {
+            id: 'PVI',
+            name: 'Pentonville (HMP)',
+          },
+        ],
       })
     })
 
@@ -133,22 +172,13 @@ describe('user detail factory', () => {
     })
 
     it('should pass through show fields if not set', async () => {
-      const dpsUserDetails = userDetailsFactory(
-        getUserRolesAndGroupsApi,
-        removeRoleApi,
-        undefined,
-        undefined,
-        undefined,
-        '/search-external-users',
-        '/manage-external-users',
-        'Search for an external user',
-        false,
-        false,
-      )
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await dpsUserDetails.index(req, { render })
       expect(render).toBeCalledWith('userDetails.njk', {
         ...expectedUserDetails,
+        searchTitle: 'Search for a DPS user',
+        searchUrl: '/search-with-filter-dps-users',
+        staffUrl: '/manage-dps-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
         canAutoEnableDisableUser: false,
         showEnableDisable: false,
@@ -245,7 +275,7 @@ describe('user detail factory', () => {
       expect(redirect).toBeCalledWith('/some-location')
     })
 
-    it('should if group Manager tries to delete users last group', async () => {
+    it('should fail gracefully if group Manager tries to delete users last group', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 403 }
       removeGroupApi.mockRejectedValue(error)
@@ -270,6 +300,34 @@ describe('user detail factory', () => {
         ...expectedUserDetails,
         errors: { error: 'some error' },
       })
+    })
+  })
+
+  describe('remove caseload', () => {
+    it('should remove caseload and redirect', async () => {
+      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, undefined, caseloadsStub])
+
+      const reqWithCaseload = { params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' } }
+
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      await dpsUserDetails.removeUserCaseload(reqWithCaseload, { redirect, locals })
+      expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
+      expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
+    })
+
+    it('should ignore if user does not have caseload', async () => {
+      const redirect = jest.fn()
+      const error = { ...new Error('This failed'), status: 400 }
+      removeUserCaseloadApi.mockRejectedValue(error)
+      await userDetails.removeUserCaseload(
+        {
+          params: { caseload: 'TEST_CASELOAD' },
+          originalUrl: '/some-location',
+        },
+        { redirect },
+      )
+      expect(redirect).toBeCalledWith('/some-location')
     })
   })
 

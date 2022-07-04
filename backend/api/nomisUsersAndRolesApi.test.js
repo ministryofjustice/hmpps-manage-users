@@ -90,6 +90,26 @@ describe('nomis users and roles API tests', () => {
       expect(actual).toEqual(userResponse)
     })
   })
+
+  describe('removeUserRole', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = nomisUsersAndRolesApi.removeRole(context, 'TEST_USER', 'TEST_ROLE')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call remove user role endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/users/TEST_USER/roles/TEST_ROLE')
+    })
+  })
+
   describe('getCaseloads', () => {
     const caseloadResponse = [
       {
@@ -118,6 +138,53 @@ describe('nomis users and roles API tests', () => {
     })
     it('will return the caseloads', () => {
       expect(nomisUsersAndRolesApi.getCaseloads(context)).toEqual(caseloadResponse)
+    })
+  })
+
+  describe('getUserCaseloads', () => {
+    const userCaseloadResponse = [
+      {
+        id: 'AKI',
+        name: 'Acklington (HMP)',
+      },
+      {
+        id: 'ALI',
+        name: 'Albany (HMP)',
+      },
+      {
+        id: 'ACI',
+        name: 'Altcourse (HMP)',
+      },
+    ]
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userCaseloadResponse,
+      })
+    })
+    it('will call /users/{username}/caseloads endpoint', () => {
+      const actual = nomisUsersAndRolesApi.getUserCaseloads(context, 'TEST_USER')
+
+      expect(client.get).toBeCalledWith(context, '/users/TEST_USER/caseloads')
+      expect(actual).toEqual(userCaseloadResponse)
+    })
+  })
+
+  describe('removeUserCaseload', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = nomisUsersAndRolesApi.removeUserCaseload(context, 'TEST_USER', 'TEST_CASELOAD')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call remove user caseload endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/users/TEST_USER/caseloads/TEST_CASELOAD')
     })
   })
 })

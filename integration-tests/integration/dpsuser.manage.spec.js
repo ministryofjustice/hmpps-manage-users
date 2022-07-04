@@ -23,8 +23,12 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
-    userPage.caseloadRows().should('have.length', 1)
+    userPage.activeCaseloadRow().should('have.length', 1)
+    userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+    userPage.caseloadRows().should('have.length', 3)
     userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+    userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(2).should('contain', 'Pentonville')
   })
 
   it('Should not display caseload details for a user with no caseloads', () => {
@@ -35,6 +39,7 @@ context('DPS user manage functionality', () => {
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
+    userPage.activeCaseloadRow().should('not.exist')
     userPage.caseloadRows().should('not.exist')
   })
 
@@ -270,6 +275,54 @@ context('DPS user manage functionality', () => {
     })
   })
 
+  describe('Remove a caseload from a user', () => {
+    it('Should remove a caseload from a user', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().should('have.length', 1)
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+
+      cy.task('verifyDpsRemoveUserCaseload')
+      userPage.removeUserCaseload('LEI').click()
+
+      cy.task('verifyDpsRemoveUserCaseload').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/caseloads/LEI')
+      })
+    })
+
+    it('Active caseload does not have a remove link', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+
+      cy.task('stubDpsRemoveUserCaseload')
+      userPage.removeUserCaseload('MDI').should('not.exist')
+    })
+
+    it('Should check for CSRF token', () => {
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
+      cy.signIn()
+      editUser({})
+      cy.task('stubDpsRemoveUserCaseload')
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-dps-users/ITAG_USER5/caseloads/LEI/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+
   it('Should provide breadcrumb link back to search results', () => {
     const userPage = editUser({})
 
@@ -296,7 +349,9 @@ context('DPS user manage functionality', () => {
     userPage.enabled().should('contain.text', ' Active')
     cy.task('stubDpsUserDisable')
     cy.task('stubDpsUserDetails', { active: false })
-    userPage.enableLink().should('have.text', 'Deactivate account').click()
+    userPage.enableLink().should('not.exist')
+    userPage.activateLink().should('not.exist')
+    userPage.deactivateLink().should('be.visible').click()
 
     cy.task('verifyDpsUserDisable').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -315,7 +370,9 @@ context('DPS user manage functionality', () => {
     userPage.enabled().should('contain.text', ' Inactive')
     cy.task('stubDpsUserEnable')
     cy.task('stubDpsUserDetails', {})
-    userPage.enableLink().should('have.text', 'Activate account').click()
+    userPage.activateLink().should('not.exist')
+    userPage.deactivateLink().should('not.exist')
+    userPage.enableLink().should('be.visible').click()
 
     cy.task('verifyDpsUserEnable').should((requests) => {
       expect(requests).to.have.lengthOf(1)
@@ -360,5 +417,39 @@ context('DPS user manage functionality', () => {
 
     userPage.enabled().should('contain.text', ' Active')
     userPage.enableLink().should('not.exist')
+  })
+
+  it('Should check for CSRF token on activate(unlock) user', () => {
+    editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: false,
+      enabled: false,
+    })
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
+  })
+
+  it('Should check for CSRF token on deactivate(lock) user', () => {
+    editUser({
+      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      active: true,
+      enabled: true,
+    })
+    // Attempt to submit form without CSRF token:
+    cy.request({
+      method: 'POST',
+      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate',
+      body: {},
+      failOnStatusCode: false,
+    }).then((response) => {
+      expect(response.status).to.be.equal(500)
+    })
   })
 })

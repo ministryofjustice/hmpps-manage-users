@@ -160,7 +160,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/nomisusersandroles/users/.*/roles',
+        urlPattern: '/nomisusersandroles/users/.*/roles/.*',
       },
       response: { status: 200 },
     }),
@@ -178,8 +178,59 @@ module.exports = {
             id: 'MDI',
             name: 'Moorland',
           },
+          {
+            id: 'LEI',
+            name: 'Leeds (HMP)',
+          },
+          {
+            id: 'PVI',
+            name: 'Pentonville (HMP)',
+          },
         ],
       },
+    }),
+  stubDpsRemoveUserCaseload: () =>
+    stubFor({
+      request: {
+        method: 'DELETE',
+        urlPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+      },
+      response: { status: 200 },
+    }),
+  stubDownload: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/download\\?.*',
+      body: [
+        {
+          username: 'LOCKED_USER',
+          staffId: 7,
+          firstName: 'User',
+          lastName: 'Locked',
+          active: false,
+          status: 'LOCKED',
+          locked: true,
+          expired: false,
+          activeCaseload: null,
+          dpsRoleCount: 0,
+          email: null,
+        },
+        {
+          username: 'ITAG_USER',
+          staffId: 1,
+          firstName: 'Itag',
+          lastName: 'User',
+          active: true,
+          status: 'OPEN',
+          locked: false,
+          expired: false,
+          activeCaseload: {
+            id: 'MDI',
+            name: 'Moorland Closed (HMP & YOI)',
+          },
+          dpsRoleCount: 0,
+          email: 'multiple.user.test@digital.justice.gov.uk',
+        },
+      ],
     }),
   verifyDpsAddRoles: () =>
     getMatchingRequests({
@@ -191,12 +242,16 @@ module.exports = {
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
     }).then((data) => data.body.requests),
+  verifyDpsRemoveUserCaseload: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+    }).then((data) => data.body.requests),
   verifyDpsUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/nomisusersandroles/users/.*/unlock-user',
     }).then((data) => data.body.requests),
-
   verifyDpsUserDisable: () =>
     getMatchingRequests({
       method: 'PUT',

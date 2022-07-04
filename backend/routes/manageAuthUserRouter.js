@@ -77,6 +77,7 @@ const controller = ({ oauthApi }) => {
     getUserRolesAndGroupsApi,
     removeRoleApi,
     removeGroupApi,
+    undefined,
     enableUserApi,
     disableUserApi,
     '/search-external-users',
@@ -101,8 +102,8 @@ const controller = ({ oauthApi }) => {
   router.get('/change-email', getEmail)
   router.get('/change-email-success', emailSuccess)
   router.post('/change-email', postEmail)
-  router.get('/activate', enableUser)
-  router.get('/deactivate', disableUser)
+  router.post('/activate', enableUser)
+  router.post('/deactivate', disableUser)
   router.get('/deactivate/reason', deactivateUser)
   router.post('/deactivate/reason', postDeactivateUser)
   router.get('/details', userDetails)
