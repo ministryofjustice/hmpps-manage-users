@@ -55,17 +55,17 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const enableUserApi = (context, username) => nomisUsersAndRolesApi.enableUser(context, { username })
   const disableUserApi = (context, username) => nomisUsersAndRolesApi.disableUser(context, { username })
 
+  const saveUserRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
+  const removeUserRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeUserRole(context, username, role)
+
   const removeUserCaseloadApi = (context, username, caseload) =>
     nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
-
-  const saveRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
-  const removeRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeRole(context, username, role)
 
   const changeEmailApi = (context, username, email) => oauthApi.changeDpsEmail(context, username, { email })
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAssignableRolesAndMessageApi,
-    saveRolesApi,
+    saveUserRolesApi,
     '/manage-dps-users',
   )
 
@@ -77,7 +77,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     disableUser,
   } = userDetailsFactory(
     getUserAndRolesApi,
-    removeRoleApi,
+    removeUserRoleApi,
     undefined,
     removeUserCaseloadApi,
     enableUserApi,

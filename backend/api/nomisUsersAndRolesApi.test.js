@@ -99,7 +99,7 @@ describe('nomis users and roles API tests', () => {
       client.del = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = nomisUsersAndRolesApi.removeRole(context, 'TEST_USER', 'TEST_ROLE')
+      actual = nomisUsersAndRolesApi.removeUserRole(context, 'TEST_USER', 'TEST_ROLE')
     })
 
     it('should return any error from endpoint', () => {

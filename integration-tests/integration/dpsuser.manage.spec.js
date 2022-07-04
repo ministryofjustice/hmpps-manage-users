@@ -180,11 +180,11 @@ context('DPS user manage functionality', () => {
       const addRole = UserAddRolePage.verifyOnPage()
       addRole.hint('User Admin').should('contain.text', 'Administering users')
 
-      cy.task('stubDpsAddRoles', {})
+      cy.task('stubDpsAddUserRoles', {})
       addRole.choose('USER_ADMIN')
       addRole.addRoleButton().click()
 
-      cy.task('verifyDpsAddRoles').should((requests) => {
+      cy.task('verifyDpsAddUserRoles').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
@@ -192,10 +192,10 @@ context('DPS user manage functionality', () => {
 
       UserPage.verifyOnPage('Itag User')
 
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
       userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
 
-      cy.task('verifyDpsRemoveRole').should((requests) => {
+      cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
@@ -206,7 +206,7 @@ context('DPS user manage functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
       cy.signIn()
       editUser({})
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
 
       // Attempt to submit form without CSRF token:
       cy.request({
@@ -238,11 +238,11 @@ context('DPS user manage functionality', () => {
       const addRole = UserAddRolePage.verifyOnPage()
       addRole.hint('User Admin').should('contain.text', 'Administering users')
 
-      cy.task('stubDpsAddRoles')
+      cy.task('stubDpsAddUserRoles')
       addRole.choose('USER_ADMIN')
       addRole.addRoleButton().click()
 
-      cy.task('verifyDpsAddRoles').should((requests) => {
+      cy.task('verifyDpsAddUserRoles').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
@@ -250,10 +250,10 @@ context('DPS user manage functionality', () => {
 
       UserPage.verifyOnPage('Itag User')
 
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
       userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
 
-      cy.task('verifyDpsRemoveRole').should((requests) => {
+      cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')

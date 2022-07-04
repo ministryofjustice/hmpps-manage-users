@@ -148,7 +148,7 @@ module.exports = {
       method: 'PUT',
       urlPattern: '/nomisusersandroles/users/.*/lock-user',
     }),
-  stubDpsAddRoles: () =>
+  stubDpsAddUserRoles: () =>
     stubFor({
       request: {
         method: 'POST',
@@ -156,7 +156,7 @@ module.exports = {
       },
       response: { status: 200 },
     }),
-  stubDpsRemoveRole: () =>
+  stubDpsRemoveUserRole: () =>
     stubFor({
       request: {
         method: 'DELETE',
@@ -232,12 +232,12 @@ module.exports = {
         },
       ],
     }),
-  verifyDpsAddRoles: () =>
+  verifyDpsAddUserRoles: () =>
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/nomisusersandroles/users/.*/roles',
     }).then((data) => data.body.requests),
-  verifyDpsRemoveRole: () =>
+  verifyDpsRemoveUserRole: () =>
     getMatchingRequests({
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',

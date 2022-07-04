@@ -51,9 +51,9 @@ const nomisUsersAndRolesFactory = (client) => {
   const getUser = (context, username) => get(context, `/users/${username}`)
   const enableUser = (context, { username }) => put(context, `/users/${username}/unlock-user`)
   const disableUser = (context, { username }) => put(context, `/users/${username}/lock-user`)
-  const addRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
+  const addUserRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
-  const removeRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
+  const removeUserRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
   const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
   const removeUserCaseload = (context, username, caseloadId) =>
     del(context, `/users/${username}/caseloads/${caseloadId}`)
@@ -67,9 +67,9 @@ const nomisUsersAndRolesFactory = (client) => {
     getUser,
     enableUser,
     disableUser,
-    addRole,
+    addUserRole,
     addUserRoles,
-    removeRole,
+    removeUserRole,
     getUserCaseloads,
     removeUserCaseload,
   }
