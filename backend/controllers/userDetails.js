@@ -42,7 +42,7 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
-      caseloads,
+      caseloads: caseloads?.sort(sortAlphabetically),
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
@@ -131,6 +131,16 @@ const userDetailsFactory = (
   }
 
   return { index, removeRole, removeGroup, removeUserCaseload, enableUser, disableUser }
+}
+
+function sortAlphabetically(caseload1, caseload2) {
+  if (caseload1.name < caseload2.name) {
+    return -1
+  }
+  if (caseload1.name > caseload2.name) {
+    return 1
+  }
+  return 0
 }
 
 module.exports = {
