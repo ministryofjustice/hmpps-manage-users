@@ -54,8 +54,8 @@ describe('user detail factory', () => {
   const rolesStub = [{ roleName: 'roleName1', roleCode: 'roleCode1' }]
   const groupsStub = [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }]
   const caseloadsStub = [
-    { id: 'MDI', name: 'Moorland (HMP)' },
     { id: 'PVI', name: 'Pentonville (HMP)' },
+    { id: 'MDI', name: 'Moorland (HMP)' },
   ]
   const expectedUserDetails = {
     searchTitle: 'Search for an external user',
@@ -111,7 +111,7 @@ describe('user detail factory', () => {
       })
     })
 
-    it('should set caseloads, if returned', async () => {
+    it('should order and set caseloads, if returned', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub, caseloadsStub])
       await userDetails.index(req, { render })
       expect(render).toBeCalledWith('userDetails.njk', {
