@@ -305,10 +305,7 @@ describe('user detail factory', () => {
 
   describe('remove caseload', () => {
     it('should remove caseload and redirect', async () => {
-      getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, undefined, caseloadsStub])
-
       const reqWithCaseload = { params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' } }
-
       const redirect = jest.fn()
       const locals = jest.fn()
       await dpsUserDetails.removeUserCaseload(reqWithCaseload, { redirect, locals })
@@ -316,7 +313,7 @@ describe('user detail factory', () => {
       expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
     })
 
-    it('should ignore if user does not have caseload', async () => {
+    it('should ignore if error', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400 }
       removeUserCaseloadApi.mockRejectedValue(error)
@@ -328,6 +325,19 @@ describe('user detail factory', () => {
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
+    })
+
+    it('should refresh user details if user does not have caseload', async () => {
+      const redirect = jest.fn()
+      const error = { ...new Error('Does not exist error'), status: 404 }
+      removeUserCaseloadApi.mockRejectedValue(error)
+      await userDetails.removeUserCaseload(
+        {
+          params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' },
+        },
+        { redirect },
+      )
+      expect(redirect).toBeCalledWith('/manage-external-users/TEST_USER/details')
     })
   })
 

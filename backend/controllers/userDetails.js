@@ -106,8 +106,10 @@ const userDetailsFactory = (
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
-        // caseload already removed
         res.redirect(req.originalUrl)
+      } else if (error.status === 404) {
+        // caseload already removed
+        res.redirect(`${staffUrl}/details`)
       } else {
         throw error
       }
