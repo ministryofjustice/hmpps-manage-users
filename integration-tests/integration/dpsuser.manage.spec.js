@@ -26,8 +26,8 @@ context('DPS user manage functionality', () => {
     userPage.activeCaseloadRow().should('have.length', 1)
     userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
     userPage.caseloadRows().should('have.length', 3)
-    userPage.caseloadRows().eq(0).should('contain', 'Moorland')
-    userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(0).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(1).should('contain', 'Moorland')
     userPage.caseloadRows().eq(2).should('contain', 'Pentonville')
   })
 
@@ -282,7 +282,7 @@ context('DPS user manage functionality', () => {
       userPage.activeCaseloadRow().should('have.length', 1)
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
-      userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+      userPage.caseloadRows().eq(0).should('contain', 'Leeds')
 
       cy.task('verifyDpsRemoveUserCaseload')
       userPage.removeUserCaseload('LEI').click()
@@ -299,7 +299,7 @@ context('DPS user manage functionality', () => {
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
-      userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
 
       cy.task('stubDpsRemoveUserCaseload')
       userPage.removeUserCaseload('MDI').should('not.exist')
