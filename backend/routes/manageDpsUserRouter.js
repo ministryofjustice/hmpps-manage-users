@@ -103,7 +103,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   router.get('/change-email', getEmail)
   router.post('/change-email', postEmail)
   router.get('/change-email-success', emailSuccess)
-  router.get('/activate', enableUser)
+  router.post('/activate', enableUser)
   router.post('/deactivate', disableUser)
 
   return router

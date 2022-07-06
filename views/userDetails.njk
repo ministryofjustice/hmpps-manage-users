@@ -1,8 +1,9 @@
 {% extends "./partials/layout.njk" %}
-{%- from "govuk/components/button/macro.njk" import govukButton -%}
-{%- from "govuk/components/error-summary/macro.njk" import govukErrorSummary -%}
-{%- from "govuk/components/table/macro.njk" import govukTable -%}
-{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "./components/linkbutton/macro.njk" import linkButton %}
 
  {% block beforeContent %}
       {% if searchUrl === searchResultsUrl %}
@@ -69,12 +70,11 @@
                   }) }}
                 </td>
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                  <form method="post" action="{{ staffUrl }}/activate">
-                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                    <button type="submit" name="activate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="activate-button">
-                      Activate account
-                    </button>
-                  </form>
+                  {{ linkButton(csrfToken, {
+                    text: "Activate account",
+                    action: staffUrl + "/activate",
+                    id: "activate-button"
+                  })}}
                 </td>
               {% endif %}
             {% else %}
@@ -88,12 +88,11 @@
                 </td>
                 {% if showEnableDisable and staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                    <form method="post" action="{{ staffUrl }}/deactivate">
-                      <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                      <button type="submit" name="deactivate-button" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="deactivate-button">
-                        Deactivate account
-                      </button>
-                    </form>
+                    {{ linkButton(csrfToken, {
+                      text: "Deactivate account",
+                      action: staffUrl + "/deactivate",
+                      id: "deactivate-button"
+                    })}}
                   </td>
                 {% endif %}
               {% else %}
@@ -106,7 +105,11 @@
                 </td>
                 {% if showEnableDisable and not staff.enabled %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                    <a href="{{ staffUrl }}/activate" class="govuk-link" data-qa="enable-button">Activate account</a>
+                    {{ linkButton(csrfToken, {
+                      text: "Activate account",
+                      action: staffUrl + "/activate",
+                      id: "enable-button"
+                    })}}
                   </td>
                 {% endif %}
               {% endif %}
@@ -209,12 +212,11 @@
         {% set rows = [] %}
         {% for userRole in roles %}
           {% set roleLink %}
-            <form method="post" action="{{ staffUrl }}/roles/{{ userRole.roleCode }}/remove">
-              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-              <button type="submit" name="remove-button-{{ userRole.roleCode }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ userRole.roleCode }}">
-                Remove role
-              </button>
-            </form>
+            {{ linkButton(csrfToken, {
+              text: "Remove role",
+              action: staffUrl + "/roles/" + userRole.roleCode + "/remove",
+              id: "remove-button-" + userRole.roleCode
+            })}}
           {% endset %}
           {% set rows = (rows.push([
             { text: userRole.roleName },
@@ -241,12 +243,11 @@
           {% for userGroup in groups %}
             {% if userGroup.showRemove %}
               {% set groupLink %}
-                <form method="post" action="{{ staffUrl }}/groups/{{ userGroup.groupCode }}/remove">
-                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                  <button type="submit" name="remove-button-{{ userGroup.groupCode }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ userGroup.groupCode }}">
-                    Remove group
-                  </button>
-                </form>
+                {{ linkButton(csrfToken, {
+                  text: "Remove group",
+                  action: staffUrl + "/groups/" + userGroup.groupCode + "/remove",
+                  id: "remove-button-" + userGroup.groupCode
+                })}}
               {% endset %}
               {% set rows = (rows.push([
                 { text: userGroup.groupName },
@@ -290,12 +291,11 @@
           {% for caseload in caseloads %}
             {% set caseloadLink %}
               {% if caseload.id != staff.activeCaseload.id %}
-                <form method="post" action="{{ staffUrl }}/caseloads/{{ caseload.id }}/remove">
-                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-                  <button type="submit" name="remove-button-{{ caseload.id }}" value="submit_value" class="link-button govuk-body-m govuk-link" data-qa="remove-button-{{ caseload.id }}">
-                    Remove caseload
-                  </button>
-                </form>
+                {{ linkButton(csrfToken, {
+                  text: "Remove caseload",
+                  action: staffUrl + "/caseloads/" + caseload.id + "/remove",
+                  id: "remove-button-" + caseload.id
+                })}}
               {% endif %}
             {% endset %}
 
