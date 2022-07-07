@@ -28,7 +28,7 @@ describe('select caseloads factory', () => {
           { text: 'Moorland (HMP)', value: 'MDI' },
           { text: 'Pentonville (HMP)', value: 'PVI' },
         ],
-        staff: { username: 'BOB', name: 'Billy Bob' },
+        staff: { username: 'BOB', firstName: 'Billy', lastName: 'Bob', name: 'Billy Bob' },
         staffUrl: '/manage-dps-users/TEST_USER/details',
         searchTitle: 'Search for a DPS user',
         searchUrl: '/search-with-filter-dps-users',
@@ -48,7 +48,7 @@ describe('select caseloads factory', () => {
       expect(render).toBeCalledWith('addUserCaseload.njk', {
         errors: { error: 'some error' },
         caseloadDropdownValues: [],
-        staff: { name: 'Billy Bob', username: 'BOB' },
+        staff: { username: 'BOB', firstName: 'Billy', lastName: 'Bob', name: 'Billy Bob' },
         staffUrl: '/manage-dps-users/TEST_USER/details',
         searchTitle: 'Search for a DPS user',
         searchUrl: '/search-with-filter-dps-users',

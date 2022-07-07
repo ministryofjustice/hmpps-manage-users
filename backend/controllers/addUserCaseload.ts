@@ -18,7 +18,7 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
     }))
 
     res.render('addUserCaseload.njk', {
-      staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
+      staff: { ...user, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
       caseloadDropdownValues,
       searchTitle: 'Search for a DPS user',
