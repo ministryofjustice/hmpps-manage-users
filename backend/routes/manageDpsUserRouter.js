@@ -1,5 +1,6 @@
 const express = require('express')
 const { changeEmailFactory } = require('../controllers/changeEmail')
+const { selectCaseloadsFactory } = require('../controllers/addUserCaseload')
 const { selectRolesFactory } = require('../controllers/addRole')
 const { userDetailsFactory } = require('../controllers/userDetails')
 
@@ -20,7 +21,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     ]
   }
 
-  const getUserAndRolesApi = async (context, username) => {
+  const getUserRolesAndCaseloadsApi = async (context, username) => {
     await oauthApi.syncDpsEmail(context, username)
 
     const [user, roles, userEmail, userCaseloads] = await Promise.all([
@@ -44,6 +45,18 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     ]
   }
 
+  const getUserAssignableCaseloadsApi = async (context, username) => {
+    const [user, userCaseloads, allCaseloads] = await Promise.all([
+      nomisUsersAndRolesApi.getUser(context, username),
+      nomisUsersAndRolesApi.getUserCaseloads(context, username),
+      nomisUsersAndRolesApi.getCaseloads(context),
+    ])
+    return [
+      user,
+      allCaseloads.filter((c) => !userCaseloads.caseloads?.some((userCaseload) => userCaseload.id === c.id)),
+    ]
+  }
+
   const getUserApi = async (context, username) => {
     const [user, userEmail] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
@@ -58,6 +71,8 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const saveUserRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
   const removeUserRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeUserRole(context, username, role)
 
+  const saveUserCaseloadsApi = (context, username, caseloads) =>
+    nomisUsersAndRolesApi.addUserCaseloads(context, username, caseloads)
   const removeUserCaseloadApi = (context, username, caseload) =>
     nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
 
@@ -69,6 +84,12 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     '/manage-dps-users',
   )
 
+  const { index: selectUserCaseloads, post: postUserCaseloads } = selectCaseloadsFactory(
+    getUserAssignableCaseloadsApi,
+    saveUserCaseloadsApi,
+    '/manage-dps-users',
+  )
+
   const {
     index: userDetails,
     removeRole,
@@ -76,7 +97,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     enableUser,
     disableUser,
   } = userDetailsFactory(
-    getUserAndRolesApi,
+    getUserRolesAndCaseloadsApi,
     removeUserRoleApi,
     undefined,
     removeUserCaseloadApi,
@@ -98,6 +119,8 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
   router.post('/roles/:role/remove', removeRole)
+  router.get('/select-caseloads', selectUserCaseloads)
+  router.post('/select-caseloads', postUserCaseloads)
   router.post('/caseloads/:caseload/remove', removeUserCaseload)
   router.get('/details', userDetails)
   router.get('/change-email', getEmail)
