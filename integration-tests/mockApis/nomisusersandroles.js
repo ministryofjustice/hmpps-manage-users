@@ -156,6 +156,14 @@ module.exports = {
       },
       response: { status: 200 },
     }),
+  stubDpsAddUserCaseloads: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/nomisusersandroles/users/.*/caseloads',
+      },
+      response: { status: 200 },
+    }),
   stubDpsRemoveUserRole: () =>
     stubFor({
       request: {
@@ -241,6 +249,11 @@ module.exports = {
     getMatchingRequests({
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
+    }).then((data) => data.body.requests),
+  verifyDpsAddUserCaseloads: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/nomisusersandroles/users/.*/caseloads',
     }).then((data) => data.body.requests),
   verifyDpsRemoveUserCaseload: () =>
     getMatchingRequests({

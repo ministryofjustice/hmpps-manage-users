@@ -1,0 +1,119 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set title =  "Select caseloads" %}
+
+ {% block beforeContent %}
+     {% set breadcrumbs =
+       [
+         { text: "Home", href: homeUrl },
+         { text: "Manage user accounts", href: '/' },
+         { text: searchTitle, href: searchUrl },
+         { text: staff.name, href: staffUrl },
+         { text: title }
+       ]
+     %}
+   {{ govukBreadcrumbs({
+     items: breadcrumbs
+   }) }}
+ {% endblock %}
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    {% if message.length > 0 %}
+    {{ govukNotificationBanner({
+      html: message,
+      attributes: { "data-qa": "banner-message" }
+    }) }}
+    {% endif %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">{{ staff.name }}</h1>
+          <table class="govuk-table">
+            <tbody class="govuk-table__body">
+            <tr class="govuk-table__row user-enabled-status">
+              {% if staff.active %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: "Active account",
+                    classes: "govuk-tag--turquoise",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+              {% else %}
+                <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: 'Inactive account - ' + staff.accountStatus,
+                    classes: "govuk-tag--pink",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                </td>
+              {% endif %}
+            </tr>
+          </tbody>
+         </table>
+      </div>
+    </div>
+
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {% if caseloadDropdownValues.length == 0 %}
+          <p class="govuk-body" data-qa="no-caseloads">
+            There are no caseloads available for you to assign.
+          </p>
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: staffUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "data-qa": "cancel-link" }
+          }) }}
+        {% else %}
+          <form method="POST">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+            {{ govukCheckboxes({
+              idPrefix: 'caseloads',
+              name: 'caseloads',
+              items: caseloadDropdownValues,
+              errorMessage: errors | findError('caseloads')
+            }) }}
+
+            {{ govukButton({
+              text: "Confirm",
+              type: "submit",
+              classes: "govuk-!-margin-right-1",
+              attributes: { "data-qa": "add-button" },
+              preventDoubleClick: true
+            }) }}
+
+            {{ govukButton({
+              text: "Cancel",
+              element: 'a',
+              href: staffUrl,
+              classes: "govuk-button--secondary",
+              attributes: { "data-qa": "cancel-link" }
+            }) }}
+          </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+{% endblock %}
+</div>

@@ -2,6 +2,7 @@ const UserPage = require('../pages/userPage')
 const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
+const UserAddCaseloadPage = require('../pages/userAddCaseloadPage')
 
 const { editUser, goToSearchPage } = require('../support/dpsuser.helpers')
 
@@ -284,12 +285,12 @@ context('DPS user manage functionality', () => {
       userPage.caseloadRows().should('have.length', 3)
       userPage.caseloadRows().eq(0).should('contain', 'Leeds')
 
+      cy.task('stubDpsRemoveUserCaseload')
       cy.task('verifyDpsRemoveUserCaseload')
       userPage.removeUserCaseload('LEI').click()
 
       cy.task('verifyDpsRemoveUserCaseload').should((requests) => {
         expect(requests).to.have.lengthOf(1)
-
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/caseloads/LEI')
       })
     })
@@ -315,6 +316,96 @@ context('DPS user manage functionality', () => {
       cy.request({
         method: 'POST',
         url: '/manage-dps-users/ITAG_USER5/caseloads/LEI/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+
+  describe('Add caseloads to a user', () => {
+    it('Should add a caseload to a user', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubBannerNoMessage')
+      cy.task('stubManageUserGetRoles', {})
+      cy.task('stubUserCaseloads', {
+        username: 'ITAG_USER',
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        caseloads: [
+          {
+            id: 'MDI',
+            name: 'Moorland',
+          },
+        ],
+      })
+      cy.task('stubDpsGetCaseloads', {})
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+
+      cy.task('stubDpsAddUserCaseloads', {})
+      addUserCaseload.choose('LEI')
+      addUserCaseload.addCaseloadButton().click()
+
+      cy.task('verifyDpsAddUserCaseloads').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal(['LEI'])
+      })
+      UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should show no caseloads available if all set', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubBannerNoMessage')
+      cy.task('stubManageUserGetRoles', {})
+      cy.task('stubUserCaseloads')
+      cy.task('stubDpsGetCaseloads', {})
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+
+      addUserCaseload.noCaseloads().should('contain', 'There are no caseloads available for you to assign.')
+      addUserCaseload.cancel()
+
+      UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should provide breadcrumb link back to user', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubDpsGetCaseloads', {})
+      cy.task('stubUserCaseloads', {})
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+      addUserCaseload.userBreadcrumb('ITAG_USER5').should('have.attr', 'href', '/manage-dps-users/ITAG_USER5/details')
+    })
+
+    it('Should check for CSRF token', () => {
+      editUser({})
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-dps-users/ITAG_USER5/select-caseloads',
         body: {},
         failOnStatusCode: false,
       }).then((response) => {

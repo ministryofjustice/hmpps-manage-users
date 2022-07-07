@@ -9,6 +9,7 @@ const userPage = (user) =>
     caseloadRows: () => cy.get('[data-qa="user-caseloads"] tbody tr'),
     addRole: () => cy.get('[data-qa="add-role-button"]'),
     addGroup: () => cy.get('[data-qa="add-group-button"]'),
+    addUserCaseload: () => cy.get('[data-qa="add-caseload-button"]'),
     removeRole: (role) => cy.get(`[data-qa="remove-button-${role}"]`),
     removeGroup: (group) => cy.get(`[data-qa="remove-button-${group}"]`),
     removeUserCaseload: (caseload) => cy.get(`[data-qa="remove-button-${caseload}"]`),

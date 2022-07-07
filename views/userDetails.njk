@@ -311,6 +311,13 @@
             attributes: { "data-qa": "user-caseloads" }
           }) }}
 
+          {{ govukButton({
+            text: "Add another caseload",
+            element: 'a',
+            href: staffUrl + '/select-caseloads',
+            classes: "govuk-button",
+            attributes: { "data-qa": "add-caseload-button" }
+          }) }}
         {% endif %}
 
         <p class="govuk-body">
