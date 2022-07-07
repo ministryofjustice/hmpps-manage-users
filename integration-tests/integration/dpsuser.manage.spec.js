@@ -285,6 +285,7 @@ context('DPS user manage functionality', () => {
       userPage.caseloadRows().should('have.length', 3)
       userPage.caseloadRows().eq(0).should('contain', 'Leeds')
 
+      cy.task('stubDpsRemoveUserCaseload')
       cy.task('verifyDpsRemoveUserCaseload')
       userPage.removeUserCaseload('LEI').click()
 
@@ -381,6 +382,21 @@ context('DPS user manage functionality', () => {
       addUserCaseload.cancel()
 
       UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should provide breadcrumb link back to user', () => {
+      const userPage = editUser({})
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubDpsGetCaseloads', {})
+      cy.task('stubUserCaseloads', {})
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+      addUserCaseload.userBreadcrumb('ITAG_USER5').should('have.attr', 'href', '/manage-dps-users/ITAG_USER5/details')
     })
 
     it('Should check for CSRF token', () => {

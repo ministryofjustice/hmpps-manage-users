@@ -7,6 +7,7 @@ const userAddCaseloadPage = () =>
     noCaseloads: () => cy.get('[data-qa="no-caseloads"]'),
     cancel: () => cy.get('[data-qa="cancel-link"]').click(),
     message: () => cy.get('[data-qa="banner-message"]'),
+    userBreadcrumb: (user) => cy.get(`a[href="/manage-dps-users/${user}/details"]`),
   })
 
 export default {
