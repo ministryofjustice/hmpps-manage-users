@@ -325,8 +325,24 @@ context('DPS user manage functionality', () => {
   })
 
   describe('Add caseloads to a user', () => {
-    it('Should add a caseload to a user', () => {
+    it('Should not show add caseload button if no role', () => {
       const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.addUserCaseload().should('not.exist')
+    })
+
+    it('Should not show remove caseload link if no role', () => {
+      const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.removeUserCaseload('LEI').should('not.exist')
+    })
+
+    it('Should add a caseload to a user', () => {
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -364,7 +380,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should show no caseloads available if all set', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -385,7 +401,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should provide breadcrumb link back to user', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -400,7 +416,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should check for CSRF token', () => {
-      editUser({})
+      editUser({ isAdmin: true })
 
       // Attempt to submit form without CSRF token:
       cy.request({
