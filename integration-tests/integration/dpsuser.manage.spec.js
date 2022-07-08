@@ -278,7 +278,7 @@ context('DPS user manage functionality', () => {
 
   describe('Remove a caseload from a user', () => {
     it('Should remove a caseload from a user', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().should('have.length', 1)
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
@@ -296,7 +296,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Active caseload does not have a remove link', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -304,13 +304,11 @@ context('DPS user manage functionality', () => {
 
       cy.task('stubDpsRemoveUserCaseload')
       userPage.removeUserCaseload('MDI').should('not.exist')
+      userPage.removeUserCaseload('LEI').should('exist')
     })
 
     it('Should check for CSRF token', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-      cy.signIn()
-      editUser({})
-      cy.task('stubDpsRemoveUserCaseload')
+      editUser({ isAdmin: true })
 
       // Attempt to submit form without CSRF token:
       cy.request({
@@ -325,8 +323,24 @@ context('DPS user manage functionality', () => {
   })
 
   describe('Add caseloads to a user', () => {
-    it('Should add a caseload to a user', () => {
+    it('Should not show add caseload button if no role', () => {
       const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.addUserCaseload().should('not.exist')
+    })
+
+    it('Should not show remove caseload link if no role', () => {
+      const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.removeUserCaseload('LEI').should('not.exist')
+    })
+
+    it('Should add a caseload to a user', () => {
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -364,7 +378,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should show no caseloads available if all set', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -385,7 +399,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should provide breadcrumb link back to user', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
@@ -400,7 +414,7 @@ context('DPS user manage functionality', () => {
     })
 
     it('Should check for CSRF token', () => {
-      editUser({})
+      editUser({ isAdmin: true })
 
       // Attempt to submit form without CSRF token:
       cy.request({

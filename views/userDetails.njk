@@ -290,7 +290,7 @@
           {% set rows = [] %}
           {% for caseload in caseloads %}
             {% set caseloadLink %}
-              {% if caseload.id != staff.activeCaseload.id %}
+              {% if hasMaintainDpsUsersAdmin and (caseload.id != staff.activeCaseload.id) %}
                 {{ linkButton(csrfToken, {
                   text: "Remove caseload",
                   action: staffUrl + "/caseloads/" + caseload.id + "/remove",
@@ -311,13 +311,15 @@
             attributes: { "data-qa": "user-caseloads" }
           }) }}
 
-          {{ govukButton({
-            text: "Add another caseload",
-            element: 'a',
-            href: staffUrl + '/select-caseloads',
-            classes: "govuk-button",
-            attributes: { "data-qa": "add-caseload-button" }
-          }) }}
+          {% if hasMaintainDpsUsersAdmin %}
+            {{ govukButton({
+              text: "Add another caseload",
+              element: 'a',
+              href: staffUrl + '/select-caseloads',
+              classes: "govuk-button",
+              attributes: { "data-qa": "add-caseload-button" }
+            }) }}
+          {% endif %}
         {% endif %}
 
         <p class="govuk-body">
