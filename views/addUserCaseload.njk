@@ -86,6 +86,7 @@
         {% else %}
           <form method="POST">
             <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+            <input type="hidden" name="assignableCaseloads" value="{{ [assignableIds] }}" />
 
             {{ govukCheckboxes({
               idPrefix: 'caseloads',
