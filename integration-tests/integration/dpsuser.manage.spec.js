@@ -2,6 +2,7 @@ const UserPage = require('../pages/userPage')
 const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
+const UserAddCaseloadPage = require('../pages/userAddCaseloadPage')
 
 const { editUser, goToSearchPage } = require('../support/dpsuser.helpers')
 
@@ -26,8 +27,8 @@ context('DPS user manage functionality', () => {
     userPage.activeCaseloadRow().should('have.length', 1)
     userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
     userPage.caseloadRows().should('have.length', 3)
-    userPage.caseloadRows().eq(0).should('contain', 'Moorland')
-    userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(0).should('contain', 'Leeds')
+    userPage.caseloadRows().eq(1).should('contain', 'Moorland')
     userPage.caseloadRows().eq(2).should('contain', 'Pentonville')
   })
 
@@ -180,11 +181,11 @@ context('DPS user manage functionality', () => {
       const addRole = UserAddRolePage.verifyOnPage()
       addRole.hint('User Admin').should('contain.text', 'Administering users')
 
-      cy.task('stubDpsAddRoles', {})
+      cy.task('stubDpsAddUserRoles', {})
       addRole.choose('USER_ADMIN')
       addRole.addRoleButton().click()
 
-      cy.task('verifyDpsAddRoles').should((requests) => {
+      cy.task('verifyDpsAddUserRoles').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
@@ -192,10 +193,10 @@ context('DPS user manage functionality', () => {
 
       UserPage.verifyOnPage('Itag User')
 
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
       userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
 
-      cy.task('verifyDpsRemoveRole').should((requests) => {
+      cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
@@ -206,7 +207,7 @@ context('DPS user manage functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
       cy.signIn()
       editUser({})
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
 
       // Attempt to submit form without CSRF token:
       cy.request({
@@ -238,11 +239,11 @@ context('DPS user manage functionality', () => {
       const addRole = UserAddRolePage.verifyOnPage()
       addRole.hint('User Admin').should('contain.text', 'Administering users')
 
-      cy.task('stubDpsAddRoles')
+      cy.task('stubDpsAddUserRoles')
       addRole.choose('USER_ADMIN')
       addRole.addRoleButton().click()
 
-      cy.task('verifyDpsAddRoles').should((requests) => {
+      cy.task('verifyDpsAddUserRoles').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(JSON.parse(requests[0].body)).to.deep.equal(['USER_ADMIN'])
@@ -250,10 +251,10 @@ context('DPS user manage functionality', () => {
 
       UserPage.verifyOnPage('Itag User')
 
-      cy.task('stubDpsRemoveRole')
+      cy.task('stubDpsRemoveUserRole')
       userPage.removeRole('ANOTHER_GENERAL_ROLE').click()
 
-      cy.task('verifyDpsRemoveRole').should((requests) => {
+      cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
@@ -277,44 +278,181 @@ context('DPS user manage functionality', () => {
 
   describe('Remove a caseload from a user', () => {
     it('Should remove a caseload from a user', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().should('have.length', 1)
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
-      userPage.caseloadRows().eq(1).should('contain', 'Leeds')
+      userPage.caseloadRows().eq(0).should('contain', 'Leeds')
 
+      cy.task('stubDpsRemoveUserCaseload')
       cy.task('verifyDpsRemoveUserCaseload')
       userPage.removeUserCaseload('LEI').click()
 
       cy.task('verifyDpsRemoveUserCaseload').should((requests) => {
         expect(requests).to.have.lengthOf(1)
-
         expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/caseloads/LEI')
       })
     })
 
     it('Active caseload does not have a remove link', () => {
-      const userPage = editUser({})
+      const userPage = editUser({ isAdmin: true })
 
       userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
       userPage.caseloadRows().should('have.length', 3)
-      userPage.caseloadRows().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
 
       cy.task('stubDpsRemoveUserCaseload')
       userPage.removeUserCaseload('MDI').should('not.exist')
+      userPage.removeUserCaseload('LEI').should('exist')
     })
 
     it('Should check for CSRF token', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'ROLES_ADMIN' }] })
-      cy.signIn()
-      editUser({})
-      cy.task('stubDpsRemoveUserCaseload')
+      editUser({ isAdmin: true })
 
       // Attempt to submit form without CSRF token:
       cy.request({
         method: 'POST',
         url: '/manage-dps-users/ITAG_USER5/caseloads/LEI/remove',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+
+  describe('Add caseloads to a user', () => {
+    it('Should not show add caseload button if no role', () => {
+      const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.addUserCaseload().should('not.exist')
+    })
+
+    it('Should not show remove caseload link if no role', () => {
+      const userPage = editUser({})
+      cy.task('stubDpsUserDetails', {})
+
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.removeUserCaseload('LEI').should('not.exist')
+    })
+
+    it('Should add a caseload to a user', () => {
+      const userPage = editUser({ isAdmin: true })
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubBannerNoMessage')
+      cy.task('stubManageUserGetRoles', {})
+      cy.task('stubUserCaseloads', {
+        username: 'ITAG_USER',
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        caseloads: [
+          {
+            id: 'MDI',
+            name: 'Moorland',
+          },
+        ],
+      })
+      cy.task('stubDpsGetCaseloads')
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+
+      cy.task('stubDpsAddUserCaseloads')
+      addUserCaseload.choose('LEI')
+      addUserCaseload.addCaseloadButton().click()
+
+      cy.task('verifyDpsAddUserCaseloads').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal(['LEI'])
+      })
+      UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should add all available caseloads to a user', () => {
+      const userPage = editUser({ isAdmin: true })
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubBannerNoMessage')
+      cy.task('stubManageUserGetRoles', {})
+
+      cy.task('stubUserCaseloads', {
+        username: 'ITAG_USER',
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+      })
+      cy.task('stubDpsGetCaseloads')
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+
+      cy.task('stubDpsAddUserCaseloads')
+      addUserCaseload.choose('ALL')
+      addUserCaseload.addCaseloadButton().click()
+
+      cy.task('verifyDpsAddUserCaseloads').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+        expect(JSON.parse(requests[0].body)).to.deep.equal(['MDI', 'LEI'])
+      })
+      UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should show no caseloads available if none assignable', () => {
+      const userPage = editUser({ isAdmin: true })
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubBannerNoMessage')
+      cy.task('stubManageUserGetRoles', {})
+      cy.task('stubUserCaseloads')
+      cy.task('stubDpsGetCaseloads')
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+
+      addUserCaseload.noCaseloads().should('contain', 'There are no caseloads available for you to assign.')
+      addUserCaseload.cancel()
+
+      UserPage.verifyOnPage('Itag User')
+    })
+
+    it('Should provide breadcrumb link back to user', () => {
+      const userPage = editUser({ isAdmin: true })
+
+      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
+      userPage.caseloadRows().should('have.length', 3)
+      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
+
+      cy.task('stubDpsGetCaseloads')
+      cy.task('stubUserCaseloads', {})
+
+      userPage.addUserCaseload().click()
+      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
+      addUserCaseload.userBreadcrumb('ITAG_USER5').should('have.attr', 'href', '/manage-dps-users/ITAG_USER5/details')
+    })
+
+    it('Should check for CSRF token', () => {
+      editUser({ isAdmin: true })
+
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-dps-users/ITAG_USER5/select-caseloads',
         body: {},
         failOnStatusCode: false,
       }).then((response) => {

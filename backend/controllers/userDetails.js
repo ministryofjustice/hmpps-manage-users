@@ -42,7 +42,7 @@ const userDetailsFactory = (
       staffUrl,
       roles,
       groups,
-      caseloads,
+      caseloads: caseloads?.sort(sortAlphabetically),
       hasMaintainDpsUsersAdmin,
       errors: req.flash('deleteGroupErrors'),
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
@@ -106,8 +106,10 @@ const userDetailsFactory = (
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
-        // caseload already removed
         res.redirect(req.originalUrl)
+      } else if (error.status === 404) {
+        // caseload already removed
+        res.redirect(`${staffUrl}/details`)
       } else {
         throw error
       }
@@ -131,6 +133,16 @@ const userDetailsFactory = (
   }
 
   return { index, removeRole, removeGroup, removeUserCaseload, enableUser, disableUser }
+}
+
+function sortAlphabetically(caseload1, caseload2) {
+  if (caseload1.name < caseload2.name) {
+    return -1
+  }
+  if (caseload1.name > caseload2.name) {
+    return 1
+  }
+  return 0
 }
 
 module.exports = {

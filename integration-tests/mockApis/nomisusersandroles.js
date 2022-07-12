@@ -148,7 +148,7 @@ module.exports = {
       method: 'PUT',
       urlPattern: '/nomisusersandroles/users/.*/lock-user',
     }),
-  stubDpsAddRoles: () =>
+  stubDpsAddUserRoles: () =>
     stubFor({
       request: {
         method: 'POST',
@@ -156,7 +156,15 @@ module.exports = {
       },
       response: { status: 200 },
     }),
-  stubDpsRemoveRole: () =>
+  stubDpsAddUserCaseloads: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/nomisusersandroles/users/.*/caseloads',
+      },
+      response: { status: 200 },
+    }),
+  stubDpsRemoveUserRole: () =>
     stubFor({
       request: {
         method: 'DELETE',
@@ -232,15 +240,20 @@ module.exports = {
         },
       ],
     }),
-  verifyDpsAddRoles: () =>
+  verifyDpsAddUserRoles: () =>
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/nomisusersandroles/users/.*/roles',
     }).then((data) => data.body.requests),
-  verifyDpsRemoveRole: () =>
+  verifyDpsRemoveUserRole: () =>
     getMatchingRequests({
       method: 'DELETE',
       urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
+    }).then((data) => data.body.requests),
+  verifyDpsAddUserCaseloads: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/nomisusersandroles/users/.*/caseloads',
     }).then((data) => data.body.requests),
   verifyDpsRemoveUserCaseload: () =>
     getMatchingRequests({

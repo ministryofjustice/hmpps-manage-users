@@ -17,15 +17,15 @@ describe('Manage DPS user router', () => {
   }
   const router = manageDpsUserRouter(apis)
   // @ts-ignore
-  const getUserAndRolesApi = router.get.mock.calls[1][1]
+  const getUserRolesAndCaseloadsApi = router.get.mock.calls[2][1]
   // @ts-ignore
-  const getUserApi = router.get.mock.calls[2][1]
+  const getUserApi = router.get.mock.calls[3][1]
 
   beforeEach(() => {
     jest.clearAllMocks()
   })
 
-  describe('getUserAndRolesApi', () => {
+  describe('getUserRolesAndCaseloadsApi', () => {
     it('should map the email info onto the user', async () => {
       apis.nomisUsersAndRolesApi.getUser.mockResolvedValue({
         username: 'joe',
@@ -45,7 +45,7 @@ describe('Manage DPS user router', () => {
         ],
       })
       const context = { user: 'bob' }
-      const results = await getUserAndRolesApi({ locals: context }, 'joe')
+      const results = await getUserRolesAndCaseloadsApi({ locals: context }, 'joe')
       expect(results).toEqual([
         {
           username: 'joe',

@@ -99,7 +99,7 @@ describe('nomis users and roles API tests', () => {
       client.del = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = nomisUsersAndRolesApi.removeRole(context, 'TEST_USER', 'TEST_ROLE')
+      actual = nomisUsersAndRolesApi.removeUserRole(context, 'TEST_USER', 'TEST_ROLE')
     })
 
     it('should return any error from endpoint', () => {
@@ -166,6 +166,25 @@ describe('nomis users and roles API tests', () => {
 
       expect(client.get).toBeCalledWith(context, '/users/TEST_USER/caseloads')
       expect(actual).toEqual(userCaseloadResponse)
+    })
+  })
+
+  describe('addUserCaseloads', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = nomisUsersAndRolesApi.addUserCaseloads(context, 'TEST_USER', ['TEST_CASELOAD'])
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/users/TEST_USER/caseloads', ['TEST_CASELOAD'])
     })
   })
 
