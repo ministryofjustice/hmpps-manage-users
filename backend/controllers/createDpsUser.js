@@ -74,9 +74,12 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
           const { userMessage } = err.response.body
           const errorDetails = [{ text: userMessage }]
           stashStateAndRedirectToIndex(req, res, errorDetails, [user])
-        } else if (err.status === 409 && err.response && err.response.body) {
+        } else if (err.status === 409 && err.response && err.response.body.errorCode === 601) {
           const usernameError = [{ href: '#username', text: 'Username already exists' }]
           stashStateAndRedirectToIndex(req, res, usernameError, [user])
+        } else if (err.status === 409 && err.response && err.response.body.errorCode === 602) {
+          const emailDomainError = [{ href: '#email', text: 'Invalid Email domain' }]
+          stashStateAndRedirectToIndex(req, res, emailDomainError, [user])
         } else {
           throw err
         }

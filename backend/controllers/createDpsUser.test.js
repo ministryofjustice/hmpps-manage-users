@@ -254,7 +254,7 @@ describe('create user factory', () => {
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { userMessage: 'Username already exists' } },
+        response: { body: { errorCode: 601, userMessage: 'Username already exists' } },
       }
 
       createUser.mockRejectedValue(error)
@@ -277,6 +277,38 @@ describe('create user factory', () => {
         {
           href: '#username',
           text: 'Username already exists',
+        },
+      ])
+    })
+
+    it('should fail gracefully if email domain is invalid', async () => {
+      const redirect = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: { body: { errorCode: 602, userMessage: 'Invalid Email domain' } },
+      }
+
+      createUser.mockRejectedValue(error)
+      const req = {
+        params: {},
+        body: {
+          email: 'bob@digital.justice.gov.uk',
+          username: 'BOB_ADM',
+          firstName: 'bob',
+          lastName: 'smith',
+          defaultCaseloadId: 'MDI',
+          userType: 'DPS_GEN',
+        },
+        flash: jest.fn(),
+        originalUrl: '/some-location',
+      }
+      await createDpsUser.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          href: '#email',
+          text: 'Invalid Email domain',
         },
       ])
     })
