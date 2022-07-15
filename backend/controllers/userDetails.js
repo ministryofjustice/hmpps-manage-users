@@ -19,9 +19,9 @@ const userDetailsFactory = (
   const index = async (req, res) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}`
-    const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
-    const hasMaintainDpsUsersAdmin = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
-    const hasManageDPSUserAccount = Boolean(res.locals && res.locals.user && res.locals.user.manageDPSUserAccount)
+    const hasMaintainAuthUsers = Boolean(res.locals?.user?.maintainAuthUsers)
+    const hasMaintainDpsUsersAdmin = Boolean(res.locals?.user?.maintainAccessAdmin)
+    const hasManageDPSUserAccount = Boolean(res.locals?.user?.manageDPSUserAccount)
 
     const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
     const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
@@ -48,7 +48,6 @@ const userDetailsFactory = (
       canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
       showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
       showGroups: Boolean(removeGroupApi),
-      showCaseloads: Boolean(user.activeCaseload),
       showExtraUserDetails,
       showUsername: user.email !== user.username.toLowerCase(),
       displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,

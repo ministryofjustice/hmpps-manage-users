@@ -33,15 +33,26 @@ context('DPS user manage functionality', () => {
   })
 
   it('Should not display caseload details for a user with no caseloads', () => {
-    const userPage = editUser({ activeCaseload: false })
+    const userPage = editUser({
+      isAdmin: false,
+      activeCaseload: false,
+      userCaseloads: {
+        username: 'ITAG_USER',
+        activeCaseload: {
+          id: 'MDI',
+          name: 'Moorland',
+        },
+        caseloads: [],
+      },
+    })
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
     userPage.userRows().eq(2).should('contain', 'Yes')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
-    userPage.activeCaseloadRow().should('not.exist')
-    userPage.caseloadRows().should('not.exist')
+    userPage.activeCaseload().should('be.empty')
+    userPage.caseloadRows().should('have.length', 0)
   })
 
   it('Should leave email blank if no email for user ', () => {

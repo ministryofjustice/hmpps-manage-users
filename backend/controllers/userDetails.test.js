@@ -61,7 +61,6 @@ describe('user detail factory', () => {
     searchTitle: 'Search for an external user',
     searchResultsUrl: '/search-external-users/results',
     searchUrl: '/search-external-users',
-    showCaseloads: false,
     staff: {
       firstName: 'Billy',
       lastName: 'Bob',

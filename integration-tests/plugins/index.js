@@ -9,11 +9,11 @@ module.exports = (on) => {
   on('task', {
     ...auth,
     reset: resetStubs,
-    stubSignIn: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] }) =>
+    stubSignIn: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }], userCaseloads = null }) =>
       Promise.all([
         auth.stubSignIn(username, roles),
         auth.stubUserMe({}),
-        nomisUsersAndRoles.stubUserCaseloads(),
+        nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
         tokenverification.stubVerifyToken(true),
       ]),
     stubAuthHealth: (status) => auth.stubHealth(status),
