@@ -173,7 +173,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['false'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })
@@ -215,7 +215,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: [''] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['false'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })
@@ -249,7 +249,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['4'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['false'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })
