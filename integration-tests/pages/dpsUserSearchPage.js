@@ -8,6 +8,7 @@ const activeCaseloadFilterRadioButton = (text) => cy.contains('label', text).pre
 
 const caseload = () => cy.get('[id="groupCode"]')
 const roleSearch = () => cy.get('[id="roleCode-search"]')
+const filterAnyRole = () => cy.get('[id="inclusiveRoles-2"]')
 const roleCheckbox = (text) => cy.contains('label', text).prev()
 const roleCheckboxLabel = (text) => cy.get('label').contains(text)
 
@@ -46,6 +47,7 @@ const dpsUserSearchPage = () =>
       } else {
         roleCheckbox(roleText).click()
       }
+      filterAnyRole().click()
       applyFilters().click()
     },
     filterAllNonAdmin: ({ user, statusText, roleText }) => {
