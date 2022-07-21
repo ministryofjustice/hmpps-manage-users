@@ -384,12 +384,12 @@ function getRoleCodeTags(currentFilter, hrefBase) {
 
 function getRoleInclusivity(currentFilter, hrefBase) {
   const { inclusiveRoles, ...newFilter } = currentFilter
-  if (inclusiveRoles) {
+  if (inclusiveRoles === 'true') {
     return [
       {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
-        text: inclusiveRoles ? 'All' : 'Any',
+        text: 'Any',
       },
     ]
   }
