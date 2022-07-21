@@ -173,7 +173,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['true'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })
@@ -215,7 +215,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: [''] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['false'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })
@@ -237,6 +237,7 @@ context('DPS search with filter user functionality', () => {
     search.filterWithTag('Active').should('exist')
     search.filterWithTag('Moorland').should('exist')
     search.filterWithTag('User Admin').should('exist')
+    search.filterWithTag('Any').should('exist')
 
     cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(3)
@@ -249,7 +250,7 @@ context('DPS search with filter user functionality', () => {
         activeCaseload: { key: 'activeCaseload', values: ['MDI'] },
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['4'] },
-        inclusiveRoles: { key: 'inclusiveRoles', values: [''] },
+        inclusiveRoles: { key: 'inclusiveRoles', values: ['true'] },
         showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
       })
     })

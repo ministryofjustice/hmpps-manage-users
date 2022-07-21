@@ -475,7 +475,9 @@ context('DPS user manage functionality', () => {
   it('Should provide breadcrumb link back to search results', () => {
     const userPage = editUser({})
 
-    userPage.searchBreadcrumb().should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL')
+    userPage
+      .searchBreadcrumb()
+      .should('have.attr', 'href', '/search-with-filter-dps-users?user=ITAG_USER5&status=ALL&inclusiveRoles=false')
   })
 
   it('Manage your details contain returnTo url for current dps search page', () => {

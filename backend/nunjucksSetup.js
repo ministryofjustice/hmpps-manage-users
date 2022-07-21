@@ -181,6 +181,8 @@ module.exports = (app, path) => {
       const caseloadTags = getCaseloadTags(currentFilter, hrefBase, prisons)
       const rolesTags = getRoleTags(currentFilter, hrefBase, roles)
       const statusTags = getStatusTags(currentFilter, hrefBase)
+      const roleInclusivity = getRoleInclusivity(currentFilter, hrefBase)
+
       const categories = [
         {
           heading: {
@@ -199,6 +201,12 @@ module.exports = (app, path) => {
             text: 'Roles',
           },
           items: rolesTags,
+        },
+        {
+          heading: {
+            text: 'inclusiveRoles',
+          },
+          items: roleInclusivity,
         },
       ]
 
@@ -368,6 +376,20 @@ function getRoleCodeTags(currentFilter, hrefBase) {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
         text: roleCode,
+      },
+    ]
+  }
+  return undefined
+}
+
+function getRoleInclusivity(currentFilter, hrefBase) {
+  const { inclusiveRoles, ...newFilter } = currentFilter
+  if (inclusiveRoles === 'true') {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: 'Any',
       },
     ]
   }

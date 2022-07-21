@@ -85,7 +85,7 @@
         id: 'groupCode',
         items: prisonDropdownValues | addBlankOptions('Select a caseload') | setSelected(currentFilter.groupCode[0]),
         formGroup: {
-          classes: 'govuk-!-margin-bottom-3'
+          classes: '.govuk-!-margin-bottom-5'
         },
         errorMessage: errors | findError('groupCode')
       }) }}
@@ -99,7 +99,7 @@
           fieldset: {
             legend: {
               text: 'Active caseload only',
-              classes: 'govuk-label'
+              classes: '.gov.uk-label--s'
             }
           },
           items: [
@@ -118,10 +118,30 @@
         )}}
     {% endif %}
     <div class="govuk-list">
+      <legend class="govuk-fieldset__legend govuk-label--s">Role</legend>
+      <div id="status-hint" class="govuk-hint">Will match users that have any or all the selected roles</div>
+
+      {{ govukRadios({
+                idPrefix: 'inclusiveRoles',
+                name: 'inclusiveRoles',
+                classes: 'govuk-radios--small',
+                items: [
+                  {
+                    value: 'false',
+                    text: 'All selected roles',
+                    checked: currentFilter.inclusiveRoles !== 'true'
+                  },
+                  {
+                    value: 'true',
+                    text: 'Any of the selected roles',
+                    checked: currentFilter.inclusiveRoles === 'true'
+                  }
+                ]
+              }
+              )}}
+
      {{multiSelectFilter({
        name: 'roleCode',
-       title: 'Role',
-       hint: 'Will match users that have all roles that are selected',
        items: roleDropdownValues  | setChecked(currentFilter.roleCode)
       })}}
     </div>
