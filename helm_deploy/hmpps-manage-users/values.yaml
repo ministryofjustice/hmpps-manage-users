@@ -11,6 +11,8 @@ generic-service:
 
   ingress:
     enabled: true
+    v1_2_enabled: true
+    v0_47_enabled: true
     annotations:
       # note this limit is per ingress replica
       nginx.ingress.kubernetes.io/limit-rpm: "120"
@@ -20,7 +22,6 @@ generic-service:
         limit_req_status 429;
     tlsSecretName: hmpps-manage-users-cert
     modsecurity_enabled: true
-    contextColour: green
 
   livenessProbe:
     httpGet:
