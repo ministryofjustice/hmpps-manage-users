@@ -204,7 +204,7 @@ module.exports = (app, path) => {
         },
         {
           heading: {
-            text: 'inclusiveRoles',
+            text: 'Role match',
           },
           items: roleInclusivity,
         },
@@ -306,7 +306,7 @@ function getStatusTags(currentFilter, hrefBase) {
       {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
-        text: toStatusDesctiption(status),
+        text: toStatusDescription(status),
       },
     ]
   }
@@ -403,14 +403,14 @@ function getAdminTags(currentFilter, hrefBase) {
       {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
-        text: toStatusDesctiption(adminTypes),
+        text: toStatusDescription(adminTypes),
       },
     ]
   }
   return undefined
 }
 
-function toStatusDesctiption(status) {
+function toStatusDescription(status) {
   switch (status) {
     case 'ACTIVE':
       return 'Active'
