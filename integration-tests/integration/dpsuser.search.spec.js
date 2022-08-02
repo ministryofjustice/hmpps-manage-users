@@ -52,6 +52,16 @@ context('DPS search with filter user functionality', () => {
     search.filterWithTag('All').should('not.exist')
   })
 
+  it('can add and remove show LSA only filter', () => {
+    const search = goToSearchPage({})
+
+    search.filterLSAOnly()
+    search.showOnlyLSAsCheckbox().should('be.checked')
+
+    search.filterLSAOnly()
+    search.showOnlyLSAsCheckbox().should('not.be.checked')
+  })
+
   it('can add and remove a single caseload filter', () => {
     const search = goToSearchPage({})
 
@@ -174,7 +184,7 @@ context('DPS search with filter user functionality', () => {
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
         inclusiveRoles: { key: 'inclusiveRoles', values: ['true'] },
-        showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
+        showOnlyLSAs: { key: 'showOnlyLSAs', values: ['true'] },
       })
     })
   })
@@ -216,7 +226,7 @@ context('DPS search with filter user functionality', () => {
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['0'] },
         inclusiveRoles: { key: 'inclusiveRoles', values: ['false'] },
-        showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
+        showOnlyLSAs: { key: 'showOnlyLSAs', values: ['true'] },
       })
     })
   })
@@ -238,6 +248,7 @@ context('DPS search with filter user functionality', () => {
     search.filterWithTag('Moorland').should('exist')
     search.filterWithTag('User Admin').should('exist')
     search.filterWithTag('Any').should('exist')
+    search.filterWithTag('Only').should('exist') // Local System Administrators
 
     cy.task('verifyDpsFindUsers').should((requests) => {
       expect(requests).to.have.lengthOf(3)
@@ -251,7 +262,7 @@ context('DPS search with filter user functionality', () => {
         size: { key: 'size', values: ['20'] },
         page: { key: 'page', values: ['4'] },
         inclusiveRoles: { key: 'inclusiveRoles', values: ['true'] },
-        showOnlyLSAs: { key: 'showOnlyLSAs', values: [''] },
+        showOnlyLSAs: { key: 'showOnlyLSAs', values: ['true'] },
       })
     })
   })
