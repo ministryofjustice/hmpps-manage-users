@@ -38,7 +38,6 @@ describe('toUserSearchFilter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ status: 'ACTIVE' }, [], [], '', true)
       expect(categoryWithHeading(result, 'Status')).toBeTruthy()
     })
-
     it('should not show current status filter section when status not set in filter (AKA as ALL)', () => {
       const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
       expect(categoryWithHeading(result, 'Status')).toBeFalsy()
@@ -62,6 +61,28 @@ describe('toUserSearchFilter', () => {
       const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', status: 'INACTIVE' }, [], [], '', true)
       expect(categoryWithHeading(result, 'Status').items[0]).toStrictEqual({
         text: 'Inactive',
+        href: '/search-with-filter-dps-users?user=Andy',
+      })
+    })
+  })
+
+  describe('Local System Administrator filter', () => {
+    it('should show LSA filter section', () => {
+      const result = njk.getFilter('toUserSearchFilter')({ showOnlyLSAs: 'true' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Local System Administrator')).toBeTruthy()
+    })
+    it('should not show LSA filter section when showOnlyLSAs not set in filter', () => {
+      const result = njk.getFilter('toUserSearchFilter')({}, [], [], '', true)
+      expect(categoryWithHeading(result, 'Local System Administrator')).toBeFalsy()
+    })
+    it('should have single show LSA tag when LSA set in filter', () => {
+      const result = njk.getFilter('toUserSearchFilter')({ showOnlyLSAs: 'true' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Local System Administrator').items).toHaveLength(1)
+    })
+    it('show LSA tag should have text and reset url for removing LSA filter', () => {
+      const result = njk.getFilter('toUserSearchFilter')({ user: 'Andy', showOnlyLSAs: 'true' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Local System Administrator').items[0]).toStrictEqual({
+        text: 'Only',
         href: '/search-with-filter-dps-users?user=Andy',
       })
     })

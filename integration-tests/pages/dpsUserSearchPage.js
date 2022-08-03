@@ -9,6 +9,7 @@ const activeCaseloadFilterRadioButton = (text) => cy.contains('label', text).pre
 const caseload = () => cy.get('[id="groupCode"]')
 const roleSearch = () => cy.get('[id="roleCode-search"]')
 const filterAnyRole = () => cy.get('[id="inclusiveRoles-2"]')
+const showOnlyLSAsCheckbox = () => cy.contains('label', 'Local System Administrators only').prev()
 const roleCheckbox = (text) => cy.contains('label', text).prev()
 const roleCheckboxLabel = (text) => cy.get('label').contains(text)
 
@@ -24,6 +25,7 @@ const dpsUserSearchPage = () =>
     filterWithTag,
     userFilterInput,
     statusFilterRadioButton,
+    showOnlyLSAsCheckbox,
     activeCaseloadFilterRadioButton,
     filterStatus: (text) => {
       statusFilterRadioButton(text).click()
@@ -38,6 +40,10 @@ const dpsUserSearchPage = () =>
       else caseload().clear()
       applyFilters().click()
     },
+    filterLSAOnly: () => {
+      showOnlyLSAsCheckbox().click()
+      applyFilters().click()
+    },
     filterAll: ({ user, statusText, caseloadText, roleText }) => {
       userFilterInput().type(user)
       statusFilterRadioButton(statusText).click()
@@ -47,12 +53,14 @@ const dpsUserSearchPage = () =>
       } else {
         roleCheckbox(roleText).click()
       }
+      showOnlyLSAsCheckbox().click()
       filterAnyRole().click()
       applyFilters().click()
     },
     filterAllNonAdmin: ({ user, statusText, roleText }) => {
       userFilterInput().type(user)
       statusFilterRadioButton(statusText).click()
+      showOnlyLSAsCheckbox().click()
       roleCheckbox(roleText).click()
       applyFilters().click()
     },

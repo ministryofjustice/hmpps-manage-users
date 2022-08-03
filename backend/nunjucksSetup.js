@@ -182,6 +182,7 @@ module.exports = (app, path) => {
       const rolesTags = getRoleTags(currentFilter, hrefBase, roles)
       const statusTags = getStatusTags(currentFilter, hrefBase)
       const roleInclusivity = getRoleInclusivity(currentFilter, hrefBase)
+      const showOnlyLSAsTags = getShowOnlyLSAsTags(currentFilter, hrefBase)
 
       const categories = [
         {
@@ -207,6 +208,12 @@ module.exports = (app, path) => {
             text: 'Role match',
           },
           items: roleInclusivity,
+        },
+        {
+          heading: {
+            text: 'Local System Administrator',
+          },
+          items: showOnlyLSAsTags,
         },
       ]
 
@@ -390,6 +397,20 @@ function getRoleInclusivity(currentFilter, hrefBase) {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
         text: 'Any',
+      },
+    ]
+  }
+  return undefined
+}
+
+function getShowOnlyLSAsTags(currentFilter, hrefBase) {
+  const { showOnlyLSAs, ...newFilter } = currentFilter
+  if (showOnlyLSAs === 'true') {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: 'Only',
       },
     ]
   }

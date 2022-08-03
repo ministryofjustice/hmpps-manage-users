@@ -1,11 +1,12 @@
 {% extends "./partials/layout.njk" %}
-{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
-{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "moj/components/filter/macro.njk" import mojFilter %}
 {% from "moj/components/pagination/macro.njk" import mojPagination %}
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
@@ -117,6 +118,26 @@
         }
         )}}
     {% endif %}
+
+    {{ govukCheckboxes({
+      idPrefix: "showOnlyLSAs",
+      name: "showOnlyLSAs",
+      classes: 'govuk-checkboxes--small govuk-checkboxes--inline',
+      fieldset: {
+        legend: {
+          text: 'Local System Administrator',
+          classes: 'govuk-label--s'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: "Local System Administrators only",
+          checked: currentFilter.showOnlyLSAs === 'true'
+        }
+      ]
+    }) }}
+
     <div class="govuk-list">
       <legend class="govuk-fieldset__legend govuk-label--s">Role</legend>
       <div id="status-hint" class="govuk-hint">Will match users that have any or all the selected roles</div>
