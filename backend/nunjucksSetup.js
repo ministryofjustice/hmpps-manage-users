@@ -211,7 +211,7 @@ module.exports = (app, path) => {
         },
         {
           heading: {
-            text: 'Local System Administrators',
+            text: 'Local System Administrator',
           },
           items: showOnlyLSAsTags,
         },
