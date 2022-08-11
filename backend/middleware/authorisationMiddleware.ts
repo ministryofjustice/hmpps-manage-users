@@ -4,8 +4,8 @@ import logger from '../log'
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
   return (req, res, next) => {
-    if (res.locals?.user?.access_token) {
-      const { authorities: roles = [] } = jwtDecode(res.locals.user.access_token) as { authorities?: string[] }
+    if (res.locals?.access_token) {
+      const { authorities: roles = [] } = jwtDecode(res.locals.access_token) as { authorities?: string[] }
 
       if (authorisedRoles.length && !roles.some((role) => authorisedRoles.includes(role))) {
         logger.error('User is not authorised to access this')

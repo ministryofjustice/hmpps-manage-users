@@ -22,11 +22,7 @@ describe('authorisationMiddleware', () => {
 
   function createResWithToken({ authorities }: { authorities: string[] }): Response {
     return {
-      locals: {
-        user: {
-          access_token: createToken(authorities),
-        },
-      },
+      locals: { access_token: createToken(authorities) },
       redirect: jest.fn(),
     } as unknown as Response
   }
