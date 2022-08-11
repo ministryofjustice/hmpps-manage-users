@@ -1,10 +1,10 @@
 const express = require('express')
 const passport = require('passport')
 const flash = require('connect-flash')
-const tokenRefresherFactory = require('./tokenRefresher').factory
-const sessionManagementRoutes = require('./sessionManagementRoutes')
-const auth = require('./auth')
-const config = require('./config')
+const tokenRefresherFactory = require('../tokenRefresher').factory
+const sessionManagementRoutes = require('../sessionManagementRoutes')
+const auth = require('../auth')
+const config = require('../config')
 
 const router = express.Router()
 
