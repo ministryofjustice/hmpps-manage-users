@@ -6,7 +6,7 @@ const createToken = () => {
     user_name: 'ITAG_USER',
     scope: ['read', 'write'],
     auth_source: 'nomis',
-    authorities: ['ROLE_GLOBAL_SEARCH'],
+    authorities: ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'],
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'dev',
   }

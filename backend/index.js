@@ -1,4 +1,5 @@
 import setUpWebSecurity from './middleware/setUpWebSecurity'
+import authorisationMiddleware from './middleware/authorisationMiddleware'
 
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
@@ -18,7 +19,7 @@ require('express-async-errors')
 const apis = require('./apis')
 const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
-const setupAuth = require('./setupAuth')
+const setupAuth = require('./middleware/setUpAuth')
 const routes = require('./routes')
 const setupWebSession = require('./setupWebSession')
 const config = require('./config')
@@ -91,6 +92,7 @@ app.use(setupStaticContent())
 
 app.use(setupWebSession())
 app.use(setupAuth({ oauthApi: apis.oauthApi, tokenVerificationApi: apis.tokenVerificationApi }))
+app.use(authorisationMiddleware())
 
 // Ensure cookie session is extended (once per minute) when user interacts with the server
 app.use((req, res, next) => {
