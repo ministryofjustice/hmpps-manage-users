@@ -14,7 +14,7 @@ export const goToSearchPage = ({
     : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
   const userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
   cy.task('stubBannerNoMessage')
-  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads })
+  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads, isAdmin })
   cy.signIn()
   const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
 
