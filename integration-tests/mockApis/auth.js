@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken')
 const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
 
 const createToken = (tokenRoles) => {
-  // const authoritiesOld = isAdmin ? ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'] : ['ROLE_GLOBAL_SEARCH']
   const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
   const payload = {
     user_name: 'ITAG_USER',
