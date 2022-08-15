@@ -1,12 +1,13 @@
 const jwt = require('jsonwebtoken')
 const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
 
-const createToken = () => {
+const createToken = (tokenRoles) => {
+  const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
   const payload = {
     user_name: 'ITAG_USER',
     scope: ['read', 'write'],
     auth_source: 'nomis',
-    authorities: ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'],
+    authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'dev',
   }
@@ -72,7 +73,7 @@ const stubError = () =>
     },
   })
 
-const token = () =>
+const token = (tokenRoles) =>
   stubFor({
     request: {
       method: 'POST',
@@ -85,7 +86,7 @@ const token = () =>
         Location: 'http://localhost:3008/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(),
+        access_token: createToken(tokenRoles),
         token_type: 'bearer',
         refresh_token: 'refresh',
         user_name: 'TEST_USER',
@@ -615,12 +616,12 @@ const verifyAuthCreateUser = () =>
 
 module.exports = {
   getSignInUrl,
-  stubSignIn: (username, roles) =>
+  stubSignIn: (username, roles, tokenRoles) =>
     Promise.all([
       favicon(),
       redirect(),
       signOut(),
-      token(),
+      token(tokenRoles),
       stubUserMe({}),
       stubUserMeRoles(roles),
       stubUser(username),

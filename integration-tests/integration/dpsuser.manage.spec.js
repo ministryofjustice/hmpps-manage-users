@@ -3,6 +3,7 @@ const UserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddCaseloadPage = require('../pages/userAddCaseloadPage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
 const { editUser, goToSearchPage } = require('../support/dpsuser.helpers')
 
@@ -469,6 +470,15 @@ context('DPS user manage functionality', () => {
       }).then((response) => {
         expect(response.status).to.be.equal(500)
       })
+    })
+
+    it('Should fail attempting to reach "select-caseloads" if unauthorised', () => {
+      const userPage = editUser({ isAdmin: false })
+      cy.task('stubDpsUserDetails', {})
+      userPage.addUserCaseload().should('not.exist')
+
+      cy.visit('/manage-dps-users/ITAG_USER5/select-caseloads', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
     })
   })
 

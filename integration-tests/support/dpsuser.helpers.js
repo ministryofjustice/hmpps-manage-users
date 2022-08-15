@@ -12,9 +12,10 @@ export const goToSearchPage = ({
   const basicRoleCode = isAdmin
     ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
     : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
+  const tokenRoles = isAdmin ? ['ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'] : ['ROLE_MAINTAIN_ACCESS_ROLES']
   const userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
   cy.task('stubBannerNoMessage')
-  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads })
+  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads, tokenRoles })
   cy.signIn()
   const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
 
