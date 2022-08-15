@@ -13,10 +13,10 @@ module.exports = (on) => {
       username = 'ITAG_USER',
       roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
       userCaseloads = null,
-      isAdmin = true,
+      tokenRoles = ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'],
     }) =>
       Promise.all([
-        auth.stubSignIn(username, roles, isAdmin),
+        auth.stubSignIn(username, roles, tokenRoles),
         auth.stubUserMe({}),
         nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
         tokenverification.stubVerifyToken(true),

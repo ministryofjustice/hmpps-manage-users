@@ -1,8 +1,9 @@
 const jwt = require('jsonwebtoken')
 const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
 
-const createToken = (isAdmin) => {
-  const authorities = isAdmin ? ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'] : ['ROLE_GLOBAL_SEARCH']
+const createToken = (tokenRoles) => {
+  // const authoritiesOld = isAdmin ? ['ROLE_GLOBAL_SEARCH', 'ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'] : ['ROLE_GLOBAL_SEARCH']
+  const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
   const payload = {
     user_name: 'ITAG_USER',
     scope: ['read', 'write'],
@@ -73,7 +74,7 @@ const stubError = () =>
     },
   })
 
-const token = (isAdmin) =>
+const token = (tokenRoles) =>
   stubFor({
     request: {
       method: 'POST',
@@ -86,7 +87,7 @@ const token = (isAdmin) =>
         Location: 'http://localhost:3008/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(isAdmin),
+        access_token: createToken(tokenRoles),
         token_type: 'bearer',
         refresh_token: 'refresh',
         user_name: 'TEST_USER',
@@ -616,12 +617,12 @@ const verifyAuthCreateUser = () =>
 
 module.exports = {
   getSignInUrl,
-  stubSignIn: (username, roles, isAdmin) =>
+  stubSignIn: (username, roles, tokenRoles) =>
     Promise.all([
       favicon(),
       redirect(),
       signOut(),
-      token(isAdmin),
+      token(tokenRoles),
       stubUserMe({}),
       stubUserMeRoles(roles),
       stubUser(username),

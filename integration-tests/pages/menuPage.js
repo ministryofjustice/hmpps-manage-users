@@ -17,6 +17,7 @@ const menuPage = () =>
     headerCaseload: () => cy.get('[data-qa="active-location"]'),
     message: () => cy.get('[data-qa="banner-message"]'),
     manageAuthUsers: () => authUsers().click(),
+    createDpsUserTile: () => createDpsUser(),
     createDpsUser: () => createDpsUser().click(),
     createAuthUser: () => createUser().click(),
     createGroup: () => createGroup().click(),

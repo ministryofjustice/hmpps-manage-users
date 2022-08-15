@@ -3,9 +3,10 @@ const UserPage = require('../pages/userPage')
 const DpsUserCreatePage = require('../pages/dpsUserCreatePage')
 const DpsUserSelectCreatePage = require('../pages/dpsSelectUserCreatePage')
 const DpsUserCreateSuccessPage = require('../pages/dpsUserCreateSuccessPage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
 function goToCreateDpsUser(userType) {
-  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
+  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }], tokenRoles: ['ROLE_CREATE_USER'] })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
@@ -110,8 +111,29 @@ context('DPS user create functionality', () => {
     UserPage.verifyOnPage('Itag User') // stub returns this first and last name
   })
 
+  it('Should fail attempting to reach "create-user" if unauthorised', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'NOT_CREATE_USER' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+
+    menuPage.createDpsUserTile().should('not.exist')
+
+    cy.visit('/create-user', { failOnStatusCode: false })
+    AuthErrorPage.verifyOnPage()
+  })
+
+  it('Should fail attempting to reach "create-dps-user" if unauthorised', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'NOT_CREATE_USER' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+
+    menuPage.createDpsUserTile().should('not.exist')
+
+    cy.visit('/create-dps-user', { failOnStatusCode: false })
+    AuthErrorPage.verifyOnPage()
+  })
   it('Should check for CSRF token', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
+    cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }], tokenRoles: ['ROLE_CREATE_USER'] })
     cy.task('stubDpsGetCaseloads')
     cy.signIn()
 

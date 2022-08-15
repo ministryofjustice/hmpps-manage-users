@@ -58,11 +58,29 @@ describe('authorisationMiddleware', () => {
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it('should redirect when analyst tries to access select-caseloads endpoint', () => {
+  it('should redirect when user without correct role tries to access select-caseloads endpoint', () => {
     const reqCaseloads = { originalUrl: '/manage-dps-users/ITAG_USER/select-caseloads' } as Request
     const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
 
     authorisationMiddleware([])(reqCaseloads, res, next)
+
+    expect(next).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith('/authError')
+  })
+  it('should redirect when user without correct role tries to access create-user endpoint', () => {
+    const reqCreateUser = { originalUrl: '/create-user' } as Request
+    const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+    authorisationMiddleware([])(reqCreateUser, res, next)
+
+    expect(next).not.toHaveBeenCalled()
+    expect(res.redirect).toHaveBeenCalledWith('/authError')
+  })
+  it('should redirect when user without correct role tries to access create-dps-user endpoint', () => {
+    const reqCreateDpsUser = { originalUrl: '/create-dps-user' } as Request
+    const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+    authorisationMiddleware([])(reqCreateDpsUser, res, next)
 
     expect(next).not.toHaveBeenCalled()
     expect(res.redirect).toHaveBeenCalledWith('/authError')
