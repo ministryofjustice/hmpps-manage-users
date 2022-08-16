@@ -211,7 +211,11 @@
                                 {{ govukTag({
                                   text: u.status,
                                   classes: "govuk-tag--pink"
-                                }) if not u.active }}
+                                 }) if not u.active and u.status != 'EXPIRED' }}
+                                {{ govukTag({
+                                  text: u.status,
+                                  classes: "govuk-tag--yellow"
+                                }) if not u.active and u.status == 'EXPIRED' }}
                                 {{ govukTag({
                                   text: "Active",
                                   classes: "govuk-tag--green"

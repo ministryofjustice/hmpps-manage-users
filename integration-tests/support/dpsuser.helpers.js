@@ -81,8 +81,9 @@ export const editUser = ({
   enabled = true,
   activeCaseload = true,
   userCaseloads = null,
+  accountStatus,
 }) => {
-  cy.task('stubDpsUserDetails', { active, enabled })
+  cy.task('stubDpsUserDetails', { accountStatus, active, enabled })
 
   cy.task('stubDpsUserGetRoles', activeCaseload)
   cy.task('stubBannerNoMessage')

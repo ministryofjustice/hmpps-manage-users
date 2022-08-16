@@ -503,114 +503,148 @@ context('DPS user manage functionality', () => {
       .and('contains', '%2Fsearch-with-filter-dps-users')
   })
 
-  it('Should disable a user', () => {
-    const userPage = editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+  describe('Activate and deactivate a user', () => {
+    it('Should disable a user', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+      })
+      userPage.enabled().should('contain.text', ' Active')
+      cy.task('stubDpsUserDisable')
+      cy.task('stubDpsUserDetails', { active: false })
+      userPage.enableLink().should('not.exist')
+      userPage.activateLink().should('not.exist')
+      userPage.deactivateLink().should('be.visible').click()
+
+      cy.task('verifyDpsUserDisable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+      })
+      userPage.enabled().should('contain.text', ' Inactive')
     })
-    userPage.enabled().should('contain.text', ' Active')
-    cy.task('stubDpsUserDisable')
-    cy.task('stubDpsUserDetails', { active: false })
-    userPage.enableLink().should('not.exist')
-    userPage.activateLink().should('not.exist')
-    userPage.deactivateLink().should('be.visible').click()
 
-    cy.task('verifyDpsUserDisable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
+    it('Should disable an expired user', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        accountStatus: 'EXPIRED',
+        active: false,
+      })
+      userPage.enabled().should('contain.text', '  Inactive account - EXPIRED')
+      cy.task('stubDpsUserDisable')
+      cy.task('stubDpsUserDetails', { active: false })
+      userPage.enableLink().should('not.exist')
+      userPage.activateLink().should('not.exist')
+      userPage.deactivateLink().should('be.visible').click()
 
-      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+      cy.task('verifyDpsUserDisable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+      })
+      userPage.enabled().should('contain.text', ' Inactive')
     })
-    userPage.enabled().should('contain.text', ' Inactive')
-  })
 
-  it('Should enable a user', () => {
-    const userPage = editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
-      active: false,
-      enabled: false,
+    it('Should enable an inactive user', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        active: false,
+        enabled: false,
+      })
+      userPage.enabled().should('contain.text', ' Inactive')
+      cy.task('stubDpsUserEnable')
+      cy.task('stubDpsUserDetails', {})
+      userPage.activateLink().should('not.exist')
+      userPage.deactivateLink().should('not.exist')
+      userPage.enableLink().should('be.visible').click()
+
+      cy.task('verifyDpsUserEnable').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/unlock-user')
+      })
+      userPage.enabled().should('contain.text', ' Active')
     })
-    userPage.enabled().should('contain.text', ' Inactive')
-    cy.task('stubDpsUserEnable')
-    cy.task('stubDpsUserDetails', {})
-    userPage.activateLink().should('not.exist')
-    userPage.deactivateLink().should('not.exist')
-    userPage.enableLink().should('be.visible').click()
 
-    cy.task('verifyDpsUserEnable').should((requests) => {
-      expect(requests).to.have.lengthOf(1)
-
-      expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/unlock-user')
+    it('Should not allow deactivate(lock) DPS user if user already disabled', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        active: true,
+        enabled: false,
+      })
+      userPage.enabled().should('contain.text', ' Active')
+      userPage.enableLink().should('not.exist')
     })
-    userPage.enabled().should('contain.text', ' Active')
-  })
 
-  it('Should not allow deactivate(lock) DPS user if user already disabled', () => {
-    const userPage = editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
-      active: true,
-      enabled: false,
+    it('Should not allow activate(unlock) DPS user if user already enabled', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        active: false,
+        enabled: true,
+      })
+      userPage.enabled().should('contain.text', ' Inactive')
+      userPage.enableLink().should('not.exist')
     })
-    userPage.enabled().should('contain.text', ' Active')
-    userPage.enableLink().should('not.exist')
-  })
 
-  it('Should not allow activate(unlock) DPS user if user already enabled', () => {
-    const userPage = editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
-      active: false,
-      enabled: true,
+    it('Should not allow activate(unlock) DPS user if no role', () => {
+      const userPage = editUser({ isAdmin: false, enabled: false, active: false })
+
+      userPage.enabled().should('contain.text', ' Inactive')
+      userPage.enableLink().should('not.exist')
     })
-    userPage.enabled().should('contain.text', ' Inactive')
-    userPage.enableLink().should('not.exist')
-  })
 
-  it('Should not allow activate(unlock) DPS user if no role', () => {
-    const userPage = editUser({ isAdmin: false, enabled: false, active: false })
+    it('Should not allow deactivate(lock) DPS user if no role', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
+      })
+      cy.task('stubDpsUserDetails', {})
 
-    userPage.enabled().should('contain.text', ' Inactive')
-    userPage.enableLink().should('not.exist')
-  })
-
-  it('Should not allow deactivate(lock) DPS user if no role', () => {
-    const userPage = editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
+      userPage.enabled().should('contain.text', ' Active')
+      userPage.enableLink().should('not.exist')
     })
-    cy.task('stubDpsUserDetails', {})
+    it('Should not allow deactivate(lock) for expired DPS user if no role', () => {
+      const userPage = editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
+        accountStatus: 'EXPIRED',
+        active: false,
+      })
+      cy.task('stubDpsUserDetails', {})
 
-    userPage.enabled().should('contain.text', ' Active')
-    userPage.enableLink().should('not.exist')
-  })
+      userPage.enabled().should('contain.text', '  Inactive account - EXPIRED')
+      userPage.enableLink().should('not.exist')
+    })
 
-  it('Should check for CSRF token on activate(unlock) user', () => {
-    editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
-      active: false,
-      enabled: false,
+    it('Should check for CSRF token on activate(unlock) user', () => {
+      editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        active: false,
+        enabled: false,
+      })
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
     })
-    // Attempt to submit form without CSRF token:
-    cy.request({
-      method: 'POST',
-      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/activate',
-      body: {},
-      failOnStatusCode: false,
-    }).then((response) => {
-      expect(response.status).to.be.equal(500)
-    })
-  })
 
-  it('Should check for CSRF token on deactivate(lock) user', () => {
-    editUser({
-      roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
-      active: true,
-      enabled: true,
-    })
-    // Attempt to submit form without CSRF token:
-    cy.request({
-      method: 'POST',
-      url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate',
-      body: {},
-      failOnStatusCode: false,
-    }).then((response) => {
-      expect(response.status).to.be.equal(500)
+    it('Should check for CSRF token on deactivate(lock) user', () => {
+      editUser({
+        roleCodes: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }],
+        active: true,
+        enabled: true,
+      })
+      // Attempt to submit form without CSRF token:
+      cy.request({
+        method: 'POST',
+        url: '/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/deactivate',
+        body: {},
+        failOnStatusCode: false,
+      }).then((response) => {
+        expect(response.status).to.be.equal(500)
+      })
     })
   })
 })
