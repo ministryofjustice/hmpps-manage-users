@@ -13,6 +13,7 @@ const replicateUser = (times) =>
       name: 'Brixton (HMP)',
     },
     dpsRoleCount: i,
+    status: i % 2 === 0 ? 'OPEN' : 'LOCKED',
   }))
 
 module.exports = {
@@ -112,7 +113,7 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: ({ active = true, enabled = true }) =>
+  stubUserDetails: ({ accountStatus, active = true, enabled = true }) =>
     getFor({
       urlPattern: '/nomisusersandroles/users/.*',
       body: {
@@ -124,7 +125,7 @@ module.exports = {
         email: `ITAG_USER@gov.uk`,
         active,
         enabled,
-        accountStatus: active ? 'OPEN' : 'LOCKED',
+        accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
       },
     }),
   stubUserDetailsWithoutEmail: () =>

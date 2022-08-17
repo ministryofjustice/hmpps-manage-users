@@ -96,21 +96,40 @@
                   </td>
                 {% endif %}
               {% else %}
-                <td class="govuk-table__cell">
+                {% if staff.accountStatus == 'EXPIRED' %}
+                  <td class="govuk-table__cell">
+                  {{ govukTag({
+                    text: 'Inactive account - ' + staff.accountStatus,
+                    classes: "govuk-tag--yellow",
+                    attributes: { "data-qa": "enabled" }
+                  }) }}
+                  </td>
+                  {% if showEnableDisable %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                      {{ linkButton(csrfToken, {
+                        text: "Deactivate account",
+                        action: staffUrl + "/deactivate",
+                        id: "deactivate-button"
+                      })}}
+                    </td>
+                  {% endif %}
+                {% else %}
+                  <td class="govuk-table__cell">
                   {{ govukTag({
                     text: 'Inactive account - ' + staff.accountStatus,
                     classes: "govuk-tag--pink",
                     attributes: { "data-qa": "enabled" }
                   }) }}
-                </td>
-                {% if showEnableDisable and not staff.enabled %}
-                  <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                    {{ linkButton(csrfToken, {
-                      text: "Activate account",
-                      action: staffUrl + "/activate",
-                      id: "enable-button"
-                    })}}
                   </td>
+                  {% if showEnableDisable and not staff.enabled %}
+                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                      {{ linkButton(csrfToken, {
+                        text: "Activate account",
+                        action: staffUrl + "/activate",
+                        id: "enable-button"
+                      })}}
+                    </td>
+                  {% endif %}
                 {% endif %}
               {% endif %}
             {% endif %}
