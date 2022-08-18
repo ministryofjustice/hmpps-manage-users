@@ -40,15 +40,6 @@ describe('authorisationMiddleware', () => {
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it('should redirect when user has no authorised roles', () => {
-    const res = createResWithToken({ authorities: [] })
-
-    authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
-
-    expect(next).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith('/authError')
-  })
-
   it('should return next when user has authorised role', async () => {
     const res = createResWithToken({ authorities: ['SOME_REQUIRED_ROLE'] })
 
@@ -58,31 +49,94 @@ describe('authorisationMiddleware', () => {
     expect(res.redirect).not.toHaveBeenCalled()
   })
 
-  it('should redirect when user without correct role tries to access select-caseloads endpoint', () => {
-    const reqCaseloads = { originalUrl: '/manage-dps-users/ITAG_USER/select-caseloads' } as Request
-    const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+  it('should redirect when user has no authorised roles', () => {
+    const res = createResWithToken({ authorities: [] })
 
-    authorisationMiddleware([])(reqCaseloads, res, next)
-
-    expect(next).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith('/authError')
-  })
-  it('should redirect when user without correct role tries to access create-user endpoint', () => {
-    const reqCreateUser = { originalUrl: '/create-user' } as Request
-    const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
-
-    authorisationMiddleware([])(reqCreateUser, res, next)
+    authorisationMiddleware(['SOME_REQUIRED_ROLE'])(req, res, next)
 
     expect(next).not.toHaveBeenCalled()
     expect(res.redirect).toHaveBeenCalledWith('/authError')
   })
-  it('should redirect when user without correct role tries to access create-dps-user endpoint', () => {
-    const reqCreateDpsUser = { originalUrl: '/create-dps-user' } as Request
-    const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
 
-    authorisationMiddleware([])(reqCreateDpsUser, res, next)
+  describe('select-caseloads', () => {
+    it('should show correct page when user with correct role tries to access select-caseloads endpoint', () => {
+      const reqCaseloads = { originalUrl: '/manage-dps-users/ITAG_USER/select-caseloads' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_ACCESS_ROLES_ADMIN'] })
 
-    expect(next).not.toHaveBeenCalled()
-    expect(res.redirect).toHaveBeenCalledWith('/authError')
+      authorisationMiddleware([])(reqCaseloads, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+
+    it('should redirect when user without correct role tries to access select-caseloads endpoint', () => {
+      const reqCaseloads = { originalUrl: '/manage-dps-users/ITAG_USER/select-caseloads' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCaseloads, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+  describe('create-user', () => {
+    it('should show correct page when user with correct role tries to access create-user endpoint', () => {
+      const reqCreateUser = { originalUrl: '/create-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_CREATE_USER'] })
+
+      authorisationMiddleware([])(reqCreateUser, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-user endpoint', () => {
+      const reqCreateUser = { originalUrl: '/create-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateUser, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+  describe('create-dps-user', () => {
+    it('should show correct page when user with correct role tries to access create-dps-user endpoint', () => {
+      const reqCreateDpsUser = { originalUrl: '/create-dps-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_CREATE_USER'] })
+
+      authorisationMiddleware([])(reqCreateDpsUser, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-dps-user endpoint', () => {
+      const reqCreateDpsUser = { originalUrl: '/create-dps-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateDpsUser, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+  describe('create-group', () => {
+    it('should show correct page when user with correct role tries to access create-group endpoint', () => {
+      const reqCreateGroup = { originalUrl: '/create-group' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_OAUTH_USERS'] })
+
+      authorisationMiddleware([])(reqCreateGroup, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-group endpoint', () => {
+      const reqCreateGroup = { originalUrl: '/create-group' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateGroup, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
   })
 })

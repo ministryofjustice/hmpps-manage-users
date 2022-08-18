@@ -6,6 +6,7 @@ const ChildGroupNameChangePage = require('../pages/childGroupNameChangePage')
 const CreateChildGroupPage = require('../pages/createChildGroupPage')
 const CreateGroupPage = require('../pages/createGroupPage')
 const GroupDeletePage = require('../pages/groupDeletePage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
 context('Groups', () => {
   before(() => {
@@ -252,8 +253,25 @@ context('Groups', () => {
   })
 
   describe('Create group', () => {
+    it('Should fail attempting to reach "create-group" if unauthorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'NOT_MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['NOT_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
+
+      menuPage.createGroupTile().should('not.exist')
+
+      cy.visit('/create-group', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
+    })
+
     it('should allow create group', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
 
@@ -285,7 +303,10 @@ context('Groups', () => {
     })
 
     it('Should check for CSRF token', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
       cy.signIn()
 
       // Attempt to submit form without CSRF token:
