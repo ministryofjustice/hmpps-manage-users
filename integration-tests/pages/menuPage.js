@@ -20,6 +20,7 @@ const menuPage = () =>
     createDpsUserTile: () => createDpsUser(),
     createDpsUser: () => createDpsUser().click(),
     createAuthUser: () => createUser().click(),
+    createGroupTile: () => createGroup(),
     createGroup: () => createGroup().click(),
     manageGroups: () => manageGroups().click(),
     createRole: () => createRole().click(),
