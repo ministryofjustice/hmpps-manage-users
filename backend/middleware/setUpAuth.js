@@ -3,7 +3,7 @@ const passport = require('passport')
 const flash = require('connect-flash')
 const tokenRefresherFactory = require('../tokenRefresher').factory
 const sessionManagementRoutes = require('../sessionManagementRoutes')
-const auth = require('../auth')
+const auth = require('../authentication/auth')
 const config = require('../config')
 
 const router = express.Router()
