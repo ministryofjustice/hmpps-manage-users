@@ -69,7 +69,7 @@
         },
         {
           value: 'INACTIVE',
-          text: 'Inactive',
+          text: 'Inactive/Expired',
           checked: currentFilter.status === 'INACTIVE'
         }
       ]
@@ -78,7 +78,7 @@
 
     {% if showPrisonDropdown %}
       {{ govukSelect({label: {
-        text: "Prison caseload",
+        text: "Prison",
         classes: 'govuk-label--s'
       },
         idPrefix: 'groupCode',
