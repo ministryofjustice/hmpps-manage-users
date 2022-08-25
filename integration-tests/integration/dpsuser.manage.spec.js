@@ -529,7 +529,7 @@ context('DPS user manage functionality', () => {
         accountStatus: 'EXPIRED',
         active: false,
       })
-      userPage.enabled().should('contain.text', '  Inactive account - EXPIRED')
+      userPage.enabled().should('contain.text', '  EXPIRED ACCOUNT')
       cy.task('stubDpsUserDisable')
       cy.task('stubDpsUserDetails', { active: false })
       userPage.enableLink().should('not.exist')
@@ -609,7 +609,7 @@ context('DPS user manage functionality', () => {
       })
       cy.task('stubDpsUserDetails', {})
 
-      userPage.enabled().should('contain.text', '  Inactive account - EXPIRED')
+      userPage.enabled().should('contain.text', '  EXPIRED ACCOUNT')
       userPage.enableLink().should('not.exist')
     })
 
