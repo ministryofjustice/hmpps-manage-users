@@ -1,5 +1,5 @@
 const appInsights = require('applicationinsights')
-const applicationVersion = require('./application-version')
+const applicationVersion = require('../application-version')
 
 const { packageData, buildNumber } = applicationVersion
 

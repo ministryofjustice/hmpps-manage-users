@@ -4,7 +4,7 @@ import authorisationMiddleware from './middleware/authorisationMiddleware'
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
 // In particular, applicationinsights automatically collects bunyan logs
-require('./azure-appinsights')
+require('./utils/azure-appinsights')
 
 const path = require('path')
 const express = require('express')
@@ -24,7 +24,7 @@ const routes = require('./routes')
 const setupWebSession = require('./setupWebSession')
 const config = require('./config')
 const setupStaticContent = require('./setupStaticContent')
-const nunjucksSetup = require('./nunjucksSetup')
+const nunjucksSetup = require('./utils/nunjucksSetup')
 const phaseNameSetup = require('./phaseNameSetup')
 const errorHandler = require('./middleware/errorHandler')
 const log = require('./log')

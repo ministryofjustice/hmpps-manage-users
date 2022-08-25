@@ -1,5 +1,5 @@
 const { validateDpsUserCreate } = require('./dpsUserValidation')
-const { trimObjValues, removeForwardApostrophe } = require('../utils')
+const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
