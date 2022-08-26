@@ -1,5 +1,5 @@
 const { validateRoleDescription } = require('./roleValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues } = require('../utils/utils')
 
 const roleDescriptionAmendmentFactory = (getRoleDetailsApi, changeRoleDescriptionApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleDescription) => {

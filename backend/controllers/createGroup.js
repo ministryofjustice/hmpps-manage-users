@@ -1,5 +1,5 @@
 const { validateCreateGroup } = require('./groupValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues } = require('../utils/utils')
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {

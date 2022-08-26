@@ -1,5 +1,5 @@
 const { validateCreate } = require('./authUserValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues } = require('../utils/utils')
 
 const createAuthUserFactory = (
   getAssignableGroupsApi,

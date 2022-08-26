@@ -1,5 +1,5 @@
 const moment = require('moment')
-const { DATE_TIME_FORMAT_SPEC } = require('./dateHelpers')
+const { DATE_TIME_FORMAT_SPEC } = require('../dateHelpers')
 
 const capitalize = (string) => {
   if (typeof string !== 'string') return ''

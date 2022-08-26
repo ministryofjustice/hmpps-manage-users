@@ -1,4 +1,4 @@
-const { forenameToInitial } = require('../utils')
+const { forenameToInitial } = require('../utils/utils')
 const config = require('../config')
 
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
