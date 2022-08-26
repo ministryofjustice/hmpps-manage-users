@@ -8,7 +8,7 @@ const flash = require('connect-flash')
 const setCookie = require('set-cookie-parser')
 
 const sessionManagementRoutes = require('../sessionManagementRoutes')
-const auth = require('../auth')
+const auth = require('../authentication/auth')
 
 const hmppsCookieName = 'testCookie'
 
