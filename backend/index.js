@@ -1,10 +1,12 @@
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
+import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
 
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
 // In particular, applicationinsights automatically collects bunyan logs
-require('./utils/azure-appinsights')
+initialiseAppInsights()
+buildAppInsightsClient()
 
 const path = require('path')
 const express = require('express')
