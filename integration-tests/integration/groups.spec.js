@@ -206,6 +206,18 @@ context('Groups', () => {
   })
 
   describe('Create child group', () => {
+    it('Should fail attempting to reach "create-group" if unauthorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'NOT_MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['NOT_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
+      MenuPage.verifyOnPage()
+
+      cy.visit('/manage-groups/SITE_1_GROUP_2/create-group', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
+    })
+
     it('should allow create child group', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
