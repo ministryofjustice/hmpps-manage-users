@@ -219,7 +219,10 @@ context('Groups', () => {
     })
 
     it('should allow create child group', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
       cy.signIn()
 
       cy.task('stubAuthAssignableGroupDetails', {})
@@ -249,7 +252,10 @@ context('Groups', () => {
     })
 
     it('Should check for CSRF token', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
       cy.signIn()
 
       // Attempt to submit form without CSRF token:
@@ -365,7 +371,10 @@ context('Groups', () => {
   })
 
   it('should return user to group detail page if user cancels action when creating child group', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.task('stubSignIn', {
+      roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+      tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+    })
     cy.signIn()
 
     cy.task('stubAuthAssignableGroupDetails', {})
