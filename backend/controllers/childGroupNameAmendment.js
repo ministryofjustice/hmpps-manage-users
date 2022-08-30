@@ -1,5 +1,5 @@
 const { validateGroupName } = require('./groupValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues } = require('../utils/utils')
 
 const childGroupAmendmentFactory = (getChildGroupDetailsApi, changeChildGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {

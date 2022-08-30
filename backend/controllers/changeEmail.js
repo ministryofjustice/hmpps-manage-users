@@ -1,5 +1,5 @@
 const { validateChangeEmail } = require('./authUserValidation')
-const { trimObjValues } = require('../utils')
+const { trimObjValues } = require('../utils/utils')
 
 function mapDescription(error, errorDescription) {
   switch (error) {

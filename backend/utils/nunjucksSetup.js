@@ -2,12 +2,12 @@ const moment = require('moment')
 const nunjucks = require('nunjucks')
 const querystring = require('querystring')
 
-const config = require('./config')
+const config = require('../config')
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
 
 module.exports = (app, path) => {
   const njkEnv = nunjucks.configure(
-    [path.join(__dirname, '../views'), 'node_modules/govuk-frontend/', 'node_modules/@ministryofjustice/frontend/'],
+    [path.join(__dirname, '../../views'), 'node_modules/govuk-frontend/', 'node_modules/@ministryofjustice/frontend/'],
     {
       autoescape: true,
       express: app,
