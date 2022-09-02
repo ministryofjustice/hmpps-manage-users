@@ -31,6 +31,7 @@ module.exports = () => {
     })
 
     client.on('error', (e) => logger.error('Redis client error', e))
+    client.connect().catch((err) => logger.error(`Error connecting to Redis`, err))
     return new RedisStore({ client })
   }
 
