@@ -14,10 +14,19 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
-    "typeRoots": ["./backend/@types", "./node_modules/@types"],
     "noImplicitAny": true,
-    "strictNullChecks": true
+    "experimentalDecorators": true,
+    "typeRoots": ["./backend/@types", "./node_modules/@types"]
   },
-  "exclude": ["node_modules", "assets", "integration-tests", "build", "dist", "static", "config", "manage-accounts-specs"],
+  "exclude": [
+    "node_modules",
+    "assets",
+    "integration-tests",
+    "build",
+    "dist",
+    "static",
+    "config",
+    "manage-accounts-specs"
+  ],
   "include": ["**/*.js", "**/*.ts"]
 }
