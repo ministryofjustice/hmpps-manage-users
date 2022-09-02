@@ -14,12 +14,12 @@ module.exports = () => {
     if (!host) return null
 
     const url = config.app.production ? `rediss://${host}:${port}` : `redis://${host}:${port}`
-    const legacyModeOn = true
+    const legacyMode = true
 
     const client = redis.createClient({
       url,
       password,
-      legacyModeOn,
+      legacyMode,
       socket: {
         reconnectStrategy: (attempts) => {
           // Exponential back off: 20ms, 40ms, 80ms..., capped to retry every 30 seconds
