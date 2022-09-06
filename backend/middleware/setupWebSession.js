@@ -11,7 +11,6 @@ const router = express.Router()
 module.exports = () => {
   const getSessionStore = () => {
     const client = redisClientFactory.createRedisClient()
-    client.connect().catch((err) => logger.error(`Error connecting to Redis`, err))
     return new RedisStore({ client })
   }
 
