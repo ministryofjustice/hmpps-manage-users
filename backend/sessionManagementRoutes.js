@@ -139,9 +139,9 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
     if (res.locals.user) {
       req.logout((err) => {
         if (err) return next(err)
-        return req.session.destroy(() => res.redirect(authSignOutUrl))
+        return req.session.destroy(() => res.redirect('/auth/sign-out'))
       })
-    } else res.redirect(authSignOutUrl)
+    } else res.redirect('/auth/sign-out')
   })
 
   app.use(refreshTokenMiddleware)
