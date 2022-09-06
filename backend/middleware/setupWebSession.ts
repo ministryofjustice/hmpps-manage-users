@@ -7,7 +7,7 @@ import { createRedisClient } from '../data/redisClient'
 
 const RedisStore = connectRedis(session)
 
-export default function setUpWebSession(): Router {
+export default function setupWebSession(): Router {
   const client = createRedisClient()
   const router = express.Router()
   client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
