@@ -57,19 +57,6 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
       }
       next()
     } catch (error) {
-      // need to sign out here otherwise user will still be considered authenticated when we take them to /sign-in
-      // TODO ?? Do we need this and if we do is this correct?
-      /*
-      req.logout((err) => {
-        if (err) {
-          next(err)
-        }
-        res.redirect('/')
-      })
-      */
-      logger.error(error, `Useful Failed message`)
-      next(error)
-
       if (isXHRRequest(req)) {
         res.status(401)
         res.json({ reason: 'session-expired' })
@@ -96,17 +83,6 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
       return
     }
 
-    // req.logout() // need logout as want session recreated from latest auth credentials    /**
-    /**  TODO - Not sure what change is needed here
-     req.logout((err) => {
-
-      if (err) {
-        next(err)
-      }
-      res.redirect('/')
-    })
-
-   */
     if (isXHRRequest(req)) {
       res.status(401)
       res.json({ reason: 'session-expired' })
@@ -121,15 +97,6 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
   }
 
   app.get('/sign-in', signInMiddleware, remoteSignInIndex)
-
-  // DO WE NEED THE LOGIN STUFF ANYMORE?
-  // app.get('/login/callback', (req, res) => {
-  //  res.redirect('/sign-in/callback')
-  // })
-
-  // app.get('/login', (req, res) => {
-  //  res.redirect('/sign-in')
-  // })
 
   app.get('/sign-in/callback', (req, res, next) => {
     passport.authenticate('oauth2', (err, user, info) => {
