@@ -1,7 +1,8 @@
-const passport = require('passport')
-const OAuth2Strategy = require('passport-oauth2').Strategy
-const { apiClientCredentials } = require('../api/oauthApi')
-const config = require('../config')
+import passport from 'passport'
+import { Strategy } from 'passport-oauth2'
+
+import config from '../config'
+import { apiClientCredentials } from '../api/oauthApi'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -10,11 +11,11 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((user, done) => {
   // Not used but required for Passport
-  done(null, user)
+  done(null, user as Express.User)
 })
 
-const init = () => {
-  const strategy = new OAuth2Strategy(
+function init(): void {
+  const strategy = new Strategy(
     {
       authorizationURL: `${config.apis.oauth2.ui_url}/oauth/authorize`,
       tokenURL: `${config.apis.oauth2.url}/oauth/token`,
@@ -32,4 +33,6 @@ const init = () => {
   passport.use(strategy)
 }
 
-module.exports.init = init
+export default {
+  init,
+}

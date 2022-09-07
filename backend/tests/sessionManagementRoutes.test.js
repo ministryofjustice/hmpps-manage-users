@@ -41,7 +41,7 @@ describe('Test the routes and middleware installed by sessionManagementRoutes', 
   app.use(passport.session())
   app.use(flash())
 
-  auth.init()
+  auth.default.init()
 
   /**
    * A Token refresher that does nothing.
