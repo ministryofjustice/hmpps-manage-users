@@ -139,4 +139,25 @@ describe('authorisationMiddleware', () => {
       expect(res.redirect).toHaveBeenCalledWith('/authError')
     })
   })
+
+  describe('delete-group', () => {
+    it('should show correct page when user with correct role tries to access delete-group endpoint', () => {
+      const reqCreateGroup = { originalUrl: '/delete-group' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_OAUTH_USERS'] })
+
+      authorisationMiddleware([])(reqCreateGroup, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access delete-group endpoint', () => {
+      const reqCreateGroup = { originalUrl: '/delete-group' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateGroup, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
 })
