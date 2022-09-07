@@ -109,64 +109,97 @@ context('Groups', () => {
     })
   })
 
-  it('should display error when delete group if child groups exist', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+  describe('Delete a group', () => {
+    it('should display error when delete group if child groups exist', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
+      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.deleteGroupChildLink()
-    groupDetails
-      .errorSummary()
-      .should('contain.text', 'You must delete all child groups before you can delete the group')
-  })
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.deleteGroupChildLink()
+      groupDetails
+        .errorSummary()
+        .should('contain.text', 'You must delete all child groups before you can delete the group')
+    })
 
-  it('should display error when attempt to view group that does not exist', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+    it('should display error when attempt to delete group that does not exist', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
 
-    cy.task('stubAuthAssignableGroups', {})
-    cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
+      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
 
-    cy.visit('/manage-groups')
+      cy.visit('/manage-groups')
 
-    cy.visit('/manage-groups/DOES_NOT_EXIST')
-    const groups = GroupsPage.verifyOnPage()
-    groups.errorSummary().should('contain.text', 'Group does not exist')
-  })
+      cy.visit('/manage-groups/DOES_NOT_EXIST/delete/children/none')
+      const groups = GroupsPage.verifyOnPage()
+      groups.errorSummary().should('contain.text', 'Group does not exist')
+    })
 
-  it('should display error when attempt to delete group that does not exist', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+    it('Should fail attempting to reach delete group directly if unauthorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'GROUP_MANAGER' }],
+        tokenRoles: ['ROLE_GROUP_MANAGER'],
+      })
+      cy.signIn()
+      MenuPage.verifyOnPage()
 
-    cy.task('stubAuthAssignableGroups', {})
-    cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
+      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    cy.visit('/manage-groups')
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.deleteGroupNoChild().should('not.exist')
 
-    cy.visit('/manage-groups/DOES_NOT_EXIST/delete/children/none')
-    const groups = GroupsPage.verifyOnPage()
-    groups.errorSummary().should('contain.text', 'Group does not exist')
-  })
+      cy.visit('/manage-groups/SITE_1_GROUP_2/delete/children/none', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
+    })
 
-  it('should allow delete group if no child groups', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
+    it('Can access delete group directly if authorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
+      MenuPage.verifyOnPage()
 
-    cy.task('stubAuthGroupDetailsNoChildren', {})
-    cy.visit('/manage-groups/SITE_1_GROUP_2')
+      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    groupDetails.deleteGroupNoChildLink()
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.deleteGroupNoChild().should('exist')
 
-    cy.task('stubAuthDeleteGroup')
-    cy.task('stubAuthAssignableGroups', {})
-    const groupDelete = GroupDeletePage.verifyOnPage()
-    groupDelete.groupDelete()
+      cy.visit('/manage-groups/SITE_1_GROUP_2/delete/children/none')
+      GroupDeletePage.verifyOnPage()
+    })
 
-    GroupsPage.verifyOnPage()
+    it('should allow delete group if no child groups', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
+        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
+      })
+      cy.signIn()
+
+      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.visit('/manage-groups/SITE_1_GROUP_2')
+
+      const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+      groupDetails.deleteGroupNoChildLink()
+
+      cy.task('stubAuthDeleteGroup')
+      cy.task('stubAuthAssignableGroups', {})
+      const groupDelete = GroupDeletePage.verifyOnPage()
+      groupDelete.groupDelete()
+
+      GroupsPage.verifyOnPage()
+    })
   })
 
   describe('Change child group name', () => {
@@ -353,6 +386,20 @@ context('Groups', () => {
 
     const postActionGroupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     postActionGroupDetails.childGroupNotThere()
+  })
+
+  it('should display error when attempt to view group that does not exist', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+
+    cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthAssignableGroupDetailsFail', 'DOES_NOT_EXIST')
+
+    cy.visit('/manage-groups')
+
+    cy.visit('/manage-groups/DOES_NOT_EXIST')
+    const groups = GroupsPage.verifyOnPage()
+    groups.errorSummary().should('contain.text', 'Group does not exist')
   })
 
   it('should return user to group detail page if user cancels action when changing child group name', () => {

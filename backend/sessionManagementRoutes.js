@@ -57,9 +57,6 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
       }
       next()
     } catch (error) {
-      // need to sign out here otherwise user will still be considered authenticated when we take them to /sign-in
-      req.logout()
-
       if (isXHRRequest(req)) {
         res.status(401)
         res.json({ reason: 'session-expired' })
@@ -85,7 +82,7 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
       next()
       return
     }
-    req.logout() // need logout as want session recreated from latest auth credentials
+
     if (isXHRRequest(req)) {
       res.status(401)
       res.json({ reason: 'session-expired' })
@@ -100,14 +97,6 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
   }
 
   app.get('/sign-in', signInMiddleware, remoteSignInIndex)
-
-  app.get('/login/callback', (req, res) => {
-    res.redirect('/sign-in/callback')
-  })
-
-  app.get('/login', (req, res) => {
-    res.redirect('/sign-in')
-  })
 
   app.get('/sign-in/callback', (req, res, next) => {
     passport.authenticate('oauth2', (err, user, info) => {
@@ -146,8 +135,13 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
   })
 
   app.get('/auth/sign-out', signOut)
-  app.get('/sign-out', (req, res) => {
-    res.redirect('/auth/sign-out')
+  app.get('/sign-out', (req, res, next) => {
+    if (res.locals.user) {
+      req.logout((err) => {
+        if (err) return next(err)
+        return req.session.destroy(() => res.redirect('/auth/sign-out'))
+      })
+    } else res.redirect('/auth/sign-out')
   })
 
   app.use(refreshTokenMiddleware)

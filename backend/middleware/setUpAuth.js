@@ -9,7 +9,7 @@ const config = require('../config')
 const router = express.Router()
 
 module.exports = ({ oauthApi, tokenVerificationApi }) => {
-  auth.init()
+  auth.default.init()
   const tokenRefresher = tokenRefresherFactory(oauthApi.refresh, config.app.tokenRefreshThresholdSeconds)
 
   router.use(passport.initialize())

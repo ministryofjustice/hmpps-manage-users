@@ -16,6 +16,7 @@ const groupDetailsPage = (groupName) =>
     changeChildGroupName: () => child().click(),
     createChildGroup: () => createChild().click(),
     deleteChildGroup: () => deleteChild().click(),
+    deleteGroupNoChild: () => deleteGroupNoChild(),
     deleteGroupNoChildLink: () => deleteGroupNoChild().click(),
     deleteGroupChildLink: () => deleteGroupChild().click(),
     childGroupNotThere: () => cy.get('Child - Site 1 - Group 2').should('not.exist'),

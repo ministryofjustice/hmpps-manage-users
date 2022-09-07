@@ -18,6 +18,7 @@ export declare global {
       }
       flash(type: string, message: Array<Record<string, string>>): number
       flash(message: string): Array<Record<string, string>>
+      logout(done: (err: unknown) => void): void
     }
   }
 }
