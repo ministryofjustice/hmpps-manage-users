@@ -1,5 +1,6 @@
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
+import setupWebSession from './middleware/setupWebSession'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
 
 require('dotenv').config()
@@ -23,7 +24,6 @@ const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
 const setupAuth = require('./middleware/setUpAuth')
 const routes = require('./routes')
-const setupWebSession = require('./setupWebSession')
 const config = require('./config')
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./utils/nunjucksSetup')
