@@ -55,6 +55,7 @@
     "whatwg-fetch": "^3.6.2"
   },
   "devDependencies": {
+    "@types/connect-redis": "^0.0.18",
     "@types/cookie-session": "^2.0.44",
     "@types/express-session": "^1.17.5",
     "@types/jest": "^28.1.8",

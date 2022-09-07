@@ -1,6 +1,7 @@
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
+import setupWebSession from './middleware/setupWebSession'
 
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
@@ -23,7 +24,6 @@ const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
 const setupAuth = require('./middleware/setUpAuth')
 const routes = require('./routes')
-const setupWebSession = require('./setupWebSession')
 const config = require('./config')
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./utils/nunjucksSetup')
