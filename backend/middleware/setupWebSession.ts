@@ -8,13 +8,20 @@ import { createRedisClient } from '../data/redisClient'
 const RedisStore = connectRedis(session)
 
 export default function setupWebSession(): Router {
-  const client = createRedisClient()
-  client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
-  const router = express.Router()
+  const getSessionStore = () => {
+    const client = createRedisClient()
+    if (client != null) {
+      client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
+      return new RedisStore({ client: client as unknown as Client })
+    }
 
+    return null
+  }
+
+  const router = express.Router()
   router.use(
     session({
-      store: new RedisStore({ client: client as unknown as Client }),
+      store: getSessionStore(),
       secret: [config.hmppsCookie.sessionSecret],
       resave: false,
       saveUninitialized: false,
