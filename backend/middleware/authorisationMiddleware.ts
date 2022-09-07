@@ -15,7 +15,7 @@ const authorisationMap = {
   '/create-group': AuthRole.MAINTAIN_OAUTH_USERS,
   '/create-child-group': AuthRole.MAINTAIN_OAUTH_USERS,
   '/create-user': AuthRole.CREATE_USER,
-  '/delete-group': AuthRole.MAINTAIN_OAUTH_USERS,
+  '/delete/children/none': AuthRole.MAINTAIN_OAUTH_USERS,
 }
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
