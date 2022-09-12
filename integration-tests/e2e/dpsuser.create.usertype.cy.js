@@ -3,7 +3,7 @@ const DpsUserSelectCreatePage = require('../pages/dpsSelectUserCreatePage')
 const DpsUserCreatePage = require('../pages/dpsUserCreatePage')
 
 function goToSelectUserType() {
-  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }], tokenRoles: 'ROLE_CREATE_USER' })
+  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
