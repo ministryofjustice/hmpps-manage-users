@@ -140,6 +140,27 @@ describe('authorisationMiddleware', () => {
     })
   })
 
+  describe('create-external-user', () => {
+    it('should show correct page when user with correct role tries to access create-external-users endpoint', () => {
+      const reqCreateExternalUsers = { originalUrl: '/create-external-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_AUTH_GROUP_MANAGER'] })
+
+      authorisationMiddleware([])(reqCreateExternalUsers, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-external-users endpoint', () => {
+      const reqCreateExternalUsers = { originalUrl: '/create-external-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateExternalUsers, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
   describe('delete a group', () => {
     it('should show correct page when user with correct role tries to access delete group endpoint', () => {
       const reqDeleteGroup = { originalUrl: '/delete/children/none' } as Request

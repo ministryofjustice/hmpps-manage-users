@@ -10,12 +10,13 @@ enum AuthRole {
 }
 
 const authorisationMap = {
-  '/select-caseloads': AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN,
-  '/create-dps-user': AuthRole.CREATE_USER,
-  '/create-group': AuthRole.MAINTAIN_OAUTH_USERS,
-  '/create-child-group': AuthRole.MAINTAIN_OAUTH_USERS,
-  '/create-user': AuthRole.CREATE_USER,
-  '/delete/children/none': AuthRole.MAINTAIN_OAUTH_USERS,
+  '/select-caseloads': [AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN],
+  '/create-dps-user': [AuthRole.CREATE_USER],
+  '/create-group': [AuthRole.MAINTAIN_OAUTH_USERS],
+  '/create-child-group': [AuthRole.MAINTAIN_OAUTH_USERS],
+  '/create-user': [AuthRole.CREATE_USER],
+  '/delete/children/none': [AuthRole.MAINTAIN_OAUTH_USERS],
+  '/create-external-user': [AuthRole.MAINTAIN_OAUTH_USERS, AuthRole.GROUP_MANAGER],
 }
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
@@ -28,9 +29,12 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
           throw Error(`User is not authorised to access manage-users`)
         }
 
-        Object.entries(authorisationMap).forEach(([urlMatch, authorisedRole]) => {
-          if (req.originalUrl.endsWith(urlMatch) && !roles.includes(authorisedRole)) {
-            throw Error(`User is not authorised to access ${urlMatch} page`)
+        Object.entries(authorisationMap).forEach(([urlMatch, authorisationMapRoles]) => {
+          if (req.originalUrl.endsWith(urlMatch)) {
+            const accessAllowed = authorisationMapRoles.filter((authorisedRole) => roles.includes(authorisedRole))
+            if (accessAllowed.length === 0) {
+              throw Error(`User is not authorised to access ${urlMatch} page`)
+            }
           }
         })
       } catch (e) {
