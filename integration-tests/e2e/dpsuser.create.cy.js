@@ -6,7 +6,7 @@ const DpsUserCreateSuccessPage = require('../pages/dpsUserCreateSuccessPage')
 const AuthErrorPage = require('../pages/authErrorPage')
 
 function goToCreateDpsUser(userType) {
-  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }], tokenRoles: ['ROLE_CREATE_USER'] })
+  cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
@@ -133,7 +133,7 @@ context('DPS user create functionality', () => {
     AuthErrorPage.verifyOnPage()
   })
   it('Should check for CSRF token', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }], tokenRoles: ['ROLE_CREATE_USER'] })
+    cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
     cy.task('stubDpsGetCaseloads')
     cy.signIn()
 

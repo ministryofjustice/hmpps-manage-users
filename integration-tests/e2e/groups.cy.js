@@ -113,7 +113,6 @@ context('Groups', () => {
     it('should display error when delete group if child groups exist', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -130,7 +129,6 @@ context('Groups', () => {
     it('should display error when attempt to delete group that does not exist', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -147,7 +145,6 @@ context('Groups', () => {
     it('Should fail attempting to reach delete group directly if unauthorised', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'GROUP_MANAGER' }],
-        tokenRoles: ['ROLE_GROUP_MANAGER'],
       })
       cy.signIn()
       MenuPage.verifyOnPage()
@@ -165,7 +162,6 @@ context('Groups', () => {
     it('Can access delete group directly if authorised', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
       MenuPage.verifyOnPage()
@@ -183,7 +179,6 @@ context('Groups', () => {
     it('should allow delete group if no child groups', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -242,7 +237,6 @@ context('Groups', () => {
     it('Should fail attempting to reach "create-group" if unauthorised', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'NOT_MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['NOT_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
       MenuPage.verifyOnPage()
@@ -254,7 +248,6 @@ context('Groups', () => {
     it('should allow create child group', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -287,7 +280,6 @@ context('Groups', () => {
     it('Should check for CSRF token', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -307,7 +299,6 @@ context('Groups', () => {
     it('Should fail attempting to reach "create-group" if unauthorised', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'NOT_MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['NOT_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
@@ -321,7 +312,6 @@ context('Groups', () => {
     it('should allow create group', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
@@ -356,7 +346,6 @@ context('Groups', () => {
     it('Should check for CSRF token', () => {
       cy.task('stubSignIn', {
         roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-        tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
       })
       cy.signIn()
 
@@ -420,7 +409,6 @@ context('Groups', () => {
   it('should return user to group detail page if user cancels action when creating child group', () => {
     cy.task('stubSignIn', {
       roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }],
-      tokenRoles: ['ROLE_MAINTAIN_OAUTH_USERS'],
     })
     cy.signIn()
 

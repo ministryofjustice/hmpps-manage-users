@@ -616,7 +616,13 @@ const verifyAuthCreateUser = () =>
 
 module.exports = {
   getSignInUrl,
-  stubSignIn: (username, roles, tokenRoles) =>
+  stubSignIn: (username, roles) => {
+    let tokenRoles = []
+    roles.forEach((role) => tokenRoles.push(`ROLE_${role.roleCode}`))
+    if (!Array.isArray(tokenRoles)) {
+      tokenRoles = [tokenRoles]
+    }
+
     Promise.all([
       favicon(),
       redirect(),
@@ -625,7 +631,8 @@ module.exports = {
       stubUserMe({}),
       stubUserMeRoles(roles),
       stubUser(username),
-    ]),
+    ])
+  },
   stubUserMe,
   stubUserMeRoles,
   stubEmail,

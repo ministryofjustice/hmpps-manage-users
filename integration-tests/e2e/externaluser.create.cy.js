@@ -28,8 +28,11 @@ function createUser() {
   UserPage.verifyOnPage('Auth Adm')
 }
 
-function goToCreateUser(roleCode = 'MAINTAIN_OAUTH_USERS') {
-  cy.task('stubSignIn', { roles: [{ roleCode }] })
+function goToCreateUser(roleCodes) {
+  const roles = []
+  roleCodes.forEach((roleCode) => roles.push({ roleCode }))
+
+  cy.task('stubSignIn', { roles })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
@@ -49,7 +52,7 @@ context('External user create functionality', () => {
   })
 
   it('Should create a user', () => {
-    const createPage = goToCreateUser()
+    const createPage = goToCreateUser(['MAINTAIN_OAUTH_USERS'])
     createPage.create('email', 'first', 'last', '')
 
     createPage.errorSummary().should('contain.text', 'Enter an email address in the correct format')
@@ -57,7 +60,7 @@ context('External user create functionality', () => {
   })
 
   it('Should create a user as a group manager', () => {
-    const createPage = goToCreateUser('AUTH_GROUP_MANAGER')
+    const createPage = goToCreateUser(['AUTH_GROUP_MANAGER'])
     createPage.create('email', 'first', 'last', '')
 
     createPage.errorSummary().should('contain.text', 'Select a group')
@@ -65,7 +68,7 @@ context('External user create functionality', () => {
   })
 
   it('Should check for CSRF token', () => {
-    goToCreateUser()
+    goToCreateUser(['MAINTAIN_OAUTH_USERS'])
 
     // Attempt to submit form without CSRF token:
     cy.request({
