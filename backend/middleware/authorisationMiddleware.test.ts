@@ -161,6 +161,27 @@ describe('authorisationMiddleware', () => {
     })
   })
 
+  describe('create-role', () => {
+    it('should show correct page when user with correct role tries to access create-role endpoint', () => {
+      const reqCreateRole = { originalUrl: '/create-role' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_ROLES_ADMIN'] })
+
+      authorisationMiddleware([])(reqCreateRole, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-role endpoint', () => {
+      const reqCreateRole = { originalUrl: '/create-role' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateRole, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
   describe('delete a group', () => {
     it('should show correct page when user with correct role tries to access delete group endpoint', () => {
       const reqDeleteGroup = { originalUrl: '/delete/children/none' } as Request

@@ -5,6 +5,7 @@ const RoleDetailsPage = require('../pages/roleDetailsPage')
 const RoleNameChangePage = require('../pages/roleNameChangePage')
 const RoleDescriptionChangePage = require('../pages/roleDescriptionChangePage')
 const RoleAdminTypeChangePage = require('../pages/roleAdminTypeChangePage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
 const CreateRolePage = require('../pages/createRolePage')
 
@@ -291,6 +292,18 @@ context('Roles', () => {
           adminType: ['EXT_ADM'],
         })
       })
+    })
+
+    it('Should fail attempting to reach "create-role" if unauthorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'GROUP_MANAGER' }],
+      })
+      cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
+      menuPage.createRoleTile().should('not.exist')
+
+      cy.visit('/create-role', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
     })
 
     it('Should check for CSRF token', () => {
