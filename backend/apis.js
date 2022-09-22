@@ -16,7 +16,7 @@ const oauthApi = oauthApiFactory(
 const manageUsersApi = manageUsersApiFactory(
   clientFactory({
     baseUrl: config.apis.manageusers.url,
-    timeout: config.apis.manageusers.timeoutSeconds * 1000,
+    timeout: config.apis.manageusers.timeout.response,
   }),
 )
 
