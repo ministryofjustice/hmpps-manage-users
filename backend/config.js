@@ -1,3 +1,5 @@
+const { AgentConfig, get } = require('./apiConfig')
+
 const toInt = (envVar, defaultVal) => (envVar ? parseInt(envVar, 10) : defaultVal)
 
 module.exports = {
@@ -31,7 +33,12 @@ module.exports = {
     },
     manageusers: {
       url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
-      timeoutSeconds: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_SECONDS, 10),
+      timeout: {
+        response: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000),
+        deadline: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_DEADLINE, 60000),
+      },
+      //      agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
+      agent: new AgentConfig(toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000)),
     },
     tokenverification: {
       url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
