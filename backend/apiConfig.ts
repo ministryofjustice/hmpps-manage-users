@@ -5,7 +5,7 @@ type EnvOptions = { requireInProduction: boolean }
 const requiredInProduction: EnvOptions = { requireInProduction: true }
 const notRequiredInProduction: EnvOptions = { requireInProduction: false }
 
-function get<T>(name: string, fallback: T, options: EnvOptions = notRequiredInProduction): T | string {
+export function get<T>(name: string, fallback: T, options: EnvOptions = notRequiredInProduction): T | string {
   if (process.env[name]) {
     return process.env[name]
   }

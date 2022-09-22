@@ -37,8 +37,7 @@ module.exports = {
         response: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000),
         deadline: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_DEADLINE, 60000),
       },
-      //      agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
-      agent: new AgentConfig(toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000)),
+      agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
     },
     tokenverification: {
       url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
