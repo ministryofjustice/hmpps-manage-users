@@ -2,7 +2,6 @@ import 'dotenv/config'
 
 const production = process.env.NODE_ENV === 'production'
 type EnvOptions = { requireInProduction: boolean }
-const requiredInProduction: EnvOptions = { requireInProduction: true }
 const notRequiredInProduction: EnvOptions = { requireInProduction: false }
 
 export function get<T>(name: string, fallback: T, options: EnvOptions = notRequiredInProduction): T | string {
