@@ -254,6 +254,25 @@ describe('search factory', () => {
         })
       })
 
+      it('should trim username of any leading or trailing spaces', async () => {
+        const req = {
+          ...standardReq,
+          query: { user: ' jane ' },
+        }
+
+        await search(req, { render, locals })
+
+        expect(findUsersApi).toBeCalledWith({
+          locals,
+          user: 'jane',
+          accessRoles: undefined,
+          caseload: undefined,
+          activeCaseload: undefined,
+          status: 'ALL',
+          size: 20,
+        })
+      })
+
       it('should search with current page and page defaults', async () => {
         const req = {
           ...standardReq,

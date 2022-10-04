@@ -76,7 +76,7 @@ function parseFilter(query) {
   const roleCode = toArrayOrUndefined(query.roleCode)
   const groupCode = toArrayOrUndefined(query.groupCode)
   return {
-    user: query.user,
+    user: query.user?.trim(),
     status: query.status || 'ALL',
     roleCode,
     groupCode,
