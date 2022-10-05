@@ -1,9 +1,9 @@
-const config = require('../config')
+const config = require('../../server/config').default
 const log = require('../log')
 
 const tokenVerificationApiFactory = (client) => {
   const verifyToken = (context) => {
-    if (!config.apis.tokenverification.enabled) {
+    if (!config.apis.tokenVerification.enabled) {
       log.debug('Token verification disabled, returning token is valid')
       return true
     }

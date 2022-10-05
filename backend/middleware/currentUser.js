@@ -1,5 +1,5 @@
 const { forenameToInitial } = require('../utils/utils')
-const config = require('../config')
+const config = require('../../server/config').default
 
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 
@@ -29,7 +29,7 @@ module.exports =
       const { activeCaseload, caseloads } = req.session.allCaseloads
       const { name } = req.session.userDetails
       const returnUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
-      const clientID = config.apis.oauth2.clientId
+      const clientID = config.apis.hmppsAuth.apiClientId
 
       res.locals.user = {
         returnUrl,

@@ -24,7 +24,7 @@ const ensureHttps = require('./middleware/ensureHttps')
 const healthFactory = require('./services/healthCheck')
 const setupAuth = require('./middleware/setUpAuth')
 const routes = require('./routes')
-const config = require('./config')
+const config = require('../server/config').default
 const setupStaticContent = require('./setupStaticContent')
 const nunjucksSetup = require('./utils/nunjucksSetup')
 const phaseNameSetup = require('./phaseNameSetup')
@@ -59,9 +59,9 @@ app.use(
 )
 
 const health = healthFactory(
-  config.apis.oauth2.url,
-  config.apis.manageusers.url,
-  config.apis.tokenverification.url,
+  config.apis.hmppsAuth.url,
+  config.apis.manageUsers.url,
+  config.apis.tokenVerification.url,
   config.apis.nomisUsersAndRoles.url,
 )
 
@@ -80,7 +80,7 @@ app.get('/health', (req, res, next) => {
 
 app.get('/ping', (req, res) => res.send('pong'))
 
-if (config.app.production) {
+if (config.production) {
   app.use(ensureHttps)
 }
 

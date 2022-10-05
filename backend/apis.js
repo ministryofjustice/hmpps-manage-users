@@ -1,4 +1,4 @@
-const config = require('./config')
+const config = require('../server/config').default
 const clientFactory = require('./api/oauthEnabledClient')
 const { oauthApiFactory } = require('./api/oauthApi')
 const { manageUsersApiFactory } = require('./api/manageUsersApi')
@@ -7,30 +7,30 @@ const { nomisUsersAndRolesFactory } = require('./api/nomisUsersAndRolesApi')
 
 const oauthApi = oauthApiFactory(
   clientFactory({
-    baseUrl: config.apis.oauth2.url,
-    timeout: config.apis.oauth2.timeoutSeconds * 1000,
+    baseUrl: config.apis.hmppsAuth.url,
+    timeout: config.apis.hmppsAuth.timeout.response,
   }),
-  { ...config.apis.oauth2 },
+  { ...config.apis.hmppsAuth },
 )
 
 const manageUsersApi = manageUsersApiFactory(
   clientFactory({
-    baseUrl: config.apis.manageusers.url,
-    timeout: config.apis.manageusers.timeout.response,
+    baseUrl: config.apis.manageUsers.url,
+    timeout: config.apis.manageUsers.timeout.response,
   }),
 )
 
 const tokenVerificationApi = tokenVerificationApiFactory(
   clientFactory({
-    baseUrl: config.apis.tokenverification.url,
-    timeout: config.apis.tokenverification.timeoutSeconds * 1000,
+    baseUrl: config.apis.tokenVerification.url,
+    timeout: config.apis.tokenVerification.timeout.response,
   }),
 )
 
 const nomisUsersAndRolesApi = nomisUsersAndRolesFactory(
   clientFactory({
     baseUrl: config.apis.nomisUsersAndRoles.url,
-    timeout: config.apis.nomisUsersAndRoles.timeoutSeconds * 1000,
+    timeout: config.apis.nomisUsersAndRoles.timeout.response,
   }),
 )
 module.exports = {
