@@ -1,7 +1,7 @@
 import session from 'express-session'
 import connectRedis, { Client } from 'connect-redis'
 import express, { Router } from 'express'
-import config from '../config'
+import config from '../../server/config'
 import logger from '../log'
 import { createRedisClient } from '../data/redisClient'
 
@@ -22,19 +22,11 @@ export default function setupWebSession(): Router {
   router.use(
     session({
       store: getSessionStore(),
-      secret: [config.hmppsCookie.sessionSecret],
-      resave: false,
+      cookie: { secure: config.https, sameSite: 'lax', maxAge: config.session.expiryMinutes * 60 * 1000 },
+      secret: config.session.secret,
+      resave: false, // redis implements touch so shouldn't need this
       saveUninitialized: false,
       rolling: true,
-      name: config.hmppsCookie.name,
-      cookie: {
-        domain: config.hmppsCookie.domain,
-        httpOnly: true,
-        maxAge: config.hmppsCookie.expiryMinutes * 60 * 1000,
-        sameSite: 'lax',
-        secure: config.app.production,
-        signed: true,
-      },
     }),
   )
   return router

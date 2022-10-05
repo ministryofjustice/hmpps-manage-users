@@ -1,6 +1,6 @@
 import { createClient } from 'redis'
 import logger from '../log'
-import config from '../config'
+import config from '../../server/config'
 
 export type RedisClient = ReturnType<typeof createClient>
 
@@ -8,7 +8,7 @@ export const createRedisClient = (): RedisClient => {
   const { host, port, password } = config.redis
   if (!host) return null
 
-  const url = config.app.production ? `rediss://${host}:${port}` : `redis://${host}:${port}`
+  const url = config.production ? `rediss://${host}:${port}` : `redis://${host}:${port}`
   const legacyMode = true
 
   const client = createClient({
