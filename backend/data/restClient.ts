@@ -4,7 +4,7 @@ import { Readable } from 'stream'
 
 import logger from '../log'
 import sanitiseError from '../sanitisedError'
-import { ApiConfig } from '../apiConfig'
+import { ApiConfig } from '../../server/config'
 import type { UnsanitisedError } from '../sanitisedError'
 // Commented out until restclient fully configured
 // import { restClientMetricsMiddleware } from './restClientMetricsMiddleware'

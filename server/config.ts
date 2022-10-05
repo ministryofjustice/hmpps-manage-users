@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 const appPortDefault = 3001
 const production = process.env.NODE_ENV === 'production'
 const toInt = (envVar: string, defaultVal: number): number => (envVar ? parseInt(envVar, 10) : defaultVal)
