@@ -49,7 +49,7 @@ The following environment variables supply these values:
 | API_CLIENT_SECRET             | Client secret for accessing apis |
 | MANAGE_USERS_API_ENDPOINT_URL |     URL to manage users api      |
 | NOMIS_USERS_API_ENDPOINT_URL  |  URL to NOMIS manage users api   |
-| OAUTH_ENDPOINT_URL            |     URL to the Oauth2 server     |
+| HMPPS_AUTH_URL                |        URL to HMPPS Auth         |
 | DPS_ENDPOINT_URL              |           DPS Core UI            |
 | SESSION_COOKIE_SECRET         |      Session cookie secret       | 
 

@@ -2,12 +2,12 @@
 const nock = require('nock')
 const { oauthApiFactory } = require('./oauthApi')
 
-const clientId = 'clientId'
+const apiClientId = 'clientId'
+const apiClientSecret = 'clientSecret'
 const url = 'http://localhost'
-const clientSecret = 'clientSecret'
 
 const client = {}
-const oauthApi = oauthApiFactory(client, { url, clientId, clientSecret })
+const oauthApi = oauthApiFactory(client, { url, apiClientId, apiClientSecret })
 const mock = nock(url, { reqheaders: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 const context = { some: 'context' }
 
@@ -20,7 +20,7 @@ describe('oauthApi tests', () => {
     it('should save access token', async () => {
       mock
         .post('/oauth/token', { grant_type: 'refresh_token', refresh_token: 'refreshToken' })
-        .basicAuth({ user: clientId, pass: clientSecret })
+        .basicAuth({ user: apiClientId, pass: apiClientSecret })
         .reply(200, {
           token_type: 'bearer',
           expires_in: 59,

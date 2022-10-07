@@ -2,7 +2,7 @@ const passport = require('passport')
 const querystring = require('querystring')
 const logger = require('./log')
 const contextProperties = require('./contextProperties')
-const config = require('./config')
+const config = require('../server/config').default
 
 const isXHRRequest = (req) =>
   req.xhr ||
@@ -19,7 +19,7 @@ const isXHRRequest = (req) =>
  * @param {any} params.homeLink The URL for the home page.
  */
 const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
-  const authSignOutUrl = `${config.apis.oauth2.ui_url}/sign-out?client_id=${config.apis.oauth2.clientId}&redirect_uri=${config.app.url}`
+  const authSignOutUrl = `${config.apis.hmppsAuth.url}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
 
   const remoteSignInIndex = (req, res, next) => {
     req.session.returnTo = req.query.returnTo

@@ -1,4 +1,4 @@
-import config from '../config'
+import config from '../../server/config'
 import RestClient from './restClient'
 
 interface AdminType {
@@ -14,7 +14,7 @@ interface RoleDetails {
 
 class ManageUsersApi extends RestClient {
   constructor(token: string) {
-    super('Manage Users API', config.apis.manageusers, token)
+    super('Manage Users API', config.apis.manageUsers, token)
   }
 
   getRoleDetails(roleCode: string): Promise<RoleDetails> {
