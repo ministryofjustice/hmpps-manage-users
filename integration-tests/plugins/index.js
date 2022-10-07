@@ -1,7 +1,7 @@
 const auth = require('../mockApis/auth')
-const manageUsersApi = require('../mockApis/manageUsers')
-const tokenVerification = require('../mockApis/tokenVerification')
-const nomisUsersAndRoles = require('../mockApis/nomisUsersAndRoles')
+const manageUsersApi = require('../mockApis/manageusers')
+const tokenverification = require('../mockApis/tokenverification')
+const nomisUsersAndRoles = require('../mockApis/nomisusersandroles')
 
 const { resetStubs } = require('../mockApis/wiremock')
 
@@ -14,17 +14,17 @@ module.exports = (on) => {
         auth.stubSignIn(username, roles),
         auth.stubUserMe({}),
         nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
-        tokenVerification.stubVerifyToken(true),
+        tokenverification.stubVerifyToken(true),
       ]),
     stubAuthHealth: (status) => auth.stubHealth(status),
     stubHealthAllHealthy: () =>
       Promise.all([
         auth.stubHealth(),
         manageUsersApi.stubHealth(),
-        tokenVerification.stubHealth(),
+        tokenverification.stubHealth(),
         nomisUsersAndRoles.stubHealth(),
       ]),
-    stubVerifyToken: (active = true) => tokenVerification.stubVerifyToken(active),
+    stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
     stubSignInPage: auth.redirect,
     ...manageUsersApi,
     ...nomisUsersAndRoles,

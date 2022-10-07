@@ -22,12 +22,12 @@ const processPageResponse = (context) => (response) => {
  * Return an oauthApi built using the supplied configuration.
  * @param client
  * @param {object} params
- * @param {string} params.apiClientId
- * @param {string} params.apiClientSecret
+ * @param {string} params.clientId
+ * @param {string} params.clientSecret
  * @param {string} params.url
  * @returns a configured oauthApi instance
  */
-const oauthApiFactory = (client, { apiClientId, apiClientSecret, url }) => {
+const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
@@ -88,7 +88,7 @@ const oauthApiFactory = (client, { apiClientId, apiClientSecret, url }) => {
     timeout: 30000,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      authorization: `Basic ${apiClientCredentials(apiClientId, apiClientSecret)}`,
+      authorization: `Basic ${apiClientCredentials(clientId, clientSecret)}`,
     },
   })
 
