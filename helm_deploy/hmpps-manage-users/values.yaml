@@ -49,8 +49,9 @@ generic-service:
       path: /ping
 
   env:
-    NODE_ENV: production
-    TOKEN_VERIFICATION_ENABLED: true
+    NODE_ENV: "production"
+    REDIS_TLS_ENABLED: "true"
+    TOKEN_VERIFICATION_ENABLED: "true"
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
     NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS: "120"
 
