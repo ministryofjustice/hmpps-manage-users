@@ -2,7 +2,7 @@ const nock = require('nock')
 
 const clientFactory = require('./oauthEnabledClient')
 const { tokenVerificationApiFactory } = require('./tokenVerificationApi')
-const config = require('../../server/config').default
+const config = require('../config')
 
 const hostname = 'http://localhost:8080'
 
@@ -18,7 +18,7 @@ describe('token verification api tests', () => {
   describe('POST requests', () => {
     describe('Token Verification disabled', () => {
       beforeAll(() => {
-        config.apis.tokenVerification.enabled = false
+        config.apis.tokenverification.enabled = false
       })
       it('Calls verify and parses response', async () => {
         mock.post('/token/verify').reply(200, { active: true })
@@ -28,7 +28,7 @@ describe('token verification api tests', () => {
     })
     describe('Token Verification enabled', () => {
       beforeAll(() => {
-        config.apis.tokenVerification.enabled = true
+        config.apis.tokenverification.enabled = true
       })
       it('Calls verify and parses response', async () => {
         mock.post('/token/verify').reply(200, { active: true })
