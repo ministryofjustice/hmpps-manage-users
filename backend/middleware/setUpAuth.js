@@ -4,7 +4,7 @@ const flash = require('connect-flash')
 const tokenRefresherFactory = require('../tokenRefresher').factory
 const sessionManagementRoutes = require('../sessionManagementRoutes')
 const auth = require('../authentication/auth')
-const config = require('../config')
+const config = require('../../server/config').default
 
 const router = express.Router()
 
@@ -21,7 +21,7 @@ module.exports = ({ oauthApi, tokenVerificationApi }) => {
     app: router,
     tokenRefresher,
     tokenVerifier: tokenVerificationApi.verifyToken,
-    homeLink: config.apis.oauth2.ui_url,
+    homeLink: config.apis.hmppsAuth.url,
   })
 
   return router
