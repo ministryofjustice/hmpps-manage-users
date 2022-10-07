@@ -12,6 +12,7 @@ export declare global {
   namespace Express {
     interface Request {
       verified?: boolean
+      id: string
       user: {
         username: string
         token: string
