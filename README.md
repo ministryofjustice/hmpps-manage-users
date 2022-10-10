@@ -16,9 +16,12 @@ Ensure that you have these installed using your system package manager and/or np
 When running locally this service needs to use other supporting services which
 need to be running and available at known locations.
 
+- Redis (port: 6379)
 - HMPPS Auth (port: 9090)
 - HMPPS Manage Users API (port: 9091)
 - NOMIS User Roles API (port: 8082)
+
+These can be run in Docker using: `docker compose up`
 
 # Running hmpps-manage-users locally
 
@@ -49,7 +52,7 @@ The following environment variables supply these values:
 | API_CLIENT_SECRET             | Client secret for accessing apis |
 | MANAGE_USERS_API_ENDPOINT_URL |     URL to manage users api      |
 | NOMIS_USERS_API_ENDPOINT_URL  |  URL to NOMIS manage users api   |
-| OAUTH_ENDPOINT_URL            |     URL to the Oauth2 server     |
+| HMPPS_AUTH_URL                |        URL to HMPPS Auth         |
 | DPS_ENDPOINT_URL              |           DPS Core UI            |
 | SESSION_COOKIE_SECRET         |      Session cookie secret       | 
 
