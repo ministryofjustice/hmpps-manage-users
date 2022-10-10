@@ -1,13 +1,5 @@
 version: '3'
 services:
-
-  redis:
-    image: 'redis:6.2'
-    networks:
-      - hmpps
-    ports:
-      - '6379:6379'
-
   hmpps-auth:
     image: quay.io/hmpps/hmpps-auth:latest
     container_name: auth_mhaa
