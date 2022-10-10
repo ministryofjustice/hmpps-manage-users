@@ -137,6 +137,13 @@ context('DPS search with filter user functionality', () => {
     search.rows().eq(1).should('include.text', '1 DPS role')
     search.rows().eq(2).should('include.text', '2 DPS roles')
   })
+  it('will trim the username entered', () => {
+    const search = goToSearchPage({})
+
+    search.filterUser(' Andy ')
+    search.filterWithTag('Andy').should('exist')
+    search.userFilterInput().should('have.value', 'Andy')
+  })
   it('will have a link to maintain the user', () => {
     cy.task('stubDpsUserDetails', {})
     cy.task('stubDpsUserGetRoles')
