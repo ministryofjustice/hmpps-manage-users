@@ -35,8 +35,8 @@ const addAppInfo = (result) => {
 module.exports = function healthcheckFactory(authUrl, manageusersUrl, tokenverificationUrl, nomisUsersAndRolesUrl) {
   const checks = [
     service('auth', authUrl),
-    service('manageUsers', manageusersUrl),
-    service('tokenVerification', tokenverificationUrl),
+    service('manageusers', manageusersUrl),
+    service('tokenverification', tokenverificationUrl),
     service('nomisUsersAndRoles', nomisUsersAndRolesUrl),
   ]
 

@@ -1,7 +1,7 @@
 import passport from 'passport'
 import { Strategy } from 'passport-oauth2'
 
-import config from '../../server/config'
+import config from '../config'
 import { apiClientCredentials } from '../api/oauthApi'
 
 passport.serializeUser((user, done) => {
@@ -17,17 +17,14 @@ passport.deserializeUser((user, done) => {
 function init(): void {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.apis.hmppsAuth.url}/oauth/authorize`,
-      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-      clientID: config.apis.hmppsAuth.apiClientId,
-      clientSecret: config.apis.hmppsAuth.apiClientSecret,
+      authorizationURL: `${config.apis.oauth2.ui_url}/oauth/authorize`,
+      tokenURL: `${config.apis.oauth2.url}/oauth/token`,
+      clientID: config.apis.oauth2.clientId,
+      clientSecret: config.apis.oauth2.clientSecret,
       callbackURL: `${config.app.url}/sign-in/callback`,
       state: true,
       customHeaders: {
-        Authorization: `Basic ${apiClientCredentials(
-          config.apis.hmppsAuth.apiClientId,
-          config.apis.hmppsAuth.apiClientSecret,
-        )}`,
+        Authorization: `Basic ${apiClientCredentials(config.apis.oauth2.clientId, config.apis.oauth2.clientSecret)}`,
       },
     },
     (accessToken, refreshToken, params, profile, done) =>

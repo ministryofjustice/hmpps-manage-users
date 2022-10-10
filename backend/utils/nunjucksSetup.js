@@ -2,7 +2,7 @@ const moment = require('moment')
 const nunjucks = require('nunjucks')
 const querystring = require('querystring')
 
-const config = require('../../server/config').default
+const config = require('../config')
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
 
 module.exports = (app, path) => {
@@ -168,7 +168,7 @@ module.exports = (app, path) => {
   njkEnv.addFilter('getDate', getDate)
   njkEnv.addFilter('getTime', getTime)
   njkEnv.addFilter('truthy', (data) => Boolean(data))
-  njkEnv.addGlobal('homeUrl', config.apis.hmppsAuth.url)
+  njkEnv.addGlobal('homeUrl', config.apis.oauth2.ui_url)
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
   njkEnv.addGlobal('supportUrl', config.app.supportUrl)
   njkEnv.addGlobal('googleTagManagerId', config.analytics.googleTagManagerId)

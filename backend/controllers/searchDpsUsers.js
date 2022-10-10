@@ -1,5 +1,5 @@
 const querystring = require('querystring')
-const config = require('../../server/config').default
+const config = require('../config')
 
 const size = 20
 
