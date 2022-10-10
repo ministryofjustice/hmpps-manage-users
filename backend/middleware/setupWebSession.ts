@@ -31,16 +31,16 @@ export default function setUpWebSession(): Router {
     next()
   })
 
-  router.use((req, res, next) => {
-    const headerName = 'X-Request-Id'
-    const oldValue = req.get(headerName)
-    const id = oldValue === undefined ? uuidv4() : oldValue
-
-    res.set(headerName, id)
-    req.id = id
-
-    next()
-  })
+  //  router.use((req, res, next) => {
+  //    const headerName = 'X-Request-Id'
+  //    const oldValue = req.get(headerName)
+  //    const id = oldValue === undefined ? uuidv4() : oldValue
+  //
+  //    res.set(headerName, id)
+  //    req.id = id
+  //
+  //    next()
+  //  })
 
   return router
 }
