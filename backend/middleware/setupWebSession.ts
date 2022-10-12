@@ -9,7 +9,7 @@ const RedisStore = connectRedis(session)
 
 export default function setupWebSession(): Router {
   const getSessionStore = () => {
-    const client = createRedisClient()
+    const client = createRedisClient({ legacyMode: true })
     if (client != null) {
       client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
       return new RedisStore({ client: client as unknown as Client })
