@@ -9,8 +9,8 @@ const { groupDeleteFactory } = require('../controllers/groupDelete')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi }) => {
-  const getGroupDetailsApi = (context, group) => oauthApi.groupDetails(context, { group })
+const controller = ({ oauthApi, manageUsersApi }) => {
+  const getGroupDetailsApi = (context, group) => manageUsersApi.groupDetails(context, { group })
   const deleteGroupApi = (context, group) => oauthApi.deleteGroup(context, group)
   const getGroups = (context) => oauthApi.assignableGroups(context)
   const changeGroupNameApi = (context, group, groupName) => oauthApi.changeGroupName(context, group, { groupName })

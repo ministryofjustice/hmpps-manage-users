@@ -61,7 +61,7 @@ context('Groups', () => {
     cy.signIn()
 
     cy.task('stubAuthAssignableGroups', {})
-    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.task('stubAssignableGroupDetails', {})
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
 
@@ -79,14 +79,14 @@ context('Groups', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
 
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubAssignableGroupDetails', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
       groupDetails.changeGroupName()
 
       cy.task('stubAuthChangeGroupName')
-      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterGroupNameChange)
+      cy.task('stubAssignableGroupDetails', groupDetailsAfterGroupNameChange)
       const groupNameChange = GroupNameChangePage.verifyOnPage()
       groupNameChange.changeName('Name Change')
 
@@ -116,7 +116,7 @@ context('Groups', () => {
       })
       cy.signIn()
 
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubAssignableGroupDetails', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -149,7 +149,7 @@ context('Groups', () => {
       cy.signIn()
       MenuPage.verifyOnPage()
 
-      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.task('stubGroupDetailsNoChildren', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -166,7 +166,7 @@ context('Groups', () => {
       cy.signIn()
       MenuPage.verifyOnPage()
 
-      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.task('stubGroupDetailsNoChildren', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -182,7 +182,7 @@ context('Groups', () => {
       })
       cy.signIn()
 
-      cy.task('stubAuthGroupDetailsNoChildren', {})
+      cy.task('stubGroupDetailsNoChildren', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -202,6 +202,7 @@ context('Groups', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
 
+      cy.task('stubAssignableGroupDetails', {})
       cy.task('stubAuthAssignableGroupDetails', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
@@ -209,7 +210,7 @@ context('Groups', () => {
       groupDetails.changeChildGroupName()
 
       cy.task('stubAuthChangeChildGroupName')
-      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterChildGroupNameChange)
+      cy.task('stubAssignableGroupDetails', groupDetailsAfterChildGroupNameChange)
       const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
       childGroupNameChange.changeName('New group name')
 
@@ -251,7 +252,7 @@ context('Groups', () => {
       })
       cy.signIn()
 
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubAssignableGroupDetails', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -259,7 +260,7 @@ context('Groups', () => {
 
       cy.task('stubAuthCreateChildGroup')
       CreateChildGroupPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterCreateChildGroup)
+      cy.task('stubAssignableGroupDetails', groupDetailsAfterCreateChildGroup)
       const createChildGroup = CreateChildGroupPage.verifyOnPage()
       createChildGroup.createGroup('BOB', 'Bob Group')
 
@@ -316,12 +317,12 @@ context('Groups', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
 
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubAssignableGroupDetails', {})
       menuPage.createGroup()
 
       cy.task('stubAuthCreateGroup')
       CreateGroupPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubAssignableGroupDetails', {})
       const createGroup = CreateGroupPage.verifyOnPage()
       createGroup.createGroup('BO$', '')
       createGroup.errorSummary().should('contain.text', 'Enter a group name')
@@ -365,12 +366,12 @@ context('Groups', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.task('stubAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     cy.task('stubAuthDeleteChildGroup')
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
-    cy.task('stubAuthAssignableGroupDetails', groupDetailsAfterDeleteChild)
+    cy.task('stubAssignableGroupDetails', groupDetailsAfterDeleteChild)
     groupDetails.deleteChildGroup()
 
     const postActionGroupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -395,6 +396,7 @@ context('Groups', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.signIn()
 
+    cy.task('stubAssignableGroupDetails', {})
     cy.task('stubAuthAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
@@ -412,7 +414,7 @@ context('Groups', () => {
     })
     cy.signIn()
 
-    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.task('stubAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -427,7 +429,7 @@ context('Groups', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }] })
     cy.task('stubBannerNoMessage')
     cy.signIn()
-    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.task('stubAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')

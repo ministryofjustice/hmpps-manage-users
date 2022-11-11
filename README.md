@@ -75,6 +75,12 @@ docker run -p 3001:3000 -d \
      quay.io/hmpps/hmpps-manage-users:latest
 ```
 
+# Running locally in intelliJ
+A redis instance needs to be created to allow the UI to run successfully.
+```
+docker stop redis && docker rm redis && docker-compose -f docker-compose-test.yaml up redis
+```
+
 # Cypress Integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
