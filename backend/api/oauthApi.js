@@ -71,7 +71,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const assignableRoles = (context, { userId }) => get(context, `/api/authuser/id/${userId}/assignable-roles`)
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
-  const groupDetails = (context, { group }) => get(context, `/api/groups/${group}`)
   const deleteGroup = (context, group) => del(context, `/api/groups/${group}`)
   const changeGroupName = (context, group, groupName) => put(context, `/api/groups/${group}`, groupName)
   const childGroupDetails = (context, { group }) => get(context, `/api/groups/child/${group}`)
@@ -160,7 +159,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     amendUserEmail,
     assignableGroups,
     searchableRoles,
-    groupDetails,
     deleteGroup,
     changeGroupName,
     childGroupDetails,

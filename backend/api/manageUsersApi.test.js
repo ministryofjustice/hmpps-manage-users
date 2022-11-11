@@ -10,28 +10,6 @@ describe('manageUsersApi tests', () => {
     nock.cleanAll()
   })
 
-  describe('createDPSUser', () => {
-    const user = {
-      user: {
-        username: 'JOE_GEN',
-        email: 'joe@digital.justice.gov.uk',
-        firstName: 'joe',
-        lastName: 'smith',
-        userType: 'DPS_GEN',
-        defaultCaseloadId: 'MDI',
-      },
-    }
-    beforeEach(() => {
-      client.post = jest.fn().mockReturnValue({
-        then: () => {},
-      })
-      manageUsersApi.createUser(context, user)
-    })
-    it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/users', user)
-    })
-  })
-
   describe('createRole', () => {
     const role = {
       role: { roleCode: 'role_code', roleName: 'role name', roleDescription: 'description', adminType: ['EXT_ADM'] },
@@ -205,6 +183,25 @@ describe('manageUsersApi tests', () => {
     })
     it('should call nomis user roles endpoint', () => {
       expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+    })
+  })
+
+  describe('groupDetails', () => {
+    const groups = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => groups,
+      })
+      actual = manageUsersApi.groupDetails(context, { group: 'group1' })
+    })
+
+    it('should return groups from endpoint', () => {
+      expect(actual).toEqual(groups)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/groups/group1')
     })
   })
 })

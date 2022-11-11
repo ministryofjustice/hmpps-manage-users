@@ -325,6 +325,39 @@ const stubChangeRoleAdminTypeFail = () =>
       developerMessage: 'Unable to get role: AUTH_GROUP_MANAGER with reason: notfound',
     },
   })
+
+const stubAssignableGroupDetails = ({
+  content = {
+    groupCode: 'SITE_1_GROUP_2',
+    groupName: 'Site 1 - Group 2',
+    assignableRoles: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
+    ],
+    children: [{ groupCode: 'CHILD_1', groupName: 'Child - Site 1 - Group 2' }],
+  },
+}) =>
+  getFor({
+    urlPattern: '/groups/.*',
+    body: content,
+  })
+
+const stubGroupDetailsNoChildren = ({
+  content = {
+    groupCode: 'SITE_1_GROUP_2',
+    groupName: 'Site 1 - Group 2',
+    assignableRoles: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
+    ],
+    children: [],
+  },
+}) =>
+  getFor({
+    urlPattern: '/groups/.*',
+    body: content,
+  })
+
 const verifyDpsCreateUser = () =>
   getMatchingRequests({
     method: 'POST',
@@ -367,6 +400,8 @@ module.exports = {
   stubGetRolesIncludingAdminRoles,
   stubAllRolesPaged,
   stubAuthCreateRole,
+  stubGroupDetailsNoChildren,
+  stubAssignableGroupDetails,
   stubHealth,
   stubChangeRoleName,
   stubChangeRoleDescription,
