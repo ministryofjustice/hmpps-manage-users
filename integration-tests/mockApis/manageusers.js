@@ -443,6 +443,34 @@ const verifyCreateChildGroup = () =>
     urlPathPattern: '/groups/child',
   }).then((data) => data.body.requests)
 
+const stubDeleteChildGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/groups/child/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+const stubChangeChildGroupName = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/groups/child/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+const stubChangeGroupName = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/groups/.*',
+  })
+
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
@@ -472,4 +500,7 @@ module.exports = {
   verifyRoleAdminTypeUpdate,
   verifyCreateGroup,
   verifyCreateChildGroup,
+  stubDeleteChildGroup,
+  stubChangeChildGroupName,
+  stubChangeGroupName,
 }

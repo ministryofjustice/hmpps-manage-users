@@ -13,6 +13,7 @@ const manageUsersApiFactory = (client) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
+  const del = (context, path) => client.del(context, path).then((response) => response.body)
 
   const createUser = (context, user) => post(context, '/users', user)
   const createRole = (context, role) => post(context, '/roles', role)
@@ -46,6 +47,11 @@ const manageUsersApiFactory = (client) => {
   const createChildGroup = (context, group) => post(context, '/groups/child', group)
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
 
+  const changeGroupName = (context, group, groupName) => put(context, `/groups/${group}`, groupName)
+  const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
+  const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
+  const deleteGroup = (context, group) => del(context, `/groups/${group}`)
+
   return {
     createUser,
     createRole,
@@ -61,6 +67,10 @@ const manageUsersApiFactory = (client) => {
     groupDetails,
     createChildGroup,
     childGroupDetails,
+    changeGroupName,
+    changeChildGroupName,
+    deleteChildGroup,
+    deleteGroup,
   }
 }
 

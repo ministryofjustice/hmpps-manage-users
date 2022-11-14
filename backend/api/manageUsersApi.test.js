@@ -245,4 +245,71 @@ describe('manageUsersApi tests', () => {
       expect(client.get).toBeCalledWith(context, '/groups/child/childgroup1')
     })
   })
+
+  describe('deleteGroup', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.deleteGroup(context, 'DEL_1')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call group delete endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/groups/DEL_1')
+    })
+  })
+
+  describe('deleteChildGroup', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.deleteChildGroup(context, 'DEL_CHILD_GRP')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call child group delete endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/groups/child/DEL_CHILD_GRP')
+    })
+  })
+  describe('change group name', () => {
+    const groupName = { groupName: 'newGroupName' }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.changeGroupName(context, 'GRP_1', groupName)
+    })
+
+    it('should call manger user endpoint and change group name', () => {
+      expect(client.put).toBeCalledWith(context, '/groups/GRP_1', groupName)
+    })
+  })
+
+  describe('change child group name', () => {
+    const groupName = { groupName: 'newGroupName' }
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.changeChildGroupName(context, 'CHILD_GRP_1', groupName)
+    })
+
+    it('should call manger user endpoint and change child group name', () => {
+      expect(client.put).toBeCalledWith(context, '/groups/child/CHILD_GRP_1', groupName)
+    })
+  })
 })

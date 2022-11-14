@@ -318,36 +318,6 @@ const stubAuthDeleteGroup = () =>
     },
   })
 
-const stubAuthChangeGroupName = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/groups/.*',
-  })
-
-const stubAuthChangeChildGroupName = () =>
-  stubFor({
-    request: {
-      method: 'PUT',
-      urlPattern: '/auth/api/groups/child/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
-const stubAuthDeleteChildGroup = () =>
-  stubFor({
-    request: {
-      method: 'DELETE',
-      urlPattern: '/auth/api/groups/child/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
 const stubAuthSearchableRoles = ({
   content = [
     { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
@@ -589,9 +559,6 @@ module.exports = {
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   stubAuthAssignableGroupDetails,
-  stubAuthChangeGroupName,
-  stubAuthChangeChildGroupName,
-  stubAuthDeleteChildGroup,
   stubAuthDeleteGroup,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
