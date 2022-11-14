@@ -85,7 +85,7 @@ context('Groups', () => {
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
       groupDetails.changeGroupName()
 
-      cy.task('stubAuthChangeGroupName')
+      cy.task('stubChangeGroupName')
       cy.task('stubGroupDetailsWithChildren', groupDetailsAfterGroupNameChange)
       const groupNameChange = GroupNameChangePage.verifyOnPage()
       groupNameChange.changeName('Name Change')
@@ -209,7 +209,7 @@ context('Groups', () => {
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
       groupDetails.changeChildGroupName()
 
-      cy.task('stubAuthChangeChildGroupName')
+      cy.task('stubChangeChildGroupName')
       cy.task('stubGroupDetailsWithChildren', groupDetailsAfterChildGroupNameChange)
       const childGroupNameChange = ChildGroupNameChangePage.verifyOnPage()
       childGroupNameChange.changeName('New group name')
@@ -369,7 +369,7 @@ context('Groups', () => {
     cy.task('stubGroupDetailsWithChildren', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
-    cy.task('stubAuthDeleteChildGroup')
+    cy.task('stubDeleteChildGroup')
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     cy.task('stubGroupDetailsWithChildren', groupDetailsAfterDeleteChild)
     groupDetails.deleteChildGroup()

@@ -12,15 +12,16 @@ const router = express.Router({ mergeParams: true })
 const controller = ({ oauthApi, manageUsersApi }) => {
   const getGroupDetailsApi = (context, group) => manageUsersApi.groupDetails(context, { group })
 
-  const deleteGroupApi = (context, group) => oauthApi.deleteGroup(context, group)
+  const deleteGroupApi = (context, group) => manageUsersApi.deleteGroup(context, group)
   const getAssignableGroups = (context) => oauthApi.assignableGroups(context)
-  const changeGroupNameApi = (context, group, groupName) => oauthApi.changeGroupName(context, group, { groupName })
+  const changeGroupNameApi = (context, group, groupName) =>
+    manageUsersApi.changeGroupName(context, group, { groupName })
   const getChildGroupDetailsApi = (context, group) => manageUsersApi.childGroupDetails(context, { group })
   const changeChildGroupNameApi = (context, group, groupName) =>
-    oauthApi.changeChildGroupName(context, group, { groupName })
+    manageUsersApi.changeChildGroupName(context, group, { groupName })
   const createChildGroupApi = (context, group) => manageUsersApi.createChildGroup(context, group)
   const createGroupApi = (context, group) => manageUsersApi.createGroup(context, group)
-  const deleteChildGroupApi = (context, group) => oauthApi.deleteChildGroup(context, group)
+  const deleteChildGroupApi = (context, group) => manageUsersApi.deleteChildGroup(context, group)
 
   const { index, search } = selectGroupsFactory(getAssignableGroups, '/manage-groups')
 

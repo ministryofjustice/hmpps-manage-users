@@ -390,34 +390,4 @@ describe('oauthApi tests', () => {
       )
     })
   })
-
-  describe('change group name', () => {
-    const groupName = { groupName: 'groupie' }
-
-    beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
-        then: () => {},
-      })
-      oauthApi.changeGroupName(context, 'group1', groupName)
-    })
-
-    it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/groups/group1', groupName)
-    })
-  })
-
-  describe('change child group name', () => {
-    const groupName = { groupName: 'groupie' }
-
-    beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
-        then: () => {},
-      })
-      oauthApi.changeChildGroupName(context, 'childgroup1', groupName)
-    })
-
-    it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/api/groups/child/childgroup1', groupName)
-    })
-  })
 })
