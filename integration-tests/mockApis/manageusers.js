@@ -326,7 +326,7 @@ const stubChangeRoleAdminTypeFail = () =>
     },
   })
 
-const stubAssignableGroupDetails = ({
+const stubGroupDetailsWithChildren = ({
   content = {
     groupCode: 'SITE_1_GROUP_2',
     groupName: 'Site 1 - Group 2',
@@ -356,6 +356,43 @@ const stubGroupDetailsNoChildren = ({
   getFor({
     urlPattern: '/groups/.*',
     body: content,
+  })
+
+const stubGroupDetailsFail = (groupName) =>
+  getFor({
+    urlPattern: `/groups/${groupName}`,
+    response: {
+      body: {
+        error: 'Not Found',
+        error_description: `Unable to get group: ${groupName} with reason: notfound`,
+        field: 'group',
+      },
+    },
+    status: 404,
+  })
+
+const stubCreateGroup = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/groups',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubCreateChildGroup = () =>
+  stubFor({
+    request: {
+      method: 'POST',
+      urlPattern: '/groups/child',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
   })
 
 const verifyDpsCreateUser = () =>
@@ -394,14 +431,29 @@ const verifyRoleAdminTypeUpdate = () =>
     urlPathPattern: '/roles/.*/admintype',
   }).then((data) => data.body.requests)
 
+const verifyCreateGroup = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/groups',
+  }).then((data) => data.body.requests)
+
+const verifyCreateChildGroup = () =>
+  getMatchingRequests({
+    method: 'POST',
+    urlPathPattern: '/groups/child',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
   stubGetRolesIncludingAdminRoles,
   stubAllRolesPaged,
   stubAuthCreateRole,
+  stubCreateGroup,
+  stubCreateChildGroup,
+  stubGroupDetailsFail,
   stubGroupDetailsNoChildren,
-  stubAssignableGroupDetails,
+  stubGroupDetailsWithChildren,
   stubHealth,
   stubChangeRoleName,
   stubChangeRoleDescription,
@@ -418,4 +470,6 @@ module.exports = {
   verifyRoleNameUpdate,
   verifyRoleDescriptionUpdate,
   verifyRoleAdminTypeUpdate,
+  verifyCreateGroup,
+  verifyCreateChildGroup,
 }
