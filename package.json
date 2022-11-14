@@ -110,7 +110,7 @@
     "test": "jest",
     "test-watch": "jest --watch",
     "record-build-info": "node scripts/record-build-info",
-    "lint": "eslint backend server integration-tests",
+    "lint": "eslint backend integration-tests",
     "typecheck": "tsc",
     "security_audit": "npx audit-ci --config audit-ci.json",
     "int-test": "cypress run",
@@ -123,8 +123,7 @@
   "nyc": {
     "all": true,
     "include": [
-      "backend/**/*.js",
-      "server/**/*.js"
+      "backend/**/*.js"
     ],
     "reporter": [
       "html"
@@ -133,15 +132,14 @@
   "jest": {
     "preset": "ts-jest",
     "collectCoverageFrom": [
-      "backend/**/*.{js,mjs}",
-      "server/**/*.{js,mjs}"
+      "backend/**/*.{js,mjs}"
     ],
     "globalSetup": "<rootDir>/config/jest/globalSetup.js",
     "setupFilesAfterEnv": [
       "<rootDir>/config/jest/setupTests.js"
     ],
     "testMatch": [
-      "<rootDir>/(backend|server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
+      "<rootDir>/(backend|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
     ],
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
