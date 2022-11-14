@@ -73,10 +73,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const deleteGroup = (context, group) => del(context, `/api/groups/${group}`)
   const changeGroupName = (context, group, groupName) => put(context, `/api/groups/${group}`, groupName)
-  const childGroupDetails = (context, { group }) => get(context, `/api/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/api/groups/child/${group}`, groupName)
-  const createChildGroup = (context, group) => post(context, '/api/groups/child', group)
-  const createGroup = (context, group) => post(context, '/api/groups', group)
   const deleteChildGroup = (context, group) => del(context, `/api/groups/child/${group}`)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
@@ -161,10 +158,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     searchableRoles,
     deleteGroup,
     changeGroupName,
-    childGroupDetails,
     changeChildGroupName,
-    createChildGroup,
-    createGroup,
     deleteChildGroup,
     changeDpsEmail,
     syncDpsEmail,

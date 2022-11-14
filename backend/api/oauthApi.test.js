@@ -406,25 +406,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('childGroupDetails', () => {
-    const groups = { bob: 'hello there' }
-    let actual
-
-    beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => groups,
-      })
-      actual = oauthApi.childGroupDetails(context, { group: 'childgroup1' })
-    })
-
-    it('should return groups from endpoint', () => {
-      expect(actual).toEqual(groups)
-    })
-    it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/groups/child/childgroup1')
-    })
-  })
-
   describe('change child group name', () => {
     const groupName = { groupName: 'groupie' }
 
