@@ -1,6 +1,6 @@
-const selectGroupsFactory = (getGroups, maintainUrl) => {
+const selectGroupsFactory = (getAssignableGroups, maintainUrl) => {
   const index = async (req, res) => {
-    const assignableGroups = await getGroups(res.locals)
+    const assignableGroups = await getAssignableGroups(res.locals)
     res.render('groups.njk', {
       groupValues: assignableGroups.map((g) => ({ text: g.groupName, value: g.groupCode })),
       maintainUrl,

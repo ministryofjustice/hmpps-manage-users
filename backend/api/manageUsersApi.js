@@ -41,7 +41,10 @@ const manageUsersApiFactory = (client) => {
 
   const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
 
+  const createGroup = (context, group) => post(context, '/groups', group)
   const groupDetails = (context, { group }) => get(context, `/groups/${group}`)
+  const createChildGroup = (context, group) => post(context, '/groups/child', group)
+  const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
 
   return {
     createUser,
@@ -54,7 +57,10 @@ const manageUsersApiFactory = (client) => {
     changeRoleDescription,
     changeRoleAdminType,
     getNotificationBannerMessage,
+    createGroup,
     groupDetails,
+    createChildGroup,
+    childGroupDetails,
   }
 }
 

@@ -226,4 +226,23 @@ describe('manageUsersApi tests', () => {
       expect(client.get).toBeCalledWith(context, '/groups/group1')
     })
   })
+
+  describe('childGroupDetails', () => {
+    const groups = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => groups,
+      })
+      actual = manageUsersApi.childGroupDetails(context, { group: 'childgroup1' })
+    })
+
+    it('should return groups from endpoint', () => {
+      expect(actual).toEqual(groups)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/groups/child/childgroup1')
+    })
+  })
 })
