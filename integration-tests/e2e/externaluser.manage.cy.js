@@ -14,7 +14,7 @@ const editUser = (roleCode, assignableGroups = []) => {
 
   cy.task('stubAuthGetUsername')
   cy.task('stubAuthUserRoles')
-  cy.task('stubAuthUserGroups')
+  cy.task('stubManageUserGroups')
   results.edit('AUTH_ADM')
 
   return UserPage.verifyOnPage('Auth Adm')
@@ -59,7 +59,7 @@ context('External user manage functionality', () => {
 
     cy.task('stubAuthGetUserWithEmail')
     cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
+    cy.task('stubManageUserGroups')
     results.edit('AUTH_ADM')
 
     const userPage = UserPage.verifyOnPage('Auth Adm')
@@ -92,7 +92,7 @@ context('External user manage functionality', () => {
 
       UserPage.verifyOnPage('Auth Adm')
 
-      cy.task('stubAuthRemoveRole')
+      cy.task('stubManageUsersRemoveRole')
       userPage.removeRole('GLOBAL_SEARCH').click()
 
       cy.task('verifyRemoveRole').should((requests) => {
@@ -141,29 +141,25 @@ context('External user manage functionality', () => {
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
-      cy.task('stubAuthAddGroup')
+      cy.task('stubManageUsersAddGroup')
       addGroup.type('SOCU North West')
       addGroup.addGroupButton().click()
 
       cy.task('verifyAddGroup').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal(
-          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
-        )
+        expect(requests[0].url).to.equal('/users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST')
       })
 
       UserPage.verifyOnPage('Auth Adm')
 
-      cy.task('stubAuthRemoveGroup')
+      cy.task('stubManageUsersRemoveGroup')
       userPage.removeGroup('SITE_1_GROUP_1').click()
 
       cy.task('verifyRemoveGroup').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal(
-          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1',
-        )
+        expect(requests[0].url).to.equal('/users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SITE_1_GROUP_1')
       })
     })
 
@@ -205,7 +201,7 @@ context('External user manage functionality', () => {
       userPage.groupRows().should('have.length', 2)
       userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-      cy.task('stubAuthRemoveGroup')
+      cy.task('stubManageUsersRemoveGroup')
       userPage.removeGroup('SITE_1_GROUP_1').click()
       userPage.removeGroup('SITE_1_GROUP_2').should('not.exist')
     })
@@ -215,7 +211,7 @@ context('External user manage functionality', () => {
       userPage.groupRows().should('have.length', 2)
       userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-      cy.task('stubAuthGroupManagerRemoveLastGroup')
+      cy.task('stubManageUsersGroupManagerRemoveLastGroup')
       userPage.removeGroup('SITE_1_GROUP_1').click()
       userPage
         .errorSummary()
@@ -235,16 +231,14 @@ context('External user manage functionality', () => {
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
-      cy.task('stubAuthAddGroup')
+      cy.task('stubManageUsersAddGroup')
       addGroup.type('SOCU North West')
       addGroup.addGroupButton().click()
 
       cy.task('verifyAddGroup').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal(
-          '/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST',
-        )
+        expect(requests[0].url).to.equal('/users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/groups/SOC_NORTH_WEST')
       })
     })
 
@@ -258,7 +252,7 @@ context('External user manage functionality', () => {
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
-      cy.task('stubAuthAddGroupGroupManagerCannotMaintainUser')
+      cy.task('stubManageUsersAddGroupGroupManagerCannotMaintainUser')
       addGroup.type('SOCU North West')
       addGroup.addGroupButton().click()
       addGroup
@@ -314,7 +308,7 @@ context('External user manage functionality', () => {
 
     cy.task('stubAuthGetUsername')
     cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
+    cy.task('stubManageUserGroups')
     results.edit('AUTH_ADM4')
 
     const userPage = UserPage.verifyOnPage('Auth Adm')
@@ -461,7 +455,7 @@ context('External user manage functionality', () => {
 
     cy.task('stubAuthGetUserWithEmail')
     cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
+    cy.task('stubManageUserGroups')
     results.edit('AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK')
     const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage.changeEmailLink().click()

@@ -26,7 +26,7 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
   router.use('/create-external-user', createAuthUserRouter({ oauthApi }))
   router.use('/search-external-users', searchExternalUserRouter({ oauthApi }))
   router.use('/search-with-filter-dps-users', searchDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
-  router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi }))
+  router.use('/manage-external-users/:userId', manageAuthUserRouter({ oauthApi, manageUsersApi }))
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi, manageUsersApi }))
   router.use('/manage-roles', manageRolesRouter({ oauthApi, manageUsersApi }))

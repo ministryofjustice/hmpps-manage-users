@@ -188,7 +188,7 @@ context('Groups', () => {
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
       groupDetails.deleteGroupNoChildLink()
 
-      cy.task('stubAuthDeleteGroup')
+      cy.task('stubManageUsersDeleteGroup')
       cy.task('stubAuthAssignableGroups', {})
       const groupDelete = GroupDeletePage.verifyOnPage()
       groupDelete.groupDelete()
@@ -203,7 +203,7 @@ context('Groups', () => {
       cy.signIn()
 
       cy.task('stubGroupDetailsWithChildren', {})
-      cy.task('stubAuthAssignableGroupDetails', {})
+      cy.task('stubManageUsersAssignableGroupDetails', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -397,7 +397,7 @@ context('Groups', () => {
     cy.signIn()
 
     cy.task('stubGroupDetailsWithChildren', {})
-    cy.task('stubAuthAssignableGroupDetails', {})
+    cy.task('stubManageUsersAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')

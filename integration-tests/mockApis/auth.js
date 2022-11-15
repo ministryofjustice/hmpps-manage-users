@@ -250,15 +250,6 @@ const stubAuthEmailSearch = () =>
     },
   })
 
-const stubAuthUserGroups = () =>
-  getFor({
-    urlPattern: '/auth/api/authuser/id/.*/groups\\?children=false',
-    body: [
-      { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
-      { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
-    ],
-  })
-
 const stubAuthUserRoles = () =>
   getFor({
     urlPattern: '/auth/api/authuser/id/.*/roles',
@@ -289,35 +280,6 @@ const stubAuthAssignableGroups = ({
     urlPattern: '/auth/api/authuser/.*/assignable-groups',
     body: content,
   })
-
-const stubAuthAssignableGroupDetails = ({
-  content = {
-    groupCode: 'SITE_1_GROUP_2',
-    groupName: 'Site 1 - Group 2',
-    assignableRoles: [
-      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
-      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
-    ],
-    children: [{ groupCode: 'CHILD_1', groupName: 'Child - Site 1 - Group 2' }],
-  },
-}) =>
-  getFor({
-    urlPattern: '/auth/api/groups/.*',
-    body: content,
-  })
-
-const stubAuthDeleteGroup = () =>
-  stubFor({
-    request: {
-      method: 'DELETE',
-      urlPattern: '/auth/api/groups/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
 const stubAuthSearchableRoles = ({
   content = [
     { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
@@ -339,70 +301,6 @@ const stubAuthAddRoles = () =>
     response: {
       status: 200,
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
-const stubAuthAddGroup = () =>
-  stubFor({
-    request: {
-      method: 'PUT',
-      urlPattern: '/auth/api/authuser/.*/groups/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
-const stubAuthAddGroupGroupManagerCannotMaintainUser = () =>
-  stubFor({
-    request: {
-      method: 'PUT',
-      urlPattern: '/auth/api/authuser/.*/groups/.*',
-    },
-    response: {
-      status: 403,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {
-        error: 'unable to maintain user',
-        error_description: 'Unable to enable user, the user is not within one of your groups',
-        field: 'groups',
-      },
-    },
-  })
-
-const stubAuthRemoveRole = () =>
-  stubFor({
-    request: {
-      method: 'DELETE',
-      urlPattern: '/auth/api/authuser/id/.*/roles/.*',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
-const stubAuthRemoveGroup = () =>
-  stubJson({
-    method: 'DELETE',
-    urlPattern: '/auth/api/authuser/.*/groups/.*',
-  })
-
-const stubAuthGroupManagerRemoveLastGroup = () =>
-  stubFor({
-    request: {
-      method: 'DELETE',
-      urlPattern: '/auth/api/authuser/.*/groups/.*',
-    },
-    response: {
-      status: 403,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      jsonBody: {
-        error: 'group.lastGroupRestriction',
-        error_description: 'Last group restriction, Group Manager not allowed to remove group: SITE_1_GROUP_1',
-        field: 'group',
-      },
     },
   })
 
@@ -477,18 +375,6 @@ const verifyRemoveRole = () =>
     urlPathPattern: '/auth/api/authuser/id/.*/roles/.*',
   }).then((data) => data.body.requests)
 
-const verifyAddGroup = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/id/.*/groups/.*',
-  }).then((data) => data.body.requests)
-
-const verifyRemoveGroup = () =>
-  getMatchingRequests({
-    method: 'DELETE',
-    urlPathPattern: '/auth/api/authuser/id/.*/groups/.*',
-  }).then((data) => data.body.requests)
-
 const verifyUserEnable = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -549,17 +435,9 @@ module.exports = {
   verifyAuthSearch,
   stubAuthEmailSearch,
   stubAuthUserRoles,
-  stubAuthUserGroups,
   stubAuthAddRoles,
-  stubAuthAddGroup,
-  stubAuthAddGroupGroupManagerCannotMaintainUser,
-  stubAuthRemoveRole,
-  stubAuthRemoveGroup,
-  stubAuthGroupManagerRemoveLastGroup,
   stubAuthAssignableRoles,
   stubAuthAssignableGroups,
-  stubAuthAssignableGroupDetails,
-  stubAuthDeleteGroup,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
   stubAuthUserEnable,
@@ -572,8 +450,6 @@ module.exports = {
   stubHealth,
   verifyAddRoles,
   verifyRemoveRole,
-  verifyAddGroup,
-  verifyRemoveGroup,
   verifyUserEnable,
   verifyUserDisable,
   verifyAuthUserChangeEmail,

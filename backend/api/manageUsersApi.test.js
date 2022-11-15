@@ -312,4 +312,69 @@ describe('manageUsersApi tests', () => {
       expect(client.put).toBeCalledWith(context, '/groups/child/CHILD_GRP_1', groupName)
     })
   })
+
+  describe('addUserGroup', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.addUserGroup(context, {
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        group: 'maintain',
+      })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call mange users api endpoint', () => {
+      expect(client.put).toBeCalledWith(
+        context,
+        '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
+        undefined,
+      )
+    })
+  })
+  describe('userGroups', () => {
+    const groups = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => groups,
+      })
+      actual = manageUsersApi.userGroups(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
+    })
+
+    it('should return groups from endpoint', () => {
+      expect(actual).toEqual(groups)
+    })
+    it('should call manage user api groups endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups?children=false')
+    })
+  })
+  describe('removeUserGroup', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.removeUserGroup(context, {
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        group: 'maintain',
+      })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call mange users api endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain')
+    })
+  })
 })
