@@ -51,6 +51,9 @@ const manageUsersApiFactory = (client) => {
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
   const deleteGroup = (context, group) => del(context, `/groups/${group}`)
+  const removeUserGroup = (context, { userId, group }) => del(context, `/users/${userId}/groups/${group}`)
+  const addUserGroup = (context, { userId, group }) => put(context, `/users/${userId}/groups/${group}`)
+  const userGroups = (context, { userId }) => get(context, `/users/${userId}/groups?children=false`)
 
   return {
     createUser,
@@ -71,6 +74,9 @@ const manageUsersApiFactory = (client) => {
     changeChildGroupName,
     deleteChildGroup,
     deleteGroup,
+    removeUserGroup,
+    addUserGroup,
+    userGroups,
   }
 }
 

@@ -15,7 +15,7 @@ context('Sign in functionality', () => {
     cy.signIn()
     cy.task('stubAuthUserFail', 'USER_NOT_FOUND')
     cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
+    cy.task('stubManageUserGroups')
 
     cy.visit('/manage-external-users/USER_NOT_FOUND/details', { failOnStatusCode: false })
     NotFoundPage.verifyOnPage()
@@ -26,7 +26,7 @@ context('Sign in functionality', () => {
     cy.signIn()
     cy.task('stubError')
     cy.task('stubAuthUserRoles')
-    cy.task('stubAuthUserGroups')
+    cy.task('stubManageUserGroups')
 
     cy.visit('/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/details', {
       failOnStatusCode: false,

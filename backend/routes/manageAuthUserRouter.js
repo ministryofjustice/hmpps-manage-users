@@ -7,7 +7,7 @@ const { deactivateUserReasonFactory } = require('../controllers/deactivateUserRe
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi }) => {
+const controller = ({ oauthApi, manageUsersApi }) => {
   const getUserAssignableRolesMessageApi = (context, userId) =>
     Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId }), ''])
 
@@ -15,14 +15,14 @@ const controller = ({ oauthApi }) => {
     Promise.all([
       oauthApi.getUser(context, { userId }),
       oauthApi.assignableGroups(context),
-      oauthApi.userGroups(context, { userId }),
+      manageUsersApi.userGroups(context, { userId }),
     ])
 
   const getUserRolesAndGroupsApi = async (context, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
       oauthApi.getUser(context, { userId }),
       oauthApi.userRoles(context, { userId }),
-      oauthApi.userGroups(context, { userId }),
+      manageUsersApi.userGroups(context, { userId }),
       hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
     ])
 
@@ -39,8 +39,8 @@ const controller = ({ oauthApi }) => {
   }
 
   const getUserApi = (context, userId) => oauthApi.getUser(context, { userId })
-  const saveGroupApi = (context, userId, group) => oauthApi.addUserGroup(context, { userId, group })
-  const removeGroupApi = (context, userId, group) => oauthApi.removeUserGroup(context, { userId, group })
+  const saveGroupApi = (context, userId, group) => manageUsersApi.addUserGroup(context, { userId, group })
+  const removeGroupApi = (context, userId, group) => manageUsersApi.removeUserGroup(context, { userId, group })
   const saveRolesApi = (context, userId, roles) => oauthApi.addUserRoles(context, { userId, roles })
   const removeRoleApi = (context, userId, role) => oauthApi.removeUserRole(context, { userId, role })
   const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })

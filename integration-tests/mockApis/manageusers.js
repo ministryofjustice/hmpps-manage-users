@@ -470,7 +470,101 @@ const stubChangeGroupName = () =>
     method: 'PUT',
     urlPattern: '/groups/.*',
   })
+const verifyAddGroup = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/users/.*/groups/.*',
+  }).then((data) => data.body.requests)
 
+const verifyRemoveGroup = () =>
+  getMatchingRequests({
+    method: 'DELETE',
+    urlPathPattern: '/users/.*/groups/.*',
+  }).then((data) => data.body.requests)
+
+const stubManageUserGroups = () =>
+  getFor({
+    urlPattern: '/users/.*/groups\\?children=false',
+    body: [
+      { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
+      { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
+    ],
+  })
+
+const stubManageUsersAddGroup = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/users/.*/groups/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubManageUsersAddGroupGroupManagerCannotMaintainUser = () =>
+  stubFor({
+    request: {
+      method: 'PUT',
+      urlPattern: '/users/.*/groups/.*',
+    },
+    response: {
+      status: 403,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        error: 'unable to maintain user',
+        error_description: 'Unable to enable user, the user is not within one of your groups',
+        field: 'groups',
+      },
+    },
+  })
+
+const stubManageUsersRemoveRole = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/users/.*/roles/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
+
+const stubManageUsersRemoveGroup = () =>
+  stubJson({
+    method: 'DELETE',
+    urlPattern: '/users/.*/groups/.*',
+  })
+
+const stubManageUsersGroupManagerRemoveLastGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/users/.*/groups/.*',
+    },
+    response: {
+      status: 403,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+      jsonBody: {
+        error: 'group.lastGroupRestriction',
+        error_description: 'Last group restriction, Group Manager not allowed to remove group: SITE_1_GROUP_1',
+        field: 'group',
+      },
+    },
+  })
+const stubManageUsersDeleteGroup = () =>
+  stubFor({
+    request: {
+      method: 'DELETE',
+      urlPattern: '/groups/.*',
+    },
+    response: {
+      status: 200,
+      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+    },
+  })
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
@@ -503,4 +597,13 @@ module.exports = {
   stubDeleteChildGroup,
   stubChangeChildGroupName,
   stubChangeGroupName,
+  verifyAddGroup,
+  verifyRemoveGroup,
+  stubManageUserGroups,
+  stubManageUsersAddGroup,
+  stubManageUsersAddGroupGroupManagerCannotMaintainUser,
+  stubManageUsersRemoveRole,
+  stubManageUsersRemoveGroup,
+  stubManageUsersGroupManagerRemoveLastGroup,
+  stubManageUsersDeleteGroup,
 }
