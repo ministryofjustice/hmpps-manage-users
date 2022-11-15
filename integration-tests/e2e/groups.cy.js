@@ -203,7 +203,7 @@ context('Groups', () => {
       cy.signIn()
 
       cy.task('stubGroupDetailsWithChildren', {})
-      cy.task('stubManageUsersAssignableGroupDetails', {})
+      cy.task('stubGroupDetailsWithChildren', {})
       cy.visit('/manage-groups/SITE_1_GROUP_2')
 
       const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
@@ -397,7 +397,6 @@ context('Groups', () => {
     cy.signIn()
 
     cy.task('stubGroupDetailsWithChildren', {})
-    cy.task('stubManageUsersAssignableGroupDetails', {})
     cy.visit('/manage-groups/SITE_1_GROUP_2')
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')

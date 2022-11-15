@@ -565,23 +565,6 @@ const stubManageUsersDeleteGroup = () =>
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     },
   })
-
-const stubManageUsersAssignableGroupDetails = ({
-  content = {
-    groupCode: 'SITE_1_GROUP_2',
-    groupName: 'Site 1 - Group 2',
-    assignableRoles: [
-      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', automatic: true },
-      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer', automatic: true },
-    ],
-    children: [{ groupCode: 'CHILD_1', groupName: 'Child - Site 1 - Group 2' }],
-  },
-}) =>
-  getFor({
-    urlPattern: '/groups/.*',
-    body: content,
-  })
-
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
@@ -623,5 +606,4 @@ module.exports = {
   stubManageUsersRemoveGroup,
   stubManageUsersGroupManagerRemoveLastGroup,
   stubManageUsersDeleteGroup,
-  stubManageUsersAssignableGroupDetails,
 }
