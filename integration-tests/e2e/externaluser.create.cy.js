@@ -8,7 +8,7 @@ function createUser() {
 
   cy.task('stubAuthCreateUser')
   cy.task('stubAuthGetUsername')
-  cy.task('stubAuthUserRoles')
+  cy.task('stubExternalUserRoles')
   cy.task('stubManageUserGroups')
   createPage.create('noone@justice.gov.uk', '', '', 'SOCU North West')
 
