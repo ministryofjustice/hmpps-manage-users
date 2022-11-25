@@ -91,6 +91,15 @@ const stubAllRolesPaged = ({
     },
   })
 
+const stubExternalUserRoles = () =>
+  getFor({
+    urlPattern: '/externalusers/.*/roles',
+    body: [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', roleDescription: 'Is allowed to search' },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+    ],
+  })
+
 const stubGetRoles = ({
   content = [
     {
@@ -594,6 +603,7 @@ module.exports = {
   verifyRoleAdminTypeUpdate,
   verifyCreateGroup,
   verifyCreateChildGroup,
+  stubExternalUserRoles,
   stubDeleteChildGroup,
   stubChangeChildGroupName,
   stubChangeGroupName,
