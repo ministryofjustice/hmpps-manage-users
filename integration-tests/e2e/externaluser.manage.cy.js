@@ -13,7 +13,7 @@ const editUser = (roleCode, assignableGroups = []) => {
   const results = searchForUser(roleCode, undefined, assignableGroups)
 
   cy.task('stubAuthGetUsername')
-  cy.task('stubAuthUserRoles')
+  cy.task('stubExternalUserRoles')
   cy.task('stubManageUserGroups')
   results.edit('AUTH_ADM')
 
@@ -58,7 +58,7 @@ context('External user manage functionality', () => {
     const results = searchForUser()
 
     cy.task('stubAuthGetUserWithEmail')
-    cy.task('stubAuthUserRoles')
+    cy.task('stubExternalUserRoles')
     cy.task('stubManageUserGroups')
     results.edit('AUTH_ADM')
 
@@ -307,7 +307,7 @@ context('External user manage functionality', () => {
     results.nextPage()
 
     cy.task('stubAuthGetUsername')
-    cy.task('stubAuthUserRoles')
+    cy.task('stubExternalUserRoles')
     cy.task('stubManageUserGroups')
     results.edit('AUTH_ADM4')
 
@@ -454,7 +454,7 @@ context('External user manage functionality', () => {
     ])
 
     cy.task('stubAuthGetUserWithEmail')
-    cy.task('stubAuthUserRoles')
+    cy.task('stubExternalUserRoles')
     cy.task('stubManageUserGroups')
     results.edit('AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK')
     const userPage = UserPage.verifyOnPage('Auth Adm')

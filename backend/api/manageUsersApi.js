@@ -15,8 +15,15 @@ const manageUsersApiFactory = (client) => {
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
   const del = (context, path) => client.del(context, path).then((response) => response.body)
 
+  const getNotificationBannerMessage = (context, notificationType) =>
+    get(context, `/notification/banner/${notificationType}`)
+
+  const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
+
   const createUser = (context, user) => post(context, '/users', user)
+
   const createRole = (context, role) => post(context, '/roles', role)
+  const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
   const getPagedRoles = (context, page, size, roleName, roleCode, adminType) => {
     const adminTypes = adminType === 'ALL' ? '' : adminType
     const query = querystring.stringify({
@@ -28,55 +35,51 @@ const manageUsersApiFactory = (client) => {
     })
     return client.get(context, `/roles/paged?${query}`).then(processPageResponse(context))
   }
-  const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
-
   const getRoleDetails = (context, roleCode) => get(context, `/roles/${roleCode}`)
-
   const changeRoleName = (context, roleCode, roleName) => client.put(context, `/roles/${roleCode}`, roleName)
   const changeRoleDescription = (context, role, roleDescription) =>
     put(context, `/roles/${role}/description`, roleDescription)
   const changeRoleAdminType = (context, role, adminType) => put(context, `/roles/${role}/admintype`, adminType)
 
-  const getNotificationBannerMessage = (context, notificationType) =>
-    get(context, `/notification/banner/${notificationType}`)
-
-  const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
+  const externalUserRoles = (context, userId) => get(context, `/externalusers/${userId}/roles`)
 
   const createGroup = (context, group) => post(context, '/groups', group)
   const groupDetails = (context, { group }) => get(context, `/groups/${group}`)
+  const changeGroupName = (context, group, groupName) => put(context, `/groups/${group}`, groupName)
+  const deleteGroup = (context, group) => del(context, `/groups/${group}`)
+
   const createChildGroup = (context, group) => post(context, '/groups/child', group)
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
-
-  const changeGroupName = (context, group, groupName) => put(context, `/groups/${group}`, groupName)
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
-  const deleteGroup = (context, group) => del(context, `/groups/${group}`)
   const removeUserGroup = (context, { userId, group }) => del(context, `/users/${userId}/groups/${group}`)
   const addUserGroup = (context, { userId, group }) => put(context, `/users/${userId}/groups/${group}`)
+
   const userGroups = (context, { userId }) => get(context, `/users/${userId}/groups?children=false`)
 
   return {
+    getNotificationBannerMessage,
+    contextUserRoles,
     createUser,
     createRole,
-    contextUserRoles,
     getPagedRoles,
     getRoles,
     getRoleDetails,
     changeRoleName,
     changeRoleDescription,
     changeRoleAdminType,
-    getNotificationBannerMessage,
+    externalUserRoles,
     createGroup,
     groupDetails,
+    changeGroupName,
+    deleteGroup,
     createChildGroup,
     childGroupDetails,
-    changeGroupName,
     changeChildGroupName,
     deleteChildGroup,
-    deleteGroup,
-    removeUserGroup,
-    addUserGroup,
     userGroups,
+    addUserGroup,
+    removeUserGroup,
   }
 }
 

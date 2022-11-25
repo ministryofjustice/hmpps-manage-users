@@ -21,7 +21,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const getUserRolesAndGroupsApi = async (context, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
       oauthApi.getUser(context, { userId }),
-      oauthApi.userRoles(context, { userId }),
+      manageUsersApi.externalUserRoles(context, userId),
       manageUsersApi.userGroups(context, { userId }),
       hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
     ])
