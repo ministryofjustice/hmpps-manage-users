@@ -1,5 +1,5 @@
 const { forenameToInitial } = require('../utils/utils')
-const config = require('../config')
+const config = require('../config').default
 
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 

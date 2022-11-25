@@ -1,5 +1,5 @@
 const { searchFactory } = require('./searchDpsUsers')
-const config = require('../config')
+const config = require('../config').default
 
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }

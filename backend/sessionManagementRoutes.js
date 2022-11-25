@@ -2,7 +2,7 @@ const passport = require('passport')
 const querystring = require('querystring')
 const logger = require('./log')
 const contextProperties = require('./contextProperties')
-const config = require('./config')
+const config = require('./config').default
 
 const isXHRRequest = (req) =>
   req.xhr ||

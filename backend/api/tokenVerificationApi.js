@@ -1,4 +1,4 @@
-const config = require('../config')
+const config = require('../config').default
 const log = require('../log')
 
 const tokenVerificationApiFactory = (client) => {

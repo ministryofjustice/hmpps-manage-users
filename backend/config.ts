@@ -1,8 +1,42 @@
-const { AgentConfig, get } = require('./apiConfig')
+import 'dotenv/config'
 
-const toInt = (envVar, defaultVal) => (envVar ? parseInt(envVar, 10) : defaultVal)
+// const appPortDefault = 3001
+const production = process.env.NODE_ENV === 'production'
+const toInt = (envVar: string, defaultVal: number): number => (envVar ? parseInt(envVar, 10) : defaultVal)
 
-module.exports = {
+function get<T>(name: string, fallback: T, options = { requireInProduction: false }): T | string {
+  if (process.env[name]) {
+    return process.env[name]
+  }
+  if (fallback !== undefined && (!production || !options.requireInProduction)) {
+    return fallback
+  }
+  throw new Error(`Missing env var ${name}`)
+}
+
+const requiredInProduction = { requireInProduction: true }
+
+export class AgentConfig {
+  timeout: number
+
+  constructor(timeout = 8000) {
+    this.timeout = timeout
+  }
+}
+
+export interface ApiConfig {
+  url: string
+  timeout: {
+    response: number
+    deadline: number
+  }
+  agent: AgentConfig
+}
+
+export default {
+  production,
+  https: production,
+  staticResourceCacheDuration: 20,
   app: {
     port: process.env.PORT || 3001,
     production: process.env.NODE_ENV === 'production',
@@ -51,10 +85,10 @@ module.exports = {
   },
 
   redis: {
-    host: process.env.REDIS_HOST || 'localhost',
-    port: process.env.REDIS_PORT || 6379,
+    host: get(process.env.REDIS_HOST, 'localhost', requiredInProduction),
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_PASSWORD,
-    tls_enabled: process.env.REDIS_TLS_ENABLED || 'false',
+    tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
   },
   featureSwitches: {},
   phaseName: process.env.SYSTEM_PHASE,
