@@ -2,7 +2,7 @@ const nock = require('nock')
 
 const clientFactory = require('./oauthEnabledClient')
 const { tokenVerificationApiFactory } = require('./tokenVerificationApi')
-const config = require('../config')
+const config = require('../config').default
 
 const hostname = 'http://localhost:8080'
 
