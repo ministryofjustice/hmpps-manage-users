@@ -4,7 +4,7 @@ const flash = require('connect-flash')
 const tokenRefresherFactory = require('../tokenRefresher').factory
 const sessionManagementRoutes = require('../sessionManagementRoutes')
 const auth = require('../authentication/auth')
-const config = require('../config')
+const config = require('../config').default
 
 const router = express.Router()
 

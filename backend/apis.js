@@ -1,4 +1,4 @@
-const config = require('./config')
+const config = require('./config').default
 const clientFactory = require('./api/oauthEnabledClient')
 const { oauthApiFactory } = require('./api/oauthApi')
 const { manageUsersApiFactory } = require('./api/manageUsersApi')

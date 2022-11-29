@@ -2,7 +2,7 @@ const moment = require('moment')
 const nunjucks = require('nunjucks')
 const querystring = require('querystring')
 
-const config = require('../config')
+const config = require('../config').default
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
 
 module.exports = (app, path) => {

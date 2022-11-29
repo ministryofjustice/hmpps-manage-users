@@ -12,7 +12,7 @@ const manageGroupsRouter = require('./routes/manageGroupsRouter')
 const manageRolesRouter = require('./routes/manageRolesRouter')
 const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
-const config = require('./config')
+const config = require('./config').default
 
 const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) => {
   const router = express.Router()
