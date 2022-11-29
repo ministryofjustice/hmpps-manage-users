@@ -574,6 +574,18 @@ const stubManageUsersDeleteGroup = () =>
       headers: { 'Content-Type': 'application/json;charset=UTF-8' },
     },
   })
+const stubAuthUserEnable = () =>
+  stubJson({
+    method: 'PUT',
+    urlPattern: '/users/.*/enable',
+  })
+
+const verifyUserEnable = () =>
+  getMatchingRequests({
+    method: 'PUT',
+    urlPathPattern: '/users/.*/enable',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
@@ -616,4 +628,6 @@ module.exports = {
   stubManageUsersRemoveGroup,
   stubManageUsersGroupManagerRemoveLastGroup,
   stubManageUsersDeleteGroup,
+  stubAuthUserEnable,
+  verifyUserEnable,
 }

@@ -63,7 +63,7 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const removeUserRole = (context, { userId, role }) => del(context, `/api/authuser/id/${userId}/roles/${role}`)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
-  const enableUser = (context, { userId }) => put(context, `/api/authuser/id/${userId}/enable`)
+
   const disableUser = (context, { userId }) => put(context, `/api/authuser/id/${userId}/disable`)
   const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const assignableRoles = (context, { userId }) => get(context, `/api/authuser/id/${userId}/assignable-roles`)
@@ -139,7 +139,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,
-    enableUser,
     disableUser,
     deactivateUser,
     amendUserEmail,

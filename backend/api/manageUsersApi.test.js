@@ -396,4 +396,23 @@ describe('manageUsersApi tests', () => {
       expect(client.del).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain')
     })
   })
+
+  describe('enableUser', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.enableUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/enable', undefined)
+    })
+  })
 })

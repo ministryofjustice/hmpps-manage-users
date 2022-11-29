@@ -308,12 +308,6 @@ const stubAuthUserDisable = () =>
     urlPattern: '/auth/api/authuser/.*/disable',
   })
 
-const stubAuthUserEnable = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/authuser/.*/enable',
-  })
-
 const stubAuthUserChangeEmail = () =>
   stubJson({
     method: 'POST',
@@ -364,12 +358,6 @@ const verifyRemoveRole = () =>
   getMatchingRequests({
     method: 'DELETE',
     urlPathPattern: '/auth/api/authuser/id/.*/roles/.*',
-  }).then((data) => data.body.requests)
-
-const verifyUserEnable = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/id/.*/enable',
   }).then((data) => data.body.requests)
 
 const verifyUserDisable = () =>
@@ -430,7 +418,6 @@ module.exports = {
   stubAuthAssignableGroups,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
-  stubAuthUserEnable,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
@@ -440,7 +427,6 @@ module.exports = {
   stubHealth,
   verifyAddRoles,
   verifyRemoveRole,
-  verifyUserEnable,
   verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
