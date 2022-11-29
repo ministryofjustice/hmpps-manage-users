@@ -85,7 +85,7 @@ export default {
   },
 
   redis: {
-    host: get(process.env.REDIS_HOST, 'localhost', requiredInProduction),
+    host: get('REDIS_HOST', 'localhost', requiredInProduction),
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_PASSWORD,
     tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
