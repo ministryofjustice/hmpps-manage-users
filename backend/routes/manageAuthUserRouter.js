@@ -42,7 +42,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const saveGroupApi = (context, userId, group) => manageUsersApi.addUserGroup(context, { userId, group })
   const removeGroupApi = (context, userId, group) => manageUsersApi.removeUserGroup(context, { userId, group })
   const saveRolesApi = (context, userId, roles) => oauthApi.addUserRoles(context, { userId, roles })
-  const removeRoleApi = (context, userId, role) => oauthApi.removeUserRole(context, { userId, role })
+  const removeUserRoleApi = (context, userId, role) => manageUsersApi.deleteExternalUserRole(context, { userId, role })
   const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })
   const enableUserApi = (context, userId) => manageUsersApi.enableExternalUser(context, { userId })
   const disableUserApi = (context, userId) => oauthApi.disableUser(context, { userId })
@@ -75,7 +75,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
     disableUser,
   } = userDetailsFactory(
     getUserRolesAndGroupsApi,
-    removeRoleApi,
+    removeUserRoleApi,
     removeGroupApi,
     undefined,
     enableUserApi,
