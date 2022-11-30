@@ -44,7 +44,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const saveRolesApi = (context, userId, roles) => oauthApi.addUserRoles(context, { userId, roles })
   const removeRoleApi = (context, userId, role) => oauthApi.removeUserRole(context, { userId, role })
   const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })
-  const enableUserApi = (context, userId) => oauthApi.enableUser(context, { userId })
+  const enableUserApi = (context, userId) => manageUsersApi.enableExternalUser(context, { userId })
   const disableUserApi = (context, userId) => oauthApi.disableUser(context, { userId })
   const deactivateUserApi = (context, userId, reason) => oauthApi.deactivateUser(context, { userId, reason })
 
