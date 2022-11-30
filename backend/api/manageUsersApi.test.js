@@ -227,6 +227,28 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('removeExternalUserRole', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.deleteExternalUserRole(context, {
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        role: 'maintain',
+      })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles/maintain')
+    })
+  })
+
   describe('groupDetails', () => {
     const groups = { bob: 'hello there' }
     let actual

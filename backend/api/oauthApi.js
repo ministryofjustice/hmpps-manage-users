@@ -60,7 +60,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
   const addUserRoles = (context, { userId, roles }) => post(context, `/api/authuser/id/${userId}/roles`, roles)
-  const removeUserRole = (context, { userId, role }) => del(context, `/api/authuser/id/${userId}/roles/${role}`)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
 
@@ -134,7 +133,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     createUser,
     userSearch,
     addUserRoles,
-    removeUserRole,
     assignableRoles,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.

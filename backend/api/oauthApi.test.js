@@ -184,25 +184,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('removeUserRole', () => {
-    const errorResponse = { field: 'hello' }
-    let actual
-
-    beforeEach(() => {
-      client.del = jest.fn().mockReturnValue({
-        then: () => errorResponse,
-      })
-      actual = oauthApi.removeUserRole(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', role: 'maintain' })
-    })
-
-    it('should return any error from endpoint', () => {
-      expect(actual).toEqual(errorResponse)
-    })
-    it('should call user endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles/maintain')
-    })
-  })
-
   describe('assignableRoles', () => {
     const roles = { bob: 'hello there' }
     let actual
