@@ -4,7 +4,7 @@ describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
   const render = jest.fn()
   const getUserRolesAndGroupsApi = jest.fn()
-  const removeRoleApi = jest.fn()
+  const removeUserRoleApi = jest.fn()
   const removeGroupApi = jest.fn()
   const removeUserCaseloadApi = jest.fn()
   const enableUserApi = jest.fn()
@@ -12,7 +12,7 @@ describe('user detail factory', () => {
 
   const dpsUserDetails = userDetailsFactory(
     getUserRolesAndGroupsApi,
-    removeRoleApi,
+    removeUserRoleApi,
     undefined,
     removeUserCaseloadApi,
     enableUserApi,
@@ -25,7 +25,7 @@ describe('user detail factory', () => {
   )
   const userDetails = userDetailsFactory(
     getUserRolesAndGroupsApi,
-    removeRoleApi,
+    removeUserRoleApi,
     removeGroupApi,
     removeUserCaseloadApi,
     enableUserApi,
@@ -231,13 +231,13 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(removeRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
+      expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
     })
 
     it('should ignore if user does not have role', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400 }
-      removeRoleApi.mockRejectedValue(error)
+      removeUserRoleApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
           params: { role: 'role99' },

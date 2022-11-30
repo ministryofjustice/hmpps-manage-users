@@ -533,7 +533,7 @@ const stubManageUsersRemoveRole = () =>
   stubFor({
     request: {
       method: 'DELETE',
-      urlPattern: '/users/.*/roles/.*',
+      urlPattern: '/externalusers/.*/roles/.*',
     },
     response: {
       status: 200,
@@ -586,6 +586,12 @@ const verifyUserEnable = () =>
     urlPathPattern: '/users/.*/enable',
   }).then((data) => data.body.requests)
 
+const verifyRemoveRole = () =>
+  getMatchingRequests({
+    method: 'DELETE',
+    urlPathPattern: '/externalusers/.*/roles/.*',
+  }).then((data) => data.body.requests)
+
 module.exports = {
   stubDpsCreateUser,
   stubGetRoles,
@@ -625,6 +631,7 @@ module.exports = {
   stubManageUsersAddGroup,
   stubManageUsersAddGroupGroupManagerCannotMaintainUser,
   stubManageUsersRemoveRole,
+  verifyRemoveRole,
   stubManageUsersRemoveGroup,
   stubManageUsersGroupManagerRemoveLastGroup,
   stubManageUsersDeleteGroup,
