@@ -56,7 +56,7 @@ const manageUsersApiFactory = (client) => {
   const addUserGroup = (context, { userId, group }) => put(context, `/users/${userId}/groups/${group}`)
 
   const userGroups = (context, { userId }) => get(context, `/users/${userId}/groups?children=false`)
-  const enableUser = (context, { userId }) => put(context, `/users/${userId}/enable`)
+  const enableExternalUser = (context, { userId }) => put(context, `/users/${userId}/enable`)
 
   return {
     getNotificationBannerMessage,
@@ -81,7 +81,7 @@ const manageUsersApiFactory = (client) => {
     userGroups,
     addUserGroup,
     removeUserGroup,
-    enableUser,
+    enableExternalUser,
   }
 }
 

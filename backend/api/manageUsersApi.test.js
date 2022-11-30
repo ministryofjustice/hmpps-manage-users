@@ -405,7 +405,7 @@ describe('manageUsersApi tests', () => {
       client.put = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = manageUsersApi.enableUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
+      actual = manageUsersApi.enableExternalUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
     })
 
     it('should return any error from endpoint', () => {
