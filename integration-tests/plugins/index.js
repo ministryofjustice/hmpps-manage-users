@@ -1,31 +1,31 @@
-const auth = require('../mockApis/auth')
+const hmppsAuth = require('../mockApis/auth')
 const manageUsersApi = require('../mockApis/manageusers')
-const tokenverification = require('../mockApis/tokenverification')
+const tokenVerification = require('../mockApis/tokenverification')
 const nomisUsersAndRoles = require('../mockApis/nomisusersandroles')
 
 const { resetStubs } = require('../mockApis/wiremock')
 
 module.exports = (on) => {
   on('task', {
-    ...auth,
+    ...hmppsAuth,
     reset: resetStubs,
     stubSignIn: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }], userCaseloads = null }) =>
       Promise.all([
-        auth.stubSignIn(username, roles),
-        auth.stubUserMe({}),
+        hmppsAuth.stubSignIn(username, roles),
+        hmppsAuth.stubUserMe({}),
         nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
-        tokenverification.stubVerifyToken(true),
+        tokenVerification.stubVerifyToken(true),
       ]),
-    stubAuthHealth: (status) => auth.stubHealth(status),
+    stubAuthHealth: (status) => hmppsAuth.stubHealth(status),
     stubHealthAllHealthy: () =>
       Promise.all([
-        auth.stubHealth(),
+        hmppsAuth.stubHealth(),
         manageUsersApi.stubHealth(),
-        tokenverification.stubHealth(),
+        tokenVerification.stubHealth(),
         nomisUsersAndRoles.stubHealth(),
       ]),
-    stubVerifyToken: (active = true) => tokenverification.stubVerifyToken(active),
-    stubSignInPage: auth.redirect,
+    stubVerifyToken: (active = true) => tokenVerification.stubVerifyToken(active),
+    stubSignInPage: hmppsAuth.redirect,
     ...manageUsersApi,
     ...nomisUsersAndRoles,
     stubDpsGetRoles: nomisUsersAndRoles.stubGetRoles,
