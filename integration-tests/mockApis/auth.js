@@ -354,12 +354,6 @@ const verifyAddRoles = () =>
     urlPathPattern: '/auth/api/authuser/id/.*/roles',
   }).then((data) => data.body.requests)
 
-const verifyRemoveRole = () =>
-  getMatchingRequests({
-    method: 'DELETE',
-    urlPathPattern: '/auth/api/authuser/id/.*/roles/.*',
-  }).then((data) => data.body.requests)
-
 const verifyUserDisable = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -426,7 +420,6 @@ module.exports = {
   stubError,
   stubHealth,
   verifyAddRoles,
-  verifyRemoveRole,
   verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,

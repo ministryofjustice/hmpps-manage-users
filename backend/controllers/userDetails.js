@@ -1,6 +1,6 @@
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
-  removeRoleApi,
+  removeUserRoleApi,
   removeGroupApi,
   removeUserCaseloadApi,
   enableUserApi,
@@ -59,7 +59,7 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${userId}`
 
     try {
-      await removeRoleApi(res.locals, userId, role)
+      await removeUserRoleApi(res.locals, userId, role)
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
