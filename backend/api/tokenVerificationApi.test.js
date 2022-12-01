@@ -18,7 +18,7 @@ describe('token verification api tests', () => {
   describe('POST requests', () => {
     describe('Token Verification disabled', () => {
       beforeAll(() => {
-        config.apis.tokenverification.enabled = false
+        config.apis.tokenVerification.enabled = false
       })
       it('Calls verify and parses response', async () => {
         mock.post('/token/verify').reply(200, { active: true })
@@ -28,7 +28,7 @@ describe('token verification api tests', () => {
     })
     describe('Token Verification enabled', () => {
       beforeAll(() => {
-        config.apis.tokenverification.enabled = true
+        config.apis.tokenVerification.enabled = true
       })
       it('Calls verify and parses response', async () => {
         mock.post('/token/verify').reply(200, { active: true })

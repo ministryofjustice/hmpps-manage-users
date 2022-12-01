@@ -5,7 +5,7 @@ module.exports = {
     return stubFor({
       request: {
         method: 'GET',
-        url: '/tokenverification/health/ping',
+        url: '/tokenVerification/health/ping',
       },
       response: {
         status,

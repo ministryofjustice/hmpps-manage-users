@@ -19,7 +19,7 @@ const isXHRRequest = (req) =>
  * @param {any} params.homeLink The URL for the home page.
  */
 const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
-  const authSignOutUrl = `${config.apis.oauth2.ui_url}/sign-out?client_id=${config.apis.oauth2.clientId}&redirect_uri=${config.app.url}`
+  const authSignOutUrl = `${config.apis.hmppsAuth.externalUrl}/sign-out?client_id=${config.apis.hmppsAuth.clientId}&redirect_uri=${config.app.url}`
 
   const remoteSignInIndex = (req, res, next) => {
     req.session.returnTo = req.query.returnTo

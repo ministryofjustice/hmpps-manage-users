@@ -168,7 +168,7 @@ module.exports = (app, path) => {
   njkEnv.addFilter('getDate', getDate)
   njkEnv.addFilter('getTime', getTime)
   njkEnv.addFilter('truthy', (data) => Boolean(data))
-  njkEnv.addGlobal('homeUrl', config.apis.oauth2.ui_url)
+  njkEnv.addGlobal('homeUrl', config.apis.hmppsAuth.externalUrl)
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
   njkEnv.addGlobal('supportUrl', config.app.supportUrl)
   njkEnv.addGlobal('googleTagManagerId', config.analytics.googleTagManagerId)

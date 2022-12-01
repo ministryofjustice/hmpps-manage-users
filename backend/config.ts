@@ -37,6 +37,12 @@ export default {
   production,
   https: production,
   staticResourceCacheDuration: 20,
+  redis: {
+    host: get('REDIS_HOST', 'localhost', requiredInProduction),
+    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
+    password: process.env.REDIS_PASSWORD,
+    tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
+  },
   app: {
     port: process.env.PORT || 3001,
     production: process.env.NODE_ENV === 'production',
@@ -58,14 +64,14 @@ export default {
     sessionSecret: process.env.SESSION_COOKIE_SECRET || 'notm-insecure-session',
   },
   apis: {
-    oauth2: {
-      url: process.env.OAUTH_ENDPOINT_URL || 'http://localhost:9090/auth',
-      ui_url: process.env.OAUTH_ENDPOINT_UI_URL || process.env.OAUTH_ENDPOINT_URL || 'http://localhost:9090/auth',
+    hmppsAuth: {
+      url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
+      externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
       timeoutSeconds: toInt(process.env.OAUTH_ENDPOINT_TIMEOUT_SECONDS, 10),
       clientId: process.env.API_CLIENT_ID || 'manage-user-accounts-ui',
       clientSecret: process.env.API_CLIENT_SECRET || 'clientsecret',
     },
-    manageusers: {
+    manageUsers: {
       url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
       timeout: {
         response: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000),
@@ -73,7 +79,7 @@ export default {
       },
       agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
     },
-    tokenverification: {
+    tokenVerification: {
       url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
       timeoutSeconds: toInt(process.env.TOKENVERIFICATION_API_TIMEOUT_SECONDS, 10),
       enabled: process.env.TOKENVERIFICATION_API_ENABLED === 'true',
@@ -84,12 +90,6 @@ export default {
     },
   },
 
-  redis: {
-    host: get('REDIS_HOST', 'localhost', requiredInProduction),
-    port: parseInt(process.env.REDIS_PORT, 10) || 6379,
-    password: process.env.REDIS_PASSWORD,
-    tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
-  },
   featureSwitches: {},
   phaseName: process.env.SYSTEM_PHASE,
   downloadRecordLimit: toInt(process.env.DPS_SEARCH_DOWNLOAD_LINK_LIMIT, 20000),

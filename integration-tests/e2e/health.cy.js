@@ -9,10 +9,10 @@ context('Health page reports health correctly', () => {
       // eslint-disable-next-line no-unused-expressions
       expect(response.body.version).to.not.be.empty
       expect(response.body.api).to.deep.equal({
-        auth: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
-        manageusers: 'UP',
+        hmppsAuth: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
+        manageUsers: 'UP',
         nomisUsersAndRoles: 'UP',
-        tokenverification: 'UP',
+        tokenVerification: 'UP',
       })
     })
   })
@@ -26,9 +26,9 @@ context('Health page reports health correctly', () => {
       // eslint-disable-next-line no-unused-expressions
       expect(response.body.version).to.not.be.empty
       expect(response.body.api).to.deep.equal({
-        auth: 'UP',
-        manageusers: 'UP',
-        tokenverification: 'UP',
+        hmppsAuth: 'UP',
+        manageUsers: 'UP',
+        tokenVerification: 'UP',
         nomisUsersAndRoles: 'UP',
       })
     })

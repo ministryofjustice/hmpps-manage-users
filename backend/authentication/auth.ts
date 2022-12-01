@@ -17,14 +17,17 @@ passport.deserializeUser((user, done) => {
 function init(): void {
   const strategy = new Strategy(
     {
-      authorizationURL: `${config.apis.oauth2.ui_url}/oauth/authorize`,
-      tokenURL: `${config.apis.oauth2.url}/oauth/token`,
-      clientID: config.apis.oauth2.clientId,
-      clientSecret: config.apis.oauth2.clientSecret,
+      authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
+      tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
+      clientID: config.apis.hmppsAuth.clientId,
+      clientSecret: config.apis.hmppsAuth.clientSecret,
       callbackURL: `${config.app.url}/sign-in/callback`,
       state: true,
       customHeaders: {
-        Authorization: `Basic ${apiClientCredentials(config.apis.oauth2.clientId, config.apis.oauth2.clientSecret)}`,
+        Authorization: `Basic ${apiClientCredentials(
+          config.apis.hmppsAuth.clientId,
+          config.apis.hmppsAuth.clientSecret,
+        )}`,
       },
     },
     (accessToken, refreshToken, params, profile, done) =>

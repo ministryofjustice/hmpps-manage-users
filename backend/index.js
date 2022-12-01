@@ -59,9 +59,9 @@ app.use(
 )
 
 const health = healthFactory(
-  config.apis.oauth2.url,
-  config.apis.manageusers.url,
-  config.apis.tokenverification.url,
+  config.apis.hmppsAuth.url,
+  config.apis.manageUsers.url,
+  config.apis.tokenVerification.url,
   config.apis.nomisUsersAndRoles.url,
 )
 
