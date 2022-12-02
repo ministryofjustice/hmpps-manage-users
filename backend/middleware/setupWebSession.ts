@@ -22,7 +22,7 @@ export default function setupWebSession(): Router {
   router.use(
     session({
       store: getSessionStore(),
-      secret: [config.hmppsCookie.sessionSecret],
+      secret: [config.session.secret],
       resave: false,
       saveUninitialized: false,
       rolling: true,
@@ -30,7 +30,7 @@ export default function setupWebSession(): Router {
       cookie: {
         domain: config.hmppsCookie.domain,
         httpOnly: true,
-        maxAge: config.hmppsCookie.expiryMinutes * 60 * 1000,
+        maxAge: config.session.expiryMinutes * 60 * 1000,
         sameSite: 'lax',
         secure: config.app.production,
         signed: true,

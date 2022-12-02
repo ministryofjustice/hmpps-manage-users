@@ -19,14 +19,14 @@ function init(): void {
     {
       authorizationURL: `${config.apis.hmppsAuth.externalUrl}/oauth/authorize`,
       tokenURL: `${config.apis.hmppsAuth.url}/oauth/token`,
-      clientID: config.apis.hmppsAuth.clientId,
-      clientSecret: config.apis.hmppsAuth.clientSecret,
+      clientID: config.apis.hmppsAuth.apiClientId,
+      clientSecret: config.apis.hmppsAuth.apiClientSecret,
       callbackURL: `${config.app.url}/sign-in/callback`,
       state: true,
       customHeaders: {
         Authorization: `Basic ${apiClientCredentials(
-          config.apis.hmppsAuth.clientId,
-          config.apis.hmppsAuth.clientSecret,
+          config.apis.hmppsAuth.apiClientId,
+          config.apis.hmppsAuth.apiClientSecret,
         )}`,
       },
     },

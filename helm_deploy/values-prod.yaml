@@ -13,7 +13,7 @@ generic-service:
     HMPPS_COOKIE_NAME: hmpps-session-prod
     HMPPS_COOKIE_DOMAIN: manage-users.hmpps.service.justice.gov.uk
     MANAGE_HMPPS_USERS_URL: https://manage-users.hmpps.service.justice.gov.uk
-    TOKENVERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
+    TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     SUPPORT_URL: https://support.hmpps.service.justice.gov.uk
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack

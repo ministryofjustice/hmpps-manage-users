@@ -52,45 +52,44 @@ export default {
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
     url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}`,
   },
-
-  analytics: {
-    googleTagManagerId: process.env.GOOGLE_TAG_MANAGER_ID,
-  },
-
-  hmppsCookie: {
-    name: process.env.HMPPS_COOKIE_NAME || 'hmpps-session-dev',
-    domain: process.env.HMPPS_COOKIE_DOMAIN || 'localhost',
-    expiryMinutes: toInt(process.env.WEB_SESSION_TIMEOUT_IN_MINUTES, 60),
-    sessionSecret: process.env.SESSION_COOKIE_SECRET || 'notm-insecure-session',
+  session: {
+    secret: get('SESSION_SECRET', 'notm-insecure-session', requiredInProduction),
+    expiryMinutes: Number(get('WEB_SESSION_TIMEOUT_IN_MINUTES', 120)),
   },
   apis: {
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
       externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
-      timeoutSeconds: toInt(process.env.OAUTH_ENDPOINT_TIMEOUT_SECONDS, 10),
-      clientId: process.env.API_CLIENT_ID || 'manage-user-accounts-ui',
-      clientSecret: process.env.API_CLIENT_SECRET || 'clientsecret',
+      timeoutSeconds: Number(get('HMPPS_AUTH_ENDPOINT_TIMEOUT_SECONDS', 10)),
+      apiClientId: get('API_CLIENT_ID', 'manage-user-accounts-ui', requiredInProduction),
+      apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
     },
     manageUsers: {
-      url: process.env.MANAGE_USERS_API_ENDPOINT_URL || 'http://localhost:9091',
+      url: get('MANAGE_USERS_API_ENDPOINT_URL', 'http://localhost:9091', requiredInProduction),
       timeout: {
-        response: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE, 60000),
-        deadline: toInt(process.env.MANAGE_USERS_API_ENDPOINT_TIMEOUT_DEADLINE, 60000),
+        response: Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000)),
+        deadline: Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_DEADLINE', 60000)),
       },
       agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
     },
     tokenVerification: {
-      url: process.env.TOKENVERIFICATION_API_URL || 'http://localhost:8100',
-      timeoutSeconds: toInt(process.env.TOKENVERIFICATION_API_TIMEOUT_SECONDS, 10),
-      enabled: process.env.TOKENVERIFICATION_API_ENABLED === 'true',
+      url: get('TOKEN_VERIFICATION_API_URL', 'http://localhost:8100', requiredInProduction),
+      timeoutSeconds: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_SECONDS', 10)),
+      enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
     nomisUsersAndRoles: {
-      url: process.env.NOMIS_USERS_API_ENDPOINT_URL || 'http://localhost:8082',
-      timeoutSeconds: toInt(process.env.NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS, 30),
+      url: get('NOMIS_USERS_API_ENDPOINT_URL', 'http://localhost:8082', requiredInProduction),
+      timeoutSeconds: Number(get('NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS', 30)),
     },
   },
-
+  analytics: {
+    googleTagManagerId: get('GOOGLE_TAG_MANAGER_ID', ''),
+  },
+  hmppsCookie: {
+    name: get('HMPPS_COOKIE_NAME', 'hmpps-session-dev'),
+    domain: get('HMPPS_COOKIE_DOMAIN', 'localhost'),
+  },
   featureSwitches: {},
-  phaseName: process.env.SYSTEM_PHASE,
-  downloadRecordLimit: toInt(process.env.DPS_SEARCH_DOWNLOAD_LINK_LIMIT, 20000),
+  phaseName: get('SYSTEM_PHASE', ''),
+  downloadRecordLimit: Number(get('DPS_SEARCH_DOWNLOAD_LINK_LIMIT', 20000)),
 }
