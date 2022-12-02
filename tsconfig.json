@@ -26,7 +26,8 @@
     "dist",
     "static",
     "config",
-    "manage-accounts-specs"
+    "manage-accounts-specs",
+    "cypress.config.ts"
   ],
   "include": ["**/*.js", "**/*.ts"]
 }
