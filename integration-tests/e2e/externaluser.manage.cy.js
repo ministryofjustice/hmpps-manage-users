@@ -74,7 +74,7 @@ context('External user manage functionality', () => {
       userPage.roleRows().should('have.length', 2)
       userPage.roleRows().eq(0).should('contain', 'Global Search')
 
-      cy.task('stubAuthAssignableRoles')
+      cy.task('stubUserAssignableRoles')
       userPage.addRole().click()
       const addRole = UserAddRolePage.verifyOnPage()
       addRole.hint('Global Search').should('contain.text', 'Is allowed to search')
@@ -105,7 +105,7 @@ context('External user manage functionality', () => {
     it('Should cancel an add role', () => {
       const userPage = editUser()
 
-      cy.task('stubAuthAssignableRoles')
+      cy.task('stubUserAssignableRoles')
       userPage.addRole().click()
       const addRole = UserAddRolePage.verifyOnPage()
 
@@ -281,7 +281,7 @@ context('External user manage functionality', () => {
     cy.signIn()
 
     cy.task('stubAuthGetUsername')
-    cy.task('stubAuthAssignableRoles', [])
+    cy.task('stubUserAssignableRoles', [])
     cy.visit('/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-roles')
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')

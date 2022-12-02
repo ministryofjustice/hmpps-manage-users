@@ -9,7 +9,7 @@ const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi, manageUsersApi }) => {
   const getUserAssignableRolesMessageApi = (context, userId) =>
-    Promise.all([oauthApi.getUser(context, { userId }), oauthApi.assignableRoles(context, { userId }), ''])
+    Promise.all([oauthApi.getUser(context, { userId }), manageUsersApi.assignableRoles(context, { userId }), ''])
 
   const getUserAndGroupsApi = (context, userId) =>
     Promise.all([

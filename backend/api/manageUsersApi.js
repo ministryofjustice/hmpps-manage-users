@@ -43,6 +43,7 @@ const manageUsersApiFactory = (client) => {
 
   const externalUserRoles = (context, userId) => get(context, `/externalusers/${userId}/roles`)
   const deleteExternalUserRole = (context, { userId, role }) => del(context, `/externalusers/${userId}/roles/${role}`)
+  const assignableRoles = (context, { userId }) => get(context, `/externalusers/${userId}/assignable-roles`)
 
   const createGroup = (context, group) => post(context, '/groups', group)
   const groupDetails = (context, { group }) => get(context, `/groups/${group}`)
@@ -66,6 +67,7 @@ const manageUsersApiFactory = (client) => {
     createRole,
     getPagedRoles,
     getRoles,
+    assignableRoles,
     getRoleDetails,
     changeRoleName,
     changeRoleDescription,

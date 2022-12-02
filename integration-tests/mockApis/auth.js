@@ -250,16 +250,6 @@ const stubAuthEmailSearch = () =>
     },
   })
 
-const stubAuthAssignableRoles = (body) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/.*/assignable-roles',
-    body: body || [
-      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', roleDescription: 'Is allowed to search' },
-      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
-      { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
-    ],
-  })
-
 const stubAuthAssignableGroups = ({
   content = [
     { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
@@ -408,7 +398,6 @@ module.exports = {
   verifyAuthSearch,
   stubAuthEmailSearch,
   stubAuthAddRoles,
-  stubAuthAssignableRoles,
   stubAuthAssignableGroups,
   stubAuthSearchableRoles,
   stubAuthUserDisable,

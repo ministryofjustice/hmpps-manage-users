@@ -248,6 +248,16 @@ const stubRoleDetails = ({
     body: content,
   })
 
+const stubUserAssignableRoles = (body) =>
+  getFor({
+    urlPattern: '/externalusers/.*/assignable-roles',
+    body: body || [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search', roleDescription: 'Is allowed to search' },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+      { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
+    ],
+  })
+
 const stubBannerMessage = () =>
   getFor({
     urlPattern: '/notification/banner/.*',
@@ -636,5 +646,6 @@ module.exports = {
   stubManageUsersGroupManagerRemoveLastGroup,
   stubManageUsersDeleteGroup,
   stubAuthUserEnable,
+  stubUserAssignableRoles,
   verifyUserEnable,
 }
