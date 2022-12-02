@@ -1,5 +1,5 @@
-import setUpWebSecurity from './middleware/setUpWebSecurity'
 import authorisationMiddleware from './middleware/authorisationMiddleware'
+import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setupWebSession from './middleware/setupWebSession'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
 
@@ -25,7 +25,7 @@ const healthFactory = require('./services/healthCheck')
 const setupAuth = require('./middleware/setUpAuth')
 const routes = require('./routes')
 const config = require('./config').default
-const setupStaticContent = require('./setupStaticContent')
+const setupStaticContent = require('./middleware/setupStaticContent')
 const nunjucksSetup = require('./utils/nunjucksSetup')
 const phaseNameSetup = require('./phaseNameSetup')
 const errorHandler = require('./middleware/errorHandler')

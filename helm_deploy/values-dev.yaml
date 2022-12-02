@@ -15,7 +15,7 @@ generic-service:
     HMPPS_COOKIE_NAME: hmpps-session-dev
     HMPPS_COOKIE_DOMAIN: manage-users-dev.hmpps.service.justice.gov.uk
     MANAGE_HMPPS_USERS_URL: https://manage-users-dev.hmpps.service.justice.gov.uk
-    TOKENVERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
+    TOKEN_VERIFICATION_API_URL: https://token-verification-api-dev.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-dev.hmpps.service.justice.gov.uk
     SYSTEM_PHASE: DEV
 
