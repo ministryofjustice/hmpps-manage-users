@@ -15,10 +15,9 @@ export default defineConfig({
     // We've imported your old cypress plugins here.
     // You may want to clean this up later by importing these.
     setupNodeEvents(on, config) {
-      // eslint-disable-next-line global-require
-      return require('./integration-tests/plugins/oldindex.js')(on, config)
+      // eslint-disable-next-line import/no-unresolved,global-require,@typescript-eslint/no-var-requires
+      return require('./integration-tests/plugins/index.js')(on, config)
     },
-    // setupNodeEvents,
     baseUrl: 'http://localhost:3008',
     excludeSpecPattern: '**/!(*.cy).js',
     specPattern: 'integration-tests/e2e/**/*.cy.{js,jsx,ts,tsx}',

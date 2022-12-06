@@ -81,11 +81,14 @@
     ],
     "comma-dangle": ["error", "always-multiline"],
 
-    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.js", "**/*.test.ts"] }],
+    "import/no-extraneous-dependencies": [
+      "error",
+        { "devDependencies": ["**/*.test.js", "**/*.test.ts", "cypress.config.ts"] }
+    ],
     "no-param-reassign": [1, { "props": true, "ignorePropertyModificationsFor": ["req", "res", "context"] }],
     "prettier/prettier": ["error"]
   },
   "parserOptions": {
-    "ecmaVersion": 2020,
+    "ecmaVersion": 2020
   }
 }
