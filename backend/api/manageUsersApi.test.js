@@ -208,6 +208,30 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('externalUserAddRoles', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.externalUserAddRoles(context, {
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        roles: ['maintain'],
+      })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles', [
+        'maintain',
+      ])
+    })
+  })
+
   describe('externalUserRoles', () => {
     const roles = { bob: 'hello there' }
     let actual

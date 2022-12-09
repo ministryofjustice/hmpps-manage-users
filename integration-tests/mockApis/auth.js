@@ -273,18 +273,6 @@ const stubAuthSearchableRoles = ({
     body: content,
   })
 
-const stubAuthAddRoles = () =>
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPattern: '/auth/api/authuser/id/.*/roles',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
 const stubAuthUserEmails = () =>
   stubJson({
     method: 'POST',
@@ -397,7 +385,6 @@ module.exports = {
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthAddRoles,
   stubAuthAssignableGroups,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
