@@ -217,27 +217,4 @@ describe('oauthApi tests', () => {
       expect(client.post).toBeCalledWith(context, '/api/authuser/create', user)
     })
   })
-
-  describe('disableUser', () => {
-    const errorResponse = { field: 'hello' }
-    let actual
-
-    beforeEach(() => {
-      client.put = jest.fn().mockReturnValue({
-        then: () => errorResponse,
-      })
-      actual = oauthApi.disableUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
-    })
-
-    it('should return any error from endpoint', () => {
-      expect(actual).toEqual(errorResponse)
-    })
-    it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(
-        context,
-        '/api/authuser/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable',
-        undefined,
-      )
-    })
-  })
 })
