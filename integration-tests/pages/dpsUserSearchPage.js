@@ -73,7 +73,7 @@ const dpsUserSearchPage = () =>
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
     manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     caseload,
-    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber),
+    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber).first(),
     searchForRole: (text) => {
       if (text) roleSearch().clear().type(text)
       else roleSearch().clear()

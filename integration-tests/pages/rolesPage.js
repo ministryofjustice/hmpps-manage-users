@@ -40,7 +40,7 @@ const rolesPage = () =>
     nextPage: () => cy.get('.moj-pagination__item--next').first().click(),
     previousPage: () => cy.get('.moj-pagination__item--prev').first().click(),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
-    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber),
+    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber).first(),
   })
 
 export default {
