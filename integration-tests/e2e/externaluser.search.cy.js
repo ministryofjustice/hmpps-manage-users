@@ -361,7 +361,7 @@ context('External user search functionality', () => {
     })
 
     it('Should not show the download link for group managers', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'AUTH_GROUP_MANAGER' }] })
+      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'AUTH_GROUP_MANAGER' }] })
       cy.signIn()
       cy.task('stubAuthAssignableGroups', { content: [] })
       cy.task('stubAuthSearchableRoles', { content: [] })
