@@ -545,7 +545,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: 'externalusers/.*/roles',
+        urlPattern: '/externalusers/.*/roles',
       },
       response: {
         status: 200,
@@ -608,6 +608,12 @@ module.exports = {
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/users/.*/enable',
+    }).then((data) => data.body.requests),
+
+  verifyAddRoles: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/externalusers/.*/roles',
     }).then((data) => data.body.requests),
 
   verifyRemoveRole: () =>

@@ -326,12 +326,6 @@ const stubHealth = (status = 200) =>
     },
   })
 
-const verifyAddRoles = () =>
-  getMatchingRequests({
-    method: 'POST',
-    urlPathPattern: '/auth/api/authuser/id/.*/roles',
-  }).then((data) => data.body.requests)
-
 const verifyUserDisable = () =>
   getMatchingRequests({
     method: 'PUT',
@@ -395,7 +389,6 @@ module.exports = {
   stubAuthUserFail,
   stubError,
   stubHealth,
-  verifyAddRoles,
   verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
