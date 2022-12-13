@@ -59,7 +59,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
-  const addUserRoles = (context, { userId, roles }) => post(context, `/api/authuser/id/${userId}/roles`, roles)
   const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
   const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
   const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
@@ -129,7 +128,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     getUser,
     createUser,
     userSearch,
-    addUserRoles,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,

@@ -273,18 +273,6 @@ const stubAuthSearchableRoles = ({
     body: content,
   })
 
-const stubAuthAddRoles = () =>
-  stubFor({
-    request: {
-      method: 'POST',
-      urlPattern: '/auth/api/authuser/id/.*/roles',
-    },
-    response: {
-      status: 200,
-      headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-    },
-  })
-
 const stubAuthUserEmails = () =>
   stubJson({
     method: 'POST',
@@ -337,12 +325,6 @@ const stubHealth = (status = 200) =>
       fixedDelayMilliseconds: status === 500 ? 3000 : '',
     },
   })
-
-const verifyAddRoles = () =>
-  getMatchingRequests({
-    method: 'POST',
-    urlPathPattern: '/auth/api/authuser/id/.*/roles',
-  }).then((data) => data.body.requests)
 
 const verifyUserDisable = () =>
   getMatchingRequests({
@@ -397,7 +379,6 @@ module.exports = {
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthAddRoles,
   stubAuthAssignableGroups,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
@@ -408,7 +389,6 @@ module.exports = {
   stubAuthUserFail,
   stubError,
   stubHealth,
-  verifyAddRoles,
   verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
