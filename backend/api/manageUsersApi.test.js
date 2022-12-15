@@ -28,7 +28,7 @@ describe('manageUsersApi tests', () => {
       manageUsersApi.createUser(context, user)
     })
     it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/users', user)
+      expect(client.post).toBeCalledWith(context, '/prisonusers', user)
     })
   })
 
@@ -204,7 +204,7 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(roles)
     })
     it('should call nomis user roles endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/users/joe/roles')
+      expect(client.get).toBeCalledWith(context, '/prisonusers/joe/roles')
     })
   })
 
@@ -417,7 +417,7 @@ describe('manageUsersApi tests', () => {
     it('should call mange users api endpoint', () => {
       expect(client.put).toBeCalledWith(
         context,
-        '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
         undefined,
       )
     })
@@ -437,7 +437,10 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(groups)
     })
     it('should call manage user api groups endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups?children=false')
+      expect(client.get).toBeCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups?children=false',
+      )
     })
   })
   describe('removeUserGroup', () => {
@@ -458,7 +461,7 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call mange users api endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain')
+      expect(client.del).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain')
     })
   })
 
@@ -477,7 +480,11 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/enable', undefined)
+      expect(client.put).toBeCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/enable',
+        undefined,
+      )
     })
   })
 
@@ -496,7 +503,11 @@ describe('manageUsersApi tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable', undefined)
+      expect(client.put).toBeCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable',
+        undefined,
+      )
     })
   })
 })

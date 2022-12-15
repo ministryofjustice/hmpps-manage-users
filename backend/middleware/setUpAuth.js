@@ -3,13 +3,13 @@ const passport = require('passport')
 const flash = require('connect-flash')
 const tokenRefresherFactory = require('../tokenRefresher').factory
 const sessionManagementRoutes = require('../sessionManagementRoutes')
-const auth = require('../authentication/auth')
+const auth = require('../authentication/auth').default
 const config = require('../config').default
 
 const router = express.Router()
 
 module.exports = ({ oauthApi, tokenVerificationApi }) => {
-  auth.default.init()
+  auth.init()
   const tokenRefresher = tokenRefresherFactory(oauthApi.refresh, config.app.tokenRefreshThresholdSeconds)
 
   router.use(passport.initialize())

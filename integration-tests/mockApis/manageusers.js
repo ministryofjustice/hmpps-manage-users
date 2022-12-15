@@ -5,7 +5,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: '/users',
+        urlPattern: '/prisonusers',
       },
       response: {
         status: 200,
@@ -293,7 +293,7 @@ module.exports = {
 
   stubDpsUserGetRoles: (activeCaseload = true) =>
     getFor({
-      urlPattern: '/users/.*/roles',
+      urlPattern: '/prisonusers/.*/roles',
       body: {
         ...(activeCaseload && {
           activeCaseload: {
@@ -418,7 +418,7 @@ module.exports = {
   verifyDpsCreateUser: () =>
     getMatchingRequests({
       method: 'POST',
-      urlPathPattern: '/users',
+      urlPathPattern: '/prisonusers',
     }).then((data) => data.body.requests),
 
   verifyAllRoles: () =>
@@ -494,18 +494,18 @@ module.exports = {
   verifyAddGroup: () =>
     getMatchingRequests({
       method: 'PUT',
-      urlPathPattern: '/users/.*/groups/.*',
+      urlPathPattern: '/externalusers/.*/groups/.*',
     }).then((data) => data.body.requests),
 
   verifyRemoveGroup: () =>
     getMatchingRequests({
       method: 'DELETE',
-      urlPathPattern: '/users/.*/groups/.*',
+      urlPathPattern: '/externalusers/.*/groups/.*',
     }).then((data) => data.body.requests),
 
   stubManageUserGroups: () =>
     getFor({
-      urlPattern: '/users/.*/groups\\?children=false',
+      urlPattern: '/externalusers/.*/groups\\?children=false',
       body: [
         { groupCode: 'SITE_1_GROUP_1', groupName: 'Site 1 - Group 1' },
         { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
@@ -516,7 +516,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'PUT',
-        urlPattern: '/users/.*/groups/.*',
+        urlPattern: '/externalusers/.*/groups/.*',
       },
       response: {
         status: 200,
@@ -528,7 +528,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'PUT',
-        urlPattern: '/users/.*/groups/.*',
+        urlPattern: '/externalusers/.*/groups/.*',
       },
       response: {
         status: 403,
@@ -568,14 +568,14 @@ module.exports = {
   stubManageUsersRemoveGroup: () =>
     stubJson({
       method: 'DELETE',
-      urlPattern: '/users/.*/groups/.*',
+      urlPattern: '/externalusers/.*/groups/.*',
     }),
 
   stubManageUsersGroupManagerRemoveLastGroup: () =>
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/users/.*/groups/.*',
+        urlPattern: '/externalusers/.*/groups/.*',
       },
       response: {
         status: 403,
@@ -601,13 +601,13 @@ module.exports = {
   stubAuthUserEnable: () =>
     stubJson({
       method: 'PUT',
-      urlPattern: '/users/.*/enable',
+      urlPattern: '/externalusers/.*/enable',
     }),
 
   verifyUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
-      urlPathPattern: '/users/.*/enable',
+      urlPathPattern: '/externalusers/.*/enable',
     }).then((data) => data.body.requests),
 
   verifyAddRoles: () =>

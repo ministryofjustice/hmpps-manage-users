@@ -18,9 +18,8 @@ const manageUsersApiFactory = (client) => {
   const getNotificationBannerMessage = (context, notificationType) =>
     get(context, `/notification/banner/${notificationType}`)
 
-  const contextUserRoles = (context, username) => get(context, `/users/${username}/roles`)
-
-  const createUser = (context, user) => post(context, '/users', user)
+  const createUser = (context, user) => post(context, '/prisonusers', user)
+  const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
 
   const createRole = (context, role) => post(context, '/roles', role)
   const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
@@ -55,12 +54,13 @@ const manageUsersApiFactory = (client) => {
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
-  const removeUserGroup = (context, { userId, group }) => del(context, `/users/${userId}/groups/${group}`)
-  const addUserGroup = (context, { userId, group }) => put(context, `/users/${userId}/groups/${group}`)
 
-  const userGroups = (context, { userId }) => get(context, `/users/${userId}/groups?children=false`)
-  const enableExternalUser = (context, { userId }) => put(context, `/users/${userId}/enable`)
-  const disableUser = (context, { userId }) => put(context, `/users/${userId}/disable`)
+  const userGroups = (context, { userId }) => get(context, `/externalusers/${userId}/groups?children=false`)
+  const removeUserGroup = (context, { userId, group }) => del(context, `/externalusers/${userId}/groups/${group}`)
+  const addUserGroup = (context, { userId, group }) => put(context, `/externalusers/${userId}/groups/${group}`)
+
+  const enableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/enable`)
+  const disableUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
 
   return {
     getNotificationBannerMessage,
