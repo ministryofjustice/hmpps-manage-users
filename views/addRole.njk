@@ -15,18 +15,16 @@
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
 
-    {% if message.length > 0 %}
-    {{ govukNotificationBanner({
-      html: message,
-      attributes: { "data-qa": "banner-message" }
-    }) }}
-    {% endif %}
+      {% if message.length > 0 %}
+      {{ govukNotificationBanner({
+        html: message,
+        attributes: { "data-qa": "banner-message" }
+      }) }}
+      {% endif %}
 
-    <h1 class="govuk-heading-l">{{ title }}</h1>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
         {% if roleDropdownValues.length == 0 %}
           <p class="govuk-body" data-qa="no-roles">
             There are no roles available for you to assign.
@@ -42,12 +40,14 @@
             errorMessage: errors | findError('roles')
           }) }}
 
-          {{ govukButton({
-            text: "Confirm",
-            type: "submit",
-            classes: "govuk-!-margin-right-1",
-            attributes: { "data-qa": "add-button" }
-          }) }}
+          {% if roleDropdownValues.length > 0 %}
+            {{ govukButton({
+              text: "Confirm",
+              type: "submit",
+              classes: "govuk-!-margin-right-1",
+              attributes: { "data-qa": "add-button" }
+            }) }}
+          {% endif %}
 
           {{ govukButton({
             text: "Cancel",

@@ -31,54 +31,51 @@
   {% endif %}
 
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      {% if groupValues.length == 0 %}
+        <p class="govuk-body" data-qa="no-groups">
+          You are not a member of any groups.
+        </p>
+      {% else %}
+        {% if groupValues.length > 10 %}
+          <form method="POST" action="{{ maintainUrl }}">
+            <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        {% if groupValues.length == 0 %}
-          <p class="govuk-body" data-qa="no-groups">
-            You are not a member of any groups.
-          </p>
-        {% else %}
-          {% if groupValues.length > 10 %}
-            <form method="POST" action="{{ maintainUrl }}">
-              <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-
-              <div class="govuk-list">
-                <input type='hidden' name='status' value='ALL' />
-                {{ govukSelect({label: {
-                  text: "Select a group"
-                },
-                  idPrefix: 'groupCode',
-                  name: 'groupCode',
-                  id: 'groupCode',
-                  items: groupValues | addBlankOptions('Select a group'),
-                  errorMessage: errors | findError('groupCode')
-                }) }}
-              </div>
-              {{ govukButton({
-                text: "Manage",
-                type: "submit",
-                attributes: { "data-qa": "manage-button" }
+            <div class="govuk-list">
+              <input type='hidden' name='status' value='ALL' />
+              {{ govukSelect({label: {
+                text: "Select a group"
+              },
+                idPrefix: 'groupCode',
+                name: 'groupCode',
+                id: 'groupCode',
+                items: groupValues | addBlankOptions('Select a group'),
+                errorMessage: errors | findError('groupCode')
               }) }}
-            </form>
-          {% else %}
-            {% set rows = [] %}
-            {% for g in groupValues %}
-              {% set groupLink %}
-                <a href="{{ maintainUrl }}/{{ g.value }}" class="govuk-link" data-qa="edit-button-{{ g.text }}">{{ g.text }}</a>
-              {% endset %}
-              {% set rows = (rows.push([
-                { html: groupLink }
-              ]), rows) %}
-            {% endfor %}
-            {{ govukTable({
-              rows: rows,
-              attributes: { "data-qa": "groups" }
+            </div>
+            {{ govukButton({
+              text: "Manage",
+              type: "submit",
+              attributes: { "data-qa": "manage-button" }
             }) }}
-          {% endif %}
+          </form>
+        {% else %}
+          {% set rows = [] %}
+          {% for g in groupValues %}
+            {% set groupLink %}
+              <a href="{{ maintainUrl }}/{{ g.value }}" class="govuk-link" data-qa="edit-button-{{ g.text }}">{{ g.text }}</a>
+            {% endset %}
+            {% set rows = (rows.push([
+              { html: groupLink }
+            ]), rows) %}
+          {% endfor %}
+          {{ govukTable({
+            rows: rows,
+            attributes: { "data-qa": "groups" }
+          }) }}
         {% endif %}
-      </div>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

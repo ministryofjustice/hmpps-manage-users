@@ -30,67 +30,64 @@
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <form method="POST">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{ govukInput({label: {
+          text: "Email address"
+        },
+          classes: "govuk-input--width-25",
+          value: email,
+          id: "email",
+          name: "email",
+          errorMessage: errors | findError('email')
+        }) }}
+        {{ govukInput({label: {
+          text: "First name"
+        },
+          classes: "govuk-input--width-20",
+          value: firstName,
+          id: "firstName",
+          name: "firstName",
+          errorMessage: errors | findError('firstName')
+        }) }}
+        {{ govukInput({label: {
+          text: "Last name"
+        },
+          classes: "govuk-input--width-20",
+          value: lastName,
+          id: "lastName",
+          name: "lastName",
+          errorMessage: errors | findError('lastName')
+        }) }}
+        <div class="govuk-list">
+        {{ govukSelect({label: {
+          text: "Select a group"
+        },
+          idPrefix: 'groupCode',
+          name: 'groupCode',
+          id: 'groupCode',
+          items: groupDropdownValues | addBlankOptions('Select a group'),
+          errorMessage: errors | findError('groupCode')
+        }) }}
+        </div>
 
-          {{ govukInput({label: {
-            text: "Email address"
-          },
-            classes: "govuk-input--width-25",
-            value: email,
-            id: "email",
-            name: "email",
-            errorMessage: errors | findError('email')
-          }) }}
-          {{ govukInput({label: {
-            text: "First name"
-          },
-            classes: "govuk-input--width-20",
-            value: firstName,
-            id: "firstName",
-            name: "firstName",
-            errorMessage: errors | findError('firstName')
-          }) }}
-          {{ govukInput({label: {
-            text: "Last name"
-          },
-            classes: "govuk-input--width-20",
-            value: lastName,
-            id: "lastName",
-            name: "lastName",
-            errorMessage: errors | findError('lastName')
-          }) }}
-          <div class="govuk-list">
-          {{ govukSelect({label: {
-            text: "Select a group"
-          },
-            idPrefix: 'groupCode',
-            name: 'groupCode',
-            id: 'groupCode',
-            items: groupDropdownValues | addBlankOptions('Select a group'),
-            errorMessage: errors | findError('groupCode')
-          }) }}
-          </div>
+        {{ govukButton({
+          text: "Create",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
 
-          {{ govukButton({
-            text: "Create",
-            type: "submit",
-            classes: "govuk-!-margin-right-1",
-            attributes: { "data-qa": "create-button" }
-          }) }}
-
-          {{ govukButton({
-            text: "Cancel",
-            element: 'a',
-            href: '/',
-            classes: "govuk-button--secondary"
-          }) }}
-        </form>
-      </div>
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: '/',
+          classes: "govuk-button--secondary"
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}

@@ -30,80 +30,77 @@
   {% endif %}
 
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type='hidden' name='userType' value='{{ userType }}'/>
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-half">
-        <form method="POST">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
-          <input type='hidden' name='userType' value='{{ userType }}'/>
+        {{ govukInput({label: {
+          text: "Username"
+        },
+          classes: "govuk-input--width-20",
+          value: username,
+          id: "username",
+          name: "username",
+          errorMessage: errors | findError('username')
+        }) }}
+        {{ govukInput({label: {
+          text: "Email address"
+        },
+          classes: "govuk-input--width-25",
+          value: email,
+          id: "email",
+          name: "email",
+          errorMessage: errors | findError('email')
+        }) }}
+        {{ govukInput({label: {
+          text: "First name"
+        },
+          classes: "govuk-input--width-20",
+          value: firstName,
+          id: "firstName",
+          name: "firstName",
+          errorMessage: errors | findError('firstName')
+        }) }}
+        {{ govukInput({label: {
+          text: "Last name"
+        },
+          classes: "govuk-input--width-20",
+          value: lastName,
+          id: "lastName",
+          name: "lastName",
+          errorMessage: errors | findError('lastName')
+        }) }}
 
-          {{ govukInput({label: {
-            text: "Username"
-          },
-            classes: "govuk-input--width-20",
-            value: username,
-            id: "username",
-            name: "username",
-            errorMessage: errors | findError('username')
-          }) }}
-          {{ govukInput({label: {
-            text: "Email address"
-          },
-            classes: "govuk-input--width-25",
-            value: email,
-            id: "email",
-            name: "email",
-            errorMessage: errors | findError('email')
-          }) }}
-          {{ govukInput({label: {
-            text: "First name"
-          },
-            classes: "govuk-input--width-20",
-            value: firstName,
-            id: "firstName",
-            name: "firstName",
-            errorMessage: errors | findError('firstName')
-          }) }}
-          {{ govukInput({label: {
-            text: "Last name"
-          },
-            classes: "govuk-input--width-20",
-            value: lastName,
-            id: "lastName",
-            name: "lastName",
-            errorMessage: errors | findError('lastName')
-          }) }}
+        {% if showCaseloadDropdown %}
+          <div class="govuk-list">
+            {{ govukSelect({label: {
+              text: caseloadTitle
+            },
+              idPrefix: 'defaultCaseloadId',
+              name: 'defaultCaseloadId',
+              id: 'defaultCaseloadId',
+              items: caseloadDropdownValues | setSelected(defaultCaseloadId) | addBlankOptions(caseloadTitle) ,
+              errorMessage: errors | findError('defaultCaseloadId')
+            }) }}
+          </div>
+        {% endif %}
 
-          {% if showCaseloadDropdown %}
-            <div class="govuk-list">
-              {{ govukSelect({label: {
-                text: caseloadTitle
-              },
-                idPrefix: 'defaultCaseloadId',
-                name: 'defaultCaseloadId',
-                id: 'defaultCaseloadId',
-                items: caseloadDropdownValues | setSelected(defaultCaseloadId) | addBlankOptions(caseloadTitle) ,
-                errorMessage: errors | findError('defaultCaseloadId')
-              }) }}
-            </div>
-          {% endif %}
+        {{ govukButton({
+          text: "Create",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
 
-          {{ govukButton({
-            text: "Create",
-            type: "submit",
-            classes: "govuk-!-margin-right-1",
-            attributes: { "data-qa": "create-button" }
-          }) }}
-
-          {{ govukButton({
-            text: "Cancel",
-            element: 'a',
-            href: '/',
-            classes: "govuk-button--secondary"
-          }) }}
-        </form>
-      </div>
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: '/',
+          classes: "govuk-button--secondary"
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}

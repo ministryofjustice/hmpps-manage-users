@@ -20,7 +20,8 @@
 
 {% block content %}
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
 
     {% block searchFilter %}
       {% include "./partials/externalUserSearchFilter.njk" %}
@@ -30,6 +31,7 @@
       {{ mojPagination(pagination) }}
 
       <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
         {% set rows = [] %}
         {% for u in results %}
           {% set userLink %}
@@ -65,6 +67,7 @@
           rows: rows
         }) }}
       </div>
+      </div>
       {{ mojPagination(pagination) }}
       {% if downloadUrl %}
         <div class="pull-right">
@@ -74,5 +77,6 @@
     {% else %}
       <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
     {% endif %}
+  </div>
   </div>
 {% endblock %}
