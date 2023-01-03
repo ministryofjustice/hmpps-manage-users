@@ -41,52 +41,68 @@
   {% endif %}
 
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ staff.name }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ staff.name }}</h1>
+      <table class="govuk-table">
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row user-enabled-status">
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <table class="govuk-table">
-          <tbody class="govuk-table__body">
-          <tr class="govuk-table__row user-enabled-status">
-
-            {% if canAutoEnableDisableUser %}
-              {% if staff.enabled %}
-                <td class="govuk-table__cell">
-                  {{ govukTag({
-                    text: "Active account",
-                    classes: "govuk-tag--turquoise",
-                    attributes: { "data-qa": "enabled" }
-                  }) }}
-                </td>
-                <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                  <a href="{{ staffUrl }}/deactivate/reason" class="govuk-link" data-qa="enable-button">Deactivate account</a>
-                </td>
-              {% else %}
-                <td class="govuk-table__cell">
-                  {{ govukTag({
-                    text: "Inactive account",
-                    classes: "govuk-tag--pink",
-                    attributes: { "data-qa": "enabled" }
-                  }) }}
-                </td>
+          {% if canAutoEnableDisableUser %}
+            {% if staff.enabled %}
+              <td class="govuk-table__cell">
+                {{ govukTag({
+                  text: "Active account",
+                  classes: "govuk-tag--turquoise",
+                  attributes: { "data-qa": "enabled" }
+                }) }}
+              </td>
+              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                <a href="{{ staffUrl }}/deactivate/reason" class="govuk-link" data-qa="enable-button">Deactivate account</a>
+              </td>
+            {% else %}
+              <td class="govuk-table__cell">
+                {{ govukTag({
+                  text: "Inactive account",
+                  classes: "govuk-tag--pink",
+                  attributes: { "data-qa": "enabled" }
+                }) }}
+              </td>
+              <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                {{ linkButton(csrfToken, {
+                  text: "Activate account",
+                  action: staffUrl + "/activate",
+                  id: "activate-button"
+                })}}
+              </td>
+            {% endif %}
+          {% else %}
+            {% if staff.active %}
+              <td class="govuk-table__cell">
+                {{ govukTag({
+                  text: "Active account",
+                  classes: "govuk-tag--turquoise",
+                  attributes: { "data-qa": "enabled" }
+                }) }}
+              </td>
+              {% if showEnableDisable and staff.enabled %}
                 <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
                   {{ linkButton(csrfToken, {
-                    text: "Activate account",
-                    action: staffUrl + "/activate",
-                    id: "activate-button"
+                    text: "Deactivate account",
+                    action: staffUrl + "/deactivate",
+                    id: "deactivate-button"
                   })}}
                 </td>
               {% endif %}
             {% else %}
-              {% if staff.active %}
+              {% if staff.accountStatus == 'EXPIRED' %}
                 <td class="govuk-table__cell">
-                  {{ govukTag({
-                    text: "Active account",
-                    classes: "govuk-tag--turquoise",
-                    attributes: { "data-qa": "enabled" }
-                  }) }}
+                {{ govukTag({
+                  text: "EXPIRED ACCOUNT",
+                  classes: "govuk-tag--yellow",
+                  attributes: { "data-qa": "enabled" }
+                }) }}
                 </td>
-                {% if showEnableDisable and staff.enabled %}
+                {% if showEnableDisable %}
                   <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
                     {{ linkButton(csrfToken, {
                       text: "Deactivate account",
@@ -96,255 +112,236 @@
                   </td>
                 {% endif %}
               {% else %}
-                {% if staff.accountStatus == 'EXPIRED' %}
-                  <td class="govuk-table__cell">
-                  {{ govukTag({
-                    text: "EXPIRED ACCOUNT",
-                    classes: "govuk-tag--yellow",
-                    attributes: { "data-qa": "enabled" }
-                  }) }}
+                <td class="govuk-table__cell">
+                {{ govukTag({
+                  text: 'Inactive account - ' + staff.accountStatus,
+                  classes: "govuk-tag--pink",
+                  attributes: { "data-qa": "enabled" }
+                }) }}
+                </td>
+                {% if showEnableDisable and not staff.enabled %}
+                  <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
+                    {{ linkButton(csrfToken, {
+                      text: "Activate account",
+                      action: staffUrl + "/activate",
+                      id: "enable-button"
+                    })}}
                   </td>
-                  {% if showEnableDisable %}
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                      {{ linkButton(csrfToken, {
-                        text: "Deactivate account",
-                        action: staffUrl + "/deactivate",
-                        id: "deactivate-button"
-                      })}}
-                    </td>
-                  {% endif %}
-                {% else %}
-                  <td class="govuk-table__cell">
-                  {{ govukTag({
-                    text: 'Inactive account - ' + staff.accountStatus,
-                    classes: "govuk-tag--pink",
-                    attributes: { "data-qa": "enabled" }
-                  }) }}
-                  </td>
-                  {% if showEnableDisable and not staff.enabled %}
-                    <td class="govuk-table__cell govuk-table__cell--numeric govuk-!-width-one-quarter">
-                      {{ linkButton(csrfToken, {
-                        text: "Activate account",
-                        action: staffUrl + "/activate",
-                        id: "enable-button"
-                      })}}
-                    </td>
-                  {% endif %}
                 {% endif %}
               {% endif %}
             {% endif %}
-          </tr>
-          </tbody>
-        </table>
-
-        {% set userDetails = [] %}
-        {% set changeEmailLink = {
-          html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
-          classes: 'govuk-!-width-one-quarter',
-          format: "numeric"
-        } if showExtraUserDetails or hasMaintainDpsUsersAdmin else {} %}
-
-        {% if showExtraUserDetails %}
-          {% if showUsername %}
-            {% set userDetails = userDetails.concat([
-              [
-                {text: "Username"},
-                {text: staff.username},
-                {text: ''}
-              ]
-            ]) %}
           {% endif %}
-          {% set userDetails = userDetails.concat([
-            [
-              {text: ("Email" if showUsername else "Username / email"), classes: 'govuk-!-width-one-quarter' },
-              {text: staff.email, classes: 'govuk-!-width-one-half' },
-              changeEmailLink
-            ],
-            [
-              {text: "Verified"},
-              {text: staff.verified | formatYesNo()},
-              {text: ''}
-            ],
-            [
-              {text: "Locked"},
-              {text: staff.locked | formatYesNo()},
-              {text: ''}
-            ],
-            [
-              {text: "Last logged in"},
-              {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
-              {text: ''}
-            ]
-          ]) %}
+        </tr>
+        </tbody>
+      </table>
 
-        {% else %}
+      {% set userDetails = [] %}
+      {% set changeEmailLink = {
+        html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
+        classes: 'govuk-!-width-one-quarter',
+        format: "numeric"
+      } if showExtraUserDetails or hasMaintainDpsUsersAdmin else {} %}
+
+      {% if showExtraUserDetails %}
+        {% if showUsername %}
           {% set userDetails = userDetails.concat([
             [
               {text: "Username"},
               {text: staff.username},
               {text: ''}
-            ],
-            [
-              {text: "Email", classes: 'govuk-!-width-one-quarter' },
-              {text: staff.email, classes: 'govuk-!-width-one-half' },
-              changeEmailLink
             ]
           ]) %}
-
-          {% if displayEmailChangeInProgress %}
-            {% set userDetails = userDetails.concat([
-              [
-                {text: "Email change awaiting verification"},
-                {text: staff.emailToVerify},
-                {text: ''}
-              ]
-            ]) %}
-          {% else %}
-            {% set userDetails = userDetails.concat([
-              [
-                {text: "Verified"},
-                {text: staff.verified | formatYesNo()},
-                {text: ''}
-              ]
-            ]) %}
-          {% endif %}
         {% endif %}
+        {% set userDetails = userDetails.concat([
+          [
+            {text: ("Email" if showUsername else "Username / email"), classes: 'govuk-!-width-one-quarter' },
+            {text: staff.email, classes: 'govuk-!-width-one-half' },
+            changeEmailLink
+          ],
+          [
+            {text: "Verified"},
+            {text: staff.verified | formatYesNo()},
+            {text: ''}
+          ],
+          [
+            {text: "Locked"},
+            {text: staff.locked | formatYesNo()},
+            {text: ''}
+          ],
+          [
+            {text: "Last logged in"},
+            {text: staff.lastLoggedIn  | formatDate('D MMMM YYYY - HH:mm:ss')},
+            {text: ''}
+          ]
+        ]) %}
 
+      {% else %}
+        {% set userDetails = userDetails.concat([
+          [
+            {text: "Username"},
+            {text: staff.username},
+            {text: ''}
+          ],
+          [
+            {text: "Email", classes: 'govuk-!-width-one-quarter' },
+            {text: staff.email, classes: 'govuk-!-width-one-half' },
+            changeEmailLink
+          ]
+        ]) %}
+
+        {% if displayEmailChangeInProgress %}
+          {% set userDetails = userDetails.concat([
+            [
+              {text: "Email change awaiting verification"},
+              {text: staff.emailToVerify},
+              {text: ''}
+            ]
+          ]) %}
+        {% else %}
+          {% set userDetails = userDetails.concat([
+            [
+              {text: "Verified"},
+              {text: staff.verified | formatYesNo()},
+              {text: ''}
+            ]
+          ]) %}
+        {% endif %}
+      {% endif %}
+
+      {{ govukTable({
+        caption: "Account details",
+        rows: userDetails,
+        attributes: { "data-qa": "user-details" }
+      }) }}
+
+      {% if staff.inactiveReason %}
         {{ govukTable({
-          caption: "Account details",
-          rows: userDetails,
-          attributes: { "data-qa": "user-details" }
+          rows: [
+            [
+              {text: "Inactive reason"},
+              {text: staff.inactiveReason}
+            ]
+          ],
+          attributes: { "data-qa": "inactive-reason" }
         }) }}
+      {% endif %}
 
-        {% if staff.inactiveReason %}
-          {{ govukTable({
-            rows: [
-              [
-                {text: "Inactive reason"},
-                {text: staff.inactiveReason}
-              ]
-            ],
-            attributes: { "data-qa": "inactive-reason" }
-          }) }}
-        {% endif %}
+      {% set rows = [] %}
+      {% for userRole in roles %}
+        {% set roleLink %}
+          {{ linkButton(csrfToken, {
+            text: "Remove role",
+            action: staffUrl + "/roles/" + userRole.roleCode + "/remove",
+            id: "remove-button-" + userRole.roleCode
+          })}}
+        {% endset %}
+        {% set rows = (rows.push([
+          { text: userRole.roleName },
+          { html: roleLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
+        ]), rows) %}
+      {% endfor %}
 
+      {{ govukTable({
+        caption: "Roles",
+        rows: rows,
+        attributes: { "data-qa": "user-roles" }
+      }) }}
+
+      {{ govukButton({
+        text: "Add another role",
+        element: 'a',
+        href: staffUrl + '/select-roles',
+        classes: "govuk-button",
+        attributes: { "data-qa": "add-role-button" }
+      }) }}
+
+      {% if showGroups %}
         {% set rows = [] %}
-        {% for userRole in roles %}
-          {% set roleLink %}
-            {{ linkButton(csrfToken, {
-              text: "Remove role",
-              action: staffUrl + "/roles/" + userRole.roleCode + "/remove",
-              id: "remove-button-" + userRole.roleCode
-            })}}
-          {% endset %}
-          {% set rows = (rows.push([
-            { text: userRole.roleName },
-            { html: roleLink, classes: 'govuk-!-width-one-quarter', format: "numeric"}
-          ]), rows) %}
+        {% for userGroup in groups %}
+          {% if userGroup.showRemove %}
+            {% set groupLink %}
+              {{ linkButton(csrfToken, {
+                text: "Remove group",
+                action: staffUrl + "/groups/" + userGroup.groupCode + "/remove",
+                id: "remove-button-" + userGroup.groupCode
+              })}}
+            {% endset %}
+            {% set rows = (rows.push([
+              { text: userGroup.groupName },
+              { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+            ]), rows) %}
+          {% else %}
+            {% set rows = (rows.push([
+              { text: userGroup.groupName },
+              { text: "" }
+            ]), rows) %}
+          {% endif %}
         {% endfor %}
 
         {{ govukTable({
-          caption: "Roles",
+          caption: "Groups",
           rows: rows,
-          attributes: { "data-qa": "user-roles" }
+          attributes: { "data-qa": "user-groups" }
         }) }}
 
         {{ govukButton({
-          text: "Add another role",
+          text: "Add another group",
           element: 'a',
-          href: staffUrl + '/select-roles',
+          href: staffUrl + '/select-group',
           classes: "govuk-button",
-          attributes: { "data-qa": "add-role-button" }
+          attributes: { "data-qa": "add-group-button" }
+        }) }}
+      {% endif %}
+
+      {% if caseloads %}
+        {{ govukTable({
+          caption: "Active Caseload",
+          attributes: { "data-qa": "user-active-caseload" },
+          rows: [
+            [
+              { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  }
+            ]
+          ]
         }) }}
 
-        {% if showGroups %}
-          {% set rows = [] %}
-          {% for userGroup in groups %}
-            {% if userGroup.showRemove %}
-              {% set groupLink %}
-                {{ linkButton(csrfToken, {
-                  text: "Remove group",
-                  action: staffUrl + "/groups/" + userGroup.groupCode + "/remove",
-                  id: "remove-button-" + userGroup.groupCode
-                })}}
-              {% endset %}
-              {% set rows = (rows.push([
-                { text: userGroup.groupName },
-                { html: groupLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-              ]), rows) %}
-            {% else %}
-              {% set rows = (rows.push([
-                { text: userGroup.groupName },
-                { text: "" }
-              ]), rows) %}
-            {% endif %}
-          {% endfor %}
-
-          {{ govukTable({
-            caption: "Groups",
-            rows: rows,
-            attributes: { "data-qa": "user-groups" }
-          }) }}
-
-          {{ govukButton({
-            text: "Add another group",
-            element: 'a',
-            href: staffUrl + '/select-group',
-            classes: "govuk-button",
-            attributes: { "data-qa": "add-group-button" }
-          }) }}
-        {% endif %}
-
-        {% if caseloads %}
-          {{ govukTable({
-            caption: "Active Caseload",
-            attributes: { "data-qa": "user-active-caseload" },
-            rows: [
-              [
-                { text: staff.activeCaseload.name, classes: 'govuk-!-width-one-half'  }
-              ]
-            ]
-          }) }}
-
-          {% set rows = [] %}
-          {% for caseload in caseloads %}
-            {% set caseloadLink %}
+        {% set rows = [] %}
+        {% for caseload in caseloads %}
+          {% set caseloadLink %}
               {% if hasMaintainDpsUsersAdmin and (caseload.id != staff.activeCaseload.id) %}
-                {{ linkButton(csrfToken, {
-                  text: "Remove caseload",
-                  action: staffUrl + "/caseloads/" + caseload.id + "/remove",
-                  id: "remove-button-" + caseload.id
-                })}}
-              {% endif %}
-            {% endset %}
+              {{ linkButton(csrfToken, {
+                text: "Remove caseload",
+                action: staffUrl + "/caseloads/" + caseload.id + "/remove",
+                id: "remove-button-" + caseload.id
+              })}}
+            {% endif %}
+          {% endset %}
 
-            {% set rows = (rows.push([
-                { text: caseload.name },
-                { html: caseloadLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
-              ]), rows) %}
-          {% endfor %}
+          {% set rows = (rows.push([
+              { text: caseload.name },
+              { html: caseloadLink, classes: 'govuk-!-width-one-quarter', format: "numeric" }
+            ]), rows) %}
+        {% endfor %}
 
-          {{ govukTable({
-            caption: "All Caseloads",
-            rows: rows,
-            attributes: { "data-qa": "user-caseloads" }
+        {{ govukTable({
+          caption: "All Caseloads",
+          rows: rows,
+          attributes: { "data-qa": "user-caseloads" }
+        }) }}
+
+        {% if hasMaintainDpsUsersAdmin %}
+          {{ govukButton({
+            text: "Add another caseload",
+            element: 'a',
+            href: staffUrl + '/select-caseloads',
+            classes: "govuk-button",
+            attributes: { "data-qa": "add-caseload-button" }
           }) }}
-
-          {% if hasMaintainDpsUsersAdmin %}
-            {{ govukButton({
-              text: "Add another caseload",
-              element: 'a',
-              href: staffUrl + '/select-caseloads',
-              classes: "govuk-button",
-              attributes: { "data-qa": "add-caseload-button" }
-            }) }}
-          {% endif %}
         {% endif %}
+      {% endif %}
 
-        <p class="govuk-body">
-          <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
-        </p>
-      </div>
+      <p class="govuk-body">
+        <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
+      </p>
     </div>
   </div>
 {% endblock %}

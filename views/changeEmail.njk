@@ -14,35 +14,33 @@
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <form method="POST">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-          {{ govukInput({
-            value: currentEmail,
-            id: "email",
-            name: "email",
-            errorMessage: errors | findError('email')
-          }) }}
+        {{ govukInput({
+          value: currentEmail,
+          id: "email",
+          name: "email",
+          errorMessage: errors | findError('email')
+        }) }}
 
-          {{ govukButton({
-            text: "Confirm",
-            type: "submit",
-            classes: "govuk-!-margin-right-1",
-            attributes: { "data-qa": "confirm-button" }
-          }) }}
+        {{ govukButton({
+          text: "Confirm",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "confirm-button" }
+        }) }}
 
-          {{ govukButton({
-            text: "Cancel",
-            element: 'a',
-            href: staffUrl,
-            classes: "govuk-button--secondary",
-            attributes: { "data-qa": "cancel-link" }
-          }) }}
-        </form>
-      </div>
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: staffUrl,
+          classes: "govuk-button--secondary",
+          attributes: { "data-qa": "cancel-link" }
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}

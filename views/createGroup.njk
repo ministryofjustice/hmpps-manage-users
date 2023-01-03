@@ -25,49 +25,46 @@
     }) }}
   {% endif %}
   <div class="govuk-grid-row">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
 
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        <form method="POST">
-          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        {{ govukInput({label: {
+          text: "Group code"
+        },
+          classes: "govuk-input--width-30",
+          value: groupCode,
+          id: "groupCode",
+          name: "groupCode",
+          errorMessage: errors | findError('groupCode')
+        }) }}
 
-          {{ govukInput({label: {
-            text: "Group code"
-          },
-            classes: "govuk-input--width-30",
-            value: groupCode,
-            id: "groupCode",
-            name: "groupCode",
-            errorMessage: errors | findError('groupCode')
-          }) }}
+        {{ govukInput({label: {
+          text: "Group name"
+        },
+          classes: "govuk-input--width-30",
+          value: groupName,
+          id: "groupName",
+          name: "groupName",
+          errorMessage: errors | findError('groupName')
+        }) }}
 
-          {{ govukInput({label: {
-            text: "Group name"
-          },
-            classes: "govuk-input--width-30",
-            value: groupName,
-            id: "groupName",
-            name: "groupName",
-            errorMessage: errors | findError('groupName')
-          }) }}
+        {{ govukButton({
+          text: "Create",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
 
-          {{ govukButton({
-            text: "Create",
-            type: "submit",
-            classes: "govuk-!-margin-right-1",
-            attributes: { "data-qa": "create-button" }
-          }) }}
-
-          {{ govukButton({
-            text: "Cancel",
-            element: 'a',
-            href: groupUrl,
-            classes: "govuk-button--secondary",
-            attributes: { "id": "cancel-button" }
-          }) }}
-        </form>
-      </div>
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: groupUrl,
+          classes: "govuk-button--secondary",
+          attributes: { "id": "cancel-button" }
+        }) }}
+      </form>
     </div>
   </div>
 {% endblock %}
