@@ -9,15 +9,8 @@ const { allowDownload } = require('../services/downloadService')
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ oauthApi }) => {
-  const searchApi = ({
-    locals: context,
-    user: nameFilter,
-    groupCode,
-    roleCode,
-    status,
-    pageNumber: page,
-    pageSize: size,
-  }) => oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
+  const searchApi = ({ locals: context, user: nameFilter, groupCode, roleCode, status, page, size }) =>
+    oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
 
   const assignableGroups = async (context) =>
     (await oauthApi.assignableGroups(context)).map((g) => ({
@@ -25,7 +18,7 @@ const controller = ({ oauthApi }) => {
       value: g.groupCode,
     }))
 
-  const { index, results } = searchFactory(
+  const search = searchFactory(
     paginationService,
     assignableGroups,
     oauthApi.searchableRoles,
@@ -39,9 +32,7 @@ const controller = ({ oauthApi }) => {
 
   const { downloadResults } = downloadFactory(searchApi, json2csv.parse, allowDownload)
 
-  router.get('/', index)
-  router.get('/results', results)
-  router.post('/results', results)
+  router.get('/', search)
   router.get('/download', downloadResults)
   return router
 }

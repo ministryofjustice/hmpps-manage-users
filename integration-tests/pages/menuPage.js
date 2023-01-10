@@ -1,7 +1,7 @@
 const page = require('./page')
 
 const searchDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_users"]')
-const authUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
+const searchExternalUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
 const createDpsUser = () => cy.get('[data-qa="create_dps_user_link"]')
 const manageGroups = () => cy.get('[data-qa="manage_groups_link"]')
@@ -16,7 +16,8 @@ const menuPage = () =>
     headerUsername: () => cy.get('[data-qa="logged-in-name"]'),
     headerCaseload: () => cy.get('[data-qa="active-location"]'),
     message: () => cy.get('[data-qa="banner-message"]'),
-    manageAuthUsers: () => authUsers().click(),
+    searchExternalUsers: () => searchExternalUsers().click(),
+    searchExternalUsersLink: () => searchExternalUsers(),
     createDpsUserTile: () => createDpsUser(),
     createDpsUser: () => createDpsUser().click(),
     createAuthUser: () => createUser().click(),

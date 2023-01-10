@@ -245,6 +245,58 @@ module.exports = (app, path) => {
     },
   )
 
+  njkEnv.addFilter('toExternalUserSearchFilter', (currentFilter, groups, roles, filterOptionsHtml) => {
+    const hrefBase = '/search-external-users?'
+    const usernameTags = getUsernameTags(currentFilter, hrefBase)
+    const statusTags = getStatusTags(currentFilter, hrefBase)
+    const rolesTags = getRoleCodeNameTags(currentFilter, hrefBase, roles)
+    const groupsTags = getGroupCodeTags(currentFilter, hrefBase, groups)
+
+    const categories = [
+      {
+        heading: {
+          text: 'Name',
+        },
+        items: usernameTags,
+      },
+      {
+        heading: {
+          text: 'Status',
+        },
+        items: statusTags,
+      },
+      {
+        heading: {
+          text: 'Group',
+        },
+        items: groupsTags,
+      },
+      {
+        heading: {
+          text: 'Role',
+        },
+        items: rolesTags,
+      },
+    ]
+
+    return {
+      heading: {
+        text: 'Filters',
+      },
+      selectedFilters: {
+        heading: {
+          html: '<div class="moj-action-bar__filter"></div>',
+        },
+        clearLink: {
+          text: 'Clear filters',
+          href: '/search-external-users',
+        },
+        categories: categories.filter((category) => category.items),
+      },
+      optionsHtml: filterOptionsHtml,
+    }
+  })
+
   njkEnv.addFilter('roleFilter', (currentFilter, filterOptionsHtml) => {
     const hrefBase = '/manage-roles?'
     const roleNameTags = getRoleNameTags(currentFilter, hrefBase)
@@ -349,6 +401,35 @@ function getCaseloadTags(currentFilter, hrefBase, prisons) {
 
   return tags
 }
+
+function getRoleCodeNameTags(currentFilter, hrefBase, roles) {
+  const { roleCode, ...newFilter } = currentFilter
+  if (roleCode) {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: roles.find((role) => role.value === roleCode).text,
+      },
+    ]
+  }
+  return undefined
+}
+
+function getGroupCodeTags(currentFilter, hrefBase, groups) {
+  const { groupCode, ...newFilter } = currentFilter
+  if (groupCode) {
+    return [
+      {
+        // TODO look at using new URLSearchParams instead
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: groups.find((group) => group.value === groupCode).text,
+      },
+    ]
+  }
+  return undefined
+}
+
 function getRoleTags(currentFilter, hrefBase, roles) {
   const { roleCode, ...currentFilterNoRoles } = currentFilter
 

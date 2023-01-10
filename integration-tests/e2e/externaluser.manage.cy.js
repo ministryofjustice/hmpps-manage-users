@@ -1,5 +1,4 @@
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddGroupPage = require('../pages/userAddGroupPage')
@@ -8,6 +7,8 @@ const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const ChangeUsernameSuccessPage = require('../pages/changeUsernameSuccessPage')
 const deactivateUserReasonPage = require('../pages/deactivateUserReasonPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
+const MenuPage = require('../pages/menuPage')
+const ExternalUserSearchPage = require('../pages/authUserSearchPage')
 
 const editUser = (roleCode, assignableGroups = []) => {
   const results = searchForUser(roleCode, undefined, assignableGroups)
@@ -290,8 +291,9 @@ context('External user manage functionality', () => {
   it('Should provide breadcrumb link back to search results', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.signIn()
-    cy.task('stubAuthAssignableGroups', { content: [] })
-    cy.task('stubAuthSearchableRoles', { content: [] })
+    const menuPage = MenuPage.verifyOnPage()
+    cy.task('stubAuthAssignableGroups', {})
+    cy.task('stubAuthSearchableRoles', {})
     cy.task('stubAuthSearch', {
       content: replicateUser(5),
       totalElements: 21,
@@ -299,15 +301,14 @@ context('External user manage functionality', () => {
       size: 5,
     })
 
-    const search = AuthUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-    results.nextPage()
+    menuPage.searchExternalUsers()
+    const search = ExternalUserSearchPage.verifyOnPage()
+    search.nextPage()
 
     cy.task('stubAuthGetUsername')
     cy.task('stubExternalUserRoles')
     cy.task('stubManageUserGroups')
-    results.edit('AUTH_ADM4')
+    search.edit('AUTH_ADM4')
 
     const userPage = UserPage.verifyOnPage('Auth Adm')
     userPage
@@ -315,7 +316,7 @@ context('External user manage functionality', () => {
       .should(
         'have.attr',
         'href',
-        '/search-external-users/results?user=sometext%40somewhere.com&status=ALL&groupCode=&roleCode=&page=1',
+        '/search-external-users?user=sometext%40somewhere.com&status=ALL&groupCode=&roleCode=&page=1',
       )
   })
 

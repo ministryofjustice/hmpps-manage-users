@@ -31,7 +31,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
   const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
-  const del = (context, path) => client.del(context, path).then((response) => response.body)
   const currentUser = (context) => get(context, '/api/user/me')
   const currentRoles = (context) => get(context, '/api/user/me/roles')
   const getUserEmail = async (context, { username }) => {
