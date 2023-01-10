@@ -6,9 +6,7 @@ const AuthUserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const ChangeUsernameSuccessPage = require('../pages/changeUsernameSuccessPage')
 const deactivateUserReasonPage = require('../pages/deactivateUserReasonPage')
-const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
-const MenuPage = require('../pages/menuPage')
-const ExternalUserSearchPage = require('../pages/authUserSearchPage')
+const { searchForUser } = require('../support/externaluser.helpers')
 
 const editUser = (roleCode, assignableGroups = []) => {
   const results = searchForUser(roleCode, undefined, assignableGroups)
@@ -286,38 +284,6 @@ context('External user manage functionality', () => {
     cy.visit('/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-roles')
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
-  })
-
-  it('Should provide breadcrumb link back to search results', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
-    const menuPage = MenuPage.verifyOnPage()
-    cy.task('stubAuthAssignableGroups', {})
-    cy.task('stubAuthSearchableRoles', {})
-    cy.task('stubAuthSearch', {
-      content: replicateUser(5),
-      totalElements: 21,
-      page: 0,
-      size: 5,
-    })
-
-    menuPage.searchExternalUsers()
-    const search = ExternalUserSearchPage.verifyOnPage()
-    search.nextPage()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubExternalUserRoles')
-    cy.task('stubManageUserGroups')
-    search.edit('AUTH_ADM4')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
-    userPage
-      .searchResultsBreadcrumb()
-      .should(
-        'have.attr',
-        'href',
-        '/search-external-users?user=sometext%40somewhere.com&status=ALL&groupCode=&roleCode=&page=1',
-      )
   })
 
   describe('Enable and disable a user', () => {

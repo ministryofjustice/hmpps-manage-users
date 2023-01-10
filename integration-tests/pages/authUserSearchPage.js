@@ -39,6 +39,7 @@ const authUserSearchPage = () =>
       roleFilterSelect().type(roleText)
       applyFilters().click()
     },
+    edit: (username) => cy.get(`[data-qa="edit-button-${username}"]`).click(),
     rows: () => cy.get('table tbody tr'),
     getPaginationList: () => cy.get('.moj-pagination__list'),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
