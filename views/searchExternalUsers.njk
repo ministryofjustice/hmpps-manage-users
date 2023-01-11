@@ -1,0 +1,212 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+{% set title = "Search for an external user " %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+{% set filterOptionsHtml %}
+  {{ govukInput({
+    label: { text: "Name, username or email address", classes: "govuk-label--s" },
+    classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+    value: currentFilter.user,
+    id: "user",
+    name: "user",
+    hint: {
+      text: "Will match the user's name, username or email address"
+    },
+    errorMessage: errors | findError('user')
+  }) }}
+
+ {{ govukRadios({
+      idPrefix: 'status',
+      name: 'status',
+      classes: 'govuk-radios--small govuk-radios--inline',
+      fieldset: {
+        legend: {
+          text: 'Status',
+          classes: 'govuk-label--s'
+        }
+      },
+      hint: {
+        text: 'Display active or inactive users only'
+      },
+      items: [
+        {
+          value: 'ALL',
+          text: 'All',
+          checked: currentFilter.status === 'ALL'
+        },
+        {
+          value: 'ACTIVE',
+          text: 'Active',
+          checked: currentFilter.status === 'ACTIVE'
+        },
+        {
+          value: 'INACTIVE',
+          text: 'Inactive',
+          checked: currentFilter.status === 'INACTIVE'
+        }
+      ]
+    }
+  )}}
+
+  <div class="govuk-list">
+    {{ govukSelect({
+      label: {
+        text: "Select a group",
+        classes: 'govuk-label--s'
+      },
+      idPrefix: 'groupCode',
+      name: 'groupCode',
+      id: 'groupCode',
+      value: currentFilter.groupCode,
+      items: groupDropdownValues | addBlankOptions('Select a group'),
+      hint: {
+        text: "Will match users that have the selected group"
+      },
+      errorMessage: errors | findError('groupCode')
+    })}}
+  </div>
+
+  <div class="govuk-list">
+    {{ govukSelect({
+      label: {
+        text: "Select a role",
+        classes: 'govuk-label--s'
+      },
+      idPrefix: 'roleCode',
+      name: 'roleCode',
+      id: 'roleCode',
+      value: currentFilter.roleCode,
+      items: roleDropdownValues | addBlankOptions('Select a role'),
+      hint: {
+        text: "Will match users that have the selected role"
+      },
+      errorMessage: errors | findError('roleCode')
+      }) }}
+  </div>
+{% endset %}
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <div class="moj-filter-layout">
+          <div class="moj-filter-layout__filter">
+            <form method="GET" action="{{ searchUrl }}" novalidate>
+              {{ mojFilter(currentFilter | toExternalUserSearchFilter(groupDropdownValues, roleDropdownValues, filterOptionsHtml)) }}
+            </form>
+          </div>
+          <div class="moj-filter-layout__content">
+            <div>
+              <div class="govuk-grid-column-full">
+                <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+                  {% if results.length %}
+                    {{ mojPagination(pagination) }}
+
+                    {% set rows = [] %}
+                    {% for u in results %}
+                      {% set maintainUserUrl = maintainUrl + '/' + u.userId + '/details' %}
+                      {% set cellHtml %}
+                        <div class="govuk-!-margin-bottom-5">
+                          <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                            <div class="govuk-grid-column-three-quarters">
+                              <a href="{{maintainUserUrl}}" class="govuk-link" data-qa="edit-button-{{u.username}}">{{u.firstName}}&nbsp;{{u.lastName}}</a><span> - {{u.username}}</span>
+                            </div>
+                            <div class="govuk-grid-column-one-quarter  pull-right">
+                              <a href="{{maintainUserUrl}}" class="govuk-link">View details</a>
+                              <span class="govuk-visually-hidden">for {{u.firstName}}&nbsp;{{u.lastName}}</span>
+                            </div>
+                          </div>
+                          <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                            <div class="govuk-grid-column-full"><span class="govuk-visually-hidden">Email</span><span>{{u.email}}</span></div>
+                          </div>
+                          <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                            <div class="govuk-grid-column-full">
+                              <div class="govuk-grid-row">
+                                <div class="govuk-grid-column-one-half">
+                                  <span class="govuk-visually-hidden">Status</span>
+                                  {{ govukTag({
+                                    text: "Locked",
+                                    classes: "govuk-tag--yellow"
+                                  }) if u.locked }}
+                                  {{ govukTag({
+                                    text: "Inactive",
+                                    classes: "govuk-tag--pink"
+                                  }) if not u.enabled }}
+                                  {{ govukTag({
+                                    text: "Active",
+                                    classes: "govuk-tag--green"
+                                  }) if u.enabled }}
+                                </div>
+                              </div>
+                          </div>
+                          </div>
+                        </div>
+                      {% endset %}
+
+                      {% set rows = (rows.push([
+                        { html: cellHtml }
+                      ]), rows) %}
+                    {% endfor %}
+
+                    {{ govukTable({
+                      rows: rows
+                    }) }}
+
+                    {{ mojPagination(pagination) }}
+
+                    {% if downloadUrl %}
+                      <div class="pull-right">
+                        {{ govukButton({
+                           text: "Download results",
+                           href: downloadUrl,
+                           preventDoubleClick: true,
+                           classes: "govuk-button",
+                           attributes: { "data-qa": "download" }
+                        }) }}
+                      </div>
+                    {% endif %}
+                  {% else %}
+                    <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block pageScripts %}
+  <meta name="autocompleteElements" content="groupCode,roleCode"/>
+  <script src="/assets/accessible-autocomplete.min.js"></script>
+  <script src="/js/autocomplete.js"></script>
+  <script src="/js/moj-filter-button-toggle.js"></script>
+{% endblock %}
