@@ -12,7 +12,7 @@ parameters:
 
   releases-slack-channel:
     type: string
-    default: hmpps_tech_alerts_security
+    default: dps-releases
 
   node-version:
     type: string
@@ -169,6 +169,7 @@ workflows:
             - hmpps-common-vars
             - hmpps-manage-users-prod
           slack_notification: true
+          slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           requires:
             - request-prod-approval
 
