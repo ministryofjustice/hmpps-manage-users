@@ -1,10 +1,19 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@6.2
+  hmpps: ministryofjustice/hmpps@6
   browser-tools: circleci/browser-tools@1.4
+  slack: circleci/slack@4.12
 
 parameters:
+  alerts-slack-channel:
+    type: string
+    default: hmpps_tech_alerts_security
+
+  releases-slack-channel:
+    type: string
+    default: hmpps_tech_alerts_security
+
   node-version:
     type: string
     default: 18.12-browsers
@@ -40,6 +49,29 @@ jobs:
             - node_modules
             - build
             - dist
+            - .cache/Cypress
+
+  check_outdated:
+    executor:
+      name: hmpps/node
+      tag: << pipeline.parameters.node-version >>
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: install-npm
+          command: 'npm ci --no-audit'
+      - run:
+          name: Check version
+          command: 'npm --version'
+      - run:
+          name: Run check
+          command: 'npm outdated typescript govuk-frontend'
+      - slack/notify:
+          event: fail
+          channel: << pipeline.parameters.alerts-slack-channel >>
+          template: basic_fail_1
 
   integration_tests:
     working_directory: ~/app
@@ -149,16 +181,19 @@ workflows:
               only:
                 - main
     jobs:
+      - check_outdated:
+          context:
+            - hmpps-common-vars
       - hmpps/npm_security_audit:
-          slack_channel: hmpps_tech_alerts_security
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
           context:
             - hmpps-common-vars
       - hmpps/trivy_latest_scan:
-          slack_channel: hmpps_tech_alerts_security
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
           context:
             - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
-          slack_channel: hmpps_tech_alerts_security
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
           context:
             - veracode-credentials
             - hmpps-common-vars
@@ -172,8 +207,7 @@ workflows:
                 - main
     jobs:
       - hmpps/veracode_policy_scan:
-          slack_channel: hmpps_tech_alerts_security
+          slack_channel: << pipeline.parameters.alerts-slack-channel >>
           context:
             - veracode-credentials
             - hmpps-common-vars
-
