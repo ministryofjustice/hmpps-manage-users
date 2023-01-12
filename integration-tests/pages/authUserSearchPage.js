@@ -1,27 +1,60 @@
 const page = require('./page')
 
-const user = () => cy.get('[id="user"]')
-const group = () => cy.get('[id="groupCode"]')
-const role = () => cy.get('[id="roleCode"]')
-const submit = () => cy.get('button[type="submit"]')
+const applyFilters = () => cy.get('button').contains('Apply filters')
+const userFilterInput = () => cy.get('[id="user"]')
+const groupFilterSelect = () => cy.get('[id="groupCode"]')
+const roleFilterSelect = () => cy.get('[id="roleCode"]')
+const statusFilterRadioButton = (text) => cy.contains('label', text).prev()
+const filterWithTag = (tag) => cy.get('a').contains(tag)
 
 const authUserSearchPage = () =>
   page('Search for an external user', {
-    search: (text) => {
-      if (text) user().type(text)
-      else user().clear()
-      submit().click()
+    filter: () => cy.get('[class="moj-filter"]'),
+    filterUser: (text) => {
+      if (text) userFilterInput().type(text)
+      else userFilterInput().clear()
+      applyFilters().click()
+      return authUserSearchPage()
     },
-    searchGroup: (text) => {
-      if (text) group().type(text)
-      else user().clear()
-      submit().click()
+    filterStatus: (text) => {
+      statusFilterRadioButton(text).click()
+      applyFilters().click()
     },
-    searchRole: (text) => {
-      if (text) role().type(text)
-      else user().clear()
-      submit().click()
+    filterGroup: (text) => {
+      if (text) groupFilterSelect().type(text)
+      else groupFilterSelect().clear()
+      applyFilters().click()
+      return authUserSearchPage()
     },
+    filterRole: (text) => {
+      if (text) roleFilterSelect().type(text)
+      else roleFilterSelect().clear()
+      applyFilters().click()
+      return authUserSearchPage()
+    },
+    filterAll: ({ user, statusText, groupText, roleText }) => {
+      userFilterInput().type(user)
+      statusFilterRadioButton(statusText).click()
+      groupFilterSelect().type(groupText)
+      roleFilterSelect().type(roleText)
+      applyFilters().click()
+    },
+    edit: (username) => cy.get(`[data-qa="edit-button-${username}"]`).click(),
+    rows: () => cy.get('table tbody tr'),
+    getPaginationList: () => cy.get('.moj-pagination__list'),
+    getPaginationResults: () => cy.get('.moj-pagination__results'),
+    paginationLink: (pageNumber) => cy.get('a').contains(pageNumber).first(),
+    nextPage: () => cy.get('.moj-pagination__item--next').first().click(),
+    previousPage: () => cy.get('.moj-pagination__item--prev').first().click(),
+    getHideDownloadLinkMessage: () => cy.get('[data-qa="exceed-download-limit"]'),
+    getDownloadLinkMessage: () => cy.get('[data-qa="download"]'),
+    download: () => cy.get('a[data-qa="download"]'),
+    filterWithTag,
+    userFilterInput,
+    groupFilterSelect,
+    roleFilterSelect,
+    statusFilterRadioButton,
+    noResults: () => cy.get('[data-qa="no-results"]'),
   })
 
 export default {

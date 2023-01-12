@@ -39,6 +39,9 @@ const results = [
 ]
 const users = results.map(({ usernameAndEmail, ...rest }) => rest)
 
+const emptyResults = []
+const noUsers = emptyResults.map(({ usernameAndEmail, ...rest }) => rest)
+
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
   const getSearchableRolesApi = jest.fn()
@@ -48,6 +51,10 @@ describe('search factory', () => {
   const getAssignableGroupsApi = jest.fn()
   const mockSearchCall = () => {
     searchApi.mockResolvedValue(users)
+  }
+  const mockGroupsAndRolesCalls = () => {
+    getAssignableGroupsApi.mockResolvedValue([{ text: 'groupName', value: 'group_code' }])
+    getSearchableRolesApi.mockResolvedValue([{ roleName: 'roleName', roleCode: 'role_code' }])
   }
 
   const search = searchFactory(
@@ -61,6 +68,16 @@ describe('search factory', () => {
     'Search for an external user',
     allowDownload,
   )
+  const pagination = { offset: 5 }
+
+  const standardReq = {
+    flash: jest.fn(),
+    query: {},
+    get: jest.fn().mockReturnValue('localhost'),
+    protocol: 'http',
+    originalUrl: '/',
+    session: {},
+  }
 
   beforeEach(() => {
     paginationService.getPagination.mockReset()
@@ -72,69 +89,83 @@ describe('search factory', () => {
   })
 
   it('should call search user render', async () => {
-    const req = { params: {}, flash: jest.fn() }
-    getAssignableGroupsApi.mockResolvedValue([{ text: 'name', value: 'code' }])
-    getSearchableRolesApi.mockResolvedValue([{ roleName: 'name', roleCode: 'code' }])
-
+    const req = {
+      ...standardReq,
+    }
+    mockGroupsAndRolesCalls()
+    searchApi.mockResolvedValue(noUsers)
     const render = jest.fn()
-    await search.index(req, { render })
+    await search(req, { render })
+
     expect(render).toBeCalledWith('searchExternalUsers.njk', {
       searchTitle: 'Search for an external user',
       searchUrl: '/search-external-users',
-      groupDropdownValues: [{ text: 'name', value: 'code' }],
-      roleDropdownValues: [{ text: 'name', value: 'code' }],
+      maintainUrl: '/manage-external-users',
+      pagination: undefined,
+      results: [],
+      groupDropdownValues: [{ text: 'groupName', value: 'group_code' }],
+      roleDropdownValues: [{ text: 'roleName', value: 'role_code' }],
+      currentFilter: {
+        groupCode: undefined,
+        roleCode: undefined,
+        status: 'ALL',
+        user: undefined,
+      },
+      downloadUrl: undefined,
+      errors: undefined,
     })
   })
 
   describe('results', () => {
     it('should call external search results render', async () => {
       const req = {
+        ...standardReq,
         query: { user: 'joe' },
         flash: jest.fn(),
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
-        originalUrl: '/results',
+        originalUrl: '/search-external-users',
         session: {},
       }
-      const pagination = { page: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
       mockSearchCall()
       const render = jest.fn()
-      await search.results(req, {
+      await search(req, {
         render,
         locals: { pageable: { page: 5, size: 10, totalElements: 123 } },
       })
 
-      expect(render).toBeCalledWith('externalSearchResults.njk', {
+      expect(render).toBeCalledWith('searchExternalUsers.njk', {
         searchTitle: 'Search for an external user',
         searchUrl: '/search-external-users',
         maintainUrl: '/manage-external-users',
         results,
+        groupDropdownValues: [{ text: 'groupName', value: 'group_code' }],
+        roleDropdownValues: [{ text: 'roleName', value: 'role_code' }],
         errors: undefined,
         pagination,
-        groupCode: undefined,
-        roleCode: undefined,
-        username: 'joe',
-        status: undefined,
+        currentFilter: {
+          groupCode: undefined,
+          roleCode: undefined,
+          status: 'ALL',
+          user: 'joe',
+        },
         downloadUrl: undefined,
       })
     })
 
     it('should call external search api', async () => {
       const req = {
+        ...standardReq,
         query: { user: 'joe', groupCode: '', roleCode: '', status: 'ACTIVE' },
-        flash: jest.fn(),
-        get: jest.fn().mockReturnValue('localhost'),
-        protocol: 'http',
-        originalUrl: '/',
-        session: {},
       }
-      const pagination = { page: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
       mockSearchCall()
       const render = jest.fn()
       const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
-      await search.results(req, {
+      await search(req, {
         render,
         locals,
       })
@@ -145,27 +176,48 @@ describe('search factory', () => {
         roleCode: '',
         groupCode: '',
         status: 'ACTIVE',
-        pageNumber: 0,
-        pageSize: 20,
-        pageOffset: 0,
+        page: undefined,
+        size: 20,
+      })
+    })
+
+    it('should call external search api for all parameters', async () => {
+      const req = {
+        ...standardReq,
+        query: { user: 'joe', groupCode: 'group_code', roleCode: 'role_code', status: 'ACTIVE' },
+      }
+      paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
+      mockSearchCall()
+      const render = jest.fn()
+      const locals = { pageable: { page: 2, size: 10, totalElements: 123 } }
+      await search(req, {
+        render,
+        locals,
+      })
+
+      expect(searchApi).toBeCalledWith({
+        locals,
+        user: 'joe',
+        roleCode: 'role_code',
+        groupCode: 'group_code',
+        status: 'ACTIVE',
+        page: undefined,
+        size: 20,
       })
     })
 
     it('should call external search api with page and size', async () => {
       const req = {
+        ...standardReq,
         query: { user: 'joe', groupCode: '', roleCode: '', status: 'INACTIVE', page: 3, size: 13 },
-        flash: jest.fn(),
-        get: jest.fn().mockReturnValue('localhost'),
-        protocol: 'http',
-        originalUrl: '/',
-        session: {},
       }
-      const pagination = { page: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
       mockSearchCall()
       const render = jest.fn()
-      const locals = { pageable: { page: 5, size: 10, totalElements: 123 } }
-      await search.results(req, {
+      const locals = { pageable: { page: 5, offset: 20, size: 10, totalElements: 123 } }
+      await search(req, {
         render,
         locals,
       })
@@ -176,9 +228,8 @@ describe('search factory', () => {
         roleCode: '',
         groupCode: '',
         status: 'INACTIVE',
-        pageNumber: 3,
-        pageSize: 13,
-        pageOffset: 0,
+        page: 3,
+        size: 20,
       })
     })
 
@@ -191,57 +242,34 @@ describe('search factory', () => {
         originalUrl: '/',
         session: {},
       }
-      const pagination = { page: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
       mockSearchCall()
       const render = jest.fn()
       const pageable = { page: 5, size: 10, totalElements: 123 }
       pagingApi.mockReturnValue(pageable)
-      await search.results(req, { render })
+      await search(req, { render })
 
       expect(paginationService.getPagination).toBeCalledWith(pageable, new URL('http://localhost/'))
     })
 
-    it('should stash away the search url in the session', async () => {
-      const req = {
-        query: { user: 'joe', page: 3, size: 13 },
-        flash: jest.fn(),
-        get: jest.fn().mockReturnValue('localhost'),
-        protocol: 'http',
-        originalUrl: '/some-url',
-        session: {},
-      }
-      const pagination = { page: 5 }
-      paginationService.getPagination.mockReturnValue(pagination)
-      mockSearchCall()
-      const render = jest.fn()
-      const pageable = { page: 5, size: 10, totalElements: 123 }
-      pagingApi.mockReturnValue(pageable)
-      await search.results(req, { render })
-
-      expect(req.session).toEqual({ searchResultsUrl: '/some-url' })
-    })
-
     it('should pass downloadUrl if user has correct permission', async () => {
       const req = {
+        ...standardReq,
         query: { user: 'joe', page: 3, size: 13 },
-        flash: jest.fn(),
-        get: jest.fn().mockReturnValue('localhost'),
-        protocol: 'http',
-        originalUrl: '/results',
-        session: {},
       }
-      const pagination = { page: 5 }
       paginationService.getPagination.mockReturnValue(pagination)
+      mockGroupsAndRolesCalls()
       mockSearchCall()
       allowDownload.mockReturnValue(true)
       const render = jest.fn()
       const pageable = { page: 5, size: 10, totalElements: 123 }
       pagingApi.mockReturnValue(pageable)
-      await search.results(req, { render })
+      await search(req, { render })
 
-      expect(render.mock.calls[0][1].downloadUrl).toBeInstanceOf(URL)
-      expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual('http://localhost/download')
+      expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual(
+        '/search-external-users/download?user=joe&status=ALL&roleCode=&groupCode=',
+      )
     })
   })
 })

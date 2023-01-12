@@ -1,6 +1,5 @@
 const MenuPage = require('../pages/menuPage')
-const AuthUserSearchPage = require('../pages/authUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
+const ExternalUserSearchPage = require('../pages/authUserSearchPage')
 
 export const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
@@ -14,19 +13,24 @@ export const replicateUser = (times) =>
     lastName: `Adm${i}`,
   }))
 
-export const searchForUser = (roleCode = 'MAINTAIN_OAUTH_USERS', searchContent = undefined, assignableGroups = []) => {
+export const searchForUser = (
+  roleCode = 'MAINTAIN_OAUTH_USERS',
+  searchContent = undefined,
+  assignableGroups = undefined,
+) => {
   cy.task('stubSignIn', { roles: [{ roleCode }] })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
   cy.task('stubAuthAssignableGroups', { content: assignableGroups })
-  cy.task('stubAuthSearchableRoles', { content: [] })
-  menuPage.manageAuthUsers()
-  const search = AuthUserSearchPage.verifyOnPage()
-
+  cy.task('stubAuthSearchableRoles', {})
   cy.task('stubAuthSearch', { content: searchContent })
-  search.search('sometext')
 
-  const results = UserSearchResultsPage.verifyOnPage()
-  results.rows().should('have.length', searchContent ? searchContent.length : 1)
-  return results
+  menuPage.searchExternalUsers()
+  return ExternalUserSearchPage.verifyOnPage()
+}
+
+export const goToMainMenuPage = () => {
+  cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+  cy.signIn()
+  return MenuPage.verifyOnPage()
 }

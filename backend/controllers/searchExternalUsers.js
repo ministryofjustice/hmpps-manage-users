@@ -1,7 +1,10 @@
+const querystring = require('querystring')
+
 const mapUsernameAndEmail = (u) => {
   if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`
   return u.username
 }
+const size = 20
 
 const searchFactory = (
   paginationService,
@@ -14,7 +17,7 @@ const searchFactory = (
   searchTitle,
   allowDownload,
 ) => {
-  const index = async (req, res) => {
+  return async (req, res) => {
     const [groupDropdownValues, searchableRoles] = await Promise.all([
       getAssignableGroups(res.locals),
       getSearchableRolesApi(res.locals),
@@ -24,20 +27,9 @@ const searchFactory = (
       value: r.roleCode,
     }))
 
-    res.render('searchExternalUsers.njk', {
-      searchTitle,
-      searchUrl,
-      groupDropdownValues,
-      roleDropdownValues,
-    })
-  }
+    const currentFilter = parseFilter(req.query)
 
-  const results = async (req, res) => {
-    const { user, groupCode, roleCode, size, status, page, offset } = req.query
-
-    const pageSize = (size && parseInt(size, 10)) || 20
-    const pageNumber = (page && parseInt(page, 10)) || 0
-    const pageOffset = (offset && parseInt(offset, 10)) || 0
+    const { page } = req.query
 
     // stash away the search url in the session to provide in breadcrumbs to go back
     req.session.searchResultsUrl = req.originalUrl
@@ -46,13 +38,12 @@ const searchFactory = (
 
     const searchResults = await searchApi({
       locals: res.locals,
-      user,
-      groupCode,
-      roleCode,
-      status,
-      pageNumber,
-      pageSize,
-      pageOffset,
+      user: currentFilter.user,
+      groupCode: currentFilter.groupCode,
+      roleCode: currentFilter.roleCode,
+      status: currentFilter.status,
+      page,
+      size,
     })
 
     const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
@@ -60,7 +51,7 @@ const searchFactory = (
       ...u,
     }))
 
-    res.render('externalSearchResults.njk', {
+    res.render('searchExternalUsers.njk', {
       searchTitle,
       searchUrl,
       maintainUrl,
@@ -69,18 +60,22 @@ const searchFactory = (
         pagingApi(res.locals),
         new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
       ),
-      status,
-      groupCode,
-      roleCode,
-      username: user,
+      currentFilter,
+      groupDropdownValues,
+      roleDropdownValues,
       errors: req.flash('errors'),
-      downloadUrl:
-        allowDownload(res) &&
-        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl.replace('/results', '/download')}`),
+      downloadUrl: allowDownload(res) && `/search-external-users/download?${querystring.stringify(currentFilter)}`,
     })
   }
+}
 
-  return { index, results }
+function parseFilter(query) {
+  return {
+    user: query.user?.trim(),
+    status: query.status || 'ALL',
+    roleCode: query.roleCode,
+    groupCode: query.groupCode,
+  }
 }
 
 module.exports = {

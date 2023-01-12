@@ -2,6 +2,131 @@ const express = require('express')
 const path = require('path')
 const nunjucksSetup = require('./nunjucksSetup')
 
+describe('toExternalUserSearchFilter', () => {
+  const app = express()
+  const njk = nunjucksSetup(app, path)
+
+  it('should show filter headings', () => {
+    const result = njk.getFilter('toExternalUserSearchFilter')({}, [], [], '', true)
+    expect(result.heading.text).toBe('Filters')
+    expect(result.selectedFilters.clearLink.text).toBe('Clear filters')
+  })
+
+  describe('user filter', () => {
+    it('should show current user filter section', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Name')).toBeTruthy()
+    })
+
+    it('should not show current user filter section when no filter for users', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({}, [], [], '', true)
+      expect(categoryWithHeading(result, 'Name')).toBeFalsy()
+    })
+    it('should have single user tag when user set in filter', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ user: 'Andy' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Name').items).toHaveLength(1)
+    })
+    it('user tag should have text and reset url removing the user', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ user: 'Andy', status: 'ACTIVE' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Name').items[0]).toStrictEqual({
+        text: 'Andy',
+        href: '/search-external-users?status=ACTIVE',
+      })
+    })
+  })
+
+  describe('status filter', () => {
+    it('should show current status filter section', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ status: 'ACTIVE' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status')).toBeTruthy()
+    })
+    it('should not show current status filter section when status not set in filter (AKA as ALL)', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({}, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status')).toBeFalsy()
+    })
+    it('should not show current status filter section when status set to ALL', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ status: 'ALL' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status')).toBeFalsy()
+    })
+    it('should have single status tag when status set in filter', () => {
+      const result = njk.getFilter('toUserSearchFilter')({ status: 'ACTIVE' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status').items).toHaveLength(1)
+    })
+    it('user tag should have text and reset url for removing the active status', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ user: 'Andy', status: 'ACTIVE' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status').items[0]).toStrictEqual({
+        text: 'Active',
+        href: '/search-external-users?user=Andy',
+      })
+    })
+    it('user tag should have text and reset url for removing the inactive status', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ user: 'Andy', status: 'INACTIVE' }, [], [], '', true)
+      expect(categoryWithHeading(result, 'Status').items[0]).toStrictEqual({
+        text: 'Inactive',
+        href: '/search-external-users?user=Andy',
+      })
+    })
+  })
+
+  describe('group filter', () => {
+    const groups = [
+      { text: 'Group 1', value: 'GROUP_ONE' },
+      { text: 'Group 2', value: 'GROUP_TWO' },
+      { text: 'Group 3', value: 'GROUP_THREE' },
+    ]
+    it('should show current group filter section', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ groupCode: 'GROUP_ONE' }, groups, [], '', true)
+      expect(categoryWithHeading(result, 'Group')).toBeTruthy()
+    })
+    it('should not show current group filter section when groups not set in filter', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({}, groups, [], '', true)
+      expect(categoryWithHeading(result, 'Group')).toBeFalsy()
+    })
+    it('group tag should have text and reset url for removing the group', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')(
+        { user: 'Andy', groupCode: 'GROUP_THREE' },
+        groups,
+        [],
+        '',
+        true,
+      )
+      expect(categoryWithHeading(result, 'Group').items[0]).toStrictEqual({
+        text: 'Group 3',
+        href: '/search-external-users?user=Andy',
+      })
+    })
+  })
+
+  describe('role filter', () => {
+    const roles = [
+      { text: 'Access Role Admin', value: 'ACCESS_ROLE_ADMIN' },
+      { text: 'Access Role General', value: 'ACCESS_ROLE_GENERAL' },
+      { text: 'Omic Admin', value: 'OMIC_ADMIN' },
+    ]
+    it('should show current role filter section', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({ roleCode: 'ACCESS_ROLE_ADMIN' }, [], roles, '', true)
+      expect(categoryWithHeading(result, 'Role')).toBeTruthy()
+    })
+    it('should not show current role filter section when roles not set in filter', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')({}, [], roles, '', true)
+      expect(categoryWithHeading(result, 'Role')).toBeFalsy()
+    })
+    it('role tag should have text and reset url for removing the role', () => {
+      const result = njk.getFilter('toExternalUserSearchFilter')(
+        { user: 'Andy', roleCode: 'ACCESS_ROLE_GENERAL' },
+        [],
+        roles,
+        '',
+        true,
+      )
+      expect(categoryWithHeading(result, 'Role').items[0]).toStrictEqual({
+        text: 'Access Role General',
+        href: '/search-external-users?user=Andy',
+      })
+    })
+  })
+})
+
 describe('toUserSearchFilter', () => {
   const app = express()
   const njk = nunjucksSetup(app, path)

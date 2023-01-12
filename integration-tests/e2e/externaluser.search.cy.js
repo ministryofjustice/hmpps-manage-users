@@ -1,7 +1,8 @@
 import { parse } from 'csv-parse'
+import { goToMainMenuPage } from '../support/externaluser.helpers'
+import MenuPage from '../pages/menuPage'
+import ExternalUserSearchPage from '../pages/authUserSearchPage'
 
-const AuthUserSearchPage = require('../pages/authUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
 
 context('External user search functionality', () => {
@@ -14,84 +15,80 @@ context('External user search functionality', () => {
   })
 
   describe('search for a user', () => {
+    it('Should show menu option for search page', () => {
+      const menu = goToMainMenuPage()
+      menu.searchExternalUsersLink().should('exist')
+    })
+
+    it('Should show filter', () => {
+      const search = searchForUser()
+      search.filter().should('exist')
+    })
+
+    it('can add and remove user filter', () => {
+      const search = searchForUser()
+
+      search.filterUser('Andy')
+      search.filterWithTag('Andy').should('exist')
+      search.userFilterInput().should('have.value', 'Andy')
+
+      search.filterWithTag('Andy').click()
+      search.filterWithTag('Andy').should('not.exist')
+      search.userFilterInput().should('have.value', '')
+    })
+
     it('Should display a message if no search results', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
-      const search = AuthUserSearchPage.goTo()
-      cy.task('stubAuthSearch', { content: [] })
-      search.search('nothing doing')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.noResults().should('contain.text', 'No records found')
+      const search = searchForUser('MAINTAIN_OAUTH_USERS', [])
+      search.noResults().should('contain.text', 'No records found')
     })
 
     it('Should still show the filters if no search results', () => {
-      cy.task('stubSignIn', {
-        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
-      })
-      cy.task('stubBannerNoMessage')
-      cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
-      const search = AuthUserSearchPage.goTo()
-      cy.task('stubAuthSearch', { content: [] })
-      search.search('nothing doing')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.noResults().should('contain.text', 'No records found')
-      results.statusFilter().should('exist')
-      results.caseloadFilter().should('not.exist')
-      results.submitFilter().should('exist')
+      const search = searchForUser('MAINTAIN_OAUTH_USERS', [])
+
+      search.noResults().should('contain.text', 'No records found')
+      search.statusFilterRadioButton('All').should('be.checked')
+      search.userFilterInput().should('exist')
+      search.groupFilterSelect().should('exist')
+      search.roleFilterSelect().should('exist')
     })
 
-    it('Should hide the caseload filter for external searches', () => {
-      cy.task('stubSignIn', {
-        roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }],
-      })
-      cy.task('stubBannerNoMessage')
-      cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
-      const search = AuthUserSearchPage.goTo()
-      cy.task('stubAuthSearch', { content: [] })
-      search.search('nothing doing')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.noResults().should('contain.text', 'No records found')
-      results.statusFilter().should('exist')
-      results.caseloadFilter().should('not.exist')
-      results.submitFilter().should('exist')
+    it('can change default ALL status to active or inactive only', () => {
+      const search = searchForUser()
+      search.statusFilterRadioButton('All').should('be.checked')
+
+      search.filterStatus('Inactive')
+      search.statusFilterRadioButton('Inactive').should('be.checked')
+      search.filterWithTag('Inactive').should('exist')
+
+      search.filterStatus('Active')
+      search.statusFilterRadioButton('Active').should('be.checked')
+      search.filterWithTag('Active').should('exist')
+
+      search.filterStatus('All')
+      search.statusFilterRadioButton('All').should('be.checked')
+      search.filterWithTag('All').should('not.exist')
     })
 
-    it('Should allow a user search by name and display results', () => {
-      const results = searchForUser()
+    it('will show user details in the results', () => {
+      const search = searchForUser()
+      search.rows().should('have.length', 1)
+      search.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
+      search.rows().eq(0).should('include.text', 'AUTH_ADM')
+      search.rows().eq(0).should('include.text', 'Active')
+      search.rows().eq(1).should('not.exist')
+      search.rows().eq(2).should('not.exist')
+    })
 
-      results
-        .rows()
-        .eq(0)
-        .find('td')
-        .then(($tableCells) => {
-          // \u00a0 is a non breaking space, won't match on ' ' though
-          expect($tableCells.get(0)).to.contain.text('Auth\u00a0Adm')
-          expect($tableCells.get(1)).to.contain.text('AUTH_ADM')
-          expect($tableCells.get(1)).to.contain.text('auth_test2@digital.justice.gov.uk')
-          expect($tableCells.get(2)).to.contain.text('Active')
-          expect($tableCells.get(2)).not.to.contain.text('Locked')
-          expect($tableCells.get(2)).not.to.contain.text('Inactive')
-        })
+    it('will trim the username entered', () => {
+      const search = searchForUser()
 
-      cy.task('stubAuthEmailSearch')
-      const search = AuthUserSearchPage.goTo()
-      search.search('sometext@somewhere.com')
-
-      results.rows().should('have.length', 2)
-      results.rows().eq(0).should('include.text', 'Auth\u00a0Adm')
-      results.rows().eq(1).should('include.text', 'Auth\u00a0Expired')
-
-      results.getPaginationResults().should('contain.text', 'Showing 1 to 2 of 2 results')
+      search.filterUser(' Andy ')
+      search.filterWithTag('Andy').should('exist')
+      search.userFilterInput().should('have.value', 'Andy')
     })
 
     it('Should escape html tags in user names when displaying results', () => {
-      const results = searchForUser('MAINTAIN_OAUTH_USERS', [
+      const search = searchForUser('MAINTAIN_OAUTH_USERS', [
         {
           userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
           username: 'AUTH_ADM',
@@ -104,7 +101,7 @@ context('External user search functionality', () => {
         },
       ])
 
-      results.rows().eq(0).should('not.include.text', 'XSSAttack')
+      search.rows().eq(0).should('not.include.text', 'XSSAttack')
     })
 
     it('Should display locked and enabled tags', () => {
@@ -125,25 +122,28 @@ context('External user search functionality', () => {
     })
 
     it('Should allow a user search by group and display results', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.signIn()
-      cy.task('stubAuthAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
-      const searchGroup = AuthUserSearchPage.goTo()
-      cy.task('stubAuthSearch', { content: [] })
-      searchGroup.searchGroup('SOCU North West')
-      UserSearchResultsPage.verifyOnPage()
+      const results = searchForUser()
+      results.filterGroup('SOCU North West')
 
       cy.task('verifyAuthSearch').should((requests) => {
-        expect(requests).to.have.lengthOf(1)
+        expect(requests).to.have.lengthOf(2)
 
         expect(requests[0].queryParams).to.deep.equal({
+          groups: { key: 'groups', values: [''] },
+          name: { key: 'name', values: [''] },
+          page: { key: 'page', values: [''] },
+          roles: { key: 'roles', values: [''] },
+          size: { key: 'size', values: ['20'] },
+          status: { key: 'status', values: ['ALL'] },
+        })
+
+        expect(requests[1].queryParams).to.deep.equal({
           groups: { key: 'groups', values: ['SOC_NORTH_WEST'] },
           name: { key: 'name', values: [''] },
-          page: { key: 'page', values: ['0'] },
+          page: { key: 'page', values: [''] },
           roles: { key: 'roles', values: [''] },
-          status: { key: 'status', values: ['ALL'] },
           size: { key: 'size', values: ['20'] },
+          status: { key: 'status', values: ['ALL'] },
         })
       })
     })
@@ -151,99 +151,84 @@ context('External user search functionality', () => {
     it('Should allow a user search by role and display results', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
-      const searchGroup = AuthUserSearchPage.goTo()
       cy.task('stubAuthSearch', {
         content: replicateUser(1),
         totalElements: 1,
         page: 0,
         size: 1,
       })
-      searchGroup.searchRole('Global Search')
-      UserSearchResultsPage.verifyOnPage()
 
-      cy.task('verifyAuthSearch').should((requests) => {
-        expect(requests).to.have.lengthOf(1)
+      menuPage.searchExternalUsers()
+      const searchByGroup = ExternalUserSearchPage.verifyOnPage()
+      searchByGroup.filterRole('Global Search')
 
-        expect(requests[0].queryParams).to.deep.equal({
-          groups: { key: 'groups', values: [''] },
-          name: { key: 'name', values: [''] },
-          page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ALL'] },
-          roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
-          size: { key: 'size', values: ['20'] },
-        })
-      })
-    })
-
-    it('Should filter results by status', () => {
-      cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-      cy.signIn()
-      cy.task('stubAuthAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
-      const searchGroup = AuthUserSearchPage.goTo()
-      cy.task('stubAuthSearch', {
-        content: replicateUser(1),
-        totalElements: 1,
-        page: 0,
-        size: 1,
-      })
-      searchGroup.searchRole('Global Search')
-      const userSearchResults = UserSearchResultsPage.verifyOnPage()
-      userSearchResults.statusFilter().should('have.value', 'ALL').select('INACTIVE')
-      userSearchResults.submitFilter().click()
-      userSearchResults.checkStillOnPage()
       cy.task('verifyAuthSearch').should((requests) => {
         expect(requests).to.have.lengthOf(2)
 
-        expect(requests[0].queryParams).to.deep.equal({
-          groups: { key: 'groups', values: [''] },
-          name: { key: 'name', values: [''] },
-          page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ALL'] },
-          roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
-          size: { key: 'size', values: ['20'] },
-        })
         expect(requests[1].queryParams).to.deep.equal({
           groups: { key: 'groups', values: [''] },
           name: { key: 'name', values: [''] },
-          page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['INACTIVE'] },
+          page: { key: 'page', values: [''] },
           roles: { key: 'roles', values: ['GLOBAL_SEARCH'] },
+          status: { key: 'status', values: ['ALL'] },
           size: { key: 'size', values: ['20'] },
         })
       })
     })
 
-    it('Should allow a user search and display paged results', () => {
+    it('will allow paging through results while maintain the filter', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
+      const menuPage = MenuPage.verifyOnPage()
+      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
-        content: replicateUser(5),
-        totalElements: 21,
+        content: replicateUser(20),
+        totalElements: 101,
         page: 0,
-        size: 5,
+        size: 20,
       })
 
-      const search = AuthUserSearchPage.goTo()
-      search.search('sometext@somewhere.com')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.rows().should('have.length', 5)
-      results.rows().eq(0).should('include.text', 'Auth\u00a0Adm0')
-      results.rows().eq(1).should('include.text', 'Auth\u00a0Adm1')
-      results.rows().eq(2).should('include.text', 'Auth\u00a0Adm2')
-      results.rows().eq(3).should('include.text', 'Auth\u00a0Adm3')
-      results.rows().eq(4).should('include.text', 'Auth\u00a0Adm4')
+      menuPage.searchExternalUsers()
+      const search = ExternalUserSearchPage.verifyOnPage()
 
-      results.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
+      search.filterAll({
+        user: 'Andy',
+        statusText: 'Active',
+        groupText: 'PECS Court Southend Combined Court',
+        roleText: 'Licence Vary',
+      })
+
+      search.rows().should('have.length', 20)
+      search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
+
+      search.paginationLink('5').click()
+      search.filterWithTag('Andy').should('exist')
+      search.filterWithTag('Active').should('exist')
+      search.filterWithTag('PECS Court Southend Combined Court').should('exist')
+      search.filterWithTag('Licence Vary').should('exist')
+
+      cy.task('verifyAuthSearch').should((requests) => {
+        expect(requests).to.have.lengthOf(3)
+
+        expect(requests[2].queryParams).to.deep.equal({
+          groups: { key: 'groups', values: ['PECS_SOUTBC'] },
+          name: { key: 'name', values: ['Andy'] },
+          page: { key: 'page', values: ['4'] },
+          roles: { key: 'roles', values: ['LICENCE_VARY'] },
+          size: { key: 'size', values: ['20'] },
+          status: { key: 'status', values: ['ACTIVE'] },
+        })
+      })
     })
 
     it('Should move between paged result when next page and previous page selected', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAuthAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
@@ -253,24 +238,23 @@ context('External user search functionality', () => {
         size: 5,
       })
 
-      const search = AuthUserSearchPage.goTo()
-      search.search('sometext@somewhere.com')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.rows().should('have.length', 5)
+      menuPage.searchExternalUsers()
+      const search = ExternalUserSearchPage.verifyOnPage()
+      search.rows().should('have.length', 5)
 
-      results.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
-      results.nextPage()
-      results.previousPage()
+      search.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
+      search.nextPage()
+      search.previousPage()
       cy.task('verifyAuthSearch').should((requests) => {
         expect(requests).to.have.lengthOf(3)
 
         expect(requests[0].queryParams).to.deep.equal({
           groups: { key: 'groups', values: [''] },
-          name: { key: 'name', values: ['sometext@somewhere.com'] },
-          page: { key: 'page', values: ['0'] },
-          status: { key: 'status', values: ['ALL'] },
+          name: { key: 'name', values: [''] },
+          page: { key: 'page', values: [''] },
           roles: { key: 'roles', values: [''] },
           size: { key: 'size', values: ['20'] },
+          status: { key: 'status', values: ['ALL'] },
         })
 
         expect(requests[1].queryParams.page).to.deep.equal({
@@ -331,8 +315,9 @@ context('External user search functionality', () => {
 
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
+      const menuPage = MenuPage.verifyOnPage()
+      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
         totalElements: 21,
@@ -345,11 +330,11 @@ context('External user search functionality', () => {
         page: 0,
         size: 10000,
       })
+      menuPage.searchExternalUsers()
+      const search = ExternalUserSearchPage.verifyOnPage()
+      //  search.rows().should('have.length', 5)
 
-      const search = AuthUserSearchPage.goTo()
-      search.search('sometext@somewhere.com')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.download().click()
+      search.download().click()
       cy.wait('@csvDownload').then(() => {
         parse(csv, {}, (err, output) => {
           validateCsv(output)
@@ -357,14 +342,16 @@ context('External user search functionality', () => {
       })
       // attempt to ensure with go any other page except '/' which is where we go after
       // csv download - else next test fail to signin since we are already at '/'
-      AuthUserSearchPage.goTo()
+      ExternalUserSearchPage.goTo()
     })
 
     it('Should not show the download link for group managers', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'AUTH_GROUP_MANAGER' }] })
       cy.signIn()
-      cy.task('stubAuthAssignableGroups', { content: [] })
-      cy.task('stubAuthSearchableRoles', { content: [] })
+      const menuPage = MenuPage.verifyOnPage()
+      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAuthSearchableRoles', {})
+
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
         totalElements: 21,
@@ -372,10 +359,12 @@ context('External user search functionality', () => {
         size: 5,
       })
 
-      const search = AuthUserSearchPage.goTo()
-      search.search('sometext@somewhere.com')
-      const results = UserSearchResultsPage.verifyOnPage()
-      results.download().should('not.exist')
+      // const search = ExternalUserSearchPage.goTo()
+      // search('sometext@somewhere.com')
+      // const results = UserSearchResultsPage.verifyOnPage()
+      menuPage.searchExternalUsers()
+      const search = ExternalUserSearchPage.verifyOnPage()
+      search.download().should('not.exist')
     })
   })
 })

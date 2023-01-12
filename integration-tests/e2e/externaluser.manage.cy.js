@@ -1,5 +1,4 @@
 const AuthUserSearchPage = require('../pages/authUserSearchPage')
-const UserSearchResultsPage = require('../pages/userSearchResultsPage')
 const UserPage = require('../pages/userPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddGroupPage = require('../pages/userAddGroupPage')
@@ -7,7 +6,7 @@ const AuthUserChangeEmailPage = require('../pages/userChangeEmailPage')
 const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const ChangeUsernameSuccessPage = require('../pages/changeUsernameSuccessPage')
 const deactivateUserReasonPage = require('../pages/deactivateUserReasonPage')
-const { searchForUser, replicateUser } = require('../support/externaluser.helpers')
+const { searchForUser } = require('../support/externaluser.helpers')
 
 const editUser = (roleCode, assignableGroups = []) => {
   const results = searchForUser(roleCode, undefined, assignableGroups)
@@ -285,38 +284,6 @@ context('External user manage functionality', () => {
     cy.visit('/manage-external-users/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/select-roles')
     const addRole = UserAddRolePage.verifyOnPage()
     addRole.noRoles().should('contain', 'There are no roles available for you to assign.')
-  })
-
-  it('Should provide breadcrumb link back to search results', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
-    cy.signIn()
-    cy.task('stubAuthAssignableGroups', { content: [] })
-    cy.task('stubAuthSearchableRoles', { content: [] })
-    cy.task('stubAuthSearch', {
-      content: replicateUser(5),
-      totalElements: 21,
-      page: 0,
-      size: 5,
-    })
-
-    const search = AuthUserSearchPage.goTo()
-    search.search('sometext@somewhere.com')
-    const results = UserSearchResultsPage.verifyOnPage()
-    results.nextPage()
-
-    cy.task('stubAuthGetUsername')
-    cy.task('stubExternalUserRoles')
-    cy.task('stubManageUserGroups')
-    results.edit('AUTH_ADM4')
-
-    const userPage = UserPage.verifyOnPage('Auth Adm')
-    userPage
-      .searchResultsBreadcrumb()
-      .should(
-        'have.attr',
-        'href',
-        '/search-external-users/results?user=sometext%40somewhere.com&status=ALL&groupCode=&roleCode=&page=1',
-      )
   })
 
   describe('Enable and disable a user', () => {
