@@ -96,20 +96,19 @@
   {% endif %}
 
   <div class="govuk-grid-row govuk-body">
-    <h1 class="govuk-heading-l">{{ title }}</h1>
-
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <div class="moj-filter-layout">
-          <div class="moj-filter-layout__filter">
-            <form id="filter-form" action="{{ rolesUrl }}" novalidate>
-              {{ mojFilter(currentFilter | roleFilter( filterOptionsHtml )) }}
-            </form>
-          </div>
-          <div class="moj-filter-layout__content">
-            <div>
-              <div class="govuk-grid-column-full">
-                <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <div class="moj-filter-layout">
+        <div class="moj-filter-layout__filter">
+          <form id="filter-form" action="{{ rolesUrl }}" novalidate>
+            {{ mojFilter(currentFilter | roleFilter( filterOptionsHtml )) }}
+          </form>
+        </div>
+        <div class="moj-filter-layout__content">
+          <div>
+            <div class="govuk-grid-column-full">
+              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+              {% if roles.length %}
                 {{ mojPagination(pagination) }}
                 {% set rows = [] %}
                 {% for r in roles %}
@@ -139,12 +138,9 @@
                             }) if a.adminTypeCode === "EXT_ADM" }}
                           {% endfor %}
                         </div>
-                          <div class="govuk-grid-column-three-quarters">
-                            {{ r.roleDescription }}
-                          </div>
+                        <div class="govuk-grid-column-three-quarters">
+                          {{ r.roleDescription }}
                         </div>
-
-
                       </div>
                     </div>
                   {% endset %}
@@ -158,7 +154,9 @@
                   attributes: { "data-qa": "roles" }
                 }) }}
                 {{ mojPagination(pagination) }}
-              </div>
+              {% else %}
+                <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+              {% endif %}
             </div>
           </div>
         </div>

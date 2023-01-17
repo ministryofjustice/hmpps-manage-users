@@ -41,6 +41,7 @@ const rolesPage = () =>
     previousPage: () => cy.get('.moj-pagination__item--prev').first().click(),
     getPaginationResults: () => cy.get('.moj-pagination__results'),
     paginationLink: (pageNumber) => cy.get('a').contains(pageNumber).first(),
+    noResults: () => cy.get('[data-qa="no-results"]'),
   })
 
 export default {
