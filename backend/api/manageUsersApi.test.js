@@ -510,4 +510,23 @@ describe('manageUsersApi tests', () => {
       )
     })
   })
+
+  describe('currentRoles', () => {
+    const roles = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.currentRoles(context)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/me/roles')
+    })
+  })
 })

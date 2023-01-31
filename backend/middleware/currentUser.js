@@ -4,7 +4,7 @@ const config = require('../config').default
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 
 module.exports =
-  ({ oauthApi, nomisUsersAndRolesApi }) =>
+  ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) =>
   async (req, res, next) => {
     if (!req.xhr) {
       if (!req.session.userDetails) {
@@ -14,7 +14,7 @@ module.exports =
           req.session.userDetails.username,
         )
 
-        const roles = await oauthApi.currentRoles(res.locals)
+        const roles = await manageUsersApi.currentRoles(res.locals)
         req.session.userRoles = {
           maintainAccess: hasRole(roles, 'MAINTAIN_ACCESS_ROLES'),
           maintainAccessAdmin: hasRole(roles, 'MAINTAIN_ACCESS_ROLES_ADMIN'),
