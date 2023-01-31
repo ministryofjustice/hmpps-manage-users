@@ -124,7 +124,7 @@ const stubUserMe = ({
     body: { username, firstName, lastName, name, activeCaseLoadId },
   })
 
-const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
+const stubUserMeRoles = (roles) => getFor({ urlPattern: '/users/me/roles', body: roles })
 
 const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
   getFor({

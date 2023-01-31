@@ -17,7 +17,7 @@ const config = require('./config').default
 const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) => {
   const router = express.Router()
 
-  router.use(currentUser({ oauthApi, nomisUsersAndRolesApi }))
+  router.use(currentUser({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use(featureSwitches(config))
 
   router.use('/', menuRouter({ manageUsersApi }))
