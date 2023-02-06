@@ -55,6 +55,7 @@ const manageUsersApiFactory = (client) => {
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
+  const assignableGroups = (context) => get(context, '/externalusers/me/assignable-groups')
 
   const userGroups = (context, { userId }) => get(context, `/externalusers/${userId}/groups?children=false`)
   const removeUserGroup = (context, { userId, group }) => del(context, `/externalusers/${userId}/groups/${group}`)
@@ -86,6 +87,7 @@ const manageUsersApiFactory = (client) => {
     childGroupDetails,
     changeChildGroupName,
     deleteChildGroup,
+    assignableGroups,
     userGroups,
     addUserGroup,
     removeUserGroup,

@@ -477,6 +477,18 @@ module.exports = {
       },
     }),
 
+  stubAssignableGroups: ({
+    content = [
+      { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
+      { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
+      { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
+    ],
+  }) =>
+    getFor({
+      urlPattern: '/externalusers/.*/assignable-groups',
+      body: content,
+    }),
+
   stubChangeChildGroupName: () =>
     stubFor({
       request: {

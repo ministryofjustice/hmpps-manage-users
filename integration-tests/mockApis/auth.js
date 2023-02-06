@@ -249,17 +249,6 @@ const stubAuthEmailSearch = () =>
     },
   })
 
-const stubAuthAssignableGroups = ({
-  content = [
-    { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
-    { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
-    { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
-  ],
-}) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/.*/assignable-groups',
-    body: content,
-  })
 const stubAuthSearchableRoles = ({
   content = [
     { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
@@ -377,7 +366,6 @@ module.exports = {
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthAssignableGroups,
   stubAuthSearchableRoles,
   stubAuthUserDisable,
   stubAuthUserChangeEmail,
