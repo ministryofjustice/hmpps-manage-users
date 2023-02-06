@@ -153,7 +153,7 @@ context('External user search functionality', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
+      cy.task('stubAExtSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(1),
         totalElements: 1,
@@ -184,7 +184,7 @@ context('External user search functionality', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
+      cy.task('stubAExtSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(20),
         totalElements: 101,
@@ -230,7 +230,7 @@ context('External user search functionality', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
+      cy.task('stubAExtSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
         totalElements: 21,
@@ -317,7 +317,7 @@ context('External user search functionality', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
+      cy.task('stubAExtSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
         totalElements: 21,
@@ -350,7 +350,7 @@ context('External user search functionality', () => {
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
-      cy.task('stubAuthSearchableRoles', {})
+      cy.task('stubAExtSearchableRoles', {})
 
       cy.task('stubAuthSearch', {
         content: replicateUser(5),

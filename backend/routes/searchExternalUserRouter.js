@@ -21,7 +21,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const search = searchFactory(
     paginationService,
     assignableGroups,
-    oauthApi.searchableRoles,
+    manageUsersApi.searchableRoles,
     searchApi,
     contextProperties.getPageable,
     '/search-external-users',
