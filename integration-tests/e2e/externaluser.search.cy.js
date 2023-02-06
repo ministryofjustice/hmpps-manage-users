@@ -125,7 +125,7 @@ context('External user search functionality', () => {
       const results = searchForUser()
       results.filterGroup('SOCU North West')
 
-      cy.task('verifyAuthSearch').should((requests) => {
+      cy.task('verifyExternalUserSearch').should((requests) => {
         expect(requests).to.have.lengthOf(2)
 
         expect(requests[0].queryParams).to.deep.equal({
@@ -154,7 +154,7 @@ context('External user search functionality', () => {
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
       cy.task('stubExtSearchableRoles', {})
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(1),
         totalElements: 1,
         page: 0,
@@ -165,7 +165,7 @@ context('External user search functionality', () => {
       const searchByGroup = ExternalUserSearchPage.verifyOnPage()
       searchByGroup.filterRole('Global Search')
 
-      cy.task('verifyAuthSearch').should((requests) => {
+      cy.task('verifyExternalUserSearch').should((requests) => {
         expect(requests).to.have.lengthOf(2)
 
         expect(requests[1].queryParams).to.deep.equal({
@@ -185,7 +185,7 @@ context('External user search functionality', () => {
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
       cy.task('stubExtSearchableRoles', {})
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(20),
         totalElements: 101,
         page: 0,
@@ -211,7 +211,7 @@ context('External user search functionality', () => {
       search.filterWithTag('PECS Court Southend Combined Court').should('exist')
       search.filterWithTag('Licence Vary').should('exist')
 
-      cy.task('verifyAuthSearch').should((requests) => {
+      cy.task('verifyExternalUserSearch').should((requests) => {
         expect(requests).to.have.lengthOf(3)
 
         expect(requests[2].queryParams).to.deep.equal({
@@ -231,7 +231,7 @@ context('External user search functionality', () => {
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
       cy.task('stubExtSearchableRoles', {})
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(5),
         totalElements: 21,
         page: 1,
@@ -245,7 +245,7 @@ context('External user search functionality', () => {
       search.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
       search.nextPage()
       search.previousPage()
-      cy.task('verifyAuthSearch').should((requests) => {
+      cy.task('verifyExternalUserSearch').should((requests) => {
         expect(requests).to.have.lengthOf(3)
 
         expect(requests[0].queryParams).to.deep.equal({
@@ -318,13 +318,13 @@ context('External user search functionality', () => {
       const menuPage = MenuPage.verifyOnPage()
       cy.task('stubAssignableGroups', {})
       cy.task('stubExtSearchableRoles', {})
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(5),
         totalElements: 21,
         page: 0,
         size: 5,
       })
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(21),
         totalElements: 21,
         page: 0,
@@ -352,7 +352,7 @@ context('External user search functionality', () => {
       cy.task('stubAssignableGroups', {})
       cy.task('stubExtSearchableRoles', {})
 
-      cy.task('stubAuthSearch', {
+      cy.task('stubExternalUserSearch', {
         content: replicateUser(5),
         totalElements: 21,
         page: 0,

@@ -555,6 +555,33 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('externalUserSearch', () => {
+    const userDetails = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userDetails,
+      })
+      actual = manageUsersApi.userSearch(context, {
+        nameFilter: "joe'fred@bananas%.com",
+        role: '',
+        group: '',
+        status: 'ALL',
+      })
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(userDetails)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(
+        context,
+        "/externalusers/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
+      )
+    })
+  })
+
   describe('currentRoles', () => {
     const roles = { bob: 'hello there' }
     let actual

@@ -8,9 +8,9 @@ const { allowDownload } = require('../services/downloadService')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const searchApi = ({ locals: context, user: nameFilter, groupCode, roleCode, status, page, size }) =>
-    oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
+    manageUsersApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
 
   const assignableGroups = async (context) =>
     (await manageUsersApi.assignableGroups(context)).map((g) => ({

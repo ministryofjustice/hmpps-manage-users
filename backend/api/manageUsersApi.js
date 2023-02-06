@@ -62,6 +62,19 @@ const manageUsersApiFactory = (client) => {
   const removeUserGroup = (context, { userId, group }) => del(context, `/externalusers/${userId}/groups/${group}`)
   const addUserGroup = (context, { userId, group }) => put(context, `/externalusers/${userId}/groups/${group}`)
 
+  const userSearch = (context, { nameFilter, role, group, status }, page, size) => {
+    const groups = group ? [group] : null
+    const roles = role ? [role] : null
+    const query = querystring.stringify({
+      name: nameFilter,
+      groups,
+      roles,
+      status,
+      page,
+      size,
+    })
+    return client.get(context, `/externalusers/search?${query}`).then(processPageResponse(context))
+  }
   const enableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/enable`)
   const disableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
   const deactivateExternalUser = (context, { userId, reason }) =>
@@ -94,6 +107,7 @@ const manageUsersApiFactory = (client) => {
     userGroups,
     addUserGroup,
     removeUserGroup,
+    userSearch,
     enableExternalUser,
     disableExternalUser,
     deactivateExternalUser,
