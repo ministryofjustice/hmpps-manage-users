@@ -21,6 +21,6 @@ export default defineConfig({
     specPattern: 'integration-tests/e2e/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'integration-tests/support/e2e.js',
     // To Run all integration test in UI mode (experimentalRunAllSpecs: true)
-    experimentalRunAllSpecs: false,
+    experimentalRunAllSpecs: true,
   },
 })

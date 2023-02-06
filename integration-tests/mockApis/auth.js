@@ -248,19 +248,6 @@ const stubAuthEmailSearch = () =>
       totalElements: 2,
     },
   })
-
-const stubAuthSearchableRoles = ({
-  content = [
-    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
-    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
-    { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
-  ],
-}) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/me/searchable-roles',
-    body: content,
-  })
-
 const stubAuthUserEmails = () =>
   stubJson({
     method: 'POST',
@@ -366,7 +353,6 @@ module.exports = {
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthSearchableRoles,
   stubAuthUserDisable,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
