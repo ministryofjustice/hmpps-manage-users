@@ -14,7 +14,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const getUserAndGroupsApi = (context, userId) =>
     Promise.all([
       oauthApi.getUser(context, { userId }),
-      oauthApi.assignableGroups(context),
+      manageUsersApi.assignableGroups(context),
       manageUsersApi.userGroups(context, { userId }),
     ])
 
@@ -23,7 +23,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
       oauthApi.getUser(context, { userId }),
       manageUsersApi.externalUserRoles(context, userId),
       manageUsersApi.userGroups(context, { userId }),
-      hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
+      hasMaintainAuthUsers ? [] : manageUsersApi.assignableGroups(context),
     ])
 
     const assignableGroupsCodes = new Set(assignableGroups.map((g) => g.groupCode))

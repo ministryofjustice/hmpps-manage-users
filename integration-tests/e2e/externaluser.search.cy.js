@@ -152,7 +152,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(1),
@@ -183,7 +183,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(20),
@@ -229,7 +229,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
@@ -316,7 +316,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
       cy.task('stubAuthSearch', {
         content: replicateUser(5),
@@ -349,7 +349,7 @@ context('External user search functionality', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }, { roleCode: 'AUTH_GROUP_MANAGER' }] })
       cy.signIn()
       const menuPage = MenuPage.verifyOnPage()
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       cy.task('stubAuthSearchableRoles', {})
 
       cy.task('stubAuthSearch', {

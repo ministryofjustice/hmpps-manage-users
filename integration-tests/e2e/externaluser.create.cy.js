@@ -36,7 +36,7 @@ function goToCreateUser(roleCodes) {
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
 
-  cy.task('stubAuthAssignableGroups', {})
+  cy.task('stubAssignableGroups', {})
   menuPage.createAuthUser()
 
   return AuthUserCreatePage.verifyOnPage()

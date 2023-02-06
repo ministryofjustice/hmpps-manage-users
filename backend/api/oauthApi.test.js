@@ -145,25 +145,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('assignableGroups', () => {
-    const groups = { bob: 'hello there' }
-    let actual
-
-    beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => groups,
-      })
-      actual = oauthApi.assignableGroups(context)
-    })
-
-    it('should return groups from endpoint', () => {
-      expect(actual).toEqual(groups)
-    })
-    it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/authuser/me/assignable-groups')
-    })
-  })
-
   describe('createUser', () => {
     const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
 

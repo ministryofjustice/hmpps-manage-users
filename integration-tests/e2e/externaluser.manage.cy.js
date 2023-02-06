@@ -134,7 +134,7 @@ context('External user manage functionality', () => {
       userPage.groupRows().should('have.length', 2)
       userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
@@ -176,7 +176,7 @@ context('External user manage functionality', () => {
     it('Should cancel an add group', () => {
       const userPage = editUser()
 
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
@@ -224,7 +224,7 @@ context('External user manage functionality', () => {
       userPage.groupRows().should('have.length', 2)
       userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 
@@ -245,7 +245,7 @@ context('External user manage functionality', () => {
       userPage.groupRows().should('have.length', 2)
       userPage.groupRows().eq(0).should('contain', 'Site 1 - Group 1')
 
-      cy.task('stubAuthAssignableGroups', {})
+      cy.task('stubAssignableGroups', {})
       userPage.addGroup().click()
       const addGroup = UserAddGroupPage.verifyOnPage()
 

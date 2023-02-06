@@ -367,6 +367,26 @@ describe('manageUsersApi tests', () => {
       expect(client.del).toBeCalledWith(context, '/groups/child/DEL_CHILD_GRP')
     })
   })
+
+  describe('assignableGroups', () => {
+    const groups = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => groups,
+      })
+      actual = manageUsersApi.assignableGroups(context)
+    })
+
+    it('should return groups from endpoint', () => {
+      expect(actual).toEqual(groups)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/externalusers/me/assignable-groups')
+    })
+  })
+
   describe('change group name', () => {
     const groupName = { groupName: 'newGroupName' }
 
