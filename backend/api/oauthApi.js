@@ -58,7 +58,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
-  // const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
   const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
