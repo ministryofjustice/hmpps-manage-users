@@ -180,42 +180,6 @@ const stubAuthGetUserWithEmail = (enabled = true) =>
     },
   })
 
-const stubAuthSearch = ({
-  content = [
-    {
-      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-      username: 'AUTH_ADM',
-      email: 'auth_test2@digital.justice.gov.uk',
-      enabled: true,
-      locked: false,
-      verified: false,
-      firstName: 'Auth',
-      lastName: 'Adm',
-    },
-  ],
-  totalElements = 1,
-  page = 0,
-  size = 10,
-}) =>
-  getFor({
-    urlPath: '/auth/api/authuser/search',
-    body: {
-      content,
-      pageable: {
-        offset: 0,
-        pageNumber: page,
-        pageSize: size,
-      },
-      totalElements,
-    },
-  })
-
-const verifyAuthSearch = () =>
-  getMatchingRequests({
-    method: 'GET',
-    urlPathPattern: '/auth/api/authuser/search',
-  }).then((data) => data.body.requests)
-
 const stubAuthEmailSearch = () =>
   getFor({
     urlPath: '/auth/api/authuser/search',
@@ -338,8 +302,6 @@ module.exports = {
   stubAuthGetUsername,
   stubAuthGetUserWithEmail,
   stubAuthUserEmails,
-  stubAuthSearch,
-  verifyAuthSearch,
   stubAuthEmailSearch,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,

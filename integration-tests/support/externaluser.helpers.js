@@ -23,7 +23,7 @@ export const searchForUser = (
   const menuPage = MenuPage.verifyOnPage()
   cy.task('stubAssignableGroups', { content: assignableGroups })
   cy.task('stubExtSearchableRoles', {})
-  cy.task('stubAuthSearch', { content: searchContent })
+  cy.task('stubExternalUserSearch', { content: searchContent })
 
   menuPage.searchExternalUsers()
   return ExternalUserSearchPage.verifyOnPage()

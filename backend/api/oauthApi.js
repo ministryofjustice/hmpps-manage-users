@@ -3,20 +3,11 @@ const axios = require('axios')
 const querystring = require('querystring')
 const logger = require('../log')
 const errorStatusCode = require('../error-status-code')
-const contextProperties = require('../contextProperties')
 
 const AuthClientErrorName = 'AuthClientError'
 const AuthClientError = (message) => ({ name: AuthClientErrorName, message, stack: new Error().stack })
 
 const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-
-const processPageResponse = (context) => (response) => {
-  if (response.body.pageable) {
-    contextProperties.setPageable(context, response.body)
-    return response.body.content
-  }
-  return response.body
-}
 
 /**
  * Return an oauthApi built using the supplied configuration.
@@ -44,19 +35,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const getUser = (context, { userId }) => get(context, `/api/authuser/id/${userId}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
 
-  const userSearch = (context, { nameFilter, role, group, status }, page, size) => {
-    const groups = group ? [group] : null
-    const roles = role ? [role] : null
-    const query = querystring.stringify({
-      name: nameFilter,
-      groups,
-      roles,
-      status,
-      page,
-      size,
-    })
-    return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
-  }
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
@@ -121,7 +99,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     userEmails,
     getUser,
     createUser,
-    userSearch,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,

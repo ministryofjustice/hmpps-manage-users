@@ -14,6 +14,37 @@ module.exports = {
     }),
 
   stubUserMeRoles: (roles) => getFor({ urlPattern: '/users/me/roles', body: roles }),
+
+  stubExternalUserSearch: ({
+    content = [
+      {
+        userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+        username: 'AUTH_ADM',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled: true,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+      },
+    ],
+    totalElements = 1,
+    page = 0,
+    size = 10,
+  }) =>
+    getFor({
+      urlPath: '/externalusers/search',
+      body: {
+        content,
+        pageable: {
+          offset: 0,
+          pageNumber: page,
+          pageSize: size,
+        },
+        totalElements,
+      },
+    }),
+
   stubDpsCreateUser: () =>
     stubFor({
       request: {
@@ -634,6 +665,11 @@ module.exports = {
       urlPattern: '/externalusers/.*/disable',
     }),
 
+  verifyExternalUserSearch: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/externalusers/search',
+    }).then((data) => data.body.requests),
   verifyExternalUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
