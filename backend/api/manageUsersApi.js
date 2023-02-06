@@ -63,7 +63,9 @@ const manageUsersApiFactory = (client) => {
   const addUserGroup = (context, { userId, group }) => put(context, `/externalusers/${userId}/groups/${group}`)
 
   const enableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/enable`)
-  const disableUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
+  const disableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
+  const deactivateExternalUser = (context, { userId, reason }) =>
+    put(context, `/externalusers/${userId}/disable`, { reason })
 
   return {
     getNotificationBannerMessage,
@@ -93,7 +95,8 @@ const manageUsersApiFactory = (client) => {
     addUserGroup,
     removeUserGroup,
     enableExternalUser,
-    disableUser,
+    disableExternalUser,
+    deactivateExternalUser,
     currentRoles,
     searchableRoles,
   }

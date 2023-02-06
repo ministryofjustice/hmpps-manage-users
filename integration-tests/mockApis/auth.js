@@ -255,12 +255,6 @@ const stubAuthUserEmails = () =>
     body: [{ username: 'ITAG_USER0', email: 'dps-user@justice.gov.uk' }],
   })
 
-const stubAuthUserDisable = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/authuser/.*/disable',
-  })
-
 const stubAuthUserChangeEmail = () =>
   stubJson({
     method: 'POST',
@@ -300,12 +294,6 @@ const stubHealth = (status = 200) =>
       fixedDelayMilliseconds: status === 500 ? 3000 : '',
     },
   })
-
-const verifyUserDisable = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/id/.*/disable',
-  }).then((data) => data.body.requests)
 
 const verifyAuthUserChangeEmail = () =>
   getMatchingRequests({
@@ -353,7 +341,6 @@ module.exports = {
   stubAuthSearch,
   verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthUserDisable,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
@@ -361,7 +348,6 @@ module.exports = {
   stubAuthUserFail,
   stubError,
   stubHealth,
-  verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
