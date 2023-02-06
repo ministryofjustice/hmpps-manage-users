@@ -623,16 +623,26 @@ module.exports = {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       },
     }),
-  stubAuthUserEnable: () =>
+  stubExternalUserEnable: () =>
     stubJson({
       method: 'PUT',
       urlPattern: '/externalusers/.*/enable',
     }),
+  stubExternalUserDisable: () =>
+    stubJson({
+      method: 'PUT',
+      urlPattern: '/externalusers/.*/disable',
+    }),
 
-  verifyUserEnable: () =>
+  verifyExternalUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/externalusers/.*/enable',
+    }).then((data) => data.body.requests),
+  verifyExternalUserDisable: () =>
+    getMatchingRequests({
+      method: 'PUT',
+      urlPathPattern: '/externalusers/.*/disable',
     }).then((data) => data.body.requests),
 
   verifyAddRoles: () =>

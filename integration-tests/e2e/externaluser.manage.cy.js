@@ -291,27 +291,27 @@ context('External user manage functionality', () => {
       const userPage = editUser()
 
       userPage.enabled().should('contain.text', ' Active')
-      cy.task('stubAuthUserDisable')
+      cy.task('stubExternalUserDisable')
       cy.task('stubAuthGetUsername', false)
       userPage.enableLink().should('have.text', 'Deactivate account').click()
 
       const deactivatePage = deactivateUserReasonPage.verifyOnPage()
       deactivatePage.deactivateUser('Left')
 
-      cy.task('verifyUserDisable').should((requests) => {
+      cy.task('verifyExternalUserDisable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
+        expect(requests[0].url).to.equal('/externalusers/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
       })
 
       userPage.enabled().should('contain.text', ' Inactive')
       userPage.inactiveReason().eq(0).should('contain', 'Left')
-      cy.task('stubAuthUserEnable')
+      cy.task('stubExternalUserEnable')
       userPage.enableLink().should('not.exist')
       userPage.deactivateLink().should('not.exist')
       userPage.activateLink().should('be.visible').click()
 
-      cy.task('verifyUserEnable').should((requests) => {
+      cy.task('verifyExternalUserEnable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
         expect(requests[0].url).to.equal('/externalusers/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
       })
@@ -321,7 +321,7 @@ context('External user manage functionality', () => {
       const userPage = editUser()
 
       userPage.enabled().should('contain.text', ' Active')
-      cy.task('stubAuthUserDisable')
+      cy.task('stubExternalUserDisable')
       cy.task('stubAuthGetUsername', false)
       userPage.enableLink().should('have.text', 'Deactivate account').click()
 
@@ -332,19 +332,19 @@ context('External user manage functionality', () => {
       deactivatePage.errorSummary().should('contain.text', 'Enter the reason')
       deactivatePage.deactivateUser('Left')
 
-      cy.task('verifyUserDisable').should((requests) => {
+      cy.task('verifyExternalUserDisable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/auth/api/authuser/id/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
+        expect(requests[0].url).to.equal('/externalusers/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/disable')
       })
 
       userPage.enabled().should('contain.text', ' Inactive')
-      cy.task('stubAuthUserEnable')
+      cy.task('stubExternalUserEnable')
       userPage.enableLink().should('not.exist')
       userPage.deactivateLink().should('not.exist')
       userPage.activateLink().should('be.visible').click()
 
-      cy.task('verifyUserEnable').should((requests) => {
+      cy.task('verifyExternalUserEnable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
         expect(requests[0].url).to.equal('/externalusers/2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f/enable')
       })

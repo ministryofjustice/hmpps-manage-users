@@ -29,7 +29,6 @@ const processPageResponse = (context) => (response) => {
  */
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
-  const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
   const currentUser = (context) => get(context, '/api/user/me')
 
@@ -58,7 +57,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     })
     return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
   }
-  const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
@@ -127,7 +125,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,
-    deactivateUser,
     amendUserEmail,
     changeDpsEmail,
     syncDpsEmail,
