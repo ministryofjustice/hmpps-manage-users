@@ -130,7 +130,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     oauthAxios,
     deactivateUser,
     amendUserEmail,
-    //
     changeDpsEmail,
     syncDpsEmail,
   }
