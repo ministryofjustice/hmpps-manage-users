@@ -13,7 +13,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const getGroupDetailsApi = (context, group) => manageUsersApi.groupDetails(context, { group })
 
   const deleteGroupApi = (context, group) => manageUsersApi.deleteGroup(context, group)
-  const getAssignableGroups = (context) => oauthApi.assignableGroups(context)
+  const getAssignableGroups = (context) => manageUsersApi.assignableGroups(context)
   const changeGroupNameApi = (context, group, groupName) =>
     manageUsersApi.changeGroupName(context, group, { groupName })
   const getChildGroupDetailsApi = (context, group) => manageUsersApi.childGroupDetails(context, { group })
