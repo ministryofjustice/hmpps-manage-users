@@ -10,6 +10,9 @@ const createDpsUserRouter = require('./routes/createDpsUserRouter')
 const manageDpsUserRouter = require('./routes/manageDpsUserRouter')
 const manageGroupsRouter = require('./routes/manageGroupsRouter')
 const manageRolesRouter = require('./routes/manageRolesRouter')
+const manageEmailDomainsRouter = require('./routes/manageEmailDomainsRouter')
+const createEmailDomainsRouter = require('./routes/createEmailDomainRouter')
+const deleteEmailDomainsRouter = require('./routes/deleteEmailDomainRouter')
 const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config').default
@@ -30,6 +33,13 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ oauthApi, manageUsersApi }))
   router.use('/manage-roles', manageRolesRouter({ oauthApi, manageUsersApi }))
+  router.use('/email-domains', manageEmailDomainsRouter({ oauthApi, manageUsersApi }))
+  router.use('/create-email-domain', createEmailDomainsRouter({ oauthApi, manageUsersApi }))
+  router.use(
+    '/delete-email-domain?id=:domainId&name=:domainName',
+    deleteEmailDomainsRouter({ oauthApi, manageUsersApi }),
+  )
+  router.use('/delete-email-domain', deleteEmailDomainsRouter({ oauthApi, manageUsersApi }))
 
   return router
 }

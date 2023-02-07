@@ -1,0 +1,74 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
+
+{% set title =  "Create Email Domain" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form action="/create-email-domain" method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukInput({label: {
+          text: "Domain Name"
+        },
+          classes: "govuk-input--width-30",
+          value: domainName,
+          id: "domainName",
+          name: "domainName",
+          errorMessage: errors | findError('domainName')
+        }) }}
+
+        {{ govukInput({label: {
+          text: "Domain Description"
+        },
+          classes: "govuk-input--width-30",
+          value: domainDescription,
+          id: "domainDescription",
+          name: "domainDescription",
+          errorMessage: errors | findError('domainDescription')
+        }) }}
+
+        {{ govukButton({
+          text: "Add Email Domain",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: listEmailDomainUrl,
+          classes: "govuk-button--secondary",
+          attributes: { "id": "cancel-button" }
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

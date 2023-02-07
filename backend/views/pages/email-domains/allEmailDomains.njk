@@ -1,0 +1,46 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "moj/components/button-menu/macro.njk" import mojButtonMenu %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set pageTitle = applicationName + " - Court Register" %}
+
+{% set filterOptionsHtml %}
+  <form id="filter-form" action="/court-register" novalidate>
+    {{ govukInput( allCourtsFilter | toCourtTextSearchInput ) }}
+    {{ govukRadios( allCourtsFilter | toCourtActiveFilterRadioButtons ) }}
+    {{ govukCheckboxes( courtTypes | toCourtTypeFilterCheckboxes(allCourtsFilter) ) }}
+  </form>
+{% endset %}
+
+{% block content %}
+  <!--suppress HtmlUnknownTarget -->
+  <div class="govuk-width-container">
+    {{ govukBackLink({
+      text: "Back",
+      href: "/"
+    }) }}
+
+    <main class="app-container govuk-body">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h1 class="govuk-heading-xl">Court Register</h1>
+        </div>
+      </div>
+
+      <h1>Helloooooo</h1>
+    </main>
+  </div>
+
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+  <script src="/assets/filter-toggle-button.js"></script>
+{% endblock %}

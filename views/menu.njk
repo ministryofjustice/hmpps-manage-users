@@ -22,7 +22,7 @@
 {% set hasMaintainAuthUsers = user and (user.maintainAuthUsers or user.groupManager) %}
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
 {% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
-
+{% set hasManageEmailDomains = user and (user.manageEmailDomains) %}
 
 {% block content %}
   {% if message.length > 0 and hasMaintainNomisRolesAccess%}
@@ -37,7 +37,7 @@
       <h1 class="govuk-heading-l">{{ title }}</h1>
       <div class="homepage-content">
         <div class="govuk-grid-row card-group">
-          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers %}
+          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains %}
           {% if hasMaintainNomisRolesAccess %}
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="search_with_filter_dps_users">
@@ -58,6 +58,16 @@
               </div>
             </div>
           {% endif %}
+          {% if hasManageEmailDomains %}
+           <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="create_auth_user_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/email-domains">Manage Email Domains</a>
+                </h1>
+                <p class="govuk-body card__description">Create, Delete and View email domain listing</p>
+              </div>
+            </div>
+          {% endif %}
           {% if hasMaintainAuthUsers %}
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="maintain_auth_users_link">
@@ -67,6 +77,7 @@
                 <p class="govuk-body card__description">Search for users that typically do not have a DPS or Delius account</p>
               </div>
             </div>
+
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="create_auth_user_link">
                 <h1 class="govuk-heading-m card__heading">

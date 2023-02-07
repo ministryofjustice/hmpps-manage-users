@@ -1,0 +1,57 @@
+{% extends "./partials/layout.njk" %}
+{%- from "govuk/components/button/macro.njk" import govukButton -%}
+{%- from "govuk/components/table/macro.njk" import govukTable -%}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set title =  "Delete Email Domain" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form action="/delete-email-domain"  method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        <input type="hidden" name="domainId" value="{{ domainId }}">
+      {% set hasMaintainAuthUsers = user and (user.maintainAuthUsers or user.groupManager) %}
+
+      <p class="govuk-body govuk-!-margin-bottom-5">Do you want to delete the email domain: <STRONG>{{domainName}} </STRONG>?</p>
+      <p class="govuk-body govuk-!-margin-bottom-9"><STRONG>This action cannot be undone</STRONG></p>
+      {% if hasMaintainAuthUsers %}
+        {{ govukButton({
+          text: "Delete Email Domain",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "delete-domain-button" }
+        }) }}
+      {% else %}
+        <p>You do not have permission to delete this group</p>
+      {% endif %}
+
+      {{ govukButton({
+        text: "Cancel",
+        element: 'a',
+        href: listEmailDomainsUrl,
+        classes: "govuk-button--secondary",
+        attributes: { "id": "cancel-button" }
+      }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

@@ -41,6 +41,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
 
@@ -49,7 +50,6 @@ describe('Current user', () => {
     const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
 
     await controller(req, res, () => {})
-
     expect(res.locals.user).toEqual({
       allCaseloads: [
         {
@@ -73,6 +73,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -92,6 +93,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
 
@@ -109,6 +111,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
 
@@ -126,6 +129,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
 
@@ -143,6 +147,7 @@ describe('Current user', () => {
       maintainAuthUsers: true,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
 
@@ -160,6 +165,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
     })
   })
   it('should set maintain dps user', async () => {
@@ -176,6 +182,7 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: false,
       manageDPSUserAccount: true,
+      manageEmailDomains: false,
     })
   })
 
@@ -193,6 +200,25 @@ describe('Current user', () => {
       maintainAuthUsers: false,
       maintainRoles: true,
       manageDPSUserAccount: false,
+      manageEmailDomains: false,
+    })
+  })
+
+  it('should set Role manage email domains for an external user', async () => {
+    oauthApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_EMAIL_DOMAINS' }])
+    const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: true,
     })
   })
 
@@ -206,6 +232,7 @@ describe('Current user', () => {
       { roleCode: 'ROLES_ADMIN' },
       { roleCode: 'CREATE_USER' },
       { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' },
+      { roleCode: 'MAINTAIN_EMAIL_DOMAINS' },
     ])
     const controller = currentUser({ oauthApi, nomisUsersAndRolesApi })
 
@@ -219,6 +246,7 @@ describe('Current user', () => {
       maintainAuthUsers: true,
       maintainRoles: true,
       manageDPSUserAccount: true,
+      manageEmailDomains: true,
     })
   })
 

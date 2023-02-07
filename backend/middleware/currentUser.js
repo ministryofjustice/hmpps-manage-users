@@ -23,6 +23,7 @@ module.exports =
           maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
           createDPSUsers: hasRole(roles, 'CREATE_USER'),
           manageDPSUserAccount: hasRole(roles, 'MANAGE_NOMIS_USER_ACCOUNT'),
+          manageEmailDomains: hasRole(roles, 'MAINTAIN_EMAIL_DOMAINS'),
         }
       }
 
