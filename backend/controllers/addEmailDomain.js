@@ -1,23 +1,47 @@
+const { trimObjValues } = require('../utils/utils')
+const { validateCreateDomain } = require('./emailDomainValidation')
+
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
-  // TODO: All validation logic
-  const stashStateAndRedirectToIndex = (req, res, errors) => {
+  const stashStateAndRedirectToIndex = (req, res, errors, domain) => {
     req.flash('createEmailDomainErrors', errors)
+    req.flash('domain', domain)
     res.redirect(req.originalUrl)
   }
+
   const index = async (req, res) => {
+    const flashDomain = req.flash('domain')
+    const domain = flashDomain != null && flashDomain.length > 0 ? flashDomain[0] : ''
     res.render('createEmailDomain.njk', {
       createEmailDomainUrl,
       listEmailDomainUrl,
+      ...domain,
       errors: req.flash('createEmailDomainErrors'),
     })
   }
 
   const post = async (req, res) => {
-    const { domainName, domainDescription } = req.body
-    const newDomain = { name: domainName, description: domainDescription }
+    const domain = trimObjValues(req.body)
+    domain.domainDescription = domain.domainDescription.toUpperCase()
+    const errors = validateCreateDomain(domain)
 
-    await createEmailDomainApi(res.locals, newDomain)
-    res.redirect('/email-domains')
+    // const { domainName, domainDescription } = req.body
+    if (errors.length > 0) {
+      stashStateAndRedirectToIndex(req, res, errors, [domain])
+    } else {
+      try {
+        const newDomain = { name: domain.domainName, description: domain.domainDescription }
+        await createEmailDomainApi(res.locals, newDomain)
+        res.redirect('/email-domains')
+      } catch (err) {
+        if (err.status === 409 && err.response && err.response.body) {
+          //  domain already exists
+          const domainError = [{ href: '#domainName', text: 'Domain name already exists' }]
+          stashStateAndRedirectToIndex(req, res, domainError, [domain])
+        } else {
+          throw err
+        }
+      }
+    }
   }
   return { index, post }
 }
