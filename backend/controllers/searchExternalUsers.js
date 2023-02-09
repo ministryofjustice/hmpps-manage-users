@@ -64,7 +64,11 @@ const searchFactory = (
       groupDropdownValues,
       roleDropdownValues,
       errors: req.flash('errors'),
-      downloadUrl: allowDownload(res) && `/search-external-users/download?${querystring.stringify(currentFilter)}`,
+      downloadUrl:
+        allowDownload(res) &&
+        `/search-external-users/download?${querystring.stringify(currentFilter)}&size=${
+          res.locals.pageable.totalElements
+        }`,
     })
   }
 }

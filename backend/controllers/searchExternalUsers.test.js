@@ -265,10 +265,10 @@ describe('search factory', () => {
       const render = jest.fn()
       const pageable = { page: 5, size: 10, totalElements: 123 }
       pagingApi.mockReturnValue(pageable)
-      await search(req, { render })
+      await search(req, { render, locals: { pageable: { page: 5, size: 10, totalElements: 123 } } })
 
       expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual(
-        '/search-external-users/download?user=joe&status=ALL&roleCode=&groupCode=',
+        '/search-external-users/download?user=joe&status=ALL&roleCode=&groupCode=&size=123',
       )
     })
   })

@@ -332,7 +332,7 @@ context('External user search functionality', () => {
       })
       menuPage.searchExternalUsers()
       const search = ExternalUserSearchPage.verifyOnPage()
-      //  search.rows().should('have.length', 5)
+      search.rows().should('have.length', 21)
 
       search.download().click()
       cy.wait('@csvDownload').then(() => {
@@ -359,9 +359,6 @@ context('External user search functionality', () => {
         size: 5,
       })
 
-      // const search = ExternalUserSearchPage.goTo()
-      // search('sometext@somewhere.com')
-      // const results = UserSearchResultsPage.verifyOnPage()
       menuPage.searchExternalUsers()
       const search = ExternalUserSearchPage.verifyOnPage()
       search.download().should('not.exist')
