@@ -4,7 +4,7 @@ const { parseFilter } = require('./searchDpsUsers')
 
 const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
   const downloadResults = async (req, res) => {
-    const { size, page, offset, ...parameters } = req.query
+    const { ...parameters } = req.query
 
     if (!allowDownload(res)) {
       res.writeHead(403, { 'Content-Type': 'text/plain' })
