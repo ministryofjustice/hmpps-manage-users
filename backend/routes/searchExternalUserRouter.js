@@ -8,12 +8,12 @@ const { allowDownload } = require('../services/downloadService')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi }) => {
+const controller = ({ manageUsersApi }) => {
   const searchApi = ({ locals: context, user: nameFilter, groupCode, roleCode, status, page, size }) =>
-    oauthApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
+    manageUsersApi.userSearch(context, { nameFilter, group: groupCode, role: roleCode, status }, page, size)
 
   const assignableGroups = async (context) =>
-    (await oauthApi.assignableGroups(context)).map((g) => ({
+    (await manageUsersApi.assignableGroups(context)).map((g) => ({
       text: g.groupName,
       value: g.groupCode,
     }))
@@ -21,7 +21,7 @@ const controller = ({ oauthApi }) => {
   const search = searchFactory(
     paginationService,
     assignableGroups,
-    oauthApi.searchableRoles,
+    manageUsersApi.searchableRoles,
     searchApi,
     contextProperties.getPageable,
     '/search-external-users',

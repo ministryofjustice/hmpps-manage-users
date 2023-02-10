@@ -49,6 +49,8 @@ const manageUsersApiFactory = (client) => {
   const externalUserRoles = (context, userId) => get(context, `/externalusers/${userId}/roles`)
   const deleteExternalUserRole = (context, { userId, role }) => del(context, `/externalusers/${userId}/roles/${role}`)
   const assignableRoles = (context, { userId }) => get(context, `/externalusers/${userId}/assignable-roles`)
+  const currentRoles = (context) => get(context, '/users/me/roles')
+  const searchableRoles = (context) => get(context, '/externalusers/me/searchable-roles')
 
   const createGroup = (context, group) => post(context, '/groups', group)
   const groupDetails = (context, { group }) => get(context, `/groups/${group}`)
@@ -59,13 +61,29 @@ const manageUsersApiFactory = (client) => {
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
+  const assignableGroups = (context) => get(context, '/externalusers/me/assignable-groups')
 
   const userGroups = (context, { userId }) => get(context, `/externalusers/${userId}/groups?children=false`)
   const removeUserGroup = (context, { userId, group }) => del(context, `/externalusers/${userId}/groups/${group}`)
   const addUserGroup = (context, { userId, group }) => put(context, `/externalusers/${userId}/groups/${group}`)
 
+  const userSearch = (context, { nameFilter, role, group, status }, page, size) => {
+    const groups = group ? [group] : null
+    const roles = role ? [role] : null
+    const query = querystring.stringify({
+      name: nameFilter,
+      groups,
+      roles,
+      status,
+      page,
+      size,
+    })
+    return client.get(context, `/externalusers/search?${query}`).then(processPageResponse(context))
+  }
   const enableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/enable`)
-  const disableUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
+  const disableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
+  const deactivateExternalUser = (context, { userId, reason }) =>
+    put(context, `/externalusers/${userId}/disable`, { reason })
 
   return {
     getNotificationBannerMessage,
@@ -93,11 +111,16 @@ const manageUsersApiFactory = (client) => {
     childGroupDetails,
     changeChildGroupName,
     deleteChildGroup,
+    assignableGroups,
     userGroups,
     addUserGroup,
     removeUserGroup,
+    userSearch,
     enableExternalUser,
-    disableUser,
+    disableExternalUser,
+    deactivateExternalUser,
+    currentRoles,
+    searchableRoles,
   }
 }
 

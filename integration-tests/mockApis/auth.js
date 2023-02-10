@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
+const { stubUserMeRoles } = require('./manageusers')
 
 const createToken = (tokenRoles) => {
   const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
@@ -124,8 +125,6 @@ const stubUserMe = ({
     body: { username, firstName, lastName, name, activeCaseLoadId },
   })
 
-const stubUserMeRoles = (roles) => getFor({ urlPattern: '/auth/api/user/me/roles', body: roles })
-
 const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
   getFor({
     urlPattern: `/auth/api/user/[^/]*/email\\?unverified=true`,
@@ -181,42 +180,6 @@ const stubAuthGetUserWithEmail = (enabled = true) =>
     },
   })
 
-const stubAuthSearch = ({
-  content = [
-    {
-      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-      username: 'AUTH_ADM',
-      email: 'auth_test2@digital.justice.gov.uk',
-      enabled: true,
-      locked: false,
-      verified: false,
-      firstName: 'Auth',
-      lastName: 'Adm',
-    },
-  ],
-  totalElements = 1,
-  page = 0,
-  size = 10,
-}) =>
-  getFor({
-    urlPath: '/auth/api/authuser/search',
-    body: {
-      content,
-      pageable: {
-        offset: 0,
-        pageNumber: page,
-        pageSize: size,
-      },
-      totalElements,
-    },
-  })
-
-const verifyAuthSearch = () =>
-  getMatchingRequests({
-    method: 'GET',
-    urlPathPattern: '/auth/api/authuser/search',
-  }).then((data) => data.body.requests)
-
 const stubAuthEmailSearch = () =>
   getFor({
     urlPath: '/auth/api/authuser/search',
@@ -249,41 +212,11 @@ const stubAuthEmailSearch = () =>
       totalElements: 2,
     },
   })
-
-const stubAuthAssignableGroups = ({
-  content = [
-    { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
-    { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
-    { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
-  ],
-}) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/.*/assignable-groups',
-    body: content,
-  })
-const stubAuthSearchableRoles = ({
-  content = [
-    { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
-    { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
-    { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
-  ],
-}) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/me/searchable-roles',
-    body: content,
-  })
-
 const stubAuthUserEmails = () =>
   stubJson({
     method: 'POST',
     urlPattern: '/auth/api/user/email',
     body: [{ username: 'ITAG_USER0', email: 'dps-user@justice.gov.uk' }],
-  })
-
-const stubAuthUserDisable = () =>
-  stubJson({
-    method: 'PUT',
-    urlPattern: '/auth/api/authuser/.*/disable',
   })
 
 const stubAuthUserChangeEmail = () =>
@@ -326,12 +259,6 @@ const stubHealth = (status = 200) =>
     },
   })
 
-const verifyUserDisable = () =>
-  getMatchingRequests({
-    method: 'PUT',
-    urlPathPattern: '/auth/api/authuser/id/.*/disable',
-  }).then((data) => data.body.requests)
-
 const verifyAuthUserChangeEmail = () =>
   getMatchingRequests({
     method: 'POST',
@@ -370,18 +297,12 @@ module.exports = {
     ])
   },
   stubUserMe,
-  stubUserMeRoles,
   stubEmail,
   redirect,
   stubAuthGetUsername,
   stubAuthGetUserWithEmail,
   stubAuthUserEmails,
-  stubAuthSearch,
-  verifyAuthSearch,
   stubAuthEmailSearch,
-  stubAuthAssignableGroups,
-  stubAuthSearchableRoles,
-  stubAuthUserDisable,
   stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
@@ -389,7 +310,6 @@ module.exports = {
   stubAuthUserFail,
   stubError,
   stubHealth,
-  verifyUserDisable,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,

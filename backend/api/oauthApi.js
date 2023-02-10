@@ -3,20 +3,11 @@ const axios = require('axios')
 const querystring = require('querystring')
 const logger = require('../log')
 const errorStatusCode = require('../error-status-code')
-const contextProperties = require('../contextProperties')
 
 const AuthClientErrorName = 'AuthClientError'
 const AuthClientError = (message) => ({ name: AuthClientErrorName, message, stack: new Error().stack })
 
 const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
-
-const processPageResponse = (context) => (response) => {
-  if (response.body.pageable) {
-    contextProperties.setPageable(context, response.body)
-    return response.body.content
-  }
-  return response.body
-}
 
 /**
  * Return an oauthApi built using the supplied configuration.
@@ -29,10 +20,9 @@ const processPageResponse = (context) => (response) => {
  */
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
-  const put = (context, path, body) => client.put(context, path, body).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
   const currentUser = (context) => get(context, '/api/user/me')
-  const currentRoles = (context) => get(context, '/api/user/me/roles')
+
   const getUserEmail = async (context, { username }) => {
     try {
       return await get(context, `/api/user/${username}/email?unverified=true`)
@@ -45,22 +35,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const getUser = (context, { userId }) => get(context, `/api/authuser/id/${userId}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
 
-  const userSearch = (context, { nameFilter, role, group, status }, page, size) => {
-    const groups = group ? [group] : null
-    const roles = role ? [role] : null
-    const query = querystring.stringify({
-      name: nameFilter,
-      groups,
-      roles,
-      status,
-      page,
-      size,
-    })
-    return client.get(context, `/api/authuser/search?${query}`).then(processPageResponse(context))
-  }
-  const assignableGroups = (context) => get(context, '/api/authuser/me/assignable-groups')
-  const searchableRoles = (context) => get(context, '/api/authuser/me/searchable-roles')
-  const deactivateUser = (context, { userId, reason }) => put(context, `/api/authuser/id/${userId}/disable`, { reason })
   const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
@@ -121,19 +95,14 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
 
   return {
     currentUser,
-    currentRoles,
     getUserEmail,
     userEmails,
     getUser,
     createUser,
-    userSearch,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,
-    deactivateUser,
     amendUserEmail,
-    assignableGroups,
-    searchableRoles,
     changeDpsEmail,
     syncDpsEmail,
   }

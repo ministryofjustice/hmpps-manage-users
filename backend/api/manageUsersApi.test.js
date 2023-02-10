@@ -367,6 +367,26 @@ describe('manageUsersApi tests', () => {
       expect(client.del).toBeCalledWith(context, '/groups/child/DEL_CHILD_GRP')
     })
   })
+
+  describe('assignableGroups', () => {
+    const groups = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => groups,
+      })
+      actual = manageUsersApi.assignableGroups(context)
+    })
+
+    it('should return groups from endpoint', () => {
+      expect(actual).toEqual(groups)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/externalusers/me/assignable-groups')
+    })
+  })
+
   describe('change group name', () => {
     const groupName = { groupName: 'newGroupName' }
 
@@ -465,7 +485,7 @@ describe('manageUsersApi tests', () => {
     })
   })
 
-  describe('enableUser', () => {
+  describe('enableExternalUser', () => {
     const errorResponse = { field: 'hello' }
     let actual
 
@@ -488,7 +508,7 @@ describe('manageUsersApi tests', () => {
     })
   })
 
-  describe('disableUser', () => {
+  describe('disableExternalUser', () => {
     const errorResponse = { field: 'hello' }
     let actual
 
@@ -496,7 +516,7 @@ describe('manageUsersApi tests', () => {
       client.put = jest.fn().mockReturnValue({
         then: () => errorResponse,
       })
-      actual = manageUsersApi.disableUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
+      actual = manageUsersApi.disableExternalUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
     })
 
     it('should return any error from endpoint', () => {
@@ -508,6 +528,76 @@ describe('manageUsersApi tests', () => {
         '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable',
         undefined,
       )
+    })
+  })
+
+  describe('deactivateExternalUser', () => {
+    const errorResponse = { field: 'hello' }
+    let actual
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = manageUsersApi.deactivateExternalUser(context, {
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        reason: 'user suspended',
+      })
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.put).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable', {
+        reason: 'user suspended',
+      })
+    })
+  })
+
+  describe('externalUserSearch', () => {
+    const userDetails = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userDetails,
+      })
+      actual = manageUsersApi.userSearch(context, {
+        nameFilter: "joe'fred@bananas%.com",
+        role: '',
+        group: '',
+        status: 'ALL',
+      })
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(userDetails)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(
+        context,
+        "/externalusers/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
+      )
+    })
+  })
+
+  describe('currentRoles', () => {
+    const roles = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => roles,
+      })
+      actual = manageUsersApi.currentRoles(context)
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(roles)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/me/roles')
     })
   })
 })

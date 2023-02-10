@@ -123,65 +123,6 @@ describe('oauthApi tests', () => {
     })
   })
 
-  describe('currentRoles', () => {
-    const roles = { bob: 'hello there' }
-    let actual
-
-    beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => roles,
-      })
-      actual = oauthApi.currentRoles(context)
-    })
-
-    it('should return roles from endpoint', () => {
-      expect(actual).toEqual(roles)
-    })
-    it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/user/me/roles')
-    })
-  })
-  describe('userSearch', () => {
-    const userDetails = { bob: 'hello there' }
-    let actual
-
-    beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => userDetails,
-      })
-      actual = oauthApi.userSearch(context, { nameFilter: "joe'fred@bananas%.com", role: '', group: '', status: 'ALL' })
-    })
-
-    it('should return roles from endpoint', () => {
-      expect(actual).toEqual(userDetails)
-    })
-    it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(
-        context,
-        "/api/authuser/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
-      )
-    })
-  })
-
-  describe('assignableGroups', () => {
-    const groups = { bob: 'hello there' }
-    let actual
-
-    beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => groups,
-      })
-      actual = oauthApi.assignableGroups(context)
-    })
-
-    it('should return groups from endpoint', () => {
-      expect(actual).toEqual(groups)
-    })
-    it('should call user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/api/authuser/me/assignable-groups')
-    })
-  })
-
   describe('createUser', () => {
     const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
 

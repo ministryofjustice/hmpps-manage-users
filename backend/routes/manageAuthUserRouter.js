@@ -14,7 +14,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const getUserAndGroupsApi = (context, userId) =>
     Promise.all([
       oauthApi.getUser(context, { userId }),
-      oauthApi.assignableGroups(context),
+      manageUsersApi.assignableGroups(context),
       manageUsersApi.userGroups(context, { userId }),
     ])
 
@@ -23,7 +23,7 @@ const controller = ({ oauthApi, manageUsersApi }) => {
       oauthApi.getUser(context, { userId }),
       manageUsersApi.externalUserRoles(context, userId),
       manageUsersApi.userGroups(context, { userId }),
-      hasMaintainAuthUsers ? [] : oauthApi.assignableGroups(context),
+      hasMaintainAuthUsers ? [] : manageUsersApi.assignableGroups(context),
     ])
 
     const assignableGroupsCodes = new Set(assignableGroups.map((g) => g.groupCode))
@@ -45,8 +45,9 @@ const controller = ({ oauthApi, manageUsersApi }) => {
   const removeUserRoleApi = (context, userId, role) => manageUsersApi.deleteExternalUserRole(context, { userId, role })
   const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })
   const enableUserApi = (context, userId) => manageUsersApi.enableExternalUser(context, { userId })
-  const disableUserApi = (context, userId) => manageUsersApi.disableUser(context, { userId })
-  const deactivateUserApi = (context, userId, reason) => oauthApi.deactivateUser(context, { userId, reason })
+  const disableUserApi = (context, userId) => manageUsersApi.disableExternalUser(context, { userId })
+  const deactivateUserApi = (context, userId, reason) =>
+    manageUsersApi.deactivateExternalUser(context, { userId, reason })
 
   const { index: selectGroup, post: postGroup } = selectGroupFactory(
     getUserAndGroupsApi,

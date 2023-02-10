@@ -1,6 +1,50 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
 module.exports = {
+  stubExtSearchableRoles: ({
+    content = [
+      { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
+      { roleCode: 'LICENCE_RO', roleName: 'Licence Responsible Officer' },
+      { roleCode: 'LICENCE_VARY', roleName: 'Licence Vary' },
+    ],
+  }) =>
+    getFor({
+      urlPattern: '/externalusers/me/searchable-roles',
+      body: content,
+    }),
+
+  stubUserMeRoles: (roles) => getFor({ urlPattern: '/users/me/roles', body: roles }),
+
+  stubExternalUserSearch: ({
+    content = [
+      {
+        userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+        username: 'AUTH_ADM',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled: true,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+      },
+    ],
+    totalElements = 1,
+    page = 0,
+    size = 10,
+  }) =>
+    getFor({
+      urlPath: '/externalusers/search',
+      body: {
+        content,
+        pageable: {
+          offset: 0,
+          pageNumber: page,
+          pageSize: size,
+        },
+        totalElements,
+      },
+    }),
+
   stubDpsCreateUser: () =>
     stubFor({
       request: {
@@ -475,6 +519,18 @@ module.exports = {
       },
     }),
 
+  stubAssignableGroups: ({
+    content = [
+      { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
+      { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
+      { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
+    ],
+  }) =>
+    getFor({
+      urlPattern: '/externalusers/.*/assignable-groups',
+      body: content,
+    }),
+
   stubChangeChildGroupName: () =>
     stubFor({
       request: {
@@ -598,16 +654,31 @@ module.exports = {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       },
     }),
-  stubAuthUserEnable: () =>
+  stubExternalUserEnable: () =>
     stubJson({
       method: 'PUT',
       urlPattern: '/externalusers/.*/enable',
     }),
+  stubExternalUserDisable: () =>
+    stubJson({
+      method: 'PUT',
+      urlPattern: '/externalusers/.*/disable',
+    }),
 
-  verifyUserEnable: () =>
+  verifyExternalUserSearch: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/externalusers/search',
+    }).then((data) => data.body.requests),
+  verifyExternalUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/externalusers/.*/enable',
+    }).then((data) => data.body.requests),
+  verifyExternalUserDisable: () =>
+    getMatchingRequests({
+      method: 'PUT',
+      urlPathPattern: '/externalusers/.*/disable',
     }).then((data) => data.body.requests),
 
   verifyAddRoles: () =>
