@@ -163,7 +163,8 @@
     }) }}
     {% endif %}
 
-    {% set searchUrl = '/search-external-users/results?groupCode='+ groupDetails.groupCode %}
+    {% set searchUrl = '/search-external-users?user=&status=ALL&roleCode=&groupCode='+ groupDetails.groupCode %}
+
 
     <p class="govuk-body">
       <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for members of this group</a>

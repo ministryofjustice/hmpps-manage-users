@@ -7,6 +7,8 @@ const CreateChildGroupPage = require('../pages/createChildGroupPage')
 const CreateGroupPage = require('../pages/createGroupPage')
 const GroupDeletePage = require('../pages/groupDeletePage')
 const AuthErrorPage = require('../pages/authErrorPage')
+const ExternalUserSearchPage = require('../pages/authUserSearchPage')
+const { replicateUser, searchForUser } = require('../support/externaluser.helpers')
 
 context('Groups', () => {
   before(() => {
@@ -26,7 +28,7 @@ context('Groups', () => {
 
     const groups = GroupsPage.verifyOnPage()
 
-    groups.groupRows().should('have.length', 3)
+    groups.groupRows().should('have.length', 4)
     groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
     groups.groupRows().eq(1).should('contain.text', 'PECS Police Force Thames Valley')
   })
@@ -65,13 +67,37 @@ context('Groups', () => {
     cy.visit('/manage-groups')
     const groups = GroupsPage.verifyOnPage()
 
-    groups.groupRows().should('have.length', 3)
+    groups.groupRows().should('have.length', 4)
     groups.groupRows().eq(0).should('contain.text', 'SOCU North West')
     groups.groupRows().get('[data-qa="edit-button-SOCU North West"]').click()
 
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
     groupDetails.assignableRoles().should('have.length', 2)
     groupDetails.childGroups().should('have.length', 1)
+  })
+
+  it('should display group details and then allow to search users from link', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+
+    cy.task('stubAssignableGroups', {})
+    cy.task('stubGroupDetailsWithChildren', {})
+    cy.visit('/manage-groups')
+    const groups = GroupsPage.verifyOnPage()
+    groups.groupRows().get('[data-qa="edit-button-Site 1 - Group 2"]').click()
+
+    const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
+    cy.task('stubAssignableGroups', { content: undefined })
+    cy.task('stubExtSearchableRoles', {})
+    cy.task('stubExternalUserSearch', {
+      content: replicateUser(1),
+      totalElements: 1,
+      page: 0,
+      size: 1,
+    })
+    groupDetails.searchUsers()
+
+    ExternalUserSearchPage.verifyOnPage()
   })
 
   describe('Change group name', () => {
