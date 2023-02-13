@@ -205,6 +205,24 @@ describe('Current user', () => {
     })
   })
 
+  it('should set Role manage email domains for an external user', async () => {
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_EMAIL_DOMAINS' }])
+    const controller = currentUser({ oauthApi, nomisUsersAndRolesApi, manageUsersApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: true,
+    })
+  })
+
   it('should set all roles', async () => {
     manageUsersApi.currentRoles.mockReturnValue([
       { roleCode: 'FRED' },
