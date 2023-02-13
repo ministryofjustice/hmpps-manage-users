@@ -5,14 +5,14 @@ const router = express.Router({ mergeParams: true })
 const controller = ({ manageUsersApi }) => {
   const createEmailDomainApi = manageUsersApi.createEmailDomain
 
-  const { index: createEmailIndex, post: createEmailExec } = createEmailDomainFactory(
+  const { index: createEmailDomainIndex, post: createEmailDomainExec } = createEmailDomainFactory(
     createEmailDomainApi,
     '/create-email-domain',
     '/email-domains',
   )
 
-  router.get('/', createEmailIndex)
-  router.post('/', createEmailExec)
+  router.get('/', createEmailDomainIndex)
+  router.post('/', createEmailDomainExec)
 
   return router
 }
