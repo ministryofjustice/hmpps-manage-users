@@ -33,13 +33,10 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
   router.use('/manage-dps-users/:userId', manageDpsUserRouter({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ manageUsersApi }))
   router.use('/manage-roles', manageRolesRouter({ oauthApi, manageUsersApi }))
-  router.use('/email-domains', manageEmailDomainsRouter({ oauthApi, manageUsersApi }))
-  router.use('/create-email-domain', createEmailDomainsRouter({ oauthApi, manageUsersApi }))
-  router.use(
-    '/delete-email-domain?id=:domainId&name=:domainName',
-    deleteEmailDomainsRouter({ oauthApi, manageUsersApi }),
-  )
-  router.use('/delete-email-domain', deleteEmailDomainsRouter({ oauthApi, manageUsersApi }))
+  router.use('/email-domains', manageEmailDomainsRouter({ manageUsersApi }))
+  router.use('/create-email-domain', createEmailDomainsRouter({ manageUsersApi }))
+  router.use('/delete-email-domain?id=:domainId&name=:domainName', deleteEmailDomainsRouter({ manageUsersApi }))
+  router.use('/delete-email-domain', deleteEmailDomainsRouter({ manageUsersApi }))
 
   return router
 }
