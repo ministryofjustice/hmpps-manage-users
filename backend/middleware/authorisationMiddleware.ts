@@ -8,6 +8,7 @@ enum AuthRole {
   MAINTAIN_OAUTH_USERS = 'ROLE_MAINTAIN_OAUTH_USERS',
   GROUP_MANAGER = 'ROLE_AUTH_GROUP_MANAGER',
   ROLES_ADMIN = 'ROLE_ROLES_ADMIN',
+  MAINTAIN_EMAIL_DOMAINS = 'ROLE_MAINTAIN_EMAIL_DOMAINS',
 }
 
 const authorisationMap = {
@@ -19,6 +20,10 @@ const authorisationMap = {
   '/delete/children/none': [AuthRole.MAINTAIN_OAUTH_USERS],
   '/create-external-user': [AuthRole.MAINTAIN_OAUTH_USERS, AuthRole.GROUP_MANAGER],
   '/create-role': [AuthRole.ROLES_ADMIN],
+  '/email-domains': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
+  '/create-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
+  '/delete-email-domain?id=:domainId&name=:domainName': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
+  '/delete-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
 }
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {
