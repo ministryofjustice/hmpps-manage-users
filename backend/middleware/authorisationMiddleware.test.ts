@@ -99,6 +99,70 @@ describe('authorisationMiddleware', () => {
       expect(res.redirect).toHaveBeenCalledWith('/authError')
     })
   })
+
+  describe('email-domains', () => {
+    it('should show correct page when user with correct role tries to access email-domains endpoint', () => {
+      const reqEmailDomains = { originalUrl: '/email-domains' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_EMAIL_DOMAINS'] })
+
+      authorisationMiddleware([])(reqEmailDomains, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access email-domains endpoint', () => {
+      const reqEmailDomains = { originalUrl: '/email-domains' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqEmailDomains, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
+  describe('create-email-domain', () => {
+    it('should show correct page when user with correct role tries to access create-email-domain endpoint', () => {
+      const reqCreateEmailDomain = { originalUrl: '/create-email-domain' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_EMAIL_DOMAINS'] })
+
+      authorisationMiddleware([])(reqCreateEmailDomain, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-email-domain endpoint', () => {
+      const reqCreateEmailDomain = { originalUrl: '/create-email-domain' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateEmailDomain, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
+  describe('delete-email-domain', () => {
+    it('should show correct page when user with correct role tries to access delete-email-domain endpoint', () => {
+      const reqDeleteEmailDomain = { originalUrl: '/delete-email-domain' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MAINTAIN_EMAIL_DOMAINS'] })
+
+      authorisationMiddleware([])(reqDeleteEmailDomain, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access delete-email-domain endpoint', () => {
+      const reqDeleteEmailDomain = { originalUrl: '/delete-email-domain' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqDeleteEmailDomain, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
   describe('create-dps-user', () => {
     it('should show correct page when user with correct role tries to access create-dps-user endpoint', () => {
       const reqCreateDpsUser = { originalUrl: '/create-dps-user' } as Request

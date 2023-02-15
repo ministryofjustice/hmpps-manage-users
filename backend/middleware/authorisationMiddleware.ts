@@ -22,7 +22,6 @@ const authorisationMap = {
   '/create-role': [AuthRole.ROLES_ADMIN],
   '/email-domains': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
   '/create-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
-  '/delete-email-domain?id=:domainId&name=:domainName': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
   '/delete-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
 }
 
@@ -37,7 +36,7 @@ export default function authorisationMiddleware(authorisedRoles: string[] = []):
         }
 
         Object.entries(authorisationMap).forEach(([urlMatch, authorisationMapRoles]) => {
-          if (req.originalUrl.endsWith(urlMatch)) {
+          if (req.originalUrl.includes(urlMatch)) {
             const accessAllowed = authorisationMapRoles.filter((authorisedRole) => roles.includes(authorisedRole))
             if (accessAllowed.length === 0) {
               throw Error(`User is not authorised to access ${urlMatch} page`)
