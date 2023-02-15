@@ -1,6 +1,9 @@
-const validateDomainNameFormat = (domainName) => {
+const isValidDomainNameChars = (domainName: string) => domainName.match(/^[0-9A-Za-z-,.()'&]*$/)
+const isValidDomainDescriptionChars = (domainDesc: string) => domainDesc.match(/^[0-9A-Z_]*$/)
+
+const validateDomainNameFormat = (domainName: string) => {
   const errors = []
-  if (!domainName.match(/^[0-9A-Za-z- ,.()'&]*$/)) {
+  if (!isValidDomainNameChars(domainName)) {
     errors.push({
       href: '#domainName',
       text: "Domain name can only contain 0-9, a-z and ( ) & , - . '  characters",
@@ -15,9 +18,9 @@ const validateDomainNameFormat = (domainName) => {
   return errors
 }
 
-const validateDomainDescriptionFormat = (domainDescription) => {
+const validateDomainDescriptionFormat = (domainDescription: string) => {
   const errors = []
-  if (!domainDescription.match(/^[0-9A-Z_]*$/)) {
+  if (!isValidDomainDescriptionChars(domainDescription)) {
     errors.push({
       href: '#domainDescription',
       text: 'Domain Description can only contain 0-9, A-Z and _ characters',
@@ -33,26 +36,26 @@ const validateDomainDescriptionFormat = (domainDescription) => {
 
   return errors
 }
-const validateDomainName = (domainName) => {
+const validateDomainName = (domainName: string) => {
   if (!domainName) return [{ href: '#domainName', text: 'Enter a domain name' }]
 
   return validateDomainNameFormat(domainName)
 }
 
-const validateCreateDomain = ({ domainName, domainDescription }) => {
+const validateCreateDomain = (domain: { domainName: string; domainDescription: string }) => {
   const errors = []
 
-  if (!domainName) {
+  if (!domain.domainName) {
     errors.push({ href: '#domainName', text: 'Enter a domain name' })
   }
-  if (!domainDescription) {
+  if (!domain.domainDescription) {
     errors.push({ href: '#domainDescription', text: 'Enter a domain description' })
   }
 
   if (errors.length) return errors
 
-  errors.push(...validateDomainNameFormat(domainName))
-  errors.push(...validateDomainDescriptionFormat(domainDescription))
+  errors.push(...validateDomainNameFormat(domain.domainName))
+  errors.push(...validateDomainDescriptionFormat(domain.domainDescription))
 
   return errors
 }
