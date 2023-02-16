@@ -6,6 +6,7 @@ const createChild = () => cy.get('[data-qa="create-child-group-button"]')
 const deleteChild = () => cy.get('[data-qa="delete-button-Child - Site 1 - Group 2"]')
 const deleteGroupNoChild = () => cy.get('[data-qa="delete-group-link-no-child"]')
 const deleteGroupChild = () => cy.get('[data-qa="delete-group-link-child"]')
+const searchUsers = () => cy.get('[data-qa="search-link"]')
 
 const groupDetailsPage = (groupName) =>
   page(`${groupName}`, {
@@ -22,6 +23,7 @@ const groupDetailsPage = (groupName) =>
     childGroupNotThere: () => cy.get('Child - Site 1 - Group 2').should('not.exist'),
     manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     errorSummary: () => cy.get('[data-qa-errors]'),
+    searchUsers: () => searchUsers().click(),
   })
 
 export default {

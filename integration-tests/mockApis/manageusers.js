@@ -524,6 +524,7 @@ module.exports = {
       { groupCode: 'SOC_NORTH_WEST', groupName: 'SOCU North West' },
       { groupCode: 'PECS_TVP', groupName: 'PECS Police Force Thames Valley' },
       { groupCode: 'PECS_SOUTBC', groupName: 'PECS Court Southend Combined Court' },
+      { groupCode: 'SITE_1_GROUP_2', groupName: 'Site 1 - Group 2' },
     ],
   }) =>
     getFor({
