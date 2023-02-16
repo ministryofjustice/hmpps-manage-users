@@ -4,17 +4,17 @@
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-{% set title =  "Create Email Domain" %}
+{% set title = "Create Email Domain" %}
 
- {% block beforeContent %}
-   {{ govukBreadcrumbs({
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
      items: [
        { text: "Home", href: homeUrl },
        { text: "Manage user accounts", href: '/' },
        { text: title }
      ]
    }) }}
- {% endblock %}
+{% endblock %}
 
 {% block content %}
   {% if errors.length > 0 %}
@@ -29,7 +29,7 @@
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{ title }}</h1>
       <form action="/create-email-domain" method="POST">
-        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
 
         {{ govukInput({label: {
           text: "Domain Name"

@@ -6,74 +6,73 @@
 
 {% set title = "Manage Email Domains " %}
 
- {% block beforeContent %}
-   {{ govukBreadcrumbs({
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
      items: [
        { text: "Home", href: homeUrl },
        { text: "Manage user accounts", href: '/' },
        { text: title }
      ]
    }) }}
- {% endblock %}
+{% endblock %}
 
 {% block content %}
-{% if errors.length > 0 %}
+  {% if errors.length > 0 %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors,
       attributes: { 'data-qa-errors': true }
     }) }}
- {% endif %}
- <main class="app-container govuk-body">
-       <div class="govuk-grid-row">
-         <div class="govuk-grid-column-full">
-           <h1 class="govuk-heading-xl">Allowed Email Domain List </h1>
-         </div>
-       </div>
+  {% endif %}
+  <main class="app-container govuk-body">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h1 class="govuk-heading-xl">Allowed Email Domain List </h1>
+      </div>
+    </div>
 
-        <div class="moj-filter-layout">
-              <div class="moj-filter-layout__content">
-                <div class="govuk-grid-row">
-                  <div class="govuk-grid-column-full">
-                    {{ govukButton({
+    <div class="moj-filter-layout">
+      <div class="moj-filter-layout__content">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            {{ govukButton({
                       text: "Add Email Domain",
                       href: "/create-email-domain"
                     }) }}
-                  </div>
-                </div>
-
-                <div class="govuk-grid-row">
-                  <div class="govuk-grid-column-full">
-
-                    {% if domains.length %}
-                      <table class="govuk-table incidents govuk-!-margin-bottom-3" data-qa="domains">
-                        <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                          <th class="govuk-table__header govuk-!-width-one-fifth" scope="col">Domain</th>
-                          <th class="govuk-table__header govuk-!-width-one-fifth" scope="col">Description</th>
-                          <th class="govuk-table__header govuk-!-width-one-fifth" scope="col"></th>
-                        </tr>
-                        </thead>
-
-                        <tbody class="govuk-table__body">
-                        {% for domain in domains %}
-                          <tr class="govuk-table__row">
-                            <td class="govuk-table__cell">{{ domain.domain }}</td>
-                            <td class="govuk-table__cell">{{ domain.description }}</td>
-                            <td class="govuk-table__cell"><a href="/delete-email-domain?id={{ domain.id }}&name={{ domain.domain }}"
-                                 class="govuk-link govuk-link--no-visited-state">Delete</a>
-                            </td>
-                          </tr>
-                        {% endfor %}
-                        </tbody>
-                      </table>
-                    {% endif %}
-                  </div>
-                </div>
-              </div>
+          </div>
         </div>
- </main>
+
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+
+            {% if domains.length %}
+              <table class="govuk-table incidents govuk-!-margin-bottom-3" data-qa="domains">
+                <thead class="govuk-table__head">
+                  <tr class="govuk-table__row">
+                    <th class="govuk-table__header govuk-!-width-one-fifth" scope="col">Domain</th>
+                    <th class="govuk-table__header govuk-!-width-one-fifth" scope="col">Description</th>
+                    <th class="govuk-table__header govuk-!-width-one-fifth" scope="col"></th>
+                  </tr>
+                </thead>
+
+                <tbody class="govuk-table__body">
+                  {% for domain in domains %}
+                    <tr class="govuk-table__row">
+                      <td class="govuk-table__cell">{{ domain.domain }}</td>
+                      <td class="govuk-table__cell">{{ domain.description }}</td>
+                      <td class="govuk-table__cell">
+                        <a href="/delete-email-domain?id={{ domain.id }}&name={{ domain.domain }}"
+                                 class="govuk-link govuk-link--no-visited-state">Delete</a>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
 
 {% endblock %}
-
-

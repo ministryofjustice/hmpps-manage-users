@@ -24,7 +24,6 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
     domain.domainDescription = domain.domainDescription.toUpperCase()
     const errors = validateCreateDomain(domain)
 
-    // const { domainName, domainDescription } = req.body
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [domain])
     } else {
@@ -34,7 +33,6 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
         res.redirect('/email-domains')
       } catch (err) {
         if (err.status === 409 && err.response && err.response.body) {
-          //  domain already exists
           const domainError = [{ href: '#domainName', text: 'Domain name already exists' }]
           stashStateAndRedirectToIndex(req, res, domainError, [domain])
         } else {
