@@ -20,6 +20,11 @@ const manageUsersApiFactory = (client) => {
 
   const createUser = (context, user) => post(context, '/prisonusers', user)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
+  const getAllEmailDomains = (context) => {
+    return client.get(context, `/email-domains`).then(processPageResponse(context))
+  }
+  const createEmailDomain = (context, domain) => post(context, '/email-domains', domain)
+  const deleteEmailDomain = (context, domainId) => del(context, `/email-domains/${domainId}`)
 
   const createRole = (context, role) => post(context, '/roles', role)
   const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
@@ -86,6 +91,9 @@ const manageUsersApiFactory = (client) => {
     createUser,
     createRole,
     getPagedRoles,
+    getAllEmailDomains,
+    createEmailDomain,
+    deleteEmailDomain,
     getRoles,
     assignableRoles,
     getRoleDetails,
