@@ -17,7 +17,14 @@ context('EmailDomains', () => {
     MenuPage.verifyOnPage().viewEmailDomainListing()
 
     const emailDomains = EmailDomainListingPage.verifyOnPage()
-
     emailDomains.rows().should('have.length', 3)
+    emailDomains.rows().eq(0).should('include.text', 'DOMAIN1')
+    emailDomains.rows().eq(0).should('include.text', 'DOMAIN 1 DESCRIPTION')
+    emailDomains.rows().eq(0).should('include.html', '/delete-email-domain')
+    emailDomains.rows().eq(0).should('include.text', 'Delete')
+    emailDomains.rows().eq(1).should('include.text', 'DOMAIN2')
+    emailDomains.rows().eq(1).should('include.text', 'DOMAIN 2 DESCRIPTION')
+    emailDomains.rows().eq(1).should('include.html', '/delete-email-domain')
+    emailDomains.rows().eq(1).should('include.text', 'Delete')
   })
 })
