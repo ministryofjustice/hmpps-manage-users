@@ -4,11 +4,11 @@ const config = require('../config').default
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
 
 module.exports =
-  ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) =>
+  ({ nomisUsersAndRolesApi, manageUsersApi }) =>
   async (req, res, next) => {
     if (!req.xhr) {
       if (!req.session.userDetails) {
-        req.session.userDetails = await oauthApi.currentUser(res.locals)
+        req.session.userDetails = await manageUsersApi.currentUser(res.locals)
         req.session.allCaseloads = await nomisUsersAndRolesApi.currentUserCaseloads(
           res.locals,
           req.session.userDetails.username,

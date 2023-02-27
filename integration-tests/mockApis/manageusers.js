@@ -1,6 +1,20 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
 module.exports = {
+  stubUserMe: ({
+    username = 'ITAG_USER',
+    firstName = 'JAMES',
+    lastName = 'STUART',
+    name = 'James Stuart',
+    activeCaseLoadId = 'MDI',
+  }) =>
+    getFor({
+      urlPattern: '/users/me',
+      body: { username, firstName, lastName, name, activeCaseLoadId },
+    }),
+
+  stubUserMeRoles: (roles) => getFor({ urlPattern: '/users/me/roles', body: roles }),
+
   stubExtSearchableRoles: ({
     content = [
       { roleCode: 'GLOBAL_SEARCH', roleName: 'Global Search' },
@@ -12,8 +26,6 @@ module.exports = {
       urlPattern: '/externalusers/me/searchable-roles',
       body: content,
     }),
-
-  stubUserMeRoles: (roles) => getFor({ urlPattern: '/users/me/roles', body: roles }),
 
   stubExternalUserSearch: ({
     content = [

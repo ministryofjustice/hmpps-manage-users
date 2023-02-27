@@ -21,7 +21,6 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const get = (context, path) => client.get(context, path).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
-  const currentUser = (context) => get(context, '/api/user/me')
 
   const getUserEmail = async (context, { username }) => {
     try {
@@ -94,7 +93,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     makeTokenRequest(querystring.stringify({ refresh_token: refreshToken, grant_type: 'refresh_token' }), 'refresh:')
 
   return {
-    currentUser,
     getUserEmail,
     userEmails,
     getUser,
