@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken')
 const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
-const { stubUserMeRoles } = require('./manageusers')
+const { stubUserMe, stubUserMeRoles } = require('./manageusers')
 
 const createToken = (tokenRoles) => {
   const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
@@ -112,18 +112,6 @@ const stubUser = (username) => {
     },
   })
 }
-
-const stubUserMe = ({
-  username = 'ITAG_USER',
-  firstName = 'JAMES',
-  lastName = 'STUART',
-  name = 'James Stuart',
-  activeCaseLoadId = 'MDI',
-}) =>
-  getFor({
-    urlPattern: '/auth/api/user/me',
-    body: { username, firstName, lastName, name, activeCaseLoadId },
-  })
 
 const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
   getFor({
@@ -296,7 +284,6 @@ module.exports = {
       stubUser(username),
     ])
   },
-  stubUserMe,
   stubEmail,
   redirect,
   stubAuthGetUsername,

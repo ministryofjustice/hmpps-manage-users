@@ -12,7 +12,7 @@ module.exports = (on) => {
     stubSignIn: ({ username = 'ITAG_USER', roles = [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }], userCaseloads = null }) =>
       Promise.all([
         hmppsAuth.stubSignIn(username, roles),
-        hmppsAuth.stubUserMe({}),
+        manageUsersApi.stubUserMe({}),
         nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
         tokenVerification.stubVerifyToken(true),
       ]),

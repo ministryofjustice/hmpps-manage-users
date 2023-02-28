@@ -18,6 +18,8 @@ const manageUsersApiFactory = (client) => {
   const getNotificationBannerMessage = (context, notificationType) =>
     get(context, `/notification/banner/${notificationType}`)
 
+  const currentUser = (context) => get(context, '/users/me')
+
   const createUser = (context, user) => post(context, '/prisonusers', user)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
   const getAllEmailDomains = (context) => {
@@ -87,6 +89,7 @@ const manageUsersApiFactory = (client) => {
 
   return {
     getNotificationBannerMessage,
+    currentUser,
     contextUserRoles,
     createUser,
     createRole,
