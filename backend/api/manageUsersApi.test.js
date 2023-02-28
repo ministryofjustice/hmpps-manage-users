@@ -10,6 +10,25 @@ describe('manageUsersApi tests', () => {
     nock.cleanAll()
   })
 
+  describe('currentUser', () => {
+    const userDetails = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userDetails,
+      })
+      actual = manageUsersApi.currentUser(context)
+    })
+
+    it('should return user details from endpoint', () => {
+      expect(actual).toEqual(userDetails)
+    })
+    it('should call user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/users/me')
+    })
+  })
+
   describe('createDPSUser', () => {
     const user = {
       user: {
