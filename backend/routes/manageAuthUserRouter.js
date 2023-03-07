@@ -7,20 +7,20 @@ const { deactivateUserReasonFactory } = require('../controllers/deactivateUserRe
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const getUserAssignableRolesMessageApi = (context, userId) =>
-    Promise.all([oauthApi.getUser(context, { userId }), manageUsersApi.assignableRoles(context, { userId }), ''])
+    Promise.all([manageUsersApi.getUser(context, { userId }), manageUsersApi.assignableRoles(context, { userId }), ''])
 
   const getUserAndGroupsApi = (context, userId) =>
     Promise.all([
-      oauthApi.getUser(context, { userId }),
+      manageUsersApi.getUser(context, { userId }),
       manageUsersApi.assignableGroups(context),
       manageUsersApi.userGroups(context, { userId }),
     ])
 
   const getUserRolesAndGroupsApi = async (context, userId, hasMaintainDpsUsers, hasMaintainAuthUsers) => {
     const [user, roles, groups, assignableGroups] = await Promise.all([
-      oauthApi.getUser(context, { userId }),
+      manageUsersApi.getUser(context, { userId }),
       manageUsersApi.externalUserRoles(context, userId),
       manageUsersApi.userGroups(context, { userId }),
       hasMaintainAuthUsers ? [] : manageUsersApi.assignableGroups(context),
@@ -38,12 +38,12 @@ const controller = ({ oauthApi, manageUsersApi }) => {
     ]
   }
 
-  const getUserApi = (context, userId) => oauthApi.getUser(context, { userId })
+  const getUserApi = (context, userId) => manageUsersApi.getUser(context, { userId })
   const saveGroupApi = (context, userId, group) => manageUsersApi.addUserGroup(context, { userId, group })
   const removeGroupApi = (context, userId, group) => manageUsersApi.removeUserGroup(context, { userId, group })
   const saveRolesApi = (context, userId, roles) => manageUsersApi.externalUserAddRoles(context, { userId, roles })
   const removeUserRoleApi = (context, userId, role) => manageUsersApi.deleteExternalUserRole(context, { userId, role })
-  const changeEmailApi = (context, userId, email) => oauthApi.amendUserEmail(context, userId, { email })
+  const changeEmailApi = (context, userId, email) => manageUsersApi.amendUserEmail(context, userId, { email })
   const enableUserApi = (context, userId) => manageUsersApi.enableExternalUser(context, { userId })
   const disableUserApi = (context, userId) => manageUsersApi.disableExternalUser(context, { userId })
   const deactivateUserApi = (context, userId, reason) =>
