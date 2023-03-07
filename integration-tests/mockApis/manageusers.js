@@ -64,7 +64,7 @@ module.exports = {
   stubAuthUserChangeEmail: () =>
     stubJson({
       method: 'POST',
-      urlPattern: '/auth/api/authuser/id/[^/]*/email',
+      urlPattern: '/externalusers/[^/]*/email',
     }),
 
   stubUserMe: ({
