@@ -59,21 +59,6 @@ const signOut = () =>
     },
   })
 
-const stubError = () =>
-  stubFor({
-    request: {
-      method: 'GET',
-      urlPattern: '/auth/api/authuser/id/[^/]*',
-    },
-    response: {
-      status: 500,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
-      body: '<html><body>Error page<h1>Error</h1></body></html>',
-    },
-  })
-
 const token = (tokenRoles) =>
   stubFor({
     request: {
@@ -123,51 +108,6 @@ const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
     },
   })
 
-const stubAuthGetUsername = (enabled = true) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/id/[^/]*',
-    body: {
-      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-      username: 'AUTH_ADM',
-      email: 'auth_test2@digital.justice.gov.uk',
-      enabled,
-      locked: false,
-      verified: false,
-      firstName: 'Auth',
-      lastName: 'Adm',
-      inactiveReason: 'Left',
-    },
-  })
-
-const stubAuthUserFail = (username) =>
-  getFor({
-    urlPattern: `/auth/api/authuser/id/${username}`,
-    response: {
-      body: {
-        error: 'Not Found',
-        error_description: `Account for username ${username} not found`,
-        field: 'username',
-      },
-    },
-    status: 404,
-  })
-
-const stubAuthGetUserWithEmail = (enabled = true) =>
-  getFor({
-    urlPattern: '/auth/api/authuser/id/[^/]*',
-    body: {
-      userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-      username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
-      email: 'auth_test2@digital.justice.gov.uk',
-      enabled,
-      locked: false,
-      verified: false,
-      firstName: 'Auth',
-      lastName: 'Adm',
-      reason: 'Left',
-    },
-  })
-
 const stubAuthEmailSearch = () =>
   getFor({
     urlPath: '/auth/api/authuser/search',
@@ -205,12 +145,6 @@ const stubAuthUserEmails = () =>
     method: 'POST',
     urlPattern: '/auth/api/user/email',
     body: [{ username: 'ITAG_USER0', email: 'dps-user@justice.gov.uk' }],
-  })
-
-const stubAuthUserChangeEmail = () =>
-  stubJson({
-    method: 'POST',
-    urlPattern: '/auth/api/authuser/id/[^/]*/email',
   })
 
 const stubDpsUserChangeEmail = () =>
@@ -286,16 +220,11 @@ module.exports = {
   },
   stubEmail,
   redirect,
-  stubAuthGetUsername,
-  stubAuthGetUserWithEmail,
   stubAuthUserEmails,
   stubAuthEmailSearch,
-  stubAuthUserChangeEmail,
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
   stubAuthCreateUser,
-  stubAuthUserFail,
-  stubError,
   stubHealth,
   verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,

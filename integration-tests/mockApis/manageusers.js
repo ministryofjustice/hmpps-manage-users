@@ -1,6 +1,72 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
 
 module.exports = {
+  stubError: () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/externalusers/id/[^/]*',
+      },
+      response: {
+        status: 500,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        body: '<html><body>Error page<h1>Error</h1></body></html>',
+      },
+    }),
+
+  stubAuthGetUsername: (enabled = true) =>
+    getFor({
+      urlPattern: '/externalusers/id/[^/]*',
+      body: {
+        userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+        username: 'AUTH_ADM',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+        inactiveReason: 'Left',
+      },
+    }),
+
+  stubAuthGetUserWithEmail: (enabled = true) =>
+    getFor({
+      urlPattern: '/externalusers/id/[^/]*',
+      body: {
+        userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+        username: 'AUTH_TEST2@DIGITAL.JUSTICE.GOV.UK',
+        email: 'auth_test2@digital.justice.gov.uk',
+        enabled,
+        locked: false,
+        verified: false,
+        firstName: 'Auth',
+        lastName: 'Adm',
+        reason: 'Left',
+      },
+    }),
+
+  stubAuthUserFail: (username) =>
+    getFor({
+      urlPattern: `/externalusers/id/${username}`,
+      response: {
+        body: {
+          error: 'Not Found',
+          error_description: `Account for username ${username} not found`,
+          field: 'username',
+        },
+      },
+      status: 404,
+    }),
+
+  stubAuthUserChangeEmail: () =>
+    stubJson({
+      method: 'POST',
+      urlPattern: '/auth/api/authuser/id/[^/]*/email',
+    }),
+
   stubUserMe: ({
     username = 'ITAG_USER',
     firstName = 'JAMES',
