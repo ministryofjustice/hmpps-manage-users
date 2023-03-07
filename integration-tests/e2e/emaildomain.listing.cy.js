@@ -1,7 +1,7 @@
 const MenuPage = require('../pages/menuPage')
 const EmailDomainListingPage = require('../pages/emailDomainListingPage')
 
-context('EmailDomains', () => {
+context('EmailDomainListing', () => {
   before(() => {
     cy.clearCookies()
   })
@@ -37,6 +37,6 @@ context('EmailDomains', () => {
       .should('include.html', '/delete-email-domain?id=acf5e424-2f7c-4bea-ac1e-07d2553f3e63&amp;name=DOMAIN2')
     emailDomainListingPage.emailDomainListingTableRows().eq(1).should('include.text', 'Delete')
 
-    emailDomainListingPage.createEmailDomainButton().should('include.html', 'Add Email Domain')
+    emailDomainListingPage.navigateToCreateEmailDomainPageButton().should('include.html', 'Add Email Domain')
   })
 })
