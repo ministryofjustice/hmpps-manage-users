@@ -21,6 +21,8 @@ const manageUsersApiFactory = (client) => {
   const currentUser = (context) => get(context, '/users/me')
 
   const createUser = (context, user) => post(context, '/prisonusers', user)
+  const getUser = (context, { userId }) => get(context, `/externalusers/id/${userId}`)
+  const amendUserEmail = (context, userId, email) => post(context, `/externalusers/${userId}/email`, email)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
   const getAllEmailDomains = (context) => {
     return client.get(context, `/email-domains`).then(processPageResponse(context))
@@ -92,6 +94,8 @@ const manageUsersApiFactory = (client) => {
     currentUser,
     contextUserRoles,
     createUser,
+    getUser,
+    amendUserEmail,
     createRole,
     getPagedRoles,
     getAllEmailDomains,

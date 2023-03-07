@@ -29,6 +29,25 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('getUser', () => {
+    const userDetails = { bob: 'hello there' }
+    let actual
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userDetails,
+      })
+      actual = manageUsersApi.getUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
+    })
+
+    it('should return roles from endpoint', () => {
+      expect(actual).toEqual(userDetails)
+    })
+    it('should call external user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/externalusers/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+    })
+  })
+
   describe('createDPSUser', () => {
     const user = {
       user: {
