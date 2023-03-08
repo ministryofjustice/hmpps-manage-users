@@ -739,16 +739,4 @@ module.exports = {
       urlPath: '/email-domains',
       body: content,
     }),
-
-  stubCreateEmailDomain: () =>
-    stubFor({
-      request: {
-        method: 'POST',
-        urlPattern: '/create-email-domain',
-      },
-      response: {
-        status: 200,
-        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-      },
-    }),
 }

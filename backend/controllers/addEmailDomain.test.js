@@ -97,7 +97,7 @@ describe('create email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully if email domain already exists', async () => {
+    it('should fail gracefully if Domain name already exists error is triggered', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       const error = {

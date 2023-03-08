@@ -19,7 +19,6 @@ context('CreateEmailDomain', () => {
     const emailDomainListingPage = EmailDomainListingPage.verifyOnPage()
     emailDomainListingPage.navigateToCreateEmailDomainPageButton().click()
     const emailDomainCreationPage = EmailDomainCreationPage.verifyOnPage()
-    cy.task('stubCreateEmailDomain', {})
     emailDomainCreationPage.createEmailDomainPage('Domain1', 'Domain1Description')
     cy.task('verifyGetAllEmailDomains').should((requests) => {
       expect(requests).to.have.lengthOf(1)

@@ -17,9 +17,7 @@ context('EmailDomainListing', () => {
     })
     cy.signIn()
     MenuPage.verifyOnPage()
-    const noPermisionsParagraph = () => cy.get('[data-qa="no-admin-functions-message"]')
-    noPermisionsParagraph().should('exist')
-
+    cy.get('[data-qa="view_email_domains_link"]').should('not.exist')
     cy.visit('/email-domains', { failOnStatusCode: false })
     AuthErrorPage.verifyOnPage()
   })
