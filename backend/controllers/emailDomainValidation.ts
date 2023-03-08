@@ -1,5 +1,5 @@
 const isValidDomainNameChars = (domainName: string) => domainName.match(/^[0-9A-Za-z-,.()'&]*$/)
-const isValidDomainDescriptionChars = (domainDesc: string) => domainDesc.match(/^[0-9A-Z_ ]*$/)
+const isValidDomainDescriptionChars = (domainDesc: string) => domainDesc.match(/^[0-9A-Z_\s+]*$/)
 
 const validateDomainNameFormat = (domainName: string) => {
   const errors = []
