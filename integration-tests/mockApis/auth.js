@@ -181,12 +181,6 @@ const stubHealth = (status = 200) =>
     },
   })
 
-const verifyAuthUserChangeEmail = () =>
-  getMatchingRequests({
-    method: 'POST',
-    urlPathPattern: '/auth/api/authuser/.*',
-  }).then((data) => data.body.requests)
-
 const verifyDpsUserChangeEmail = () =>
   getMatchingRequests({
     method: 'POST',
@@ -226,7 +220,6 @@ module.exports = {
   stubSyncDpsEmail,
   stubAuthCreateUser,
   stubHealth,
-  verifyAuthUserChangeEmail,
   verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
 }

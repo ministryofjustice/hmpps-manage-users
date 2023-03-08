@@ -67,6 +67,12 @@ module.exports = {
       urlPattern: '/externalusers/[^/]*/email',
     }),
 
+  verifyAuthUserChangeEmail: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/externalusers/[^/]*/email',
+    }).then((data) => data.body.requests),
+
   stubUserMe: ({
     username = 'ITAG_USER',
     firstName = 'JAMES',
