@@ -1,5 +1,6 @@
 const MenuPage = require('../pages/menuPage')
 const EmailDomainListingPage = require('../pages/emailDomainListingPage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
 context('EmailDomainListing', () => {
   before(() => {
@@ -8,6 +9,19 @@ context('EmailDomainListing', () => {
 
   beforeEach(() => {
     cy.task('reset')
+  })
+
+  it('Should fail attempting to reach "email-domains" page, if unauthorised', () => {
+    cy.task('stubSignIn', {
+      roles: [{ roleCode: 'NOT_MAINTAIN_EMAIL_DOMAINS' }],
+    })
+    cy.signIn()
+    MenuPage.verifyOnPage()
+    const noPermisionsParagraph = () => cy.get('[data-qa="no-admin-functions-message"]')
+    noPermisionsParagraph().should('exist')
+
+    cy.visit('/email-domains', { failOnStatusCode: false })
+    AuthErrorPage.verifyOnPage()
   })
 
   it('Should display email domain listing with the create and delete email domain button and link respectively', () => {
