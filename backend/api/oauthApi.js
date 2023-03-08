@@ -31,10 +31,8 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     }
   }
   const userEmails = (context, usernames) => post(context, `/api/user/email`, usernames)
-  const getUser = (context, { userId }) => get(context, `/api/authuser/id/${userId}`)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
 
-  const amendUserEmail = (context, userId, email) => post(context, `/api/authuser/id/${userId}/email`, email)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
 
@@ -95,12 +93,10 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   return {
     getUserEmail,
     userEmails,
-    getUser,
     createUser,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,
-    amendUserEmail,
     changeDpsEmail,
     syncDpsEmail,
   }
