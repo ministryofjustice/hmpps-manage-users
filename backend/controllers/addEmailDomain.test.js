@@ -32,7 +32,7 @@ describe('create email domain factory', () => {
         createEmailDomainUrl: '/create-email-domain',
         listEmailDomainUrl: '/email-domains',
         ...domain,
-        errors: req.flash('createEmailDomainErrors'),
+        errors: { error: 'some error' },
       })
     })
   })
@@ -73,7 +73,7 @@ describe('create email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully if email domain description has spaces', async () => {
+    it('should fail gracefully if email domain description has invalid characters', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       const error = {
@@ -85,7 +85,7 @@ describe('create email domain factory', () => {
       const req = {
         body: {
           domainName: 'DOMAIN1',
-          domainDescription: 'DOMAIN DESCRIPTION1',
+          domainDescription: 'DOMAIN&@DESCRIPTION1',
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
@@ -109,8 +109,8 @@ describe('create email domain factory', () => {
       createEmailDomainApi.mockRejectedValue(error)
       const req = {
         body: {
-          domainName: 'DOMAIN1',
-          domainDescription: 'DOMAINDESCRIPTION1',
+          domainName: 'EXISTINGDOMAIN',
+          domainDescription: 'EXISTING DOMAIN DESCRIPTION',
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
