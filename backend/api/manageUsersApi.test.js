@@ -48,6 +48,21 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('amendUserEmail', () => {
+    const newEmail = 'testy@testing.com'
+    const userId = '1234'
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.amendUserEmail(context, userId, newEmail)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/externalusers/1234/email', newEmail)
+    })
+  })
+
   describe('createDPSUser', () => {
     const user = {
       user: {
