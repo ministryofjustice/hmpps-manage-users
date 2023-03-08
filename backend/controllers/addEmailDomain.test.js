@@ -18,7 +18,7 @@ describe('create email domain factory', () => {
         createEmailDomainUrl: '/create-email-domain',
         listEmailDomainUrl: '/email-domains',
         ...domain,
-        errors: req.flash('createEmailDomainErrors'),
+        errors: undefined,
       })
     })
 

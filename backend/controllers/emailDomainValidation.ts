@@ -36,11 +36,6 @@ const validateDomainDescriptionFormat = (domainDescription: string) => {
 
   return errors
 }
-const validateDomainName = (domainName: string) => {
-  if (!domainName) return [{ href: '#domainName', text: 'Enter a domain name' }]
-
-  return validateDomainNameFormat(domainName)
-}
 
 const validateCreateDomain = (domain: { domainName: string; domainDescription: string }) => {
   const errors = []
@@ -60,4 +55,4 @@ const validateCreateDomain = (domain: { domainName: string; domainDescription: s
   return errors
 }
 
-module.exports = { validateDomainName, validateCreateDomain }
+module.exports = { validateCreateDomain }
