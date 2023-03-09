@@ -12,7 +12,7 @@ module.exports = {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        body: '<html><body>Error page<h1>Error</h1></body></html>',
+        body: '<html lang="en"><body>Error page<h1>Error</h1></body></html>',
       },
     }),
 
@@ -561,6 +561,18 @@ module.exports = {
       urlPathPattern: '/roles',
     }).then((data) => data.body.requests),
 
+  verifyEmailDomainListing: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/email-domains',
+    }).then((data) => data.body.requests),
+
+  verifyCreateEmailDomain: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/email-domains',
+    }).then((data) => data.body.requests),
+
   verifyRoleNameUpdate: () =>
     getMatchingRequests({
       method: 'PUT',
@@ -728,6 +740,7 @@ module.exports = {
         },
       },
     }),
+
   stubManageUsersDeleteGroup: () =>
     stubFor({
       request: {
@@ -739,6 +752,7 @@ module.exports = {
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
       },
     }),
+
   stubExternalUserEnable: () =>
     stubJson({
       method: 'PUT',
@@ -755,11 +769,13 @@ module.exports = {
       method: 'GET',
       urlPathPattern: '/externalusers/search',
     }).then((data) => data.body.requests),
+
   verifyExternalUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
       urlPathPattern: '/externalusers/.*/enable',
     }).then((data) => data.body.requests),
+
   verifyExternalUserDisable: () =>
     getMatchingRequests({
       method: 'PUT',

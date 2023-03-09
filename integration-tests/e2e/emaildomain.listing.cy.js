@@ -1,7 +1,8 @@
 const MenuPage = require('../pages/menuPage')
 const EmailDomainListingPage = require('../pages/emailDomainListingPage')
+const AuthErrorPage = require('../pages/authErrorPage')
 
-context('EmailDomains', () => {
+context('EmailDomainListing', () => {
   before(() => {
     cy.clearCookies()
   })
@@ -10,11 +11,26 @@ context('EmailDomains', () => {
     cy.task('reset')
   })
 
+  it('Should fail attempting to reach "email-domains" page, if unauthorised', () => {
+    cy.task('stubSignIn', {
+      roles: [{ roleCode: 'NOT_MAINTAIN_EMAIL_DOMAINS' }],
+    })
+    cy.signIn()
+    MenuPage.verifyOnPage()
+    cy.get('[data-qa="view_email_domains_link"]').should('not.exist')
+    cy.visit('/email-domains', { failOnStatusCode: false })
+    AuthErrorPage.verifyOnPage()
+  })
+
   it('Should display email domain listing with the create and delete email domain button and link respectively', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_EMAIL_DOMAINS' }] })
     cy.signIn()
     cy.task('stubAllEmailDomains', {})
     MenuPage.verifyOnPage().viewEmailDomainListing()
+
+    cy.task('verifyEmailDomainListing').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
 
     const emailDomainListingPage = EmailDomainListingPage.verifyOnPage()
     emailDomainListingPage.emailDomainListingTableRows().should('have.length', 3)
@@ -37,6 +53,6 @@ context('EmailDomains', () => {
       .should('include.html', '/delete-email-domain?id=acf5e424-2f7c-4bea-ac1e-07d2553f3e63&amp;name=DOMAIN2')
     emailDomainListingPage.emailDomainListingTableRows().eq(1).should('include.text', 'Delete')
 
-    emailDomainListingPage.createEmailDomainButton().should('include.html', 'Add Email Domain')
+    emailDomainListingPage.navigateToCreateEmailDomainPageButton().should('include.html', 'Add Email Domain')
   })
 })
