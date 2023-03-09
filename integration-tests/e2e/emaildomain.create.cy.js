@@ -22,7 +22,7 @@ context('CreateEmailDomain', () => {
     return EmailDomainCreationPage.verifyOnPage()
   }
 
-  it('Should fail attempting to reach create-email-domain page directly via URL, if unauthorised', () => {
+  it('Should disallow attempting to reach create-email-domain page directly via URL, if unauthorised', () => {
     cy.task('stubSignIn', {
       roles: [{ roleCode: 'NOT_MAINTAIN_EMAIL_DOMAINS' }],
     })
@@ -65,7 +65,7 @@ context('CreateEmailDomain', () => {
     emailDomainCreationPage.errorSummary().should('contain.text', 'Enter a domain name')
   })
 
-  it('Should display error and prevent form submission, when both email domain name and description is blank', () => {
+  it('Should display error and prevent form submission, when both email domain name and description are blank', () => {
     const emailDomainCreationPage = navigateToCreateEmailDomainPage()
     emailDomainCreationPage.createEmailDomainPage('', '')
     emailDomainCreationPage.errorSummary().should('contain.text', 'Enter a domain description')
