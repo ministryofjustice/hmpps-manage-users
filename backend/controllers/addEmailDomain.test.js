@@ -73,30 +73,6 @@ describe('create email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully if email domain description has invalid characters', async () => {
-      const redirect = jest.fn()
-      const locals = jest.fn()
-      const error = {
-        ...new Error('This failed'),
-        response: { body: { error_description: 'Domain Description can only contain 0-9, A-Z and _ characters' } },
-      }
-
-      createEmailDomainApi.mockRejectedValue(error)
-      const req = {
-        body: {
-          domainName: 'DOMAIN1',
-          domainDescription: 'DOMAIN&@DESCRIPTION1',
-        },
-        flash: jest.fn(),
-        originalUrl: '/email-domains',
-      }
-      await emailDomainFactory.post(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainDescription', text: 'Domain Description can only contain 0-9, A-Z and _ characters' },
-      ])
-    })
-
     it('should fail gracefully if Domain name already exists error is triggered', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()

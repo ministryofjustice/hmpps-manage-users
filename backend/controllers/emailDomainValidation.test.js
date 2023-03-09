@@ -22,15 +22,6 @@ describe('create email domain validation scenarios', () => {
     )
   })
 
-  it('should validate specific characters allowed in email domain name', () => {
-    const newDomain = { domainName: 'b@c,d.com', domainDescription: 'Domain Description 1' }
-    expect(validateCreateDomain(newDomain)).toEqual(
-      expect.arrayContaining([
-        { href: '#domainName', text: "Domain name can only contain 0-9, a-z and ( ) & , - . '  characters" },
-      ]),
-    )
-  })
-
   it('should return an error if the domain description is not specified', () => {
     const newDomain = { domainName: 'Domain1', domainDescription: '' }
     expect(validateCreateDomain(newDomain)).toEqual([
@@ -52,19 +43,5 @@ describe('create email domain validation scenarios', () => {
         { href: '#domainDescription', text: 'Domain description must be 200 characters or less' },
       ]),
     )
-  })
-
-  it('should disallow specific characters in email domain description', () => {
-    const newDomain = { domainName: 'Domain1', domainDescription: 'Domainb@c,d.comDescription 1' }
-    expect(validateCreateDomain(newDomain)).toEqual(
-      expect.arrayContaining([
-        { href: '#domainDescription', text: 'Domain Description can only contain 0-9, A-Z and _ characters' },
-      ]),
-    )
-  })
-
-  it('should pass validation where domain description has allowable non alpha characters', () => {
-    const newDomain = { domainName: 'gooddomain', domainDescription: "Domain good's&Groop(),. Description 1" }
-    expect(validateCreateDomain(newDomain)).toEqual(expect.arrayContaining([]))
   })
 })

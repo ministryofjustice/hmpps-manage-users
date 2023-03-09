@@ -12,7 +12,7 @@ module.exports = {
         headers: {
           'Content-Type': 'application/json;charset=UTF-8',
         },
-        body: '<html><body>Error page<h1>Error</h1></body></html>',
+        body: '<html lang="en"><body>Error page<h1>Error</h1></body></html>',
       },
     }),
 
@@ -561,9 +561,9 @@ module.exports = {
       urlPathPattern: '/roles',
     }).then((data) => data.body.requests),
 
-  verifyGetAllEmailDomains: () =>
+  verifyCreateEmailDomain: () =>
     getMatchingRequests({
-      method: 'GET',
+      method: 'POST',
       urlPathPattern: '/email-domains',
     }).then((data) => data.body.requests),
 

@@ -36,7 +36,7 @@ context('CreateEmailDomain', () => {
   it('Should create new email domain, after completing form and clicking the create email domain button', () => {
     const emailDomainCreationPage = navigateToCreateEmailDomainPage()
     emailDomainCreationPage.createEmailDomainPage('Domain1', 'Domain1Description')
-    cy.task('verifyGetAllEmailDomains').should((requests) => {
+    cy.task('verifyCreateEmailDomain').should((requests) => {
       expect(requests).to.have.lengthOf(1)
     })
   })
