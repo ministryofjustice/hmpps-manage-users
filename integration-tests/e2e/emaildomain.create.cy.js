@@ -38,6 +38,10 @@ context('CreateEmailDomain', () => {
     emailDomainCreationPage.createEmailDomainPage('Domain1', 'Domain1Description')
     cy.task('verifyCreateEmailDomain').should((requests) => {
       expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.include({
+        name: 'Domain1',
+        description: 'Domain1Description',
+      })
     })
   })
 

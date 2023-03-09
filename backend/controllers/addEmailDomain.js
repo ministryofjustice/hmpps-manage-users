@@ -21,7 +21,6 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
 
   const post = async (req, res) => {
     const domain = trimObjValues(req.body)
-    domain.domainDescription = domain.domainDescription.toUpperCase()
     const errors = validateCreateDomain(domain)
 
     if (errors.length > 0) {
