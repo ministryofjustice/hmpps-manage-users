@@ -28,6 +28,10 @@ context('EmailDomainListing', () => {
     cy.task('stubAllEmailDomains', {})
     MenuPage.verifyOnPage().viewEmailDomainListing()
 
+    cy.task('verifyEmailDomainListing').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
+
     const emailDomainListingPage = EmailDomainListingPage.verifyOnPage()
     emailDomainListingPage.emailDomainListingTableRows().should('have.length', 3)
     emailDomainListingPage.emailDomainListingTableRows().eq(0).should('include.text', 'DOMAIN1')

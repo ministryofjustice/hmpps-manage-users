@@ -561,6 +561,12 @@ module.exports = {
       urlPathPattern: '/roles',
     }).then((data) => data.body.requests),
 
+  verifyEmailDomainListing: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPathPattern: '/email-domains',
+    }).then((data) => data.body.requests),
+
   verifyCreateEmailDomain: () =>
     getMatchingRequests({
       method: 'POST',
