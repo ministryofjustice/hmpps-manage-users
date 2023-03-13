@@ -6,7 +6,7 @@ const router = express.Router({ mergeParams: true })
 const controller = ({ manageUsersApi }) => {
   const deleteEmailDomainApi = manageUsersApi.deleteEmailDomain
 
-  const { index: deleteEmailDomainLanding, post: deleteEmailDomainExec } = deleteEmailDomainFactory(
+  const { index: deleteEmailDomainLanding, deleteEmailDomain: deleteEmailDomainExec } = deleteEmailDomainFactory(
     deleteEmailDomainApi,
     '/email-domains',
   )

@@ -573,6 +573,12 @@ module.exports = {
       urlPathPattern: '/email-domains',
     }).then((data) => data.body.requests),
 
+  verifyDeleteEmailDomain: () =>
+    getMatchingRequests({
+      method: 'DELETE',
+      urlPathPattern: '/email-domains/.*',
+    }).then((data) => data.body.requests),
+
   verifyRoleNameUpdate: () =>
     getMatchingRequests({
       method: 'PUT',
