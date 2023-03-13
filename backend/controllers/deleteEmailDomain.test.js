@@ -66,37 +66,6 @@ describe('delete email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully, if user is forbidden to use the delete email domain functionality without the relevant role', async () => {
-      const redirect = jest.fn()
-      const locals = jest.fn()
-      const error = {
-        ...new Error('This failed'),
-        status: 403,
-        response: {
-          body: {
-            error_description: 'Forbidden to use the delete email domain functionality without the relevant role',
-          },
-        },
-      }
-
-      deleteEmailDomainApi.mockRejectedValue(error)
-      const req = {
-        body: {
-          domainId: '1234',
-        },
-        flash: jest.fn(),
-        originalUrl: '/email-domains',
-      }
-      await emailDomainFactory.deleteEmailDomain(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
-        {
-          href: '#domainName',
-          text: 'Forbidden to use the delete email domain functionality without the relevant role',
-        },
-      ])
-    })
-
     it('should fail gracefully, if the email domain to be deleted is not found', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()

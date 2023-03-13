@@ -31,14 +31,6 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
           },
         ]
         stashStateAndRedirectToIndex(req, res, domainUnauthorizedError)
-      } else if (error.status === 403 && error.response && error.response.body) {
-        const domainRoleForbiddenError = [
-          {
-            href: '#domainName',
-            text: 'Forbidden to use the delete email domain functionality without the relevant role',
-          },
-        ]
-        stashStateAndRedirectToIndex(req, res, domainRoleForbiddenError)
       } else if (error.status === 404 && error.response && error.response.body) {
         const domainNotFoundError = [{ href: '#domainName', text: 'Email domain not found' }]
         stashStateAndRedirectToIndex(req, res, domainNotFoundError)
