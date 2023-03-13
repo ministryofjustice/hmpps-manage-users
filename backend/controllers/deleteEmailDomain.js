@@ -1,5 +1,4 @@
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {
-  // TODO:Error handling
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('deleteEmailDomainErrors', errors)
     res.redirect(req.originalUrl)
@@ -15,7 +14,7 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
     })
   }
 
-  const post = async (req, res) => {
+  const deleteEmailDomain = async (req, res) => {
     const { domainId } = req.body
 
     try {
@@ -24,13 +23,32 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
     } catch (error) {
       if (error.status === 400) {
         res.redirect(req.originalUrl)
+      } else if (error.status === 401 && error.response && error.response.body) {
+        const domainUnauthorizedError = [
+          {
+            href: '#domainName',
+            text: 'Unauthorized to use the delete email domain functionality',
+          },
+        ]
+        stashStateAndRedirectToIndex(req, res, domainUnauthorizedError)
+      } else if (error.status === 403 && error.response && error.response.body) {
+        const domainRoleForbiddenError = [
+          {
+            href: '#domainName',
+            text: 'Forbidden to use the delete email domain functionality without the relevant role',
+          },
+        ]
+        stashStateAndRedirectToIndex(req, res, domainRoleForbiddenError)
+      } else if (error.status === 404 && error.response && error.response.body) {
+        const domainNotFoundError = [{ href: '#domainName', text: 'Email domain not found' }]
+        stashStateAndRedirectToIndex(req, res, domainNotFoundError)
       } else {
         throw error
       }
     }
   }
 
-  return { index, post }
+  return { index, deleteEmailDomain }
 }
 
 module.exports = {
