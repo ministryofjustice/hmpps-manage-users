@@ -19,7 +19,7 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
     })
   }
 
-  const post = async (req, res) => {
+  const createEmailDomain = async (req, res) => {
     const domain = trimObjValues(req.body)
     const errors = validateCreateDomain(domain)
 
@@ -40,7 +40,7 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
       }
     }
   }
-  return { index, post }
+  return { index, createEmailDomain }
 }
 
 module.exports = {

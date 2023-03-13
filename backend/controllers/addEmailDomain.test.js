@@ -49,7 +49,7 @@ describe('create email domain factory', () => {
         flash: jest.fn(),
         originalUrl: '/email-domains',
       }
-      await emailDomainFactory.post(createEmailDomainRequest, { locals, redirect })
+      await emailDomainFactory.createEmailDomain(createEmailDomainRequest, { locals, redirect })
       expect(createEmailDomainApi).toBeCalledWith(locals, { name: 'DOMAIN1', description: 'DOMAINDESCRIPTION1' })
       expect(redirect).toBeCalledWith('/email-domains')
     })
@@ -66,7 +66,7 @@ describe('create email domain factory', () => {
       }
       const redirect = jest.fn()
       const locals = jest.fn()
-      await emailDomainFactory.post(createEmailDomainRequestNoInput, { redirect, locals })
+      await emailDomainFactory.createEmailDomain(createEmailDomainRequestNoInput, { redirect, locals })
       expect(createEmailDomainRequestNoInput.flash).toBeCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Enter a domain name' },
         { href: '#domainDescription', text: 'Enter a domain description' },
@@ -91,7 +91,7 @@ describe('create email domain factory', () => {
         flash: jest.fn(),
         originalUrl: '/email-domains',
       }
-      await emailDomainFactory.post(req, { locals, redirect })
+      await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Domain name already exists' },
