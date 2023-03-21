@@ -73,13 +73,13 @@ describe('create email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully if Domain already present in the allowed list error is triggered', async () => {
+    it('should fail gracefully if Email Domain already present in the allowed list error is triggered', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { userMessage: 'Domain EXISTINGDOMAIN is already present in the allowed list' } },
+        response: { body: { userMessage: 'Email domain EXISTINGDOMAIN is already present in the allowed list' } },
       }
 
       createEmailDomainApi.mockRejectedValue(error)
@@ -94,17 +94,17 @@ describe('create email domain factory', () => {
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainName', text: 'Domain EXISTINGDOMAIN is already present in the allowed list' },
+        { href: '#domainName', text: 'Email domain EXISTINGDOMAIN is already present in the allowed list' },
       ])
     })
 
-    it('should fail gracefully if Domain present in excluded list error is triggered', async () => {
+    it('should fail gracefully if Email domain is present in excluded list error is triggered', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { userMessage: 'Domain EXCLUDEDDOMAIN is present in the excluded list' } },
+        response: { body: { userMessage: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' } },
       }
 
       createEmailDomainApi.mockRejectedValue(error)
@@ -119,7 +119,7 @@ describe('create email domain factory', () => {
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainName', text: 'Domain EXCLUDEDDOMAIN is present in the excluded list' },
+        { href: '#domainName', text: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' },
       ])
     })
   })
