@@ -79,7 +79,7 @@ describe('create email domain factory', () => {
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { userMessage: 'Some text : Domain already present in allowed list' } },
+        response: { body: { userMessage: 'Domain EXISTINGDOMAIN is already present in allowed list' } },
       }
 
       createEmailDomainApi.mockRejectedValue(error)
@@ -94,7 +94,7 @@ describe('create email domain factory', () => {
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainName', text: 'Domain already present in allowed list' },
+        { href: '#domainName', text: 'Domain EXISTINGDOMAIN is already present in allowed list' },
       ])
     })
 
@@ -104,7 +104,7 @@ describe('create email domain factory', () => {
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { userMessage: 'Some text : Domain present in excluded list' } },
+        response: { body: { userMessage: 'Domain EXCLUDEDDOMAIN is present in excluded list' } },
       }
 
       createEmailDomainApi.mockRejectedValue(error)
@@ -119,7 +119,7 @@ describe('create email domain factory', () => {
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainName', text: 'Domain present in excluded list' },
+        { href: '#domainName', text: 'Domain EXCLUDEDDOMAIN is present in excluded list' },
       ])
     })
   })
