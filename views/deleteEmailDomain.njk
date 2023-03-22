@@ -40,6 +40,7 @@
         {% if hasManageEmailDomains %}
           {{ govukButton({
           text: "Delete Email Domain",
+          preventDoubleClick: true,
           type: "submit",
           classes: "govuk-button--warning",
           attributes: { "data-qa": "delete-domain-button" }

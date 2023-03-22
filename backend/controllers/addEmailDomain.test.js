@@ -73,13 +73,13 @@ describe('create email domain factory', () => {
       ])
     })
 
-    it('should fail gracefully if Domain name already exists error is triggered', async () => {
+    it('should fail gracefully if Email Domain already present in the allowed list error is triggered', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       const error = {
         ...new Error('This failed'),
         status: 409,
-        response: { body: { error_description: 'Domain name already exists' } },
+        response: { body: { userMessage: 'Email domain EXISTINGDOMAIN is already present in the allowed list' } },
       }
 
       createEmailDomainApi.mockRejectedValue(error)
@@ -94,7 +94,32 @@ describe('create email domain factory', () => {
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
-        { href: '#domainName', text: 'Domain name already exists' },
+        { href: '#domainName', text: 'Email domain EXISTINGDOMAIN is already present in the allowed list' },
+      ])
+    })
+
+    it('should fail gracefully if Email domain is present in excluded list error is triggered', async () => {
+      const redirect = jest.fn()
+      const locals = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: { body: { userMessage: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' } },
+      }
+
+      createEmailDomainApi.mockRejectedValue(error)
+      const req = {
+        body: {
+          domainName: 'EXCLUDEDDOMAIN',
+          domainDescription: 'EXCLUDED DOMAIN DESCRIPTION',
+        },
+        flash: jest.fn(),
+        originalUrl: '/email-domains',
+      }
+      await emailDomainFactory.createEmailDomain(req, { locals, redirect })
+      expect(redirect).toBeCalledWith('/email-domains')
+      expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
+        { href: '#domainName', text: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' },
       ])
     })
   })

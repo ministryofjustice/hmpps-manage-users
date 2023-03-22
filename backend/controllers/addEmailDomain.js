@@ -32,7 +32,7 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
         res.redirect('/email-domains')
       } catch (err) {
         if (err.status === 409 && err.response && err.response.body) {
-          const domainError = [{ href: '#domainName', text: 'Domain name already exists' }]
+          const domainError = [{ href: '#domainName', text: err.response.body.userMessage }]
           stashStateAndRedirectToIndex(req, res, domainError, [domain])
         } else {
           throw err
