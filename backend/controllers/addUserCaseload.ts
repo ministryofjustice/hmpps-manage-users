@@ -16,17 +16,11 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
       text: c.name,
       value: c.id,
     }))
-    if (caseloadDropdownValues.length > 0) {
-      caseloadDropdownValues.push({ divider: 'or' })
-      caseloadDropdownValues.push({ text: 'All caseloads', value: 'ALL', behaviour: 'exclusive' })
-    }
-    const assignableIds = Array.from(assignableCaseloads.map((c: caseload) => c.id))
 
     res.render('addUserCaseload.njk', {
       staff: { ...user, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
       caseloadDropdownValues,
-      assignableIds,
       searchTitle: 'Search for a DPS user',
       searchUrl: '/search-with-filter-dps-users',
       errors: req.flash('addCaseloadErrors'),
@@ -35,18 +29,14 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
 
   const post = async (req: Request, res: Response) => {
     const { userId } = req.params
-    const { caseloads, assignableCaseloads } = req.body
+    const { caseloads } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
 
     if (!caseloads) {
       const errors = [{ href: '#caseloads', text: 'Select at least one caseload' }]
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
-      let caseloadArray = Array.isArray(caseloads) ? caseloads : [caseloads]
-      if (caseloads.includes('ALL')) {
-        caseloadArray = assignableCaseloads.split(',')
-      }
-
+      const caseloadArray = Array.isArray(caseloads) ? caseloads : [caseloads]
       await saveCaseloads(res.locals, userId, caseloadArray)
       res.redirect(`${staffUrl}`)
     }

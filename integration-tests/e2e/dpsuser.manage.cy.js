@@ -389,39 +389,6 @@ context('DPS user manage functionality', () => {
       UserPage.verifyOnPage('Itag User')
     })
 
-    it('Should add all available caseloads to a user', () => {
-      const userPage = editUser({ isAdmin: true })
-
-      userPage.activeCaseloadRow().eq(0).should('contain', 'Moorland')
-      userPage.caseloadRows().should('have.length', 3)
-      userPage.caseloadRows().eq(1).should('contain', 'Moorland')
-
-      cy.task('stubBannerNoMessage')
-      cy.task('stubManageUserGetRoles', {})
-
-      cy.task('stubUserCaseloads', {
-        username: 'ITAG_USER',
-        activeCaseload: {
-          id: 'MDI',
-          name: 'Moorland',
-        },
-      })
-      cy.task('stubDpsGetCaseloads')
-
-      userPage.addUserCaseload().click()
-      const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
-
-      cy.task('stubDpsAddUserCaseloads')
-      addUserCaseload.choose('ALL')
-      addUserCaseload.addCaseloadButton().click()
-
-      cy.task('verifyDpsAddUserCaseloads').should((requests) => {
-        expect(requests).to.have.lengthOf(1)
-        expect(JSON.parse(requests[0].body)).to.deep.equal(['MDI', 'LEI'])
-      })
-      UserPage.verifyOnPage('Itag User')
-    })
-
     it('Should show no caseloads available if none assignable', () => {
       const userPage = editUser({ isAdmin: true })
 
