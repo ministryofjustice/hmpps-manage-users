@@ -30,7 +30,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
       throw error
     }
   }
-  const userEmails = (context, usernames) => post(context, `/api/user/email`, usernames)
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
 
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
@@ -92,7 +91,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
 
   return {
     getUserEmail,
-    userEmails,
     createUser,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.

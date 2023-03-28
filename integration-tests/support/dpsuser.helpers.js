@@ -60,7 +60,6 @@ export const goToSearchPage = ({
   })
   cy.task('stubDpsFindUsers', { totalElements, size })
   if (isAdmin) cy.task('stubDpsGetCaseloads')
-  cy.task('stubAuthUserEmails')
 
   return DpsUserSearchPage.goTo()
 }

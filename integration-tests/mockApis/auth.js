@@ -140,12 +140,6 @@ const stubAuthEmailSearch = () =>
       totalElements: 2,
     },
   })
-const stubAuthUserEmails = () =>
-  stubJson({
-    method: 'POST',
-    urlPattern: '/auth/api/user/email',
-    body: [{ username: 'ITAG_USER0', email: 'dps-user@justice.gov.uk' }],
-  })
 
 const stubDpsUserChangeEmail = () =>
   stubJson({
@@ -214,7 +208,6 @@ module.exports = {
   },
   stubEmail,
   redirect,
-  stubAuthUserEmails,
   stubAuthEmailSearch,
   stubDpsUserChangeEmail,
   stubSyncDpsEmail,
