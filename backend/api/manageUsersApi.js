@@ -23,6 +23,14 @@ const manageUsersApiFactory = (client) => {
   const createUser = (context, user) => post(context, '/prisonusers', user)
   const getUser = (context, { userId }) => get(context, `/externalusers/id/${userId}`)
   const amendUserEmail = (context, userId, email) => post(context, `/externalusers/${userId}/email`, email)
+  const getUserEmail = async (context, { username }) => {
+    try {
+      return await get(context, `/users/${username}/email?unverified=true`)
+    } catch (error) {
+      if (error?.status === 404) return {}
+      throw error
+    }
+  }
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
   const getAllEmailDomains = (context) => {
     return client.get(context, `/email-domains`).then(processPageResponse(context))
@@ -95,6 +103,7 @@ const manageUsersApiFactory = (client) => {
     contextUserRoles,
     createUser,
     getUser,
+    getUserEmail,
     amendUserEmail,
     createRole,
     getPagedRoles,
