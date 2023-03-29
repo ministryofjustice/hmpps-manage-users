@@ -683,4 +683,19 @@ describe('manageUsersApi tests', () => {
       expect(client.get).toBeCalledWith(context, '/users/me/roles')
     })
   })
+
+  describe('changeDPSEmail', () => {
+    const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.changeDpsEmail(context, 'joe', 'joe@digital.justice.gov.uk')
+    })
+
+    it('should call user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/prisonusers/joe/email', 'joe@digital.justice.gov.uk')
+    })
+  })
 })

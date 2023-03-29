@@ -139,6 +139,12 @@ module.exports = {
       },
     }),
 
+  stubDpsUserChangeEmail: () =>
+    stubJson({
+      method: 'POST',
+      urlPattern: '/prisonusers/[^/]*/email',
+    }),
+
   stubDpsCreateUser: () =>
     stubFor({
       request: {
@@ -780,6 +786,30 @@ module.exports = {
       urlPattern: '/externalusers/.*/disable',
     }),
 
+  stubAllEmailDomains: ({
+    content = [
+      {
+        id: 'cb5d9f0c-b7c8-40d5-8626-2e97f66d5127',
+        domain: 'DOMAIN1',
+        description: 'DOMAIN 1 DESCRIPTION',
+      },
+      {
+        id: 'acf5e424-2f7c-4bea-ac1e-07d2553f3e63',
+        domain: 'DOMAIN2',
+        description: 'DOMAIN 2 DESCRIPTION',
+      },
+      {
+        id: '8529edfa-6bcf-462f-ae29-5433a615d405',
+        domain: 'DOMAIN3',
+        description: 'DOMAIN 3 DESCRIPTION',
+      },
+    ],
+  }) =>
+    getFor({
+      urlPath: '/email-domains',
+      body: content,
+    }),
+
   verifyExternalUserSearch: () =>
     getMatchingRequests({
       method: 'GET',
@@ -810,27 +840,9 @@ module.exports = {
       urlPathPattern: '/externalusers/.*/roles/.*',
     }).then((data) => data.body.requests),
 
-  stubAllEmailDomains: ({
-    content = [
-      {
-        id: 'cb5d9f0c-b7c8-40d5-8626-2e97f66d5127',
-        domain: 'DOMAIN1',
-        description: 'DOMAIN 1 DESCRIPTION',
-      },
-      {
-        id: 'acf5e424-2f7c-4bea-ac1e-07d2553f3e63',
-        domain: 'DOMAIN2',
-        description: 'DOMAIN 2 DESCRIPTION',
-      },
-      {
-        id: '8529edfa-6bcf-462f-ae29-5433a615d405',
-        domain: 'DOMAIN3',
-        description: 'DOMAIN 3 DESCRIPTION',
-      },
-    ],
-  }) =>
-    getFor({
-      urlPath: '/email-domains',
-      body: content,
-    }),
+  verifyDpsUserChangeEmail: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/prisonusers/[^/]*/email',
+    }).then((data) => data.body.requests),
 }

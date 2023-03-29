@@ -76,7 +76,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const removeUserCaseloadApi = (context, username, caseload) =>
     nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
 
-  const changeEmailApi = (context, username, email) => oauthApi.changeDpsEmail(context, username, { email })
+  const changeEmailApi = (context, username, email) => manageUsersApi.changeDpsEmail(context, username, { email })
 
   const { index: selectRoles, post: postRoles } = selectRolesFactory(
     getUserAssignableRolesAndMessageApi,

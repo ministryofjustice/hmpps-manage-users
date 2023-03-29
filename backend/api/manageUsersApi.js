@@ -18,26 +18,6 @@ const manageUsersApiFactory = (client) => {
   const getNotificationBannerMessage = (context, notificationType) =>
     get(context, `/notification/banner/${notificationType}`)
 
-  const currentUser = (context) => get(context, '/users/me')
-
-  const createUser = (context, user) => post(context, '/prisonusers', user)
-  const getUser = (context, { userId }) => get(context, `/externalusers/id/${userId}`)
-  const amendUserEmail = (context, userId, email) => post(context, `/externalusers/${userId}/email`, email)
-  const getUserEmail = async (context, { username }) => {
-    try {
-      return await get(context, `/users/${username}/email?unverified=true`)
-    } catch (error) {
-      if (error?.status === 404) return {}
-      throw error
-    }
-  }
-  const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
-  const getAllEmailDomains = (context) => {
-    return client.get(context, `/email-domains`).then(processPageResponse(context))
-  }
-  const createEmailDomain = (context, domain) => post(context, '/email-domains', domain)
-  const deleteEmailDomain = (context, domainId) => del(context, `/email-domains/${domainId}`)
-
   const createRole = (context, role) => post(context, '/roles', role)
   const getRoles = (context, { adminTypes }) => get(context, `/roles?adminTypes=${adminTypes}`)
   const getPagedRoles = (context, page, size, roleName, roleCode, adminType) => {
@@ -57,13 +37,6 @@ const manageUsersApiFactory = (client) => {
     put(context, `/roles/${role}/description`, roleDescription)
   const changeRoleAdminType = (context, role, adminType) => put(context, `/roles/${role}/admintype`, adminType)
 
-  const externalUserAddRoles = (context, { userId, roles }) => post(context, `/externalusers/${userId}/roles`, roles)
-  const externalUserRoles = (context, userId) => get(context, `/externalusers/${userId}/roles`)
-  const deleteExternalUserRole = (context, { userId, role }) => del(context, `/externalusers/${userId}/roles/${role}`)
-  const assignableRoles = (context, { userId }) => get(context, `/externalusers/${userId}/assignable-roles`)
-  const currentRoles = (context) => get(context, '/users/me/roles')
-  const searchableRoles = (context) => get(context, '/externalusers/me/searchable-roles')
-
   const createGroup = (context, group) => post(context, '/groups', group)
   const groupDetails = (context, { group }) => get(context, `/groups/${group}`)
   const changeGroupName = (context, group, groupName) => put(context, `/groups/${group}`, groupName)
@@ -73,11 +46,37 @@ const manageUsersApiFactory = (client) => {
   const childGroupDetails = (context, { group }) => get(context, `/groups/child/${group}`)
   const changeChildGroupName = (context, group, groupName) => put(context, `/groups/child/${group}`, groupName)
   const deleteChildGroup = (context, group) => del(context, `/groups/child/${group}`)
-  const assignableGroups = (context) => get(context, '/externalusers/me/assignable-groups')
 
+  const getAllEmailDomains = (context) => {
+    return client.get(context, `/email-domains`).then(processPageResponse(context))
+  }
+  const createEmailDomain = (context, domain) => post(context, '/email-domains', domain)
+  const deleteEmailDomain = (context, domainId) => del(context, `/email-domains/${domainId}`)
+
+  const currentUser = (context) => get(context, '/users/me')
+  const currentRoles = (context) => get(context, '/users/me/roles')
+  const getUserEmail = async (context, { username }) => {
+    try {
+      return await get(context, `/users/${username}/email?unverified=true`)
+    } catch (error) {
+      if (error?.status === 404) return {}
+      throw error
+    }
+  }
+
+  const externalUserAddRoles = (context, { userId, roles }) => post(context, `/externalusers/${userId}/roles`, roles)
+  const externalUserRoles = (context, userId) => get(context, `/externalusers/${userId}/roles`)
+  const deleteExternalUserRole = (context, { userId, role }) => del(context, `/externalusers/${userId}/roles/${role}`)
+  const assignableRoles = (context, { userId }) => get(context, `/externalusers/${userId}/assignable-roles`)
+  const searchableRoles = (context) => get(context, '/externalusers/me/searchable-roles')
+
+  const assignableGroups = (context) => get(context, '/externalusers/me/assignable-groups')
   const userGroups = (context, { userId }) => get(context, `/externalusers/${userId}/groups?children=false`)
   const removeUserGroup = (context, { userId, group }) => del(context, `/externalusers/${userId}/groups/${group}`)
   const addUserGroup = (context, { userId, group }) => put(context, `/externalusers/${userId}/groups/${group}`)
+
+  const getUser = (context, { userId }) => get(context, `/externalusers/id/${userId}`)
+  const amendUserEmail = (context, userId, email) => post(context, `/externalusers/${userId}/email`, email)
 
   const userSearch = (context, { nameFilter, role, group, status }, page, size) => {
     const groups = group ? [group] : null
@@ -96,6 +95,10 @@ const manageUsersApiFactory = (client) => {
   const disableExternalUser = (context, { userId }) => put(context, `/externalusers/${userId}/disable`)
   const deactivateExternalUser = (context, { userId, reason }) =>
     put(context, `/externalusers/${userId}/disable`, { reason })
+
+  const createUser = (context, user) => post(context, '/prisonusers', user)
+  const changeDpsEmail = (context, username, email) => post(context, `/prisonusers/${username}/email`, email)
+  const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
 
   return {
     getNotificationBannerMessage,
@@ -137,6 +140,7 @@ const manageUsersApiFactory = (client) => {
     deactivateExternalUser,
     currentRoles,
     searchableRoles,
+    changeDpsEmail,
   }
 }
 
