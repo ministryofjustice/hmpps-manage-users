@@ -131,12 +131,6 @@ const stubAuthEmailSearch = () =>
     },
   })
 
-const stubDpsUserChangeEmail = () =>
-  stubJson({
-    method: 'POST',
-    urlPattern: '/auth/api/prisonuser/[^/]*/email',
-  })
-
 const stubSyncDpsEmail = () =>
   stubJson({
     method: 'POST',
@@ -165,12 +159,6 @@ const stubHealth = (status = 200) =>
     },
   })
 
-const verifyDpsUserChangeEmail = () =>
-  getMatchingRequests({
-    method: 'POST',
-    urlPathPattern: '/auth/api/prisonuser/[^/]*/email',
-  }).then((data) => data.body.requests)
-
 const verifyAuthCreateUser = () =>
   getMatchingRequests({
     method: 'POST',
@@ -198,10 +186,8 @@ module.exports = {
   },
   redirect,
   stubAuthEmailSearch,
-  stubDpsUserChangeEmail,
   stubSyncDpsEmail,
   stubAuthCreateUser,
   stubHealth,
-  verifyDpsUserChangeEmail,
   verifyAuthCreateUser,
 }
