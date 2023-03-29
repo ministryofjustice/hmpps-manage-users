@@ -48,6 +48,36 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('getUserEmail', () => {
+    const emailDetails = { email: 'hello@there', username: 'someuser' }
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => emailDetails,
+      })
+    })
+
+    it('should return email from endpoint', async () => {
+      const actual = await manageUsersApi.getUserEmail(context, { username: 'joe' })
+      expect(actual).toEqual(emailDetails)
+    })
+    it('should call user email endpoint', () => {
+      manageUsersApi.getUserEmail(context, { username: 'joe' })
+      expect(client.get).toBeCalledWith(context, '/users/joe/email?unverified=true')
+    })
+    it('should cope with not found from endpoint', async () => {
+      const error = { ...new Error('User not found'), status: 404 }
+      client.get.mockRejectedValue(error)
+      const actual = await manageUsersApi.getUserEmail(context, { username: 'joe' })
+      expect(actual).toEqual({})
+    })
+    it('should rethrow other errors', async () => {
+      const error = new Error('User not found')
+      client.get.mockRejectedValue(error)
+      expect(async () => manageUsersApi.getUserEmail(context, { username: 'joe' })).rejects.toThrow(error)
+    })
+  })
+
   describe('amendUserEmail', () => {
     const newEmail = 'testy@testing.com'
     const userId = '1234'

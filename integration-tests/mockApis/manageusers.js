@@ -32,6 +32,16 @@ module.exports = {
       },
     }),
 
+  stubEmail: ({ username = 'ITAG_USER', email, verified = true }) =>
+    getFor({
+      urlPattern: `/users/[^/]*/email\\?unverified=true`,
+      body: {
+        username,
+        email,
+        verified,
+      },
+    }),
+
   stubAuthGetUserWithEmail: (enabled = true) =>
     getFor({
       urlPattern: '/externalusers/id/[^/]*',

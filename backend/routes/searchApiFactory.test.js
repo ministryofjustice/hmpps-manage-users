@@ -8,9 +8,9 @@ describe('Search API Factory', () => {
   }
   const manageUsersApi = {
     getRoles: jest.fn(),
+    userEmails: jest.fn(),
   }
-  const oauthApi = { userEmails: jest.fn() }
-  const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(oauthApi, nomisUsersAndRolesApi, manageUsersApi)
+  const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
 
   beforeEach(() => {
     jest.resetAllMocks()

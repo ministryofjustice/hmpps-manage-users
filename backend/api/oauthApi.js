@@ -19,20 +19,11 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
  * @returns a configured oauthApi instance
  */
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
-  const get = (context, path) => client.get(context, path).then((response) => response.body)
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
 
-  const getUserEmail = async (context, { username }) => {
-    try {
-      return await get(context, `/api/user/${username}/email?unverified=true`)
-    } catch (error) {
-      if (error?.status === 404) return {}
-      throw error
-    }
-  }
-  const createUser = (context, user) => post(context, `/api/authuser/create`, user)
-
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
+
+  const createUser = (context, user) => post(context, `/api/authuser/create`, user)
   const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
 
   const oauthAxios = axios.create({
@@ -90,7 +81,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     makeTokenRequest(querystring.stringify({ refresh_token: refreshToken, grant_type: 'refresh_token' }), 'refresh:')
 
   return {
-    getUserEmail,
     createUser,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.

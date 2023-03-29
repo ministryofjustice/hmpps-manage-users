@@ -11,9 +11,9 @@ const manageDpsUserRouter = require('./manageDpsUserRouter')
 
 describe('Manage DPS user router', () => {
   const apis = {
-    oauthApi: { getUserEmail: jest.fn(), syncDpsEmail: jest.fn() },
+    oauthApi: { syncDpsEmail: jest.fn() },
     nomisUsersAndRolesApi: { getUser: jest.fn(), getUserCaseloads: jest.fn() },
-    manageUsersApi: { contextUserRoles: jest.fn() },
+    manageUsersApi: { contextUserRoles: jest.fn(), getUserEmail: jest.fn() },
   }
   const router = manageDpsUserRouter(apis)
   // @ts-ignore
@@ -37,7 +37,7 @@ describe('Manage DPS user router', () => {
         dpsRoles: [{ code: 'role1' }],
         activeCaseload: { id: 'MDI', name: 'Moorland' },
       })
-      apis.oauthApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@auth', verified: false })
+      apis.manageUsersApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@auth', verified: false })
       apis.nomisUsersAndRolesApi.getUserCaseloads.mockResolvedValue({
         caseloads: [
           { id: 'MDI', name: 'Moorland' },
@@ -73,7 +73,7 @@ describe('Manage DPS user router', () => {
   describe('getUserApi', () => {
     it('should map the email info onto the user', async () => {
       apis.nomisUsersAndRolesApi.getUser.mockResolvedValue({ username: 'joe', active: true })
-      apis.oauthApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@bloggs', verified: false })
+      apis.manageUsersApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@bloggs', verified: false })
       const context = { user: 'bob' }
       const results = await getUserApi({ locals: context })
       expect(results).toEqual({ username: 'joe', active: true, email: 'joe@bloggs' })

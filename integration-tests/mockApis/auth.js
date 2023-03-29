@@ -98,16 +98,6 @@ const stubUser = (username) => {
   })
 }
 
-const stubEmail = ({ username = 'ITAG_USER', email, verified = true }) =>
-  getFor({
-    urlPattern: `/auth/api/user/[^/]*/email\\?unverified=true`,
-    body: {
-      username,
-      email,
-      verified,
-    },
-  })
-
 const stubAuthEmailSearch = () =>
   getFor({
     urlPath: '/auth/api/authuser/search',
@@ -206,7 +196,6 @@ module.exports = {
       stubUser(username),
     ])
   },
-  stubEmail,
   redirect,
   stubAuthEmailSearch,
   stubDpsUserChangeEmail,
