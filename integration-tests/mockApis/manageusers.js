@@ -843,6 +843,6 @@ module.exports = {
   verifyDpsUserChangeEmail: () =>
     getMatchingRequests({
       method: 'POST',
-      urlPathPattern: '/auth/api/prisonuser/[^/]*/email',
+      urlPathPattern: '/prisonusers/[^/]*/email',
     }).then((data) => data.body.requests),
 }
