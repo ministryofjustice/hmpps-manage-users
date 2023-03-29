@@ -1,4 +1,4 @@
-function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
+function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
   const findUsersApi = async ({
     locals: context,
     user: nameFilter,
@@ -88,5 +88,4 @@ function searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi) {
   }
 }
 
-module.exports = (oauthApi, nomisUsersAndRolesApi, manageUsersApi) =>
-  searchApiFacade(oauthApi, nomisUsersAndRolesApi, manageUsersApi)
+module.exports = (nomisUsersAndRolesApi, manageUsersApi) => searchApiFacade(nomisUsersAndRolesApi, manageUsersApi)

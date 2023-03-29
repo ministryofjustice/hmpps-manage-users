@@ -27,7 +27,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
     const [user, roles, userEmail, userCaseloads] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
-      oauthApi.getUserEmail(context, { username }),
+      manageUsersApi.getUserEmail(context, { username }),
       nomisUsersAndRolesApi.getUserCaseloads(context, username),
     ])
 
@@ -60,7 +60,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserApi = async (context, username) => {
     const [user, userEmail] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
-      oauthApi.getUserEmail(context, { username }),
+      manageUsersApi.getUserEmail(context, { username }),
     ])
     return { ...user, email: userEmail.email }
   }
