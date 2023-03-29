@@ -21,7 +21,6 @@ const apiClientCredentials = (clientId, clientSecret) => Buffer.from(`${clientId
 const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
 
-  const userEmails = (context, usernames) => post(context, `/api/user/email`, usernames)
   const changeDpsEmail = (context, username, email) => post(context, `/api/prisonuser/${username}/email`, email)
 
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
@@ -82,7 +81,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     makeTokenRequest(querystring.stringify({ refresh_token: refreshToken, grant_type: 'refresh_token' }), 'refresh:')
 
   return {
-    userEmails,
     createUser,
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
