@@ -98,6 +98,7 @@ const manageUsersApiFactory = (client) => {
 
   const createUser = (context, user) => post(context, '/prisonusers', user)
   const changeDpsEmail = (context, username, email) => post(context, `/prisonusers/${username}/email`, email)
+  const syncDpsEmail = (context, username) => post(context, `/prisonusers/${username}/email/sync`)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
 
   return {
@@ -141,6 +142,7 @@ const manageUsersApiFactory = (client) => {
     currentRoles,
     searchableRoles,
     changeDpsEmail,
+    syncDpsEmail,
   }
 }
 

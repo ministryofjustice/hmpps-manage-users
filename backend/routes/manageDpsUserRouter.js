@@ -6,7 +6,7 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
+const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAssignableRolesAndMessageApi = async (context, username, hasAdminRole) => {
     const [user, userRoles, allRoles, bannerMessage] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
@@ -22,7 +22,7 @@ const controller = ({ oauthApi, nomisUsersAndRolesApi, manageUsersApi }) => {
   }
 
   const getUserRolesAndCaseloadsApi = async (context, username) => {
-    await oauthApi.syncDpsEmail(context, username)
+    await manageUsersApi.syncDpsEmail(context, username)
 
     const [user, roles, userEmail, userCaseloads] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),

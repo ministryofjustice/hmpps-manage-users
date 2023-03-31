@@ -131,12 +131,6 @@ const stubAuthEmailSearch = () =>
     },
   })
 
-const stubSyncDpsEmail = () =>
-  stubJson({
-    method: 'POST',
-    urlPattern: '/auth/api/prisonuser/[^/]*/email/sync',
-  })
-
 const stubAuthCreateUser = () =>
   stubJson({
     method: 'POST',
@@ -186,7 +180,6 @@ module.exports = {
   },
   redirect,
   stubAuthEmailSearch,
-  stubSyncDpsEmail,
   stubAuthCreateUser,
   stubHealth,
   verifyAuthCreateUser,
