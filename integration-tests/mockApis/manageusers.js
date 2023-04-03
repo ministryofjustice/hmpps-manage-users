@@ -139,6 +139,12 @@ module.exports = {
       },
     }),
 
+  stubSyncDpsEmail: () =>
+    stubJson({
+      method: 'POST',
+      urlPattern: '/prisonusers/[^/]*/email/sync',
+    }),
+
   stubDpsUserChangeEmail: () =>
     stubJson({
       method: 'POST',

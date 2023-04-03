@@ -22,7 +22,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
   const post = (context, path, body) => client.post(context, path, body).then((response) => response.body)
 
   const createUser = (context, user) => post(context, `/api/authuser/create`, user)
-  const syncDpsEmail = (context, username) => post(context, `/api/prisonuser/${username}/email/sync`)
 
   const oauthAxios = axios.create({
     baseURL: `${url}/oauth/token`,
@@ -83,7 +82,6 @@ const oauthApiFactory = (client, { clientId, clientSecret, url }) => {
     refresh,
     // Expose the internals so they can be Monkey Patched for testing. Oo oo oo.
     oauthAxios,
-    syncDpsEmail,
   }
 }
 

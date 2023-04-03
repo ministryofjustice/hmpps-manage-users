@@ -11,9 +11,8 @@ const manageDpsUserRouter = require('./manageDpsUserRouter')
 
 describe('Manage DPS user router', () => {
   const apis = {
-    oauthApi: { syncDpsEmail: jest.fn() },
     nomisUsersAndRolesApi: { getUser: jest.fn(), getUserCaseloads: jest.fn() },
-    manageUsersApi: { contextUserRoles: jest.fn(), getUserEmail: jest.fn() },
+    manageUsersApi: { syncDpsEmail: jest.fn(), contextUserRoles: jest.fn(), getUserEmail: jest.fn() },
   }
   const router = manageDpsUserRouter(apis)
   // @ts-ignore
@@ -66,7 +65,7 @@ describe('Manage DPS user router', () => {
           { id: 'PVI', name: 'Pentonville' },
         ],
       ])
-      expect(apis.oauthApi.syncDpsEmail).toBeCalledWith({ locals: context }, 'joe')
+      expect(apis.manageUsersApi.syncDpsEmail).toBeCalledWith({ locals: context }, 'joe')
     })
   })
 
