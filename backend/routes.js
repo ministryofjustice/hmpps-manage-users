@@ -17,7 +17,7 @@ const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config').default
 
-const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) => {
+const configureRoutes = ({ manageUsersApi, nomisUsersAndRolesApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ nomisUsersAndRolesApi, manageUsersApi }))
@@ -26,7 +26,7 @@ const configureRoutes = ({ oauthApi, manageUsersApi, nomisUsersAndRolesApi }) =>
   router.use('/', menuRouter({ manageUsersApi }))
   router.use('/create-user', creatUserRouter())
   router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
-  router.use('/create-external-user', createAuthUserRouter({ oauthApi, manageUsersApi }))
+  router.use('/create-external-user', createAuthUserRouter({ manageUsersApi }))
   router.use('/search-external-users', searchExternalUserRouter({ manageUsersApi }))
   router.use('/search-with-filter-dps-users', searchDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ manageUsersApi }))

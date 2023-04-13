@@ -69,6 +69,7 @@ describe('create user factory', () => {
         firstName: 'bob',
         lastName: 'smith',
         groupCode: 'SITE_1_GROUP_1',
+        groupCodes: ['SITE_1_GROUP_1'],
       })
     })
 
@@ -98,6 +99,7 @@ describe('create user factory', () => {
         firstName: 'bob',
         lastName: 'smith',
         groupCode: 'SITE_1_GROUP_1',
+        groupCodes: ['SITE_1_GROUP_1'],
       })
     })
 
@@ -128,6 +130,7 @@ describe('create user factory', () => {
         firstName: 'bob',
         lastName: 'smith',
         groupCode: '',
+        groupCodes: [''],
       })
     })
 

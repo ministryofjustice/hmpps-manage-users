@@ -130,14 +130,6 @@ const stubAuthEmailSearch = () =>
       totalElements: 2,
     },
   })
-
-const stubAuthCreateUser = () =>
-  stubJson({
-    method: 'POST',
-    urlPattern: '/auth/api/authuser/create',
-    body: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-  })
-
 const stubHealth = (status = 200) =>
   stubFor({
     request: {
@@ -152,12 +144,6 @@ const stubHealth = (status = 200) =>
       fixedDelayMilliseconds: status === 500 ? 3000 : '',
     },
   })
-
-const verifyAuthCreateUser = () =>
-  getMatchingRequests({
-    method: 'POST',
-    urlPathPattern: '/auth/api/authuser/create',
-  }).then((data) => data.body.requests)
 
 module.exports = {
   getSignInUrl,
@@ -180,7 +166,5 @@ module.exports = {
   },
   redirect,
   stubAuthEmailSearch,
-  stubAuthCreateUser,
   stubHealth,
-  verifyAuthCreateUser,
 }

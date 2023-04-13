@@ -44,7 +44,9 @@ const createAuthUserFactory = (
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        const userId = await createAuthUser(res.locals, user)
+        const groupCodes = [user.groupCode]
+        const updatedUser = { ...user, groupCodes }
+        const userId = await createAuthUser(res.locals, updatedUser)
 
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
@@ -54,11 +56,20 @@ const createAuthUserFactory = (
         })
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
-          const { emailError: error, error_description: errorDescription, field } = err.response.body
-          const description =
-            error === 'email.domain' ? 'The email domain is not allowed.  Enter a work email address' : errorDescription
+          const { emailError: error, userMessage: errorDescription } = err.response.body
 
-          const errorDetails = [{ href: `#${field}`, text: description }]
+          const updateDes = errorDescription
+            .replace('Validation failure:', '')
+            .split(';')
+            .map((x) => x.split(':'))
+          const eachFieldIdWithError = updateDes[0].toString().split(',')
+
+          const description =
+            error === 'email.domain'
+              ? 'The email domain is not allowed.  Enter a work email address'
+              : eachFieldIdWithError[1]
+
+          const errorDetails = [{ href: `#${eachFieldIdWithError[0].toString().trim()}`, text: description }]
           stashStateAndRedirectToIndex(req, res, errorDetails, [user])
         } else if (err.status === 409 && err.response && err.response.body) {
           // email already exists

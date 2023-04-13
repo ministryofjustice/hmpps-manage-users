@@ -698,4 +698,19 @@ describe('manageUsersApi tests', () => {
       expect(client.post).toBeCalledWith(context, '/prisonusers/joe/email', 'joe@digital.justice.gov.uk')
     })
   })
+
+  describe('createUser', () => {
+    const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
+
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createExternalUser(context, user)
+    })
+
+    it('should call external user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/externalusers/create', user)
+    })
+  })
 })
