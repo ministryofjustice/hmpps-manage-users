@@ -699,7 +699,7 @@ describe('manageUsersApi tests', () => {
     })
   })
 
-  describe('createUser', () => {
+  describe('createExternalUser', () => {
     const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
 
     beforeEach(() => {

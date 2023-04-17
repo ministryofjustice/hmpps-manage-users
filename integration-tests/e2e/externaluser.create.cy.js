@@ -19,7 +19,7 @@ function createUser() {
       email: 'emailnoone@justice.gov.uk',
       firstName: 'first',
       lastName: 'last',
-      groupCode: 'SOC_NORTH_WEST',
+      groupCodes: ['SOC_NORTH_WEST'],
     })
   })
   const successPage = AuthUserCreateSuccessPage.verifyOnPage()

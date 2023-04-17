@@ -1,4 +1,4 @@
-const { validateChangeEmail } = require('./authUserValidation')
+const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
 
 function mapDescription(error, errorDescription) {

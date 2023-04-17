@@ -1,16 +1,16 @@
-const { validateCreate } = require('./authUserValidation')
+const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
 
-const createAuthUserFactory = (
+const createExternalUserFactory = (
   getAssignableGroupsApi,
-  createAuthUser,
+  createExternalUser,
   createUrl,
   searchUrl,
   manageUrl,
   maintainTitle,
 ) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
-    req.flash('createAuthUserErrors', errors)
+    req.flash('createExternalUserErrors', errors)
     req.flash('user', user)
     res.redirect(req.originalUrl)
   }
@@ -25,12 +25,12 @@ const createAuthUserFactory = (
       selected: g.groupCode === user.groupCode,
     }))
 
-    res.render('createAuthUser.njk', {
+    res.render('createExternalUser.njk', {
       maintainTitle,
       maintainUrl: createUrl,
       ...user,
       groupDropdownValues,
-      errors: req.flash('createAuthUserErrors'),
+      errors: req.flash('createExternalUserErrors'),
     })
   }
 
@@ -44,13 +44,13 @@ const createAuthUserFactory = (
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        const groupCodes = [user.groupCode]
-        const updatedUser = { ...user, groupCodes }
-        const userId = await createAuthUser(res.locals, updatedUser)
+        const groupCodes = user.groupCode !== '' ? [user.groupCode] : undefined
+        const updatedUser = { email: user.email, firstName: user.firstName, lastName: user.lastName, groupCodes }
+        const userId = await createExternalUser(res.locals, updatedUser)
 
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
-        res.render('createAuthUserSuccess.njk', {
+        res.render('createExternalUserSuccess.njk', {
           email: user.email,
           detailsLink: `${manageUrl}/${userId}/details`,
         })
@@ -86,5 +86,5 @@ const createAuthUserFactory = (
 }
 
 module.exports = {
-  createAuthUserFactory,
+  createExternalUserFactory,
 }
