@@ -149,7 +149,7 @@ describe('create user factory', () => {
       await createExternalUser.post(req, { render, locals })
       expect(req.session).toEqual({
         searchUrl: '/search-external-users',
-        searchResultsUrl: '/search-external-users/results?user=bob@digital.justice.gov.uk',
+        searchResultsUrl: '/search-external-users?user=bob%40digital.justice.gov.uk',
       })
     })
 
