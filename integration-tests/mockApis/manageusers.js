@@ -423,6 +423,13 @@ module.exports = {
       body: { message: '' },
     }),
 
+  stubExternalCreateUser: () =>
+    stubJson({
+      method: 'POST',
+      urlPattern: '/externalusers/create',
+      body: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+    }),
+
   stubDPSRoleDetails: ({
     content = {
       roleCode: 'AUTH_GROUP_MANAGER',
@@ -569,6 +576,12 @@ module.exports = {
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/prisonusers',
+    }).then((data) => data.body.requests),
+
+  verifyExternalCreateUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/externalusers/create',
     }).then((data) => data.body.requests),
 
   verifyAllRoles: () =>

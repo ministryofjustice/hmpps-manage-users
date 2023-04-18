@@ -1,16 +1,16 @@
 const express = require('express')
-const { createAuthUserFactory } = require('../controllers/createAuthUser')
+const { createExternalUserFactory } = require('../controllers/createExternalUser')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ oauthApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const getAssignableGroupsApi = manageUsersApi.assignableGroups
 
-  const createAuthUserApi = (context, user) => oauthApi.createUser(context, user)
+  const createExternalUserApi = (context, user) => manageUsersApi.createExternalUser(context, user)
 
-  const { index: createUser, post: postUser } = createAuthUserFactory(
+  const { index: createUser, post: postUser } = createExternalUserFactory(
     getAssignableGroupsApi,
-    createAuthUserApi,
+    createExternalUserApi,
     '/create-external-users',
     '/search-external-users',
     '/manage-external-users',

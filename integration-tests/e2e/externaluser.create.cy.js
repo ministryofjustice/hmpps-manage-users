@@ -6,20 +6,20 @@ const AuthUserCreateSuccessPage = require('../pages/authUserCreateSuccessPage')
 function createUser() {
   const createPage = AuthUserCreatePage.verifyOnPage()
 
-  cy.task('stubAuthCreateUser')
+  cy.task('stubExternalCreateUser')
   cy.task('stubAuthGetUsername')
   cy.task('stubExternalUserRoles')
   cy.task('stubManageUserGroups')
   createPage.create('noone@justice.gov.uk', '', '', 'SOCU North West')
 
-  cy.task('verifyAuthCreateUser').should((requests) => {
+  cy.task('verifyExternalCreateUser').should((requests) => {
     expect(requests).to.have.lengthOf(1)
 
     expect(JSON.parse(requests[0].body)).to.deep.include({
       email: 'emailnoone@justice.gov.uk',
       firstName: 'first',
       lastName: 'last',
-      groupCode: 'SOC_NORTH_WEST',
+      groupCodes: ['SOC_NORTH_WEST'],
     })
   })
   const successPage = AuthUserCreateSuccessPage.verifyOnPage()

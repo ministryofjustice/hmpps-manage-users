@@ -1,4 +1,4 @@
-const { validateSearch, validateCreate, validateChangeEmail } = require('./authUserValidation')
+const { validateSearch, validateCreate, validateChangeEmail } = require('./externalUserValidation')
 
 describe('Auth search validation', () => {
   describe('missing username', () => {
