@@ -49,7 +49,7 @@ const createExternalUserFactory = (
         const userId = await createExternalUser(res.locals, updatedUser)
 
         req.session.searchUrl = searchUrl
-        req.session.searchResultsUrl = `${searchUrl}/results?user=${user.email}`
+        req.session.searchResultsUrl = `${searchUrl}?user=${encodeURIComponent(user.email)}`
         res.render('createExternalUserSuccess.njk', {
           email: user.email,
           detailsLink: `${manageUrl}/${userId}/details`,
