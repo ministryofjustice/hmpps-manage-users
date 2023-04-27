@@ -2,6 +2,7 @@ const MenuPage = require('../pages/menuPage')
 const UserPage = require('../pages/userPage')
 const DpsUserCreatePage = require('../pages/dpsUserCreatePage')
 const DpsUserSelectCreatePage = require('../pages/dpsSelectUserCreatePage')
+const DpsSelectLinkedCreateUserOptionsPage = require('../pages/dpsSelectLinkedCreateUserOptionsPage')
 const DpsUserCreateSuccessPage = require('../pages/dpsUserCreateSuccessPage')
 const AuthErrorPage = require('../pages/authErrorPage')
 
@@ -12,10 +13,13 @@ function goToCreateDpsUser(userType) {
 
   menuPage.createDpsUser()
 
-  const createPage = DpsUserSelectCreatePage.verifyOnPage()
+  const userSelectCreatePage = DpsUserSelectCreatePage.verifyOnPage()
   cy.task('stubDpsGetCaseloads')
-  createPage.userTypeRadioButton(userType).click()
-  createPage.submit().click()
+  userSelectCreatePage.userTypeRadioButton(userType).click()
+  userSelectCreatePage.submit().click()
+  const linkUserCreateOptionsPage = DpsSelectLinkedCreateUserOptionsPage.verifyOnPage(`Create a DPS ${userType} user`)
+  linkUserCreateOptionsPage.isLinkedRadioButton('No').click()
+  linkUserCreateOptionsPage.submit().click()
   return DpsUserCreatePage.verifyOnPage(`Create a DPS ${userType} user`)
 }
 

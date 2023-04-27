@@ -1,7 +1,7 @@
 const { createUserFactory } = require('./createUser')
 
 describe('create user factory', () => {
-  const createUser = createUserFactory('/create-dps-user')
+  const createUser = createUserFactory('/create-user-options')
   const userTypeValues = [
     { value: 'DPS_ADM', text: 'Central Admin' },
     { value: 'DPS_GEN', text: 'General User' },
@@ -46,7 +46,7 @@ describe('create user factory', () => {
       await createUser.post(req, { render, locals, redirect })
 
       expect(req.flash).toBeCalledWith('user', [{ userType: 'DPS_GEN' }])
-      expect(redirect).toBeCalledWith('/create-dps-user')
+      expect(redirect).toBeCalledWith('/create-user-options')
     })
 
     it('should stash the error and redirect if no usertype selected', async () => {

@@ -98,6 +98,7 @@ const manageUsersApiFactory = (client) => {
     put(context, `/externalusers/${userId}/disable`, { reason })
 
   const createUser = (context, user) => post(context, '/prisonusers', user)
+  const createLinkedCentralAdminUser = (context, user) => post(context, '/linkedprisonusers/admin', user)
   const changeDpsEmail = (context, username, email) => post(context, `/prisonusers/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/prisonusers/${username}/email/sync`)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
@@ -107,6 +108,7 @@ const manageUsersApiFactory = (client) => {
     currentUser,
     contextUserRoles,
     createUser,
+    createLinkedCentralAdminUser,
     getUser,
     getUserEmail,
     amendUserEmail,

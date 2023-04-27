@@ -1,0 +1,27 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: "Create a Linked DPS user" }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {{ govukPanel({
+          titleText: "DPS user created",
+          html: "The linked user has been created ",
+          attributes: { "data-qa": "email" }
+        }) }}
+      </div>
+    </div>
+  </div>
+{% endblock %}

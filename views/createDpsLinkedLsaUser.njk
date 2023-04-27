@@ -1,0 +1,122 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: "Create a DPS user" }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l">Create a Linked DPS Local System Administrator (LSA) user</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukInput({label: {
+          text: "Username"
+        },
+          classes: "govuk-input--width-20",
+          value: username,
+          id: "username",
+          name: "username",
+          errorMessage: errors | findError('username')
+        }) }}
+        {{ govukInput({label: {
+            text: "General Username"
+        },
+          classes: "govuk-input--width-20",
+          value: generalusername,
+          id: "generalusername",
+          name: "generalusername",
+          errorMessage: errors | findError('generalusername')
+        }) }}
+        {{ govukInput({label: {
+          text: "Email address"
+        },
+          classes: "govuk-input--width-25",
+          value: email,
+          id: "email",
+          name: "email",
+          errorMessage: errors | findError('email')
+        }) }}
+        {{ govukInput({label: {
+          text: "First name"
+        },
+          classes: "govuk-input--width-20",
+          value: firstName,
+          id: "firstName",
+          name: "firstName",
+          errorMessage: errors | findError('firstName')
+        }) }}
+        {{ govukInput({label: {
+          text: "Last name"
+        },
+          classes: "govuk-input--width-20",
+          value: lastName,
+          id: "lastName",
+          name: "lastName",
+          errorMessage: errors | findError('lastName')
+        }) }}
+
+        {% if showCaseloadDropdown %}
+          <div class="govuk-list">
+            {{ govukSelect({label: {
+              text: caseloadTitle
+            },
+              idPrefix: 'defaultCaseloadId',
+              name: 'defaultCaseloadId',
+              id: 'defaultCaseloadId',
+              items: caseloadDropdownValues | setSelected(defaultCaseloadId) | addBlankOptions(caseloadTitle) ,
+              errorMessage: errors | findError('defaultCaseloadId')
+            }) }}
+          </div>
+        {% endif %}
+
+        {{ govukButton({
+          text: "Create",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: '/',
+          classes: "govuk-button--secondary"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+{% if showCaseloadDropdown %}
+  {% block pageScripts %}
+    <meta name="autocompleteElements" content="defaultCaseloadId"/>
+    <script src="/assets/accessible-autocomplete.min.js"></script>
+    <script src="/js/autocomplete.js"></script>
+  {% endblock %}
+{% endif %}

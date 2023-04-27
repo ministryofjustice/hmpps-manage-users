@@ -6,16 +6,15 @@ const validateCreate = ({ userType }) => {
   return errors
 }
 
-const createUserFactory = (createDpsUserUrl) => {
+const createUserFactory = (createDpsUserOptionsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createUserErrors', errors)
     req.flash('user', user)
     res.redirect(req.originalUrl)
   }
-
-  const stashStateAndRedirectToCreateDpsUser = (req, res, user) => {
+  const stashStateAndRedirectToCreateUserOptions = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(createDpsUserUrl)
+    res.redirect(createDpsUserOptionsUrl)
   }
 
   const index = async (req, res) => {
@@ -37,14 +36,13 @@ const createUserFactory = (createDpsUserUrl) => {
 
   const post = async (req, res) => {
     const user = req.body
-
     const errors = validateCreate(user)
 
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
-        stashStateAndRedirectToCreateDpsUser(req, res, [user])
+        stashStateAndRedirectToCreateUserOptions(req, res, [user])
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
           const { emailError: error, error_description: errorDescription, field } = err.response.body
