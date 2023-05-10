@@ -31,27 +31,37 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      <h1 class="govuk-heading-l">Create a Linked General User</h1>
+      <h1 class="govuk-heading-l">Create a Linked DPS General User</h1>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="userType" value="{{ user }}" />
 
         {{ govukInput({label: {
-          text: "Username"
+          text: "Existing Admin Username"
         },
           classes: "govuk-input--width-20",
-          value: username,
-          id: "username",
-          name: "username",
-          errorMessage: errors | findError('username')
+          value: adminUsername,
+          id: "adminUsername",
+          name: "adminUsername",
+          errorMessage: errors | findError('adminUsername')
+        }) }}
+        {{ govukButton({
+           text: "Search and populate user details",
+           type: "submit",
+           id: "searchUser",
+           name: "searchUser",
+           value: "DPS_GEN",
+           classes: "govuk-!-margin-right-1",
+           attributes: { "data-qa": "create-button" }
         }) }}
         {{ govukInput({label: {
-            text: "Generak Username"
+            text: "General Username"
         },
           classes: "govuk-input--width-20",
-          value: generalusername,
-          id: "generalusername",
-          name: "generalusername",
-          errorMessage: errors | findError('generalusername')
+          value: generalUsername,
+          id: "generalUsername",
+          name: "generalUsername",
+          errorMessage: errors | findError('generalUsername')
         }) }}
         {{ govukInput({label: {
           text: "Email address"
@@ -60,7 +70,7 @@
           value: email,
           id: "email",
           name: "email",
-          errorMessage: errors | findError('email')
+          errorMessage: null
         }) }}
         {{ govukInput({label: {
           text: "First name"
@@ -69,7 +79,7 @@
           value: firstName,
           id: "firstName",
           name: "firstName",
-          errorMessage: errors | findError('firstName')
+          errorMessage: null
         }) }}
         {{ govukInput({label: {
           text: "Last name"
@@ -78,7 +88,7 @@
           value: lastName,
           id: "lastName",
           name: "lastName",
-          errorMessage: errors | findError('lastName')
+          errorMessage: null
         }) }}
 
         {% if showCaseloadDropdown %}
@@ -96,8 +106,11 @@
         {% endif %}
 
         {{ govukButton({
-          text: "Create",
+          text: "Create and Link General User",
           type: "submit",
+          id: "createUser",
+          name: "createUser",
+          value: "create-gen",
           classes: "govuk-!-margin-right-1",
           attributes: { "data-qa": "create-button" }
         }) }}

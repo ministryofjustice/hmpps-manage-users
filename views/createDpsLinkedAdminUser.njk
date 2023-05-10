@@ -48,6 +48,9 @@
         {{ govukButton({
           text: "Search and populate user details",
           type: "submit",
+          id: "searchUser",
+          name: "searchUser",
+          value: "DPS_ADM",
           classes: "govuk-!-margin-right-1",
           attributes: { "data-qa": "create-button" }
         }) }}
@@ -91,6 +94,9 @@
         {{ govukButton({
           text: "Create and Link Admin User",
           type: "submit",
+          id: "createUser",
+          name: "createUser",
+          value: "create-admin",
           classes: "govuk-!-margin-right-1",
           attributes: { "data-qa": "create-button" }
         }) }}
