@@ -40,10 +40,10 @@
           text: "Existing Admin Username"
         },
           classes: "govuk-input--width-20",
-          value: adminUsername,
-          id: "adminUsername",
-          name: "adminUsername",
-          errorMessage: errors | findError('adminUsername')
+          value: existingUsername,
+          id: "existingUsername",
+          name: "existingUsername",
+          errorMessage: errors | findError('existingUsername')
         }) }}
         {{ govukButton({
            text: "Search and populate user details",
