@@ -1,6 +1,6 @@
-const validateLinkedUserOptionSelection = (user) => {
+const validateLinkedUserOptionSelection = (userExists) => {
   const errors = []
-  if (!user.userExists || !user.userExists.trim()) {
+  if (!userExists) {
     errors.push({ href: '#userExists', text: 'Select if user has an existing account' })
   }
   return errors

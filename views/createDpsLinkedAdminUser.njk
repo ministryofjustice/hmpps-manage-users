@@ -36,17 +36,20 @@
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <input type="hidden" name="userType" value="{{ user }}" />
 
-        {{ govukInput({label: {
-          text: "Existing Username"
-        },
-          classes: "govuk-input--width-20",
+        {{ govukInput({ label: {
+            text: " Existing Username", classes: "govuk-label--s"
+         },
+          classes: "govuk-input--width-20 govuk-fieldset__legend--s",
           value: existingUsername,
           id: "existingUsername",
           name: "existingUsername",
+          hint: {
+             text: "Search and populate existing user details by Username"
+          },
           errorMessage: errors | findError('existingUsername')
         }) }}
         {{ govukButton({
-          text: "Search and populate user details",
+          text: "Search",
           type: "submit",
           id: "searchUser",
           name: "searchUser",
@@ -55,7 +58,7 @@
           attributes: { "data-qa": "create-button" }
         }) }}
         {{ govukInput({label: {
-            text: "Admin Username"
+            text: "Admin Username" , classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: adminUsername,
@@ -64,7 +67,7 @@
           errorMessage: errors | findError('adminUsername')
         }) }}
         {{ govukInput({label: {
-          text: "Email address"
+          text: "Email address", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-25",
           value: email,
@@ -73,7 +76,7 @@
           errorMessage: null
         }) }}
         {{ govukInput({label: {
-          text: "First name"
+          text: "First name", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: firstName,
@@ -82,7 +85,7 @@
           errorMessage: null
         }) }}
         {{ govukInput({label: {
-          text: "Last name"
+          text: "Last name", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: lastName,

@@ -37,16 +37,19 @@
         <input type="hidden" name="userType" value="{{ user }}" />
 
         {{ govukInput({label: {
-          text: "Existing Admin Username"
+            text: " Existing Admin Username", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: existingUsername,
           id: "existingUsername",
           name: "existingUsername",
+          hint: {
+            text: "Search and populate existing user details by Admin Username"
+          },
           errorMessage: errors | findError('existingUsername')
         }) }}
         {{ govukButton({
-           text: "Search and populate user details",
+           text: "Search",
            type: "submit",
            id: "searchUser",
            name: "searchUser",
@@ -55,7 +58,7 @@
            attributes: { "data-qa": "create-button" }
         }) }}
         {{ govukInput({label: {
-            text: "General Username"
+            text: "General Username", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: generalUsername,
@@ -64,7 +67,7 @@
           errorMessage: errors | findError('generalUsername')
         }) }}
         {{ govukInput({label: {
-          text: "Email address"
+          text: "Email address", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-25",
           value: email,
@@ -73,7 +76,7 @@
           errorMessage: null
         }) }}
         {{ govukInput({label: {
-          text: "First name"
+          text: "First name", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: firstName,
@@ -82,7 +85,7 @@
           errorMessage: null
         }) }}
         {{ govukInput({label: {
-          text: "Last name"
+          text: "Last name", classes: "govuk-label--s"
         },
           classes: "govuk-input--width-20",
           value: lastName,
@@ -94,7 +97,7 @@
         {% if showCaseloadDropdown %}
           <div class="govuk-list">
             {{ govukSelect({label: {
-              text: caseloadTitle
+              text: "caseloadTitle", classes: "govuk-label--s"
             },
               idPrefix: 'defaultCaseloadId',
               name: 'defaultCaseloadId',

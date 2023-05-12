@@ -1,4 +1,4 @@
-const { validateLinkedAccountSelection } = require('./linkedAccountValidation')
+const { validateLinkedUserOptionSelection } = require('./linkedAccountValidation')
 
 const createLinkedDpsUserDecisionFactory = (createLinkedUserUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
@@ -38,8 +38,8 @@ const createLinkedDpsUserDecisionFactory = (createLinkedUserUrl) => {
 
   const post = async (req, res) => {
     const user = req.body
-    // const errors = validateLinkedAccountSelection(user)
-    const errors = []
+    const errors = validateLinkedUserOptionSelection(user.userExists)
+    // const errors = []
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
