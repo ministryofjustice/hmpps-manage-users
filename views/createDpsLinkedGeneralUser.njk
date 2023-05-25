@@ -31,7 +31,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      <h1 class="govuk-heading-l">Create a Linked DPS General User</h1>
+      <h1 class="govuk-heading-l">Create a Linked General User</h1>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <input type="hidden" name="userType" value="{{ user }}" />
@@ -44,7 +44,7 @@
           id: "existingUsername",
           name: "existingUsername",
           hint: {
-            text: "Search and populate existing user details by Admin Username"
+            text: "Search and populate existing admin user details by username"
           },
           errorMessage: errors | findError('existingUsername')
         }) }}
@@ -97,7 +97,7 @@
         {% if showCaseloadDropdown %}
           <div class="govuk-list">
             {{ govukSelect({label: {
-              text: "caseloadTitle", classes: "govuk-label--s"
+              text: "Select a default caseload", classes: "govuk-label--s"
             },
               idPrefix: 'defaultCaseloadId',
               name: 'defaultCaseloadId',

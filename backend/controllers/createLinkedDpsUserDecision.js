@@ -2,7 +2,12 @@ const { validateLinkedUserOptionSelection } = require('./linkedAccountValidation
 
 const createLinkedDpsUserDecisionFactory = (createLinkedUserUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
-    res.redirect(createLinkedUserUrl)
+    // res.redirect(createLinkedUserUrl)
+    if (req.originalUrl === '/create-user-options') {
+      res.redirect('/create-user')
+    } else {
+      res.redirect(req.originalUrl)
+    }
   }
   const stashStateAndRedirectToCreateLinkedDpsUser = (req, res, user) => {
     req.flash('user', user)
@@ -28,7 +33,7 @@ const createLinkedDpsUserDecisionFactory = (createLinkedUserUrl) => {
     } else {
       const currentUserTypeDesc = userTypes.get(user.userType)
       res.render('createLinkedUserDecision.njk', {
-        title: `Create a DPS ${currentUserTypeDesc} user`,
+        title: `Create a DPS ${currentUserTypeDesc} User`,
         ...user,
         userType: user.userType,
         errors: req.flash('createDpsUserErrors'),

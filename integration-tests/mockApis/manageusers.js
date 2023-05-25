@@ -181,6 +181,28 @@ module.exports = {
       },
     }),
 
+  stubLinkedAdminDpsCreateUser: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/linkedprisonusers/admin',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          staffId: 100,
+          firstName: 'Firstlaa',
+          lastName: 'Lastlaa',
+          status: 'EXPIRED',
+          primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+          adminAccount: { username: 'USERNAME' },
+        },
+      },
+    }),
+
   stubAllRolesPaged: ({
     content = [
       {
@@ -576,6 +598,12 @@ module.exports = {
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/prisonusers',
+    }).then((data) => data.body.requests),
+
+  verifyLinkedAdminDpsCreateUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/linkedprisonusers/admin',
     }).then((data) => data.body.requests),
 
   verifyExternalCreateUser: () =>

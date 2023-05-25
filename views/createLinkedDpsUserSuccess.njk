@@ -18,9 +18,12 @@
       <div class="govuk-grid-column-two-thirds">
         {{ govukPanel({
           titleText: "DPS user created",
-          html: "The linked user has been created ",
+          html: "The new user has been linked to an existing account ",
           attributes: { "data-qa": "email" }
         }) }}
+        <div class="govuk-body">
+         <a data-qa="user-details" href="{{detailsLink}}" class="govuk-link">View new user details</a>
+        </div>
       </div>
     </div>
   </div>

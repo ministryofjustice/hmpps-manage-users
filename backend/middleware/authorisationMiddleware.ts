@@ -14,6 +14,7 @@ enum AuthRole {
 const authorisationMap = {
   '/select-caseloads': [AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN],
   '/create-dps-user': [AuthRole.CREATE_USER],
+  '/create-linked-dps-user': [AuthRole.CREATE_USER],
   '/create-group': [AuthRole.MAINTAIN_OAUTH_USERS],
   '/create-child-group': [AuthRole.MAINTAIN_OAUTH_USERS],
   '/create-user': [AuthRole.CREATE_USER],

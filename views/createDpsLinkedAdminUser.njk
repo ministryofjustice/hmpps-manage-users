@@ -31,7 +31,7 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
-      <h1 class="govuk-heading-l">Create a Linked Central Admin user</h1>
+      <h1 class="govuk-heading-l">Create a Linked Central Admin User</h1>
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
         <input type="hidden" name="userType" value="{{ user }}" />
@@ -44,7 +44,7 @@
           id: "existingUsername",
           name: "existingUsername",
           hint: {
-             text: "Search and populate existing user details by Username"
+             text: "Search and populate existing general user details by username"
           },
           errorMessage: errors | findError('existingUsername')
         }) }}

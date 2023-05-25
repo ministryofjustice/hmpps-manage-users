@@ -14,10 +14,16 @@ const createLinkedDpsUserFactory = (
   searchUser,
   createLinkedDpsUserUrl,
   creatDpsUserUrl,
+  manageUserUrl,
 ) => {
   const stashStateAndRedirectToCreateLinkedDpsUser = (req, res, user) => {
     req.flash('user', user)
     res.redirect(createLinkedDpsUserUrl)
+  }
+
+  const stashStateAndRedirectToCreateUser = (req, res, user) => {
+    req.flash('user', user)
+    res.redirect('/create-user')
   }
 
   const stashStateAndRedirectToCreateDpsUser = (req, res, user) => {
@@ -52,7 +58,7 @@ const createLinkedDpsUserFactory = (
       if (req.query.action === 'searchUser') {
         stashStateAndRedirectToCreateLinkedDpsUser(req, res)
       } else {
-        stashStateAndRedirectToCreateLinkedDpsUser(req, res)
+        stashStateAndRedirectToCreateUser(req, res)
       }
     } else {
       // TODO Caseload should not be retrieved for admin
@@ -78,7 +84,7 @@ const createLinkedDpsUserFactory = (
           errors: req.flash('createDpsUserErrors'),
         })
       } else {
-        // For Creating a non linked user
+        // For Creating a non-linked user
         stashStateAndRedirectToCreateDpsUser(req, res, [user])
       }
     }
@@ -162,25 +168,31 @@ const createLinkedDpsUserFactory = (
       stashStateAndRedirectToLinkedUserIndex(req, res, errors, [user])
     } else {
       try {
+        let userNameDetailsLink
         if (user.createUser === 'create-admin') {
           const linkedAdminRequest = { existingUsername: user.existingUsername, adminUsername: user.adminUsername }
-          await createLinkedAdminUser(res.locals, linkedAdminRequest)
+          const linkedAdminUserDetails = await createLinkedAdminUser(res.locals, linkedAdminRequest)
+          userNameDetailsLink = linkedAdminUserDetails.adminAccount.username
         } else if (user.createUser === 'create-lsa') {
           const linkedLsaRequest = {
             existingUsername: user.existingUsername,
             adminUsername: user.adminUsername,
             localAdminGroup: user.defaultCaseloadId,
           }
-          await createLinkedLsaUser(res.locals, linkedLsaRequest)
+          const linkLsaUserDetails = await createLinkedLsaUser(res.locals, linkedLsaRequest)
+          userNameDetailsLink = linkLsaUserDetails.adminAccount.username
         } else {
           const linkedGeneralRequest = {
             existingAdminUsername: user.existingUsername,
             generalUsername: user.generalUsername,
             defaultCaseloadId: user.defaultCaseloadId,
           }
-          await createLinkedGeneralUser(res.locals, linkedGeneralRequest)
+          const linkGeneralUserDetails = await createLinkedGeneralUser(res.locals, linkedGeneralRequest)
+          userNameDetailsLink = linkGeneralUserDetails.generalAccount.username
         }
-        res.render('createLinkedDpsUserSuccess.njk', {})
+        res.render('createLinkedDpsUserSuccess.njk', {
+          detailsLink: `${manageUserUrl}/${userNameDetailsLink}/details`,
+        })
       } catch (err) {
         if (err.status === 400 && err.response && err.response.body) {
           const { userMessage } = err.response.body

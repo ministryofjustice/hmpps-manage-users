@@ -115,6 +115,71 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('linkAdminUserToExistingGeneralAccount', () => {
+    const user = {
+      user: {
+        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
+        email: 'joe@digital.justice.gov.uk',
+        firstName: 'joe',
+        lastName: 'smith',
+        userType: 'DPS_GEN',
+      },
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedCentralAdminUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/admin', user)
+    })
+  })
+
+  describe('linkLsaUserToExistingGeneralAccount', () => {
+    const user = {
+      user: {
+        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
+        email: 'joe@digital.justice.gov.uk',
+        firstName: 'joe',
+        lastName: 'smith',
+        userType: 'DPS_GEN',
+        defaultCaseloadId: 'MDI',
+      },
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedLsaUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/lsa', user)
+    })
+  })
+
+  describe('linkGeneralUserToExistingAdminAccount', () => {
+    const user = {
+      user: {
+        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
+        email: 'joe@digital.justice.gov.uk',
+        firstName: 'joe',
+        lastName: 'smith',
+        userType: 'DPS_GEN',
+        defaultCaseloadId: 'MDI',
+      },
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedGeneralUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/general', user)
+    })
+  })
+
   describe('createRole', () => {
     const role = {
       role: { roleCode: 'role_code', roleName: 'role name', roleDescription: 'description', adminType: ['EXT_ADM'] },

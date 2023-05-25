@@ -10,14 +10,13 @@ function goToCreateDpsUser(userType) {
   cy.task('stubSignIn', { roles: [{ roleCode: 'CREATE_USER' }] })
   cy.signIn()
   const menuPage = MenuPage.verifyOnPage()
-
   menuPage.createDpsUser()
 
   const userSelectCreatePage = DpsUserSelectCreatePage.verifyOnPage()
   cy.task('stubDpsGetCaseloads')
   userSelectCreatePage.userTypeRadioButton(userType).click()
   userSelectCreatePage.submit().click()
-  const linkUserCreateOptionsPage = DpsSelectLinkedCreateUserOptionsPage.verifyOnPage(`Create a DPS ${userType} user`)
+  const linkUserCreateOptionsPage = DpsSelectLinkedCreateUserOptionsPage.verifyOnPage(`Create a DPS ${userType} User`)
   linkUserCreateOptionsPage.isLinkedRadioButton('No').click()
   linkUserCreateOptionsPage.submit().click()
   return DpsUserCreatePage.verifyOnPage(`Create a DPS ${userType} user`)
