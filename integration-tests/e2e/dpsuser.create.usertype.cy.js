@@ -44,7 +44,7 @@ context('Select DPS user to create functionality', () => {
     createPage.userTypeRadioButton('Central Admin').click()
     createPage.submit().click()
 
-    DpsUserCreatePage.verifyOnPage('Create a DPS Central Admin user')
+    DpsUserCreatePage.verifyOnPage('Create a DPS Central Admin User')
   })
 
   it('Should check for CSRF token', () => {
