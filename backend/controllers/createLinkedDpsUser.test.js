@@ -104,10 +104,7 @@ describe('create linked user factory', () => {
           userType: 'DPS_GEN',
           searchUser: 'DPS_GEN',
         },
-        flash: jest
-          .fn()
-          .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
-          .mockReturnValueOnce({ error: 'some error' }),
+        flash: jest.fn(),
         session: {},
       }
       searchUser.mockResolvedValue({
@@ -121,22 +118,11 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
       expect(searchUser).toBeCalledWith(locals, req.body.existingUsername)
-      /*      expect(render).toBeCalledWith('createDpsLinkedGeneralUser.njk', {
-        existingUsername: 'BOB_ADM',
-        firstName: 'bob',
-        lastName: 'smith',
-        caseloadDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
-        userType: 'DPS_GEN',
-        title: `Create a Linked DPS user`,
-        showCaseloadDropdown: true,
-        email: 'bob@digital.justice.gov.uk',
-        errors: [{ userType: 'DPS_GEN' }],
-      }) */
     })
   })
 
   describe('post create linked user', () => {
-    it('should create general user and link to existing admin and redirect', async () => {
+    it('should create General user and link to existing admin and redirect', async () => {
       const req = {
         params: {},
         body: {
@@ -168,7 +154,7 @@ describe('create linked user factory', () => {
       })
     })
 
-    it('should create admin user and link to general user and redirect', async () => {
+    it('should create Admin user and link to general user and redirect', async () => {
       const req = {
         params: {},
         body: {

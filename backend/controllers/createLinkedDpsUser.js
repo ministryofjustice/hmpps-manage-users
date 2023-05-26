@@ -118,7 +118,6 @@ const createLinkedDpsUserFactory = (
       try {
         const userFound = await searchUser(res.locals, user.existingUsername)
         res.render(linkedUserTypeViews.get(user.searchUser), {
-          title: `Create a Linked DPS user`,
           userType: user.userType,
           existingUsername: userFound.username,
           email: userFound.primaryEmail,
