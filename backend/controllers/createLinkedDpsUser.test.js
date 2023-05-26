@@ -118,7 +118,6 @@ describe('create linked user factory', () => {
       })
       getCaseloads.mockResolvedValue([{ id: 'MDI', name: 'Moorland HMP' }])
       const render = jest.fn()
-      const redirect = jest.fn()
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
       expect(searchUser).toBeCalledWith(locals, req.body.existingUsername)
@@ -199,36 +198,6 @@ describe('create linked user factory', () => {
       })
     })
 
-    it('should create admin user and link to general user and redirect', async () => {
-      const req = {
-        params: {},
-        body: {
-          existingUsername: 'BOB_GEN',
-          adminUsername: 'BOB_ADM',
-          userType: 'DPS_ADM',
-          createUser: 'create-admin',
-        },
-        flash: jest
-          .fn()
-          .mockReturnValueOnce([{ userType: 'DPS_ADM' }])
-          .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
-      }
-      createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
-
-      const render = jest.fn()
-      const locals = jest.fn()
-      await createLinkedDpsUser.post(req, { render, locals })
-
-      expect(createLinkedAdminUser).toBeCalledWith(locals, {
-        existingUsername: 'BOB_GEN',
-        adminUsername: 'BOB_ADM',
-      })
-      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
-        detailsLink: '/manage-dps-users/BOB_ADM/details',
-      })
-    })
-
     it('should create an LSA user and link to general user and redirect', async () => {
       const req = {
         params: {},
@@ -261,181 +230,137 @@ describe('create linked user factory', () => {
       })
     })
 
-    /*
-it('should trim fields, create user and redirect', async () => {
-  const req = {
-    params: { userId: 'BOB_ADM' },
-    body: {
-      email: ' bob@digital.justice.gov.uk ',
-      username: ' BOB_ADM ',
-      firstName: ' bob ',
-      lastName: ' smith ',
-      userType: 'DPS_ADM',
-    },
-    flash: jest.fn(),
-    session: {},
-  }
+    it('should trim fields, create admin user and link to general user and redirect', async () => {
+      const req = {
+        params: {},
+        body: {
+          existingUsername: 'BOB_GEN  ',
+          adminUsername: 'BOB_ADM  ',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest
+          .fn()
+          .mockReturnValueOnce([{ userType: 'DPS_ADM' }])
+          .mockReturnValueOnce({ error: 'some error' }),
+        session: {},
+      }
+      createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
 
-  createLinkedAdminUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
+      const render = jest.fn()
+      const locals = jest.fn()
+      await createLinkedDpsUser.post(req, { render, locals })
 
-  const render = jest.fn()
-  const locals = jest.fn()
-  await createLinkedDpsUser.post(req, { render, locals })
+      expect(createLinkedAdminUser).toBeCalledWith(locals, {
+        existingUsername: 'BOB_GEN',
+        adminUsername: 'BOB_ADM',
+      })
+      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
+        detailsLink: '/manage-dps-users/BOB_ADM/details',
+      })
+    })
 
-  expect(createLinkedAdminUser).toBeCalledWith(locals, {
-    email: 'bob@digital.justice.gov.uk',
-    username: 'BOB_ADM',
-    firstName: 'bob',
-    lastName: 'smith',
-    defaultCaseloadId: 'MDI',
-    userType: 'DPS_GEN',
-  })
-  expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
-    detailsLink: '/manage-dps-users/BOB_ADM/details',
-  })
-})
+    it('should stash the errors and redirect if no details entered for admin to general user linking', async () => {
+      const req = {
+        params: {},
+        body: {
+          existingUsername: '',
+          adminUsername: '',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest.fn(),
+        session: {},
+        originalUrl: '/original',
+      }
+      createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
 
-it('should stash the errors and redirect if no details entered', async () => {
-  const req = { params: {}, body: { userType: 'DPS_GEN' }, flash: jest.fn(), originalUrl: '/original' }
+      const render = jest.fn()
+      const locals = jest.fn()
+      const redirect = jest.fn()
 
-  const redirect = jest.fn()
-  await createLinkedDpsUser.post(req, { redirect })
-  expect(redirect).toBeCalledWith('/original')
-  expect(req.flash).toBeCalledWith('createDpsUserErrors', [
-    {
-      href: '#username',
-      text: 'Enter a username',
-    },
-    {
-      href: '#email',
-      text: 'Enter an email address',
-    },
-    {
-      href: '#firstName',
-      text: 'Enter a first name',
-    },
-    {
-      href: '#lastName',
-      text: 'Enter a last name',
-    },
-  ])
-})
+      await createLinkedDpsUser.post(req, { render, locals, redirect })
 
-it('should show error if an email is invalid', async () => {
-  const req = {
-    params: {},
-    body: {
-      username: ' BOB_ADM ',
-      email: ' invalidemail ',
-      firstName: ' bob ',
-      lastName: ' smith ',
-      userType: 'DPS_GEN',
-    },
-    flash: jest.fn(),
-    originalUrl: '/original',
-  }
+      expect(redirect).toBeCalledWith('/original')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          href: '#existingUsername',
+          text: 'Enter the existing username',
+        },
+        {
+          href: '#existingUsername',
+          text: 'Existing Username must be 2 characters or more',
+        },
+        {
+          href: '#adminUsername',
+          text: 'Enter the Admin user name',
+        },
+        {
+          href: '#adminUsername',
+          text: 'Admin user name must be 2 characters or more',
+        },
+      ])
+    })
 
-  const redirect = jest.fn()
-  await createLinkedDpsUser.post(req, { redirect })
-  expect(redirect).toBeCalledWith('/original')
-  expect(req.flash).toBeCalledWith('createDpsUserErrors', [
-    {
-      href: '#email',
-      text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
-    },
-  ])
-})
+    it('should fail gracefully if a general error occurs', async () => {
+      const redirect = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 400,
+        response: { body: { userMessage: 'something went wrong' } },
+      }
 
-it('should fail gracefully if a general error occurs', async () => {
-  const redirect = jest.fn()
-  const error = {
-    ...new Error('This failed'),
-    status: 400,
-    response: { body: { userMessage: 'something went wrong' } },
-  }
+      createLinkedAdminUser.mockRejectedValue(error)
+      const req = {
+        params: {},
+        body: {
+          existingUsername: 'BOB_GEN',
+          adminUsername: 'BOB_ADM',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest.fn(),
+        session: {},
+        originalUrl: '/some-location',
+      }
+      await createLinkedDpsUser.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          text: 'something went wrong',
+        },
+      ])
+    })
 
-  createLinkedAdminUser.mockRejectedValue(error)
-  const req = {
-    body: {
-      email: 'bob@digital.justice.gov.uk',
-      username: 'BOB_ADM',
-      firstName: 'bob',
-      lastName: 'smith',
-      userType: 'DPS_GEN',
-    },
-    flash: jest.fn(),
-    originalUrl: '/some-location',
-  }
-  await createLinkedDpsUser.post(req, { redirect })
-  expect(redirect).toBeCalledWith('/some-location')
-  expect(req.flash).toBeCalledWith('createDpsUserErrors', [
-    {
-      text: 'something went wrong',
-    },
-  ])
-})
+    it('should fail gracefully if username already exists', async () => {
+      const redirect = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: { body: { errorCode: 409, userMessage: 'Username already exists' } },
+      }
 
-it('should fail gracefully if username already exists', async () => {
-  const redirect = jest.fn()
-  const error = {
-    ...new Error('This failed'),
-    status: 409,
-    response: { body: { errorCode: 601, userMessage: 'Username already exists' } },
-  }
-
-  createLinkedAdminUser.mockRejectedValue(error)
-  const req = {
-    params: {},
-    body: {
-      email: 'bob@digital.justice.gov.uk',
-      username: 'BOB_ADM',
-      firstName: 'bob',
-      lastName: 'smith',
-      defaultCaseloadId: 'MDI',
-      userType: 'DPS_GEN',
-    },
-    flash: jest.fn(),
-    originalUrl: '/some-location',
-  }
-  await createLinkedDpsUser.post(req, { redirect })
-  expect(redirect).toBeCalledWith('/some-location')
-  expect(req.flash).toBeCalledWith('createDpsUserErrors', [
-    {
-      href: '#username',
-      text: 'Username already exists',
-    },
-  ])
-})
-
-it('should fail gracefully if email domain is invalid', async () => {
-  const redirect = jest.fn()
-  const error = {
-    ...new Error('This failed'),
-    status: 409,
-    response: { body: { errorCode: 602, userMessage: 'Invalid Email domain' } },
-  }
-
-  createLinkedAdminUser.mockRejectedValue(error)
-  const req = {
-    params: {},
-    body: {
-      email: 'bob@digital.justice.gov.uk',
-      username: 'BOB_ADM',
-      firstName: 'bob',
-      lastName: 'smith',
-      userType: 'DPS_GEN',
-    },
-    flash: jest.fn(),
-    originalUrl: '/some-location',
-  }
-  await createLinkedDpsUser.post(req, { redirect })
-  expect(redirect).toBeCalledWith('/some-location')
-  expect(req.flash).toBeCalledWith('createDpsUserErrors', [
-    {
-      href: '#email',
-      text: 'Invalid Email domain',
-    },
-  ])
-}) */
+      createLinkedAdminUser.mockRejectedValue(error)
+      const req = {
+        params: {},
+        body: {
+          existingUsername: 'BOB_GEN',
+          adminUsername: 'BOB_ADM',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest.fn(),
+        session: {},
+        originalUrl: '/some-location',
+      }
+      await createLinkedDpsUser.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          href: '#adminUsername',
+          text: 'Username already exists',
+        },
+      ])
+    })
   })
 })
