@@ -14,6 +14,7 @@ const createLinkedDpsUserFactory = (
   searchUser,
   createLinkedDpsUserUrl,
   creatDpsUserUrl,
+  createUserUrl,
   manageUserUrl,
 ) => {
   const stashStateAndRedirectToCreateLinkedDpsUser = (req, res, user) => {
@@ -23,7 +24,7 @@ const createLinkedDpsUserFactory = (
 
   const stashStateAndRedirectToCreateUser = (req, res, user) => {
     req.flash('user', user)
-    res.redirect('/create-user')
+    res.redirect(createUserUrl)
   }
 
   const stashStateAndRedirectToCreateDpsUser = (req, res, user) => {
@@ -53,7 +54,7 @@ const createLinkedDpsUserFactory = (
   const index = async (req, res) => {
     const flashUser = req.flash('user')
     const user = flashUser != null && flashUser.length > 0 ? flashUser[0] : ''
-    // redirect if no user or type configured
+    // redirect if no user or type is configured in request
     if (user === '' || user.userType === 'undefined') {
       if (req.query.action === 'searchUser') {
         stashStateAndRedirectToCreateLinkedDpsUser(req, res)
@@ -61,7 +62,6 @@ const createLinkedDpsUserFactory = (
         stashStateAndRedirectToCreateUser(req, res)
       }
     } else {
-      // TODO Caseload should not be retrieved for admin
       const caseloads = await getCaseloads(res.locals)
       const caseloadDropdownValues = caseloads.map((c) => ({
         text: c.name,
@@ -92,7 +92,7 @@ const createLinkedDpsUserFactory = (
 
   const post = (req, res) => {
     const user = trimObjValues(req.body)
-    if (user.createUser === 'create-admin' || user.createUser === 'create-lsa' || user.createUser === 'create-gen') {
+    if (user.createUser !== undefined) {
       postCreateUser(req, res)
     } else if (user.searchUser !== null) {
       postSearchUser(req, res)
@@ -105,7 +105,6 @@ const createLinkedDpsUserFactory = (
     user.userType = user.searchUser
     const errors = validateUserForSearch(user.existingUsername)
     const showCaseloadDropdown = Boolean(user.userType !== 'DPS_ADM')
-    // TODO Caseload should not be retrieved for admin
     const caseloads = await getCaseloads(res.locals)
     const caseloadDropdownValues = caseloads.map((c) => ({
       text: c.name,

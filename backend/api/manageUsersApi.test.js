@@ -115,15 +115,22 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('searchUserByUsername', () => {
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.searchUserByUserName(context, 'JOE_GEN')
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN')
+    })
+  })
+
   describe('linkAdminUserToExistingGeneralAccount', () => {
     const user = {
-      user: {
-        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
-        email: 'joe@digital.justice.gov.uk',
-        firstName: 'joe',
-        lastName: 'smith',
-        userType: 'DPS_GEN',
-      },
+      existingUsername: 'BOB_GEN',
+      adminUsername: 'BOB_ADM',
     }
     beforeEach(() => {
       client.post = jest.fn().mockReturnValue({
@@ -139,12 +146,9 @@ describe('manageUsersApi tests', () => {
   describe('linkLsaUserToExistingGeneralAccount', () => {
     const user = {
       user: {
-        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
-        email: 'joe@digital.justice.gov.uk',
-        firstName: 'joe',
-        lastName: 'smith',
-        userType: 'DPS_GEN',
-        defaultCaseloadId: 'MDI',
+        existingUsername: 'BOB_GEN',
+        adminUsername: 'BOB_LSA',
+        localAdminGroup: 'smith',
       },
     }
     beforeEach(() => {
@@ -160,14 +164,9 @@ describe('manageUsersApi tests', () => {
 
   describe('linkGeneralUserToExistingAdminAccount', () => {
     const user = {
-      user: {
-        username: 'JOE_GEN_LINK_ADMIN_TO_GEN',
-        email: 'joe@digital.justice.gov.uk',
-        firstName: 'joe',
-        lastName: 'smith',
-        userType: 'DPS_GEN',
-        defaultCaseloadId: 'MDI',
-      },
+      existingAdminUsername: 'BOB_ADM',
+      generalUsername: 'bob',
+      defaultCaseloadId: 'smith',
     }
     beforeEach(() => {
       client.post = jest.fn().mockReturnValue({

@@ -15,11 +15,12 @@ describe('create linked user factory', () => {
     searchUser,
     '/create-linked-dps-user',
     '/create-dps-user',
+    '/create-user',
     '/manage-dps-users',
   )
 
   describe('index', () => {
-    it('should call create-user render scenario 1', async () => {
+    it('should call create-user index scenario 1', async () => {
       const req = {
         query: { action: 'searchUser' },
         flash: jest.fn().mockReturnValueOnce(''),
@@ -32,7 +33,7 @@ describe('create linked user factory', () => {
       expect(redirect).toBeCalledWith('/create-linked-dps-user')
     })
 
-    it('should call create-user render scenario 2', async () => {
+    it('should call create-user index scenario 2', async () => {
       const req = {
         query: { action: '' },
         flash: jest.fn().mockReturnValueOnce(''),
@@ -45,7 +46,7 @@ describe('create linked user factory', () => {
       expect(redirect).toBeCalledWith('/create-user')
     })
 
-    it('should call create-user render scenario 3', async () => {
+    it('should call create-user index scenario 3', async () => {
       const req = {
         params: {},
         flash: jest.fn().mockReturnValueOnce([{ userType: 'DPS_GEN', userExists: 'true' }]),
@@ -127,7 +128,7 @@ describe('create linked user factory', () => {
         params: {},
         body: {
           existingUsername: 'BOB_ADM',
-          generalUsername: 'bob',
+          generalUsername: 'BOB_GEN',
           defaultCaseloadId: 'smith',
           userType: 'DPS_GEN',
           createUser: 'create-gen',
@@ -138,7 +139,7 @@ describe('create linked user factory', () => {
           .mockReturnValueOnce({ error: 'some error' }),
         session: {},
       }
-      createLinkedGeneralUser.mockResolvedValue({ generalAccount: { username: 'BOB_ADM' } })
+      createLinkedGeneralUser.mockResolvedValue({ generalAccount: { username: 'BOB_GEN' } })
 
       const render = jest.fn()
       const locals = jest.fn()
@@ -146,11 +147,11 @@ describe('create linked user factory', () => {
 
       expect(createLinkedGeneralUser).toBeCalledWith(locals, {
         existingAdminUsername: 'BOB_ADM',
-        generalUsername: 'bob',
+        generalUsername: 'BOB_GEN',
         defaultCaseloadId: 'smith',
       })
       expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
-        detailsLink: '/manage-dps-users/BOB_ADM/details',
+        detailsLink: '/manage-dps-users/BOB_GEN/details',
       })
     })
 
@@ -345,6 +346,37 @@ describe('create linked user factory', () => {
         {
           href: '#adminUsername',
           text: 'Username already exists',
+        },
+      ])
+    })
+
+    it('should fail gracefully if the Username was not found', async () => {
+      const redirect = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 404,
+        response: { body: { errorCode: 404, userMessage: 'Username not found' } },
+      }
+
+      createLinkedAdminUser.mockRejectedValue(error)
+      const req = {
+        params: {},
+        body: {
+          existingUsername: 'BOB_GEN',
+          adminUsername: 'BOB_ADM',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest.fn(),
+        session: {},
+        originalUrl: '/some-location',
+      }
+      await createLinkedDpsUser.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          href: '#existingUsername',
+          text: 'Username not found',
         },
       ])
     })

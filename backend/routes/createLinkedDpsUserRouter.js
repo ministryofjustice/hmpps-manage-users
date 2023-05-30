@@ -18,6 +18,7 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
     searchUser,
     '/create-linked-dps-user',
     '/create-dps-user',
+    '/create-user',
     '/manage-dps-users',
   )
 
