@@ -1,5 +1,4 @@
 const MenuPage = require('../pages/menuPage')
-const UserPage = require('../pages/userPage')
 const LinkedDpsUserCreatePage = require('../pages/linkedDpsUserCreatePage')
 const DpsUserSelectCreatePage = require('../pages/dpsSelectUserCreatePage')
 const DpsSelectLinkedCreateUserOptionsPage = require('../pages/dpsSelectLinkedCreateUserOptionsPage')
@@ -85,6 +84,38 @@ context('DPS linked user create functionality', () => {
     LinkedDpsUserCreateSuccessPage.verifyOnPage()
   })
 
+  it('Should create a linked LSA user', () => {
+    cy.task('stubLinkedLsaDpsCreateUser')
+    const linkedDpsUserCreatePage = goToCreateLinkedDpsUser('Local System Administrator (LSA)')
+    linkedDpsUserCreatePage.linkLsa('BOB_GEN', 'BOB_LSA', 'Moorland (HMP & YOI)')
+
+    cy.task('verifyLinkedLsaDpsCreateUser').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.include({
+        existingUsername: 'BOB_GEN',
+        adminUsername: 'BOB_LSA',
+        localAdminGroup: 'MDI',
+      })
+    })
+    LinkedDpsUserCreateSuccessPage.verifyOnPage()
+  })
+
+  it('Should create a linked General user', () => {
+    cy.task('stubLinkedGeneralDpsCreateUser')
+    const linkedDpsUserCreatePage = goToCreateLinkedDpsUser('General')
+    linkedDpsUserCreatePage.linkGeneral('BOB_GEN', 'BOB_ADM', 'Moorland (HMP & YOI)')
+
+    cy.task('verifyLinkedGeneralDpsCreateUser').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      expect(JSON.parse(requests[0].body)).to.deep.include({
+        existingAdminUsername: 'BOB_ADM',
+        generalUsername: 'BOB_GEN',
+        defaultCaseloadId: 'MDI',
+      })
+    })
+    LinkedDpsUserCreateSuccessPage.verifyOnPage()
+  })
+
   it('Should fail attempting to reach "create-user" if unauthorised', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'NOT_CREATE_USER' }] })
     cy.signIn()
@@ -93,6 +124,17 @@ context('DPS linked user create functionality', () => {
     menuPage.createDpsUserTile().should('not.exist')
 
     cy.visit('/create-user', { failOnStatusCode: false })
+    AuthErrorPage.verifyOnPage()
+  })
+
+  it('Should fail attempting to reach "create-user-options" if unauthorised', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'NOT_CREATE_USER' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+
+    menuPage.createDpsUserTile().should('not.exist')
+
+    cy.visit('/create-user-options', { failOnStatusCode: false })
     AuthErrorPage.verifyOnPage()
   })
 

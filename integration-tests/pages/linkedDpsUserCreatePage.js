@@ -1,7 +1,6 @@
 const page = require('./page')
 
 const existingUsernameVar = () => cy.get('#existingUsername')
-const existingAdminUsername = () => cy.get('#existingAdminUsername')
 const adminUsernameVar = () => cy.get('#adminUsername')
 const generalUsername = () => cy.get('#generalUsername')
 const caseloadField = () => cy.get('#defaultCaseloadId')
@@ -15,15 +14,15 @@ const dpsUserCreatePage = (title) =>
       if (adminUsername) adminUsernameVar().type(adminUsername)
       submit().click()
     },
-    linkLsa: (username, adminname, caseload) => {
-      if (username) existingUsernameVar().type(username)
-      if (adminname) adminUsernameVar().type(adminname)
+    linkLsa: (existingUsername, lsaUsername, caseload) => {
+      if (existingUsername) existingUsernameVar().type(existingUsername)
+      if (lsaUsername) adminUsernameVar().type(lsaUsername)
       if (caseload) caseloadField().clear().type(caseload)
       submit().click()
     },
-    linkGeneral: (username, adminname, caseload) => {
+    linkGeneral: (username, existingAdminUsername, caseload) => {
       if (username) generalUsername().type(username)
-      if (adminname) existingAdminUsername().type(adminname)
+      if (existingAdminUsername) existingUsernameVar().type(existingAdminUsername)
       if (caseload) caseloadField().clear().type(caseload)
       submit().click()
     },
