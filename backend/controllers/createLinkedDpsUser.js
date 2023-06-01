@@ -1,6 +1,6 @@
 const { trimObjValues } = require('../utils/utils')
+const { validateUserForSearch } = require('./linkUserSearchValidation')
 const {
-  validateUserForSearch,
   validateLinkedAdminUserCreate,
   validateLinkedLsaUserCreate,
   validateLinkedGeneralUserCreate,

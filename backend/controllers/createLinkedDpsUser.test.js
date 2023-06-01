@@ -20,7 +20,7 @@ describe('create linked user factory', () => {
   )
 
   describe('index', () => {
-    it('should call create-user index scenario 1', async () => {
+    it('should redirect to create-user page when no user but search param is set e.g. using browser back button from create linked user page  ', async () => {
       const req = {
         query: { action: 'searchUser' },
         flash: jest.fn().mockReturnValueOnce(''),
@@ -33,7 +33,7 @@ describe('create linked user factory', () => {
       expect(redirect).toBeCalledWith('/create-linked-dps-user')
     })
 
-    it('should call create-user index scenario 2', async () => {
+    it('should redirect to create-user page when no user or user type is defined in request e.g. using browser back button from create linked user page  ', async () => {
       const req = {
         query: { action: '' },
         flash: jest.fn().mockReturnValueOnce(''),
@@ -46,7 +46,7 @@ describe('create linked user factory', () => {
       expect(redirect).toBeCalledWith('/create-user')
     })
 
-    it('should call create-user index scenario 3', async () => {
+    it('should display link general user page, when general user type with link option is selected on preceeding pages', async () => {
       const req = {
         params: {},
         flash: jest.fn().mockReturnValueOnce([{ userType: 'DPS_GEN', userExists: 'true' }]),
