@@ -115,6 +115,70 @@ describe('manageUsersApi tests', () => {
     })
   })
 
+  describe('searchUserByUsername', () => {
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.searchUserByUserName(context, 'JOE_GEN')
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN')
+    })
+  })
+
+  describe('linkAdminUserToExistingGeneralAccount', () => {
+    const user = {
+      existingUsername: 'BOB_GEN',
+      adminUsername: 'BOB_ADM',
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedCentralAdminUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/admin', user)
+    })
+  })
+
+  describe('linkLsaUserToExistingGeneralAccount', () => {
+    const user = {
+      user: {
+        existingUsername: 'BOB_GEN',
+        adminUsername: 'BOB_LSA',
+        localAdminGroup: 'smith',
+      },
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedLsaUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/lsa', user)
+    })
+  })
+
+  describe('linkGeneralUserToExistingAdminAccount', () => {
+    const user = {
+      existingAdminUsername: 'BOB_ADM',
+      generalUsername: 'bob',
+      defaultCaseloadId: 'smith',
+    }
+    beforeEach(() => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => {},
+      })
+      manageUsersApi.createLinkedGeneralUser(context, user)
+    })
+    it('should call create manage user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/general', user)
+    })
+  })
+
   describe('createRole', () => {
     const role = {
       role: { roleCode: 'role_code', roleName: 'role name', roleDescription: 'description', adminType: ['EXT_ADM'] },

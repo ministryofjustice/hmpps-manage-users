@@ -97,16 +97,24 @@ const manageUsersApiFactory = (client) => {
   const deactivateExternalUser = (context, { userId, reason }) =>
     put(context, `/externalusers/${userId}/disable`, { reason })
 
+  const searchUserByUserName = (context, username) => get(context, `/prisonusers/${username}`)
   const createUser = (context, user) => post(context, '/prisonusers', user)
+  const createLinkedCentralAdminUser = (context, user) => post(context, '/linkedprisonusers/admin', user)
+  const createLinkedLsaUser = (context, user) => post(context, '/linkedprisonusers/lsa', user)
+  const createLinkedGeneralUser = (context, user) => post(context, '/linkedprisonusers/general', user)
   const changeDpsEmail = (context, username, email) => post(context, `/prisonusers/${username}/email`, email)
   const syncDpsEmail = (context, username) => post(context, `/prisonusers/${username}/email/sync`)
   const contextUserRoles = (context, username) => get(context, `/prisonusers/${username}/roles`)
 
   return {
     getNotificationBannerMessage,
+    searchUserByUserName,
     currentUser,
     contextUserRoles,
     createUser,
+    createLinkedCentralAdminUser,
+    createLinkedLsaUser,
+    createLinkedGeneralUser,
     getUser,
     getUserEmail,
     amendUserEmail,

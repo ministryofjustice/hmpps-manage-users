@@ -181,6 +181,72 @@ module.exports = {
       },
     }),
 
+  stubLinkedAdminDpsCreateUser: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/linkedprisonusers/admin',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          staffId: 100,
+          firstName: 'Firstlaa',
+          lastName: 'Lastlaa',
+          status: 'EXPIRED',
+          primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+          adminAccount: { username: 'NEW_ADMIN' },
+        },
+      },
+    }),
+
+  stubLinkedLsaDpsCreateUser: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/linkedprisonusers/lsa',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          staffId: 100,
+          firstName: 'Firstlaa',
+          lastName: 'Lastlaa',
+          status: 'EXPIRED',
+          primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+          adminAccount: { username: 'BOB_LSA' },
+        },
+      },
+    }),
+
+  stubLinkedGeneralDpsCreateUser: () =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/linkedprisonusers/general',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: {
+          staffId: 100,
+          firstName: 'Firstlaa',
+          lastName: 'Lastlaa',
+          status: 'EXPIRED',
+          primaryEmail: 'test.localadminuser@digital.justice.gov.uk',
+          generalAccount: { username: 'USERNAME' },
+        },
+      },
+    }),
+
   stubAllRolesPaged: ({
     content = [
       {
@@ -576,6 +642,24 @@ module.exports = {
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/prisonusers',
+    }).then((data) => data.body.requests),
+
+  verifyLinkedAdminDpsCreateUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/linkedprisonusers/admin',
+    }).then((data) => data.body.requests),
+
+  verifyLinkedLsaDpsCreateUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/linkedprisonusers/lsa',
+    }).then((data) => data.body.requests),
+
+  verifyLinkedGeneralDpsCreateUser: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/linkedprisonusers/general',
     }).then((data) => data.body.requests),
 
   verifyExternalCreateUser: () =>

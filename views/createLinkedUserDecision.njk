@@ -1,0 +1,76 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="userType" value="{{ userType }}" />
+
+        {{ govukRadios({
+          idPrefix: "userExists",
+          name: "userExists",
+          fieldset: {
+            legend: {
+              text: "Does user have an existing account ?",
+              isPageHeading: true,
+              classes: 'govuk-radios--small govuk-radios--inline'
+            }
+          },
+          items: [
+            {
+              value: "true",
+              text: "Yes"
+            },
+            {
+              value: "false",
+              text: "No"
+            }
+          ],
+          errorMessage: errors | findError('userExists')
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: '/',
+          classes: "govuk-button--secondary"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

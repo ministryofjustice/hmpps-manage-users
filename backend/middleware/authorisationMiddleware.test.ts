@@ -183,6 +183,28 @@ describe('authorisationMiddleware', () => {
       expect(res.redirect).toHaveBeenCalledWith('/authError')
     })
   })
+
+  describe('create-linked-dps-user', () => {
+    it('should show correct page when user with correct role tries to access create-linked-dps-user endpoint', () => {
+      const reqCreateDpsUser = { originalUrl: '/create-linked-dps-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_CREATE_USER'] })
+
+      authorisationMiddleware([])(reqCreateDpsUser, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access create-linked-dps-user endpoint', () => {
+      const reqCreateDpsUser = { originalUrl: '/create-linked-dps-user' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCreateDpsUser, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
   describe('create-group', () => {
     it('should show correct page when user with correct role tries to access create-group endpoint', () => {
       const reqCreateGroup = { originalUrl: '/create-group' } as Request

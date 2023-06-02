@@ -113,7 +113,6 @@ describe('create user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
-
       expect(createUser).toBeCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_OSHEA',
