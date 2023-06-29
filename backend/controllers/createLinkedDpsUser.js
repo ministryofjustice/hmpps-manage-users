@@ -132,7 +132,7 @@ const createLinkedDpsUserFactory = (
           const errorDetails = [{ text: userMessage }]
           stashStateAndRedirectToLinkedUserIndex(req, res, errorDetails, [user])
         } else if (err.status === 409) {
-          const usernameError = [{ href: '#existingUsername', text: 'Username already exists' }]
+          const usernameError = [{ href: '#existingUsername', text: 'Linked Username already exists' }]
           stashStateAndRedirectToLinkedUserIndex(req, res, usernameError, [user])
         } else if (err.status === 404) {
           const usernameError = [{ href: '#existingUsername', text: 'Username not found' }]
@@ -196,6 +196,13 @@ const createLinkedDpsUserFactory = (
           const { userMessage } = err.response.body
           const errorDetails = [{ text: userMessage }]
           stashStateAndRedirectToLinkedUserIndex(req, res, errorDetails, [user])
+        } else if (
+          err.status === 409 &&
+          err.response.body.userMessage !== undefined &&
+          err.response.body.userMessage.includes('already exists for this staff member')
+        ) {
+          const usernameError = [{ href: '#existingUsername', text: 'Username already linked to another account' }]
+          stashStateAndRedirectToLinkedUserIndex(req, res, usernameError, [user])
         } else if (err.status === 409) {
           const usernameError = [{ href: newUserId, text: 'Username already exists' }]
           stashStateAndRedirectToLinkedUserIndex(req, res, usernameError, [user])

@@ -350,6 +350,39 @@ describe('create linked user factory', () => {
       ])
     })
 
+    it('should fail gracefully if username already linked', async () => {
+      const redirect = jest.fn()
+      const error = {
+        ...new Error('This failed'),
+        status: 409,
+        response: {
+          body: { errorCode: 409, userMessage: 'User already exists: Admin user already exists for this staff member' },
+        },
+      }
+
+      createLinkedAdminUser.mockRejectedValue(error)
+      const req = {
+        params: {},
+        body: {
+          existingUsername: 'BOB_GEN',
+          adminUsername: 'BOB_ADM',
+          userType: 'DPS_ADM',
+          createUser: 'create-admin',
+        },
+        flash: jest.fn(),
+        session: {},
+        originalUrl: '/some-location',
+      }
+      await createLinkedDpsUser.post(req, { redirect })
+      expect(redirect).toBeCalledWith('/some-location')
+      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+        {
+          href: '#existingUsername',
+          text: 'Username already linked to another account',
+        },
+      ])
+    })
+
     it('should fail gracefully if the Username was not found', async () => {
       const redirect = jest.fn()
       const error = {
