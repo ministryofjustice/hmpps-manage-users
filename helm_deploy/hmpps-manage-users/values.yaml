@@ -22,7 +22,7 @@ generic-service:
     modsecurity_enabled: true
     modsecurity_snippet: |
       SecRuleEngine On
-      SecDefaultAction "phase:2,pass,log,tag:github_team=dps-tech
+      SecDefaultAction "phase:2,pass,log,tag:github_team=dps-tech"
       {{ if .Values.ingress.modsecurity_audit_enabled -}}
       SecAuditEngine RelevantOnly
       SecAuditLog /var/log/nginx/error.log
