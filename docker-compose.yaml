@@ -18,8 +18,9 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_PROFILES_ACTIVE=dev,nomis
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+      - NOMIS_ENDPOINT_URL=http://nomis-user-roles-api:8080
 
   manage-users-api:
     image: quay.io/hmpps/hmpps-manage-users-api:latest
@@ -35,7 +36,7 @@ services:
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
-      - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
+      - HMPPS_AUTH_ENDPOINT_URL=http://hmpps-auth:8080/auth
 
   nomis-user-roles-api:
     image: quay.io/hmpps/nomis-user-roles-api:latest
