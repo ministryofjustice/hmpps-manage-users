@@ -1,6 +1,19 @@
 version: '3'
 services:
 
+  auth-db:
+    image: postgres:14.3
+    networks:
+      - hmpps
+    container_name: auth-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=admin_password
+      - POSTGRES_USER=admin
+      - POSTGRES_DB=auth-db
+
   redis:
     image: 'redis:7.0'
     networks:
@@ -18,8 +31,10 @@ services:
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:8080/auth/health']
     environment:
-      - SPRING_PROFILES_ACTIVE=dev
+      - SPRING_PROFILES_ACTIVE=dev,nomis,local-postgres
       - APPLICATION_AUTHENTICATION_UI_ALLOWLIST=0.0.0.0/0
+      - NOMIS_ENDPOINT_URL=http://nomis-user-roles-api:8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://auth-db:5432/auth-db
 
   manage-users-api:
     image: quay.io/hmpps/hmpps-manage-users-api:latest
@@ -35,7 +50,8 @@ services:
     environment:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
-      - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
+      - HMPPS_AUTH_ENDPOINT_URL=http://hmpps-auth:8080/auth
+      - EXTERNAL_USERS_ENDPOINT_URL=http://hmpps-external-users-api:8080
 
   nomis-user-roles-api:
     image: quay.io/hmpps/nomis-user-roles-api:latest
@@ -52,6 +68,25 @@ services:
       - SERVER_PORT=8080
       - SPRING_PROFILES_ACTIVE=dev
       - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
+
+
+  hmpps-external-users-api:
+    image: quay.io/hmpps/hmpps-external-users-api:latest
+    networks:
+      - hmpps
+    container_name: hmpps-external-users-api
+    depends_on:
+      - hmpps-auth
+    ports:
+      - "8083:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/health" ]
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_PROFILES_ACTIVE=dev,local-postgres
+      - API_BASE_URL_OAUTH=http://hmpps-auth:8080/auth
+      - SPRING_R2DBC_URL=r2dbc:postgresql://auth-db:5432/auth-db?sslmode=prefer
+      - SPRING_FLYWAY_URL=jdbc:postgresql://auth-db:5432/auth-db?sslmode=prefer
 
 networks:
   hmpps:
