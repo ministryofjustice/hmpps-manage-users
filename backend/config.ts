@@ -61,8 +61,6 @@ export default {
       region: get('AUDIT_SQS_REGION', 'eu-west-2', requiredInProduction),
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'http://localhost:4566/000000000000/mainQueue', requiredInProduction),
       serviceName: get('AUDIT_SERVICE_NAME', 'manage-users-ui', requiredInProduction),
-      accessKeyId: get('AUDIT_SQS_ACCESS_KEY_ID', ''),
-      secretAccessKey: get('AUDIT_SQS_SECRET_ACCESS_KEY', ''),
     },
     hmppsAuth: {
       url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),

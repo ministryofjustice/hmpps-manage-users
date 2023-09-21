@@ -15,7 +15,7 @@ describe('Audit service', () => {
     await auditService.addRoleToUser({
       admin: 'some admin',
       user: 'some user',
-      role: 'NEW_ROLE',
+      roles: ['NEW_ROLE'],
       logErrors: true,
     })
 
@@ -38,7 +38,7 @@ describe('Audit service', () => {
     await auditService.addRoleToUser({
       admin: 'some admin',
       user: 'some user',
-      role: 'NEW_ROLE',
+      roles: ['NEW_ROLE'],
       logErrors: true,
     })
     expect(logger.error).toHaveBeenCalledWith('Problem sending message to SQS queue', err)
@@ -50,7 +50,7 @@ describe('Audit service', () => {
     await auditService.addRoleToUser({
       admin: 'some admin',
       user: 'some user',
-      role: 'NEW_ROLE',
+      roles: ['NEW_ROLE'],
       logErrors: false,
     })
     expect(logger.error).not.toHaveBeenCalled()

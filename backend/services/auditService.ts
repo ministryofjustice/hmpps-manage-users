@@ -18,12 +18,12 @@ export class AuditService {
   async addRoleToUser({
     admin,
     user,
-    role,
+    roles,
     logErrors,
   }: {
     admin: string
     user: string
-    role: string
+    roles: Array<string>
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
@@ -31,7 +31,7 @@ export class AuditService {
       who: admin,
       admin,
       user,
-      role,
+      roles,
       logErrors,
     })
   }
@@ -42,7 +42,7 @@ export class AuditService {
     timestamp = new Date(),
     admin,
     user,
-    role,
+    roles,
     logErrors,
   }: {
     action: string
@@ -50,23 +50,18 @@ export class AuditService {
     timestamp?: Date
     admin: string
     user: string
-    role: string
+    roles: Array<string>
     logErrors: boolean
   }) {
     try {
       const message = JSON.stringify({
-        operationId: 'operationId', // TODO where does this come from?
         what: action,
         when: timestamp,
         who,
         service: config.apis.audit.serviceName,
-        details: JSON.stringify({ admin, user, role }),
+        details: JSON.stringify({ admin, user, roles }),
       })
 
-      console.log('before send sqs')
-      console.log(this.queueUrl)
-      console.log(config.apis.audit.accessKeyId)
-      console.log(config.apis.audit.secretAccessKey)
       const messageResponse = await this.sqsClient.send(
         new SendMessageCommand({
           MessageBody: message,
@@ -74,8 +69,6 @@ export class AuditService {
         }),
       )
 
-      console.log('after send sqs')
-      console.log(messageResponse)
       logger.info(`SQS message sent (${messageResponse.MessageId})`)
     } catch (error) {
       if (logErrors) {
