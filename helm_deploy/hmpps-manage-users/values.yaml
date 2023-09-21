@@ -3,6 +3,7 @@
 
 generic-service:
   nameOverride: hmpps-manage-users
+  serviceAccountName: hmpps-manage-users-service-account
 
   image:
     repository: quay.io/hmpps/hmpps-manage-users
