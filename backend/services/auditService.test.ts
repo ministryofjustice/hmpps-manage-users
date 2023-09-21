@@ -1,12 +1,9 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
-import AuditService from './auditService'
 import logger from '../../logger'
+import auditService from './auditService'
 
 describe('Audit service', () => {
-  let auditService: AuditService
-
   beforeEach(() => {
-    auditService = new AuditService()
     jest.resetAllMocks()
   })
 
@@ -20,15 +17,14 @@ describe('Audit service', () => {
     })
 
     const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
-    const { operationId, what, when, who, service, details } = JSON.parse(MessageBody)
+    const { what, when, who, service, details } = JSON.parse(MessageBody)
 
-    expect(QueueUrl).toEqual('foobar')
-    expect(operationId).toEqual('operationId')
+    expect(QueueUrl).toEqual('http://localhost:4566/000000000000/mainQueue')
     expect(what).toEqual('ADD_USER_ROLE')
     expect(when).toBeDefined()
     expect(who).toEqual('some admin')
     expect(service).toEqual('manage-users-ui')
-    expect(details).toEqual('{"admin":"some admin","user":"some user","role":"NEW_ROLE"}')
+    expect(details).toEqual('{"admin":"some admin","user":"some user","roles":["NEW_ROLE"]}')
   })
 
   it('logs out errors if logErrors is true', async () => {
