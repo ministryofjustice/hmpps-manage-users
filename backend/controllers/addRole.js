@@ -45,7 +45,12 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
-      await auditService.addRoleToUser({ username: 'some username', logErrors: false })
+      await auditService.addRoleToUser({
+        admin: 'admin', // TODO user logged in, have a look at header
+        user: userId,
+        role: roleArray, // TODO one action can have multiple roles
+        logErrors: true,
+      })
       res.redirect(`${staffUrl}`)
     }
   }

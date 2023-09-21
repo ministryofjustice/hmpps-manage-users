@@ -13,8 +13,6 @@ describe('Audit service', () => {
   it('sends a prisoner search audit message', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
     await auditService.addRoleToUser({
-      subjectId: 'subjectId',
-      subjectType: 'subjectType',
       admin: 'some admin',
       user: 'some user',
       role: 'NEW_ROLE',
@@ -22,15 +20,13 @@ describe('Audit service', () => {
     })
 
     const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
-    const { operationId, what, when, who, subjectId, subjectType, service, details } = JSON.parse(MessageBody)
+    const { operationId, what, when, who, service, details } = JSON.parse(MessageBody)
 
     expect(QueueUrl).toEqual('foobar')
     expect(operationId).toEqual('operationId')
     expect(what).toEqual('ADD_USER_ROLE')
     expect(when).toBeDefined()
     expect(who).toEqual('some admin')
-    expect(subjectId).toEqual('subjectId')
-    expect(subjectType).toEqual('subjectType')
     expect(service).toEqual('manage-users-ui')
     expect(details).toEqual('{"admin":"some admin","user":"some user","role":"NEW_ROLE"}')
   })
@@ -40,8 +36,6 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
     await auditService.addRoleToUser({
-      subjectId: 'subjectId',
-      subjectType: 'subjectType',
       admin: 'some admin',
       user: 'some user',
       role: 'NEW_ROLE',
@@ -54,8 +48,6 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
     await auditService.addRoleToUser({
-      subjectId: 'subjectId',
-      subjectType: 'subjectType',
       admin: 'some admin',
       user: 'some user',
       role: 'NEW_ROLE',

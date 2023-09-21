@@ -68,6 +68,9 @@ generic-service:
       API_CLIENT_SECRET: "API_CLIENT_SECRET"
       GOOGLE_TAG_MANAGER_ID: "GOOGLE_TAG_MANAGER_ID"
       SESSION_SECRET: "SESSION_SECRET"
+    sqs-hmpps-audit-secret:
+      AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
+      AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
     hmpps-redis:
       REDIS_HOST: "REDIS_HOST"
       REDIS_PASSWORD: "REDIS_PASSWORD"

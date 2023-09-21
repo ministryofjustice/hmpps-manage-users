@@ -6,19 +6,21 @@ export class AuditService {
   private sqsClient: SQSClient
 
   constructor(private readonly queueUrl = config.apis.audit.queueUrl) {
-    this.sqsClient = new SQSClient({})
+    this.sqsClient = new SQSClient({
+      region: config.apis.audit.region,
+      credentials: {
+        accessKeyId: config.apis.audit.accessKeyId,
+        secretAccessKey: config.apis.audit.secretAccessKey,
+      },
+    })
   }
 
   async addRoleToUser({
-    subjectId,
-    subjectType,
     admin,
     user,
     role,
     logErrors,
   }: {
-    subjectId: string
-    subjectType: string
     admin: string
     user: string
     role: string
@@ -27,8 +29,6 @@ export class AuditService {
     return this.sendAuditMessage({
       action: 'ADD_USER_ROLE',
       who: admin,
-      subjectId,
-      subjectType,
       admin,
       user,
       role,
@@ -39,8 +39,6 @@ export class AuditService {
   async sendAuditMessage({
     action,
     who,
-    subjectId,
-    subjectType,
     timestamp = new Date(),
     admin,
     user,
@@ -49,8 +47,6 @@ export class AuditService {
   }: {
     action: string
     who: string
-    subjectId: string
-    subjectType: string
     timestamp?: Date
     admin: string
     user: string
@@ -63,12 +59,14 @@ export class AuditService {
         what: action,
         when: timestamp,
         who,
-        subjectId,
-        subjectType,
         service: config.apis.audit.serviceName,
         details: JSON.stringify({ admin, user, role }),
       })
 
+      console.log('before send sqs')
+      console.log(this.queueUrl)
+      console.log(config.apis.audit.accessKeyId)
+      console.log(config.apis.audit.secretAccessKey)
       const messageResponse = await this.sqsClient.send(
         new SendMessageCommand({
           MessageBody: message,
@@ -76,6 +74,8 @@ export class AuditService {
         }),
       )
 
+      console.log('after send sqs')
+      console.log(messageResponse)
       logger.info(`SQS message sent (${messageResponse.MessageId})`)
     } catch (error) {
       if (logErrors) {
