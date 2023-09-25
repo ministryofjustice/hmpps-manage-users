@@ -1,4 +1,7 @@
-const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl, auditService) => {
+// eslint-disable-next-line import/no-import-module-exports
+import AuditService from '../services/auditService'
+
+const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
     res.redirect(req.originalUrl)
@@ -31,6 +34,8 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl, auditS
   }
 
   const post = async (req, res) => {
+    const auditService = new AuditService()
+
     const { userId } = req.params
     const { roles } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
