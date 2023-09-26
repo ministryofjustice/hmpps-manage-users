@@ -72,6 +72,7 @@ generic-service:
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
+      AUDIT_SQS_REGION: "eu-west-2"
     hmpps-redis:
       REDIS_HOST: "REDIS_HOST"
       REDIS_PASSWORD: "REDIS_PASSWORD"
