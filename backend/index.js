@@ -122,4 +122,3 @@ app.listen(config.app.port, () => {
   // eslint-disable-next-line no-console
   console.log('Backend running on port', config.app.port)
 })
-
