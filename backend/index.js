@@ -8,7 +8,6 @@ require('dotenv').config()
 // In particular, applicationinsights automatically collects bunyan logs
 initialiseAppInsights()
 buildAppInsightsClient()
-// TODO import auditService here and use
 
 const path = require('path')
 const express = require('express')
