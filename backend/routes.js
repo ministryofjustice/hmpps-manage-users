@@ -1,4 +1,5 @@
 const express = require('express')
+const { AuditService } = require('./services/auditService')
 
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')

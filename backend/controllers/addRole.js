@@ -1,3 +1,5 @@
+const { AuditService } = require('../services/auditService')
+
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
@@ -31,6 +33,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   }
 
   const post = async (req, res) => {
+    const auditService = new AuditService()
     const { userId } = req.params
     const { roles } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
@@ -41,6 +44,12 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
+      await auditService.addRoleToUser({
+        admin: 'admin', // TODO populate with real value
+        user: userId,
+        role: roleArray,
+        logErrors: true,
+      })
       res.redirect(`${staffUrl}`)
     }
   }
