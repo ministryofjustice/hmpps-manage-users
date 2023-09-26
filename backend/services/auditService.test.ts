@@ -26,7 +26,7 @@ describe('Audit service', () => {
     expect(what).toEqual('ADD_USER_ROLE')
     expect(when).toBeDefined()
     expect(who).toEqual('some admin')
-    expect(service).toEqual('manage-users-ui')
+    expect(service).toEqual('hmpps-manage-users')
     expect(details).toEqual('{"admin":"some admin","user":"some user","roles":["NEW_ROLE"]}')
   })
 

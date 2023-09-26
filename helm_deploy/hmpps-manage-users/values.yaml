@@ -57,6 +57,8 @@ generic-service:
     TOKEN_VERIFICATION_ENABLED: true
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
     NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS: "120"
+    AUDIT_SQS_REGION: "eu-west-2"
+    AUDIT_SERVICE_NAME: "hmpps-manage-users"
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
