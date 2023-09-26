@@ -1,6 +1,8 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
-import AuditService from './auditService'
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { AuditService } = require('./auditService')
 
 describe('Audit service', () => {
   const auditService = new AuditService()

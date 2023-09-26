@@ -8,6 +8,7 @@ require('dotenv').config()
 // In particular, applicationinsights automatically collects bunyan logs
 initialiseAppInsights()
 buildAppInsightsClient()
+// TODO import auditService here and use
 
 const path = require('path')
 const express = require('express')
@@ -121,3 +122,4 @@ app.listen(config.app.port, () => {
   // eslint-disable-next-line no-console
   console.log('Backend running on port', config.app.port)
 })
+

@@ -74,4 +74,4 @@ class AuditService {
   }
 }
 
-export default AuditService
+module.exports = { AuditService }

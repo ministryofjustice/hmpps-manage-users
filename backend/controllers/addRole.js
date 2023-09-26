@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-import-module-exports
-import AuditService from '../services/auditService'
+const { AuditService } = require('../services/auditService')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -35,7 +34,6 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
 
   const post = async (req, res) => {
     const auditService = new AuditService()
-
     const { userId } = req.params
     const { roles } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
