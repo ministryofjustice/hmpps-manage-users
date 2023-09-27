@@ -36,6 +36,7 @@ export interface ApiConfig {
 export default {
   production,
   https: production,
+  productId: get('PRODUCT_ID', 'DPS017', requiredInProduction),
   staticResourceCacheDuration: 20,
   redis: {
     host: get('REDIS_HOST', 'localhost', requiredInProduction),

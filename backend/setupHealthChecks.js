@@ -27,5 +27,11 @@ module.exports = () => {
 
   router.get('/ping', (req, res) => res.send('pong'))
 
+  router.get('/info', (req, res) =>
+    res.send({
+      productId: config.productId,
+    }),
+  )
+
   return router
 }
