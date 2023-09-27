@@ -80,6 +80,8 @@ app.get('/health', (req, res, next) => {
 
 app.get('/ping', (req, res) => res.send('pong'))
 
+app.get('/info', (req, res) => res.send({ productId: config.productId }))
+
 if (config.app.production) {
   app.use(ensureHttps)
 }
