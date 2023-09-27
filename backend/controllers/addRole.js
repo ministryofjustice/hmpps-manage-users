@@ -47,7 +47,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       await auditService.addRoleToUser({
         admin: 'admin', // TODO populate with real value
         user: userId,
-        role: roleArray,
+        roles: roleArray,
         logErrors: true,
       })
       res.redirect(`${staffUrl}`)

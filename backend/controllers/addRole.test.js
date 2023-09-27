@@ -1,8 +1,17 @@
 const { selectRolesFactory } = require('./addRole')
+const { AuditService } = require('../services/auditService')
 
 describe('select roles factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
   const getUserRolesAndMessage = jest.fn()
   const saveRoles = jest.fn()
+  jest.mock('../services/auditService')
+  const mockAddRoleToUser = jest.fn()
+  AuditService.prototype.addRoleToUser = mockAddRoleToUser
+
   const addRole = selectRolesFactory(getUserRolesAndMessage, saveRoles, '/manage-external-users')
 
   describe('index', () => {
@@ -64,6 +73,12 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
+      expect(mockAddRoleToUser).toBeCalledWith({
+        admin: 'admin',
+        logErrors: true,
+        roles: ['GLOBAL_SEARCH', 'BOB'],
+        user: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
     })
@@ -78,6 +93,12 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
+      expect(mockAddRoleToUser).toBeCalledWith({
+        admin: 'admin',
+        logErrors: true,
+        roles: ['GLOBAL_SEARCH'],
+        user: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
     })
@@ -92,6 +113,7 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       await addRole.post(req, { redirect })
+      expect(mockAddRoleToUser).not.toHaveBeenCalled()
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
     })
