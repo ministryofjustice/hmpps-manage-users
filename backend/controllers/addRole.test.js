@@ -74,7 +74,7 @@ describe('select roles factory', () => {
       const locals = { user: 'JoeAdmin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
-        admin: 'JoeAdmin',
+        adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH', 'BOB'],
         userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -94,7 +94,7 @@ describe('select roles factory', () => {
       const locals = { user: 'JoeAdmin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
-        admin: 'JoeAdmin',
+        adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH'],
         userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
