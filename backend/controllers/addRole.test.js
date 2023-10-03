@@ -65,13 +65,15 @@ describe('select roles factory', () => {
   describe('post', () => {
     it('should add the role and redirect', async () => {
       const req = {
+        session: { userDetails: { name: 'JoeAdmin' } },
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { roles: ['GLOBAL_SEARCH', 'BOB'] },
         flash: jest.fn(),
       }
 
       const redirect = jest.fn()
-      const locals = { user: 'JoeAdmin' }
+      const locals = jest.fn()
+      // const locals = { user: 'JoeAdmin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
         adminId: 'JoeAdmin',
@@ -85,13 +87,15 @@ describe('select roles factory', () => {
 
     it('should cope with single role being added', async () => {
       const req = {
+        session: { userDetails: { name: 'JoeAdmin' } },
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { roles: 'GLOBAL_SEARCH' },
         flash: jest.fn(),
       }
 
       const redirect = jest.fn()
-      const locals = { user: 'JoeAdmin' }
+      const locals = jest.fn()
+      // const locals = { user: 'JoeAdmin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
         adminId: 'JoeAdmin',
@@ -105,6 +109,7 @@ describe('select roles factory', () => {
 
     it('should stash the errors and redirect if no roles selected', async () => {
       const req = {
+        session: { userDetails: { name: 'JoeAdmin' } },
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: {},
         flash: jest.fn(),
