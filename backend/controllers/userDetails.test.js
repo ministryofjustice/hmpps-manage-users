@@ -230,7 +230,10 @@ describe('user detail factory', () => {
 
   describe('remove role', () => {
     it('should remove role and redirect', async () => {
-      const reqWithRoles = { params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const reqWithRoles = {
+        session: { userDetails: { username: 'username' } },
+        params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      }
 
       const redirect = jest.fn()
       const locals = jest.fn()
@@ -239,8 +242,8 @@ describe('user detail factory', () => {
       expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
       expect(mockRemoveRoleFromUser).toHaveBeenCalledTimes(1)
       expect(mockRemoveRoleFromUser).toHaveBeenCalledWith({
-        admin: 'username',
-        user: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        adminId: 'username',
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         roles: ['role1'],
         logErrors: true,
       })
@@ -254,6 +257,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'role99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
@@ -280,6 +284,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'group99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
@@ -294,6 +299,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'group99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )

@@ -59,13 +59,14 @@ const userDetailsFactory = (
   const removeRole = async (req, res) => {
     const auditService = new AuditService()
     const { userId, role } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeUserRoleApi(res.locals, userId, role)
       await auditService.removeRoleFromUser({
-        admin: res.locals.user,
-        user: userId,
+        adminId: username,
+        userId,
         roles: [role],
         logErrors: true,
       })
