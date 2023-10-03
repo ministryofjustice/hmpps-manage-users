@@ -36,7 +36,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     const auditService = new AuditService()
     const { userId } = req.params
     const { roles } = req.body
-    const { name } = req.session.userDetails
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}/details`
 
     if (!roles) {
@@ -46,7 +46,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
       await auditService.addRoleToUser({
-        adminId: name,
+        adminId: username,
         userId,
         roles: roleArray,
         logErrors: true,
