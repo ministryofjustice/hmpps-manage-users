@@ -1,4 +1,5 @@
 const { userDetailsFactory } = require('./userDetails')
+const { AuditService } = require('../services/auditService')
 
 describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
@@ -84,6 +85,10 @@ describe('user detail factory', () => {
     showUsername: true,
     errors: undefined,
   }
+
+  jest.mock('../services/auditService')
+  const mockRemoveRoleFromUser = jest.fn()
+  AuditService.prototype.removeRoleFromUser = mockRemoveRoleFromUser
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -225,13 +230,23 @@ describe('user detail factory', () => {
 
   describe('remove role', () => {
     it('should remove role and redirect', async () => {
-      const reqWithRoles = { params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const reqWithRoles = {
+        session: { userDetails: { username: 'username' } },
+        params: { role: 'role1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+      }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
+      expect(mockRemoveRoleFromUser).toHaveBeenCalledTimes(1)
+      expect(mockRemoveRoleFromUser).toHaveBeenCalledWith({
+        adminId: 'username',
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        roles: ['role1'],
+        logErrors: true,
+      })
     })
 
     it('should ignore if user does not have role', async () => {
@@ -242,6 +257,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'role99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
@@ -268,6 +284,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'group99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
@@ -282,6 +299,7 @@ describe('user detail factory', () => {
         {
           params: { role: 'group99' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )

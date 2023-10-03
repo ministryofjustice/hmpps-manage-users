@@ -10,31 +10,51 @@ describe('Audit service', () => {
     jest.resetAllMocks()
   })
 
-  it('sends a prisoner search audit message', async () => {
-    jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
-    await auditService.addRoleToUser({
+  it('sends a roles added to user audit message', async () => {
+    const auditMessage = {
       adminId: 'some admin',
       userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: true,
-    })
-
-    const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
-    const { what, when, who, service, details } = JSON.parse(MessageBody)
-
-    expect(QueueUrl).toEqual('http://localhost:4566/000000000000/mainQueue')
-    expect(what).toEqual('ADD_USER_ROLE')
-    expect(when).toBeDefined()
-    expect(who).toEqual('some admin')
-    expect(service).toEqual('hmpps-manage-users')
-    expect(details).toEqual('{"userId":"some user","roles":["NEW_ROLE"]}')
+    }
+    const expectedWhat = 'ADD_USER_ROLES'
+    const expectedWho = 'some admin'
+    const expectedDetails = '{"adminId":"some admin","userId":"some user","roles":["NEW_ROLE"]}'
+    await assertAuditMessageIsPublishedCorrectly(
+      auditService.addRolesToUser.bind(auditService),
+      auditMessage,
+      expectedWhat,
+      expectedWho,
+      expectedDetails,
+    )
   })
 
-  it('logs out errors if logErrors is true', async () => {
+  it('sends a role removed from user audit message', async () => {
+    jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
+    const auditMessage = {
+      adminId: 'some admin',
+      userId: 'some user',
+      role: 'ROLE_TO_REMOVE',
+      logErrors: true,
+    }
+    const expectedWhat = 'REMOVE_USER_ROLE'
+    const expectedWho = 'some admin'
+    const expectedDetails = '{"adminId":"some admin","userId":"some user","role":"ROLE_TO_REMOVE"}'
+
+    await assertAuditMessageIsPublishedCorrectly(
+      auditService.removeRoleFromUser.bind(auditService),
+      auditMessage,
+      expectedWhat,
+      expectedWho,
+      expectedDetails,
+    )
+  })
+
+  it('logs out errors if logErrors is true when adding user roles', async () => {
     const err = new Error('SQS queue not found')
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
-    await auditService.addRoleToUser({
+    await auditService.addRolesToUser({
       adminId: 'some admin',
       userId: 'some user',
       roles: ['NEW_ROLE'],
@@ -43,10 +63,23 @@ describe('Audit service', () => {
     expect(logger.error).toHaveBeenCalledWith('Problem sending message to SQS queue', err)
   })
 
-  it('does not log out errors if logErrors is false', async () => {
+  it('logs out errors if logErrors is true when removing user role', async () => {
+    const err = new Error('SQS queue not found')
+    jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
+    jest.spyOn(logger, 'error')
+    await auditService.removeRoleFromUser({
+      adminId: 'some admin',
+      userId: 'some user',
+      role: 'ROLE_TO_REMOVE',
+      logErrors: true,
+    })
+    expect(logger.error).toHaveBeenCalledWith('Problem sending message to SQS queue', err)
+  })
+
+  it('does not log out errors if logErrors is false for add roles to user', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
-    await auditService.addRoleToUser({
+    await auditService.addRolesToUser({
       adminId: 'some admin',
       userId: 'some user',
       roles: ['NEW_ROLE'],
@@ -54,4 +87,39 @@ describe('Audit service', () => {
     })
     expect(logger.error).not.toHaveBeenCalled()
   })
+
+  it('does not log out errors if logErrors is false for remove role from user', async () => {
+    jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
+    jest.spyOn(logger, 'error')
+    await auditService.removeRoleFromUser({
+      adminId: 'some admin',
+      userId: 'some user',
+      role: 'ROLE_TO_REMOVE',
+      logErrors: false,
+    })
+    expect(logger.error).not.toHaveBeenCalled()
+  })
+
+  type AuditFunction = (message: object) => Promise<void>
+
+  async function assertAuditMessageIsPublishedCorrectly(
+    fn: AuditFunction,
+    auditMessage: object,
+    expectedWhat: string,
+    expectedWho: string,
+    expectedDetails: string,
+  ) {
+    jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
+    await fn(auditMessage)
+
+    const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
+    const { what, when, who, service, details } = JSON.parse(MessageBody)
+
+    expect(QueueUrl).toEqual('http://localhost:4566/000000000000/mainQueue')
+    expect(what).toEqual(expectedWhat)
+    expect(when).toBeDefined()
+    expect(who).toEqual(expectedWho)
+    expect(service).toEqual('hmpps-manage-users')
+    expect(details).toEqual(expectedDetails)
+  }
 })

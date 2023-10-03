@@ -45,7 +45,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
-      await auditService.addRoleToUser({
+      await auditService.addRolesToUser({
         adminId: username,
         userId,
         roles: roleArray,
