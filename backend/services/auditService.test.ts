@@ -13,8 +13,8 @@ describe('Audit service', () => {
   it('sends a prisoner search audit message', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
     await auditService.addRoleToUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: true,
     })
@@ -27,7 +27,7 @@ describe('Audit service', () => {
     expect(when).toBeDefined()
     expect(who).toEqual('some admin')
     expect(service).toEqual('hmpps-manage-users')
-    expect(details).toEqual('{"admin":"some admin","user":"some user","roles":["NEW_ROLE"]}')
+    expect(details).toEqual('{"userId":"some user","roles":["NEW_ROLE"]}')
   })
 
   it('logs out errors if logErrors is true', async () => {
@@ -35,8 +35,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
     await auditService.addRoleToUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: true,
     })
@@ -47,8 +47,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
     await auditService.addRoleToUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: false,
     })
