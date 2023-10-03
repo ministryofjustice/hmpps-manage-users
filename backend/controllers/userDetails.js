@@ -1,3 +1,5 @@
+const { AuditService } = require('../services/auditService')
+
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
   removeUserRoleApi,
@@ -55,11 +57,18 @@ const userDetailsFactory = (
   }
 
   const removeRole = async (req, res) => {
+    const auditService = new AuditService()
     const { userId, role } = req.params
     const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeUserRoleApi(res.locals, userId, role)
+      await auditService.removeRoleFromUser({
+        admin: res.locals.user,
+        user: userId,
+        roles: [role],
+        logErrors: true,
+      })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {

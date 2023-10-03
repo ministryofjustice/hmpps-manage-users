@@ -1,4 +1,5 @@
 const { userDetailsFactory } = require('./userDetails')
+const { AuditService } = require('../services/auditService')
 
 describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
@@ -84,6 +85,10 @@ describe('user detail factory', () => {
     showUsername: true,
     errors: undefined,
   }
+
+  jest.mock('../services/auditService')
+  const mockRemoveRoleFromUser = jest.fn()
+  AuditService.prototype.removeRoleFromUser = mockRemoveRoleFromUser
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -232,6 +237,13 @@ describe('user detail factory', () => {
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
+      expect(mockRemoveRoleFromUser).toHaveBeenCalledTimes(1)
+      expect(mockRemoveRoleFromUser).toHaveBeenCalledWith({
+        admin: 'username',
+        user: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        roles: ['role1'],
+        logErrors: true,
+      })
     })
 
     it('should ignore if user does not have role', async () => {

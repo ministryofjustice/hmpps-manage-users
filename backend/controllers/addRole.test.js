@@ -10,7 +10,7 @@ describe('select roles factory', () => {
   const saveRoles = jest.fn()
   jest.mock('../services/auditService')
   const mockAddRoleToUser = jest.fn()
-  AuditService.prototype.addRoleToUser = mockAddRoleToUser
+  AuditService.prototype.addRolesToUser = mockAddRoleToUser
 
   const addRole = selectRolesFactory(getUserRolesAndMessage, saveRoles, '/manage-external-users')
 

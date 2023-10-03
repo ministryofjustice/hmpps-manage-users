@@ -44,7 +44,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
-      await auditService.addRoleToUser({
+      await auditService.addRolesToUser({
         admin: 'admin', // TODO populate with real value
         user: userId,
         roles: roleArray,
