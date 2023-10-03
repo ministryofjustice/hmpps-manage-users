@@ -12,21 +12,20 @@ class AuditService {
   }
 
   async addRoleToUser({
-    admin,
-    user,
+    adminId,
+    userId,
     roles,
     logErrors,
   }: {
-    admin: string
-    user: string
+    adminId: string
+    userId: string
     roles: Array<string>
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'ADD_USER_ROLE',
-      who: admin,
-      admin,
-      user,
+      who: adminId,
+      userId,
       roles,
       logErrors,
     })
@@ -36,16 +35,14 @@ class AuditService {
     action,
     who,
     timestamp = new Date(),
-    admin,
-    user,
+    userId,
     roles,
     logErrors,
   }: {
     action: string
     who: string
     timestamp?: Date
-    admin: string
-    user: string
+    userId: string
     roles: Array<string>
     logErrors: boolean
   }) {
@@ -55,7 +52,7 @@ class AuditService {
         when: timestamp,
         who,
         service: config.apis.audit.serviceName,
-        details: JSON.stringify({ admin, user, roles }),
+        details: JSON.stringify({ userId, roles }),
       })
 
       const messageResponse = await this.sqsClient.send(

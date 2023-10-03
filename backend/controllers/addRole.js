@@ -43,10 +43,11 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
+      const adminId = res.locals.user.name
       await saveRoles(res.locals, userId, roleArray)
       await auditService.addRoleToUser({
-        admin: res.locals.user,
-        user: userId,
+        admin: adminId,
+        userId,
         roles: roleArray,
         logErrors: true,
       })
