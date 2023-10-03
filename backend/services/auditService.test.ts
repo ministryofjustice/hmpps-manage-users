@@ -12,14 +12,14 @@ describe('Audit service', () => {
 
   it('sends a roles added to user audit message', async () => {
     const auditMessage = {
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: true,
     }
     const expectedWhat = 'ADD_USER_ROLES'
     const expectedWho = 'some admin'
-    const expectedDetails = '{"admin":"some admin","user":"some user","roles":["NEW_ROLE"]}'
+    const expectedDetails = '{"adminId":"some admin","userId":"some user","roles":["NEW_ROLE"]}'
     await assertAuditMessageIsPublishedCorrectly(
       auditService.addRolesToUser.bind(auditService),
       auditMessage,
@@ -32,14 +32,14 @@ describe('Audit service', () => {
   it('sends a role removed from user audit message', async () => {
     jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
     const auditMessage = {
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       role: 'ROLE_TO_REMOVE',
       logErrors: true,
     }
     const expectedWhat = 'REMOVE_USER_ROLE'
     const expectedWho = 'some admin'
-    const expectedDetails = '{"admin":"some admin","user":"some user","role":"ROLE_TO_REMOVE"}'
+    const expectedDetails = '{"adminId":"some admin","userId":"some user","role":"ROLE_TO_REMOVE"}'
 
     await assertAuditMessageIsPublishedCorrectly(
       auditService.removeRoleFromUser.bind(auditService),
@@ -55,8 +55,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
     await auditService.addRolesToUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: true,
     })
@@ -68,8 +68,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(err as never)
     jest.spyOn(logger, 'error')
     await auditService.removeRoleFromUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       role: 'ROLE_TO_REMOVE',
       logErrors: true,
     })
@@ -80,8 +80,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
     await auditService.addRolesToUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       roles: ['NEW_ROLE'],
       logErrors: false,
     })
@@ -92,8 +92,8 @@ describe('Audit service', () => {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
     await auditService.removeRoleFromUser({
-      admin: 'some admin',
-      user: 'some user',
+      adminId: 'some admin',
+      userId: 'some user',
       role: 'ROLE_TO_REMOVE',
       logErrors: false,
     })

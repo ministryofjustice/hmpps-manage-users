@@ -12,39 +12,39 @@ class AuditService {
   }
 
   async addRolesToUser({
-    admin,
-    user,
+    adminId,
+    userId,
     roles,
     logErrors,
   }: {
-    admin: string
-    user: string
+    adminId: string
+    userId: string
     roles: Array<string>
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'ADD_USER_ROLES',
-      who: admin,
-      details: JSON.stringify({ admin, user, roles }),
+      who: adminId,
+      details: JSON.stringify({ adminId, userId, roles }),
       logErrors,
     })
   }
 
   async removeRoleFromUser({
-    admin,
-    user,
+    adminId,
+    userId,
     role,
     logErrors,
   }: {
-    admin: string
-    user: string
+    adminId: string
+    userId: string
     role: string
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'REMOVE_USER_ROLE',
-      who: admin,
-      details: JSON.stringify({ admin, user, role }),
+      who: adminId,
+      details: JSON.stringify({ adminId, userId, role }),
       logErrors,
     })
   }
