@@ -71,7 +71,7 @@ describe('select roles factory', () => {
       }
 
       const redirect = jest.fn()
-      const locals = jest.fn()
+      const locals = { user: 'admin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
         admin: 'admin',
@@ -91,7 +91,7 @@ describe('select roles factory', () => {
       }
 
       const redirect = jest.fn()
-      const locals = jest.fn()
+      const locals = { user: 'admin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
         admin: 'admin',
