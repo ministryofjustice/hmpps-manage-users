@@ -1,5 +1,6 @@
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
+const { AuditService } = require('../services/auditService')
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
@@ -20,16 +21,24 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
   }
 
   const post = async (req, res) => {
+    const auditService = new AuditService()
     const group = trimObjValues(req.body)
     group.groupCode = group.groupCode.toUpperCase()
     const errors = validateCreateGroup(group)
+    const { username } = req.session.userDetails
+    const { userId } = req.params
 
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [group])
     } else {
       try {
         await createGroup(res.locals, group)
-
+        await auditService.createGroup({
+          adminId: username,
+          userId,
+          group,
+          logErrors: true,
+        })
         res.redirect(`${manageGroupUrl}/${group.groupCode}`)
       } catch (err) {
         if (err.status === 409 && err.response && err.response.body) {

@@ -49,6 +49,25 @@ class AuditService {
     })
   }
 
+  async createGroup({
+    adminId,
+    userId,
+    group,
+    logErrors,
+  }: {
+    adminId: string
+    userId: string
+    group: object
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'CREATE_GROUP',
+      who: adminId,
+      details: JSON.stringify({ adminId, userId, group }),
+      logErrors,
+    })
+  }
+
   async sendAuditMessage({
     action,
     who,
