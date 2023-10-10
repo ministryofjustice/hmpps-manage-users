@@ -141,10 +141,17 @@ const userDetailsFactory = (
   }
 
   const disableUser = async (req, res) => {
+    const auditService = new AuditService()
     const { userId } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     await disableUserApi(res.locals, userId)
+    await auditService.disableUser({
+      adminId: username,
+      userId,
+      logErrors: true,
+    })
     res.redirect(`${staffUrl}/details`)
   }
 

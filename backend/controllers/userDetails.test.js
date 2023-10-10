@@ -89,8 +89,10 @@ describe('user detail factory', () => {
   jest.mock('../services/auditService')
   const mockRemoveRoleFromUser = jest.fn()
   const mockEnableUser = jest.fn()
+  const mockDisableUser = jest.fn()
   AuditService.prototype.removeRoleFromUser = mockRemoveRoleFromUser
   AuditService.prototype.enableUser = mockEnableUser
+  AuditService.prototype.disableUser = mockDisableUser
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -381,6 +383,11 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(mockDisableUser).toBeCalledWith({
+        adminId: 'username',
+        logErrors: true,
+        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      })
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })
