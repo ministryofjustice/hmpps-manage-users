@@ -126,18 +126,32 @@ const userDetailsFactory = (
   }
 
   const enableUser = async (req, res) => {
+    const auditService = new AuditService()
     const { userId } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     await enableUserApi(res.locals, userId)
+    await auditService.enableUser({
+      adminId: username,
+      userId,
+      logErrors: true,
+    })
     res.redirect(`${staffUrl}/details`)
   }
 
   const disableUser = async (req, res) => {
+    const auditService = new AuditService()
     const { userId } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     await disableUserApi(res.locals, userId)
+    await auditService.disableUser({
+      adminId: username,
+      userId,
+      logErrors: true,
+    })
     res.redirect(`${staffUrl}/details`)
   }
 
