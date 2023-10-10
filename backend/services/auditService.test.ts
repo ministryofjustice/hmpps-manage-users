@@ -130,6 +130,43 @@ describe('Audit service', () => {
     })
   })
 
+  describe('enable user', () => {
+    it('sends a user enabled audit message', async () => {
+      jest.spyOn(SQSClient.prototype, 'send').mockResolvedValue({} as never)
+      const auditMessage = {
+        adminId: 'some admin',
+        userId: 'some user',
+        logErrors: true,
+      }
+      const expectedWhat = 'ENABLE_USER'
+      const expectedDetails = '{"adminId":"some admin","userId":"some user"}'
+
+      await assertAuditMessageIsPublishedCorrectly(
+        auditService.enableUser.bind(auditService),
+        auditMessage,
+        expectedWhat,
+        adminId,
+        expectedDetails,
+      )
+    })
+
+    it('logs out errors if logErrors is true when creating group', async () => {
+      await assertErrorsLoggedWhenLogErrorsIsTrue(auditService.enableUser.bind(auditService), {
+        adminId: 'some admin',
+        userId: 'some user',
+        logErrors: true,
+      })
+    })
+
+    it('does not log out errors if logErrors is false when creating group', async () => {
+      await assertErrorsNotLoggedWhenLogErrorsIsFalse(auditService.enableUser.bind(auditService), {
+        adminId: 'some admin',
+        userId: 'some user',
+        logErrors: false,
+      })
+    })
+  })
+
   async function assertAuditMessageIsPublishedCorrectly(
     fn: AuditFunction,
     auditMessage: object,
