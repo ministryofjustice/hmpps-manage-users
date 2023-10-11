@@ -114,6 +114,42 @@ class AuditService {
     })
   }
 
+  async enableUser({
+    adminId,
+    userId,
+    logErrors,
+  }: {
+    adminId: string
+    userId: string
+    group: object
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'ENABLE_USER',
+      who: adminId,
+      details: JSON.stringify({ adminId, userId }),
+      logErrors,
+    })
+  }
+
+  async disableUser({
+    adminId,
+    userId,
+    logErrors,
+  }: {
+    adminId: string
+    userId: string
+    group: object
+    logErrors: boolean
+  }) {
+    return this.sendAuditMessage({
+      action: 'DISABLE_USER',
+      who: adminId,
+      details: JSON.stringify({ adminId, userId }),
+      logErrors,
+    })
+  }
+
   async sendAuditMessage({
     action,
     who,
