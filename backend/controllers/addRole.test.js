@@ -78,7 +78,7 @@ describe('select roles factory', () => {
         adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH', 'BOB'],
-        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
@@ -94,13 +94,12 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       const locals = jest.fn()
-      // const locals = { user: 'JoeAdmin' }
       await addRole.post(req, { redirect, locals })
       expect(mockAddRoleToUser).toBeCalledWith({
         adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH'],
-        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])

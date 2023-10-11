@@ -35,7 +35,7 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
         await createGroup(res.locals, group)
         await auditService.createGroup({
           adminId: username,
-          userId,
+          subjectId: userId,
           group,
           logErrors: true,
         })

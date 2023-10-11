@@ -59,7 +59,7 @@ describe('create group factory', () => {
           groupCode: 'BOB1',
           groupName: 'group name',
         },
-        userId: 'userId',
+        subjectId: 'userId',
       })
     })
 
@@ -86,7 +86,7 @@ describe('create group factory', () => {
           groupCode: 'BOB1',
           groupName: 'group name',
         },
-        userId: 'userId',
+        subjectId: 'userId',
       })
     })
 
@@ -113,7 +113,7 @@ describe('create group factory', () => {
           groupCode: 'BOB1',
           groupName: 'group name',
         },
-        userId: 'userId',
+        subjectId: 'userId',
       })
     })
 

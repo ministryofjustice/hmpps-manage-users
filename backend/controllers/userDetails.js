@@ -66,7 +66,7 @@ const userDetailsFactory = (
       await removeUserRoleApi(res.locals, userId, role)
       await auditService.removeRoleFromUser({
         adminId: username,
-        userId,
+        subjectId: userId,
         roles: [role],
         logErrors: true,
       })
@@ -134,7 +134,7 @@ const userDetailsFactory = (
     await enableUserApi(res.locals, userId)
     await auditService.enableUser({
       adminId: username,
-      userId,
+      subjectId: userId,
       logErrors: true,
     })
     res.redirect(`${staffUrl}/details`)
@@ -149,7 +149,7 @@ const userDetailsFactory = (
     await disableUserApi(res.locals, userId)
     await auditService.disableUser({
       adminId: username,
-      userId,
+      subjectId: userId,
       logErrors: true,
     })
     res.redirect(`${staffUrl}/details`)

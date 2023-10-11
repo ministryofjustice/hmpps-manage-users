@@ -247,7 +247,7 @@ describe('user detail factory', () => {
       expect(mockRemoveRoleFromUser).toHaveBeenCalledTimes(1)
       expect(mockRemoveRoleFromUser).toHaveBeenCalledWith({
         adminId: 'username',
-        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         roles: ['role1'],
         logErrors: true,
       })
@@ -371,7 +371,7 @@ describe('user detail factory', () => {
       expect(mockEnableUser).toHaveBeenCalledWith({
         adminId: 'username',
         logErrors: true,
-        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       })
       expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
@@ -386,7 +386,7 @@ describe('user detail factory', () => {
       expect(mockDisableUser).toBeCalledWith({
         adminId: 'username',
         logErrors: true,
-        userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       })
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
