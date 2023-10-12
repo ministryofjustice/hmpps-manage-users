@@ -121,7 +121,7 @@ class AuditService {
     subjectId,
     subjectType,
     details,
-    logErrors,
+    logErrors = true,
   }: {
     action: string
     who: string
@@ -129,7 +129,7 @@ class AuditService {
     subjectId: string
     subjectType: string
     details: string
-    logErrors: boolean
+    logErrors?: boolean
   }) {
     try {
       const message = JSON.stringify({

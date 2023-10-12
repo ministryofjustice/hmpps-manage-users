@@ -1,5 +1,6 @@
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
+const { AuditService } = require('../services/auditService')
 
 function mapDescription(error, errorDescription) {
   switch (error) {
@@ -36,7 +37,9 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
   }
 
   const post = async (req, res) => {
+    const auditService = new AuditService()
     const { userId } = req.params
+    const { username } = req.session.userDetails
     const { email } = trimObjValues(req.body)
     try {
       const errors = validateChangeEmail(email)
@@ -45,6 +48,13 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         await changeEmail(res.locals, userId, email)
+        await auditService.sendAuditMessage({
+          action: 'CHANGE_EMAIL_ADDRESS',
+          who: username,
+          subjectId: userId,
+          subjectType: 'USER_ID',
+          details: { email },
+        })
         const successUrl = `${manageUrl}/${userId}/change-email-success`
         req.flash('changeEmail', email)
         res.redirect(successUrl)
