@@ -100,6 +100,8 @@ describe('create user factory', () => {
       })
       expect(mockSendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
+        subjectId: 'BOB_ADM',
+        subjectType: 'USER_ID',
         details: {
           user: {
             defaultCaseloadId: 'MDI',
@@ -161,6 +163,8 @@ describe('create user factory', () => {
           },
         },
         who: 'username',
+        subjectId: 'BOB_OSHEA',
+        subjectType: 'USER_ID',
       })
     })
 
@@ -210,6 +214,8 @@ describe('create user factory', () => {
           },
         },
         who: 'username',
+        subjectId: 'BOB_ADM',
+        subjectType: 'USER_ID',
       })
     })
 

@@ -70,6 +70,8 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
         await auditService.sendAuditMessage({
           action: 'CREATE_DPS_USER',
           who: username,
+          subjectId: userDetails.username,
+          subjectType: AuditService.USER_ID_SUBJECT_TYPE,
           details: { user },
         })
         res.render('createDpsUserSuccess.njk', {
