@@ -107,11 +107,20 @@ const userDetailsFactory = (
   }
 
   const removeUserCaseload = async (req, res) => {
+    const auditService = new AuditService()
     const { userId, caseload } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeUserCaseloadApi(res.locals, userId, caseload)
+      await auditService.sendAuditMessage({
+        action: 'REMOVE_USER_CASELOAD',
+        who: username,
+        subjectId: userId,
+        subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+        details: { caseload },
+      })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {

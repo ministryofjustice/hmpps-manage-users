@@ -1,4 +1,6 @@
 import { Request, Response } from 'express'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const { AuditService } = require('../services/auditService')
 
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
   const stashStateAndRedirectToIndex = (req: Request, res: Response, errors: Array<Record<string, string>>) => {
@@ -28,6 +30,10 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
   }
 
   const post = async (req: Request, res: Response) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { username } = req.session.userDetails
+    const auditService = new AuditService()
     const { userId } = req.params
     const { caseloads } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
@@ -38,6 +44,13 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
     } else {
       const caseloadArray = Array.isArray(caseloads) ? caseloads : [caseloads]
       await saveCaseloads(res.locals, userId, caseloadArray)
+      await auditService.sendAuditMessage({
+        action: 'ADD_USER_CASELOAD',
+        who: username,
+        subjectId: userId,
+        subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+        details: { caseloads: caseloadArray },
+      })
       res.redirect(`${staffUrl}`)
     }
   }

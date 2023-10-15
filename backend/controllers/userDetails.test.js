@@ -90,9 +90,11 @@ describe('user detail factory', () => {
   const mockRemoveRoleFromUser = jest.fn()
   const mockEnableUser = jest.fn()
   const mockDisableUser = jest.fn()
+  const mockSendAuditMessage = jest.fn()
   AuditService.prototype.removeRoleFromUser = mockRemoveRoleFromUser
   AuditService.prototype.enableUser = mockEnableUser
   AuditService.prototype.disableUser = mockDisableUser
+  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.clearAllMocks()
@@ -326,12 +328,24 @@ describe('user detail factory', () => {
 
   describe('remove caseload', () => {
     it('should remove caseload and redirect', async () => {
-      const reqWithCaseload = { params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' } }
+      const reqWithCaseload = {
+        session: { userDetails: { username: 'username' } },
+        params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' },
+      }
       const redirect = jest.fn()
       const locals = jest.fn()
       await dpsUserDetails.removeUserCaseload(reqWithCaseload, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
+      expect(mockSendAuditMessage).toBeCalledWith({
+        action: 'REMOVE_USER_CASELOAD',
+        details: {
+          caseload: 'TEST_CASELOAD',
+        },
+        subjectId: 'TEST_USER',
+        subjectType: 'USER_ID',
+        who: 'username',
+      })
     })
 
     it('should ignore if error', async () => {
@@ -342,10 +356,12 @@ describe('user detail factory', () => {
         {
           params: { caseload: 'TEST_CASELOAD' },
           originalUrl: '/some-location',
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should refresh user details if user does not have caseload', async () => {
@@ -355,10 +371,12 @@ describe('user detail factory', () => {
       await userDetails.removeUserCaseload(
         {
           params: { caseload: 'TEST_CASELOAD', userId: 'TEST_USER' },
+          session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
       expect(redirect).toBeCalledWith('/manage-external-users/TEST_USER/details')
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
   })
 
