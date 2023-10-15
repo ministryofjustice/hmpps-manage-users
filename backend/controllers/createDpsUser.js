@@ -1,5 +1,6 @@
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
+const { AuditService } = require('../services/auditService')
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
@@ -63,8 +64,14 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
       stashStateAndRedirectToIndex(req, res, errors, [user])
     } else {
       try {
+        const { username } = req.session.userDetails
+        const auditService = new AuditService()
         const userDetails = await createDpsUser(res.locals, user)
-
+        await auditService.sendAuditMessage({
+          action: 'CREATE_DPS_USER',
+          who: username,
+          details: { user },
+        })
         res.render('createDpsUserSuccess.njk', {
           email: `${userDetails.primaryEmail}`,
           detailsLink: `${manageUrl}/${userDetails.username}/details`,
