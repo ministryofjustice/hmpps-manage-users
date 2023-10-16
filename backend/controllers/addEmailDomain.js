@@ -1,5 +1,6 @@
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')
+const { AuditService } = require('../services/auditService')
 
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, domain) => {
@@ -29,6 +30,13 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
       try {
         const newDomain = { name: domain.domainName, description: domain.domainDescription }
         await createEmailDomainApi(res.locals, newDomain)
+        const { username } = req.session.userDetails
+        const auditService = new AuditService()
+        await auditService.sendAuditMessage({
+          action: 'CREATE_EMAIL_DOMAIN',
+          who: username,
+          details: JSON.stringify({ domain: newDomain }),
+        })
         res.redirect('/email-domains')
       } catch (err) {
         if (err.status === 409 && err.response && err.response.body) {

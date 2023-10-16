@@ -128,9 +128,9 @@ class AuditService {
     action: string
     who: string
     timestamp?: Date
-    subjectId: string
-    subjectType: string
-    details: string
+    subjectId?: string
+    subjectType?: string
+    details?: string
     logErrors?: boolean
   }) {
     try {

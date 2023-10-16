@@ -1,6 +1,13 @@
 const { createEmailDomainFactory } = require('./addEmailDomain')
+const { AuditService } = require('../services/auditService')
 
 describe('create email domain factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
+  const mockSendAuditMessage = jest.fn()
+  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
   const createEmailDomainApi = jest.fn()
   const emailDomainFactory = createEmailDomainFactory(createEmailDomainApi, '/create-email-domain', '/email-domains')
   describe('index', () => {
@@ -38,6 +45,7 @@ describe('create email domain factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should create email domain and redirect', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
@@ -48,10 +56,16 @@ describe('create email domain factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
+        session,
       }
       await emailDomainFactory.createEmailDomain(createEmailDomainRequest, { locals, redirect })
       expect(createEmailDomainApi).toBeCalledWith(locals, { name: 'DOMAIN1', description: 'DOMAINDESCRIPTION1' })
       expect(redirect).toBeCalledWith('/email-domains')
+      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+        action: 'CREATE_EMAIL_DOMAIN',
+        details: '{"domain":{"name":"DOMAIN1","description":"DOMAINDESCRIPTION1"}}',
+        who: 'username',
+      })
     })
 
     it('should stash the errors and redirect if no email domain name and description entered', async () => {
@@ -71,6 +85,7 @@ describe('create email domain factory', () => {
         { href: '#domainName', text: 'Enter a domain name' },
         { href: '#domainDescription', text: 'Enter a domain description' },
       ])
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if Email Domain already present in the allowed list error is triggered', async () => {
@@ -96,6 +111,7 @@ describe('create email domain factory', () => {
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Email domain EXISTINGDOMAIN is already present in the allowed list' },
       ])
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if Email domain is present in excluded list error is triggered', async () => {
@@ -121,6 +137,7 @@ describe('create email domain factory', () => {
       expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' },
       ])
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
