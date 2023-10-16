@@ -1,6 +1,13 @@
 const { deleteEmailDomainFactory } = require('./deleteEmailDomain')
+const { AuditService } = require('../services/auditService')
 
 describe('delete email domain factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+  })
+
+  const mockSendAuditMessage = jest.fn()
+  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
   const deleteEmailDomainApi = jest.fn()
   const emailDomainFactory = deleteEmailDomainFactory(deleteEmailDomainApi, '/email-domains')
   describe('index', () => {
@@ -23,6 +30,7 @@ describe('delete email domain factory', () => {
   })
 
   describe('delete email domain', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should delete email domain and redirect to the email domain listing page', async () => {
       const redirect = jest.fn()
       const locals = jest.fn()
@@ -32,10 +40,16 @@ describe('delete email domain factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
+        session,
       }
       await emailDomainFactory.deleteEmailDomain(deleteEmailDomainRequest, { locals, redirect })
       expect(deleteEmailDomainApi).toBeCalledWith(locals, '1234')
       expect(redirect).toBeCalledWith('/email-domains')
+      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+        action: 'DELETE_EMAIL_DOMAIN',
+        details: '{"domainId":"1234"}',
+        who: 'username',
+      })
     })
 
     it('should fail gracefully, if user is Unauthorized to use the delete email domain functionality', async () => {
@@ -64,6 +78,7 @@ describe('delete email domain factory', () => {
       expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
         { href: '#domainName', text: 'Unauthorized to use the delete email domain functionality' },
       ])
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully, if the email domain to be deleted is not found', async () => {
@@ -95,6 +110,7 @@ describe('delete email domain factory', () => {
           text: 'Email domain not found',
         },
       ])
+      expect(mockSendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
