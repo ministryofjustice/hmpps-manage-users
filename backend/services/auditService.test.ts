@@ -1,8 +1,6 @@
 import { SQSClient } from '@aws-sdk/client-sqs'
 import logger from '../../logger'
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { AuditService } = require('./auditService')
+import { auditService } from './auditService'
 
 const adminId = 'some admin'
 const userId = 'some user'
@@ -10,7 +8,6 @@ const userIdSubjectType = 'USER_ID'
 type AuditFunction = (message: object) => Promise<void>
 
 describe('Audit service', () => {
-  const auditService = new AuditService()
   beforeEach(() => {
     jest.resetAllMocks()
   })
@@ -215,7 +212,7 @@ describe('Audit service', () => {
   async function assertErrorsNotLoggedWhenLogErrorsIsFalse(fn: AuditFunction, functionArgs: object) {
     jest.spyOn(SQSClient.prototype, 'send').mockRejectedValue(new Error('SQS queue not found') as never)
     jest.spyOn(logger, 'error')
-    await auditService.removeRoleFromUser(functionArgs)
+    await fn(functionArgs)
     expect(logger.error).not.toHaveBeenCalled()
   }
 })

@@ -1,6 +1,6 @@
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 function mapDescription(error, errorDescription) {
   switch (error) {
@@ -37,7 +37,6 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
   }
 
   const post = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { username } = req.session.userDetails
     const { email } = trimObjValues(req.body)

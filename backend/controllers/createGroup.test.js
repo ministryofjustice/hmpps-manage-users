@@ -1,15 +1,14 @@
 const { createGroupFactory } = require('./createGroup')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('create group factory', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'createGroup').mockResolvedValue()
   })
 
   const createGroupApi = jest.fn()
   const createGroup = createGroupFactory(createGroupApi, '/manage-groups')
-  const mockCreateGroup = jest.fn()
-  AuditService.prototype.createGroup = mockCreateGroup
 
   describe('index', () => {
     it('should call create group render', async () => {
@@ -52,7 +51,7 @@ describe('create group factory', () => {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
-      expect(mockCreateGroup).toBeCalledWith({
+      expect(auditService.createGroup).toBeCalledWith({
         adminId: 'username',
         logErrors: true,
         group: {
@@ -79,7 +78,7 @@ describe('create group factory', () => {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
-      expect(mockCreateGroup).toBeCalledWith({
+      expect(auditService.createGroup).toBeCalledWith({
         adminId: 'username',
         logErrors: true,
         group: {
@@ -106,7 +105,7 @@ describe('create group factory', () => {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
-      expect(mockCreateGroup).toBeCalledWith({
+      expect(auditService.createGroup).toBeCalledWith({
         adminId: 'username',
         logErrors: true,
         group: {
@@ -133,7 +132,7 @@ describe('create group factory', () => {
         { href: '#groupCode', text: 'Enter a group code' },
         { href: '#groupName', text: 'Enter a group name' },
       ])
-      expect(mockCreateGroup).not.toHaveBeenCalled()
+      expect(auditService.createGroup).not.toHaveBeenCalled()
     })
 
     it('should stash the group and redirect if no code or name entered', async () => {
@@ -149,7 +148,7 @@ describe('create group factory', () => {
       await createGroup.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('group', [{ groupCode: '', groupName: '' }])
-      expect(mockCreateGroup).not.toHaveBeenCalled()
+      expect(auditService.createGroup).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if group already exists', async () => {
@@ -176,7 +175,7 @@ describe('create group factory', () => {
           text: 'Group code already exists',
         },
       ])
-      expect(mockCreateGroup).not.toHaveBeenCalled()
+      expect(auditService.createGroup).not.toHaveBeenCalled()
     })
   })
 })

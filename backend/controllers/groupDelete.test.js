@@ -1,15 +1,14 @@
 const { groupDeleteFactory } = require('./groupDelete')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('group delete factory', () => {
   const getGroupDetailsApi = jest.fn()
   const deleteGroupApi = jest.fn()
   const groupDelete = groupDeleteFactory(getGroupDetailsApi, deleteGroupApi, '/manage-groups')
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -68,7 +67,7 @@ describe('group delete factory', () => {
       await groupDelete.deleteGroup(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups')
       expect(deleteGroupApi).toBeCalledWith(locals, 'group1')
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'DELETE_GROUP',
         subjectId: 'user id',
         subjectType: 'USER_ID',
@@ -96,7 +95,7 @@ describe('group delete factory', () => {
       expect(deleteGroupApi).toBeCalledWith(locals, 'DOES_NOT_EXIST')
       expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
       expect(redirect).toBeCalledWith('/manage-groups')
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })

@@ -1,5 +1,5 @@
 const { changeEmailFactory } = require('./changeEmail')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => ({
   ...new Error('This failed'),
@@ -11,11 +11,10 @@ describe('change email factory', () => {
   const getUserApi = jest.fn()
   const saveEmail = jest.fn()
   const changeEmail = changeEmailFactory(getUserApi, saveEmail, '/manage-external-users')
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -79,7 +78,7 @@ describe('change email factory', () => {
         '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
       )
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
         details: { email: 'bob@digital.justice.gov.uk' },
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -103,7 +102,7 @@ describe('change email factory', () => {
         '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
       )
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
         details: { email: 'bob@digital.justice.gov.uk' },
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -128,7 +127,7 @@ describe('change email factory', () => {
       )
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(req.flash).toBeCalledWith('changeEmail', 'bob@digital.justice.gov.uk')
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
         details: { email: 'bob@digital.justice.gov.uk' },
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -150,7 +149,7 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeEmailErrors', [{ href: '#email', text: 'Enter an email address' }])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should stash the email and redirect if no email entered', async () => {
@@ -166,7 +165,7 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeEmail', [undefined])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email not valid', async () => {
@@ -184,7 +183,7 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeEmail', ['bob@digital.justice.gov.uk'])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should display work email message if email domain not valid', async () => {
@@ -206,7 +205,7 @@ describe('change email factory', () => {
           text: 'The email domain is not allowed.  Enter a work email address',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should display duplicate email message if email already taken', async () => {
@@ -228,7 +227,7 @@ describe('change email factory', () => {
           text: 'This email address is already assigned to a different user',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should display default error message on client error', async () => {
@@ -250,7 +249,7 @@ describe('change email factory', () => {
           text: 'not valid',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 

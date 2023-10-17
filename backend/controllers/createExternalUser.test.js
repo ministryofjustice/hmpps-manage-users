@@ -1,5 +1,5 @@
 const { createExternalUserFactory } = require('./createExternalUser')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()
@@ -12,11 +12,10 @@ describe('create user factory', () => {
     '/manage-external-users',
     'Search for an external user',
   )
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -78,7 +77,7 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: ['SITE_1_GROUP_1'],
       })
-      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: 'CREATE_DPS_USER',
         details: {
           user: {
@@ -121,7 +120,7 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: ['SITE_1_GROUP_1'],
       })
-      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: 'CREATE_DPS_USER',
         details: {
           user: {
@@ -165,7 +164,7 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: undefined,
       })
-      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: 'CREATE_DPS_USER',
         details: {
           user: {
@@ -202,7 +201,7 @@ describe('create user factory', () => {
         searchResultsUrl: '/search-external-users?user=bob%40digital.justice.gov.uk',
         userDetails: { username: 'username' },
       })
-      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: 'CREATE_DPS_USER',
         details: { user: { email: 'bob@digital.justice.gov.uk', firstName: 'bob', groupCode: '', lastName: 'smith' } },
         subjectType: 'USER_ID',
@@ -230,7 +229,7 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email not valid', async () => {
@@ -255,7 +254,7 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email already exists', async () => {
@@ -286,7 +285,7 @@ describe('create user factory', () => {
           text: 'Email already exists',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
-    expect(mockSendAuditMessage).not.toHaveBeenCalled()
   })
 })

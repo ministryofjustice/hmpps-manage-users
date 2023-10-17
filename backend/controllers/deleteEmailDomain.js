@@ -1,4 +1,4 @@
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -22,7 +22,6 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
     try {
       await deleteEmailDomainApi(res.locals, domainId)
       const { username } = req.session.userDetails
-      const auditService = new AuditService()
       await auditService.sendAuditMessage({
         action: 'DELETE_EMAIL_DOMAIN',
         who: username,

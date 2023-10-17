@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const { AuditService } = require('../services/auditService')
+import { auditService, USER_ID_SUBJECT_TYPE } from '../services/auditService'
 
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
   const stashStateAndRedirectToIndex = (
@@ -44,7 +43,6 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const { username } = req.session.userDetails
-    const auditService = new AuditService()
     const { group } = req.params
     const { userId } = req.params
     try {
@@ -53,7 +51,7 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
         action: 'DELETE_GROUP',
         who: username,
         subjectId: userId,
-        subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+        subjectType: USER_ID_SUBJECT_TYPE,
       })
       res.redirect(`${maintainUrl}`)
     } catch (error) {

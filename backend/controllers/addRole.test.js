@@ -1,16 +1,14 @@
 const { selectRolesFactory } = require('./addRole')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('select roles factory', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'addRolesToUser').mockResolvedValue()
   })
 
   const getUserRolesAndMessage = jest.fn()
   const saveRoles = jest.fn()
-  jest.mock('../services/auditService')
-  const mockAddRoleToUser = jest.fn()
-  AuditService.prototype.addRolesToUser = mockAddRoleToUser
 
   const addRole = selectRolesFactory(getUserRolesAndMessage, saveRoles, '/manage-external-users')
 
@@ -74,7 +72,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(mockAddRoleToUser).toBeCalledWith({
+      expect(auditService.addRolesToUser).toBeCalledWith({
         adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH', 'BOB'],
@@ -95,7 +93,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(mockAddRoleToUser).toBeCalledWith({
+      expect(auditService.addRolesToUser).toBeCalledWith({
         adminId: 'JoeAdmin',
         logErrors: true,
         roles: ['GLOBAL_SEARCH'],
@@ -116,7 +114,7 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       await addRole.post(req, { redirect })
-      expect(mockAddRoleToUser).not.toHaveBeenCalled()
+      expect(auditService.addRolesToUser).not.toHaveBeenCalled()
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
     })

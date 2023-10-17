@@ -1,15 +1,15 @@
+const { auditService } = require('../services/auditService')
+
 const { selectCaseloadsFactory } = require('./addUserCaseload')
-const { AuditService } = require('../services/auditService')
 
 describe('select caseloads factory', () => {
   const getUserAssignableCaseloads = jest.fn()
   const saveCaseloads = jest.fn()
   const addUserCaseload = selectCaseloadsFactory(getUserAssignableCaseloads, saveCaseloads, '/manage-dps-users')
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -78,7 +78,7 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI', 'PVI'])
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'ADD_USER_CASELOAD',
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
@@ -100,7 +100,7 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI'])
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'ADD_USER_CASELOAD',
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
@@ -124,7 +124,7 @@ describe('select caseloads factory', () => {
       expect(req.flash).toBeCalledWith('addCaseloadErrors', [
         { href: '#caseloads', text: 'Select at least one caseload' },
       ])
-      expect(mockSendAuditMessage).not.toBeCalled()
+      expect(auditService.sendAuditMessage).not.toBeCalled()
     })
   })
 })

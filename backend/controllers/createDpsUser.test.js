@@ -1,15 +1,14 @@
 const { createDpsUserFactory } = require('./createDpsUser')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('create user factory', () => {
   const getCaseloads = jest.fn()
   const createUser = jest.fn()
   const createDpsUser = createDpsUserFactory(getCaseloads, createUser, '/create-user', '/manage-dps-users')
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -98,7 +97,7 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
         subjectId: 'BOB_ADM',
         subjectType: 'USER_ID',
@@ -150,7 +149,7 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_OSHEA/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
         details: {
           user: {
@@ -201,7 +200,7 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(mockSendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
         details: {
           user: {
@@ -247,7 +246,7 @@ describe('create user factory', () => {
           text: 'Select a default caseload',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should show error if an email is invalid', async () => {
@@ -274,7 +273,7 @@ describe('create user factory', () => {
           text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -306,7 +305,7 @@ describe('create user factory', () => {
           text: 'something went wrong',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -340,7 +339,7 @@ describe('create user factory', () => {
           text: 'Username already exists',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email domain is invalid', async () => {
@@ -374,7 +373,7 @@ describe('create user factory', () => {
           text: 'Invalid Email domain',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })

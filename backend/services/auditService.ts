@@ -5,8 +5,6 @@ import config from '../config'
 class AuditService {
   private sqsClient: SQSClient
 
-  static USER_ID_SUBJECT_TYPE = 'USER_ID'
-
   constructor(private readonly queueUrl = config.apis.audit.queueUrl) {
     this.sqsClient = new SQSClient({
       region: config.apis.audit.region,
@@ -28,7 +26,7 @@ class AuditService {
       action: 'ADD_USER_ROLES',
       who: adminId,
       subjectId,
-      subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+      subjectType: USER_ID_SUBJECT_TYPE,
       details: JSON.stringify({ roles }),
       logErrors,
     })
@@ -49,7 +47,7 @@ class AuditService {
       action: 'REMOVE_USER_ROLE',
       who: adminId,
       subjectId,
-      subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+      subjectType: USER_ID_SUBJECT_TYPE,
       details: JSON.stringify({ role }),
       logErrors,
     })
@@ -70,7 +68,7 @@ class AuditService {
       action: 'CREATE_GROUP',
       who: adminId,
       subjectId,
-      subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+      subjectType: USER_ID_SUBJECT_TYPE,
       details: JSON.stringify({ group }),
       logErrors,
     })
@@ -90,7 +88,7 @@ class AuditService {
       action: 'ENABLE_USER',
       who: adminId,
       subjectId,
-      subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+      subjectType: USER_ID_SUBJECT_TYPE,
       details: null,
       logErrors,
     })
@@ -110,7 +108,7 @@ class AuditService {
       action: 'DISABLE_USER',
       who: adminId,
       subjectId,
-      subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+      subjectType: USER_ID_SUBJECT_TYPE,
       details: null,
       logErrors,
     })
@@ -160,4 +158,5 @@ class AuditService {
   }
 }
 
-module.exports = { AuditService }
+export const auditService = new AuditService()
+export const USER_ID_SUBJECT_TYPE = 'USER_ID'

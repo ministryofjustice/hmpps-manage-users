@@ -1,13 +1,12 @@
 const { deleteEmailDomainFactory } = require('./deleteEmailDomain')
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 describe('delete email domain factory', () => {
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
-  const mockSendAuditMessage = jest.fn()
-  AuditService.prototype.sendAuditMessage = mockSendAuditMessage
   const deleteEmailDomainApi = jest.fn()
   const emailDomainFactory = deleteEmailDomainFactory(deleteEmailDomainApi, '/email-domains')
   describe('index', () => {
@@ -45,7 +44,7 @@ describe('delete email domain factory', () => {
       await emailDomainFactory.deleteEmailDomain(deleteEmailDomainRequest, { locals, redirect })
       expect(deleteEmailDomainApi).toBeCalledWith(locals, '1234')
       expect(redirect).toBeCalledWith('/email-domains')
-      expect(mockSendAuditMessage).toHaveBeenCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: 'DELETE_EMAIL_DOMAIN',
         details: '{"domainId":"1234"}',
         who: 'username',
@@ -78,7 +77,7 @@ describe('delete email domain factory', () => {
       expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
         { href: '#domainName', text: 'Unauthorized to use the delete email domain functionality' },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully, if the email domain to be deleted is not found', async () => {
@@ -110,7 +109,7 @@ describe('delete email domain factory', () => {
           text: 'Email domain not found',
         },
       ])
-      expect(mockSendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })

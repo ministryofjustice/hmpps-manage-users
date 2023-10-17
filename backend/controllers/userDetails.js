@@ -1,4 +1,4 @@
-const { AuditService } = require('../services/auditService')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
@@ -57,7 +57,6 @@ const userDetailsFactory = (
   }
 
   const removeRole = async (req, res) => {
-    const auditService = new AuditService()
     const { userId, role } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -107,7 +106,6 @@ const userDetailsFactory = (
   }
 
   const removeUserCaseload = async (req, res) => {
-    const auditService = new AuditService()
     const { userId, caseload } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -118,7 +116,7 @@ const userDetailsFactory = (
         action: 'REMOVE_USER_CASELOAD',
         who: username,
         subjectId: userId,
-        subjectType: AuditService.USER_ID_SUBJECT_TYPE,
+        subjectType: USER_ID_SUBJECT_TYPE,
         details: { caseload },
       })
       res.redirect(`${staffUrl}/details`)
@@ -135,7 +133,6 @@ const userDetailsFactory = (
   }
 
   const enableUser = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -150,7 +147,6 @@ const userDetailsFactory = (
   }
 
   const disableUser = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
