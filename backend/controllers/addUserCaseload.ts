@@ -29,8 +29,6 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
   }
 
   const post = async (req: Request, res: Response) => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const { username } = req.session.userDetails
     const { userId } = req.params
     const { caseloads } = req.body

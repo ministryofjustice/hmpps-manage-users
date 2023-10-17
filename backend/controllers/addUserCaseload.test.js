@@ -83,7 +83,7 @@ describe('select caseloads factory', () => {
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
         who: username,
-        details: { caseloads: ['LEI', 'PVI'] },
+        details: '{"caseloads":["LEI","PVI"]}',
       })
     })
 
@@ -105,7 +105,7 @@ describe('select caseloads factory', () => {
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
         who: username,
-        details: { caseloads: ['LEI'] },
+        details: '{"caseloads":["LEI"]}',
       })
     })
 
