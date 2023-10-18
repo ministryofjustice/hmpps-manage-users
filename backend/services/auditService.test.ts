@@ -12,34 +12,6 @@ describe('Audit service', () => {
     jest.resetAllMocks()
   })
 
-  describe('add role', () => {
-    const functionArgs = { adminId, subjectId: userId, roles: ['NEW_ROLE'], logErrors: true }
-
-    it('sends audit message', async () => {
-      const expectedWhat = 'ADD_USER_ROLES'
-      const expectedWho = 'some admin'
-      const expectedDetails = '{"roles":["NEW_ROLE"]}'
-      await assertAuditMessageIsPublishedCorrectly(
-        auditService.addRolesToUser.bind(auditService),
-        functionArgs,
-        expectedWhat,
-        expectedWho,
-        userId,
-        userIdSubjectType,
-        expectedDetails,
-      )
-    })
-
-    it('logs out errors if logErrors is true', async () => {
-      await assertErrorsLoggedWhenLogErrorsIsTrue(auditService.addRolesToUser.bind(auditService), functionArgs)
-    })
-
-    it('does not log out errors if logErrors is false', async () => {
-      functionArgs.logErrors = false
-      await assertErrorsNotLoggedWhenLogErrorsIsFalse(auditService.addRolesToUser.bind(auditService), functionArgs)
-    })
-  })
-
   describe('remove role', () => {
     const functionArgs = {
       adminId,

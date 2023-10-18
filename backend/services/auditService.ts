@@ -11,27 +11,6 @@ class AuditService {
     })
   }
 
-  async addRolesToUser({
-    adminId,
-    subjectId,
-    roles,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    roles: Array<string>
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'ADD_USER_ROLES',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: JSON.stringify({ roles }),
-      logErrors,
-    })
-  }
-
   async removeRoleFromUser({
     adminId,
     subjectId,
@@ -117,7 +96,6 @@ class AuditService {
   async sendAuditMessage({
     action,
     who,
-    timestamp = new Date(),
     subjectId,
     subjectType,
     details,
@@ -125,7 +103,6 @@ class AuditService {
   }: {
     action: string
     who: string
-    timestamp?: Date
     subjectId?: string
     subjectType?: string
     details?: string
@@ -134,7 +111,7 @@ class AuditService {
     try {
       const message = JSON.stringify({
         what: action,
-        when: timestamp,
+        when: new Date(),
         who,
         subjectId,
         subjectType,

@@ -4,7 +4,7 @@ const { auditService } = require('../services/auditService')
 describe('select roles factory', () => {
   beforeEach(() => {
     jest.resetAllMocks()
-    jest.spyOn(auditService, 'addRolesToUser').mockResolvedValue()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   const getUserRolesAndMessage = jest.fn()
@@ -72,11 +72,12 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(auditService.addRolesToUser).toBeCalledWith({
-        adminId: 'JoeAdmin',
-        logErrors: true,
-        roles: ['GLOBAL_SEARCH', 'BOB'],
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'ADD_USER_ROLES',
+        details: '{"roles":["GLOBAL_SEARCH","BOB"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'JoeAdmin',
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
@@ -93,11 +94,12 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(auditService.addRolesToUser).toBeCalledWith({
-        adminId: 'JoeAdmin',
-        logErrors: true,
-        roles: ['GLOBAL_SEARCH'],
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'ADD_USER_ROLES',
+        details: '{"roles":["GLOBAL_SEARCH"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'JoeAdmin',
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
@@ -114,7 +116,7 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       await addRole.post(req, { redirect })
-      expect(auditService.addRolesToUser).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
     })
