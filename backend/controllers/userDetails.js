@@ -1,4 +1,4 @@
-const { AuditService } = require('../services/auditService')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
@@ -57,7 +57,6 @@ const userDetailsFactory = (
   }
 
   const removeRole = async (req, res) => {
-    const auditService = new AuditService()
     const { userId, role } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -66,7 +65,7 @@ const userDetailsFactory = (
       await removeUserRoleApi(res.locals, userId, role)
       await auditService.removeRoleFromUser({
         adminId: username,
-        userId,
+        subjectId: userId,
         roles: [role],
         logErrors: true,
       })
@@ -108,10 +107,18 @@ const userDetailsFactory = (
 
   const removeUserCaseload = async (req, res) => {
     const { userId, caseload } = req.params
+    const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
     try {
       await removeUserCaseloadApi(res.locals, userId, caseload)
+      await auditService.sendAuditMessage({
+        action: 'REMOVE_USER_CASELOAD',
+        who: username,
+        subjectId: userId,
+        subjectType: USER_ID_SUBJECT_TYPE,
+        details: { caseload },
+      })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
       if (error.status === 400) {
@@ -126,7 +133,6 @@ const userDetailsFactory = (
   }
 
   const enableUser = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -134,14 +140,13 @@ const userDetailsFactory = (
     await enableUserApi(res.locals, userId)
     await auditService.enableUser({
       adminId: username,
-      userId,
+      subjectId: userId,
       logErrors: true,
     })
     res.redirect(`${staffUrl}/details`)
   }
 
   const disableUser = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
@@ -149,7 +154,7 @@ const userDetailsFactory = (
     await disableUserApi(res.locals, userId)
     await auditService.disableUser({
       adminId: username,
-      userId,
+      subjectId: userId,
       logErrors: true,
     })
     res.redirect(`${staffUrl}/details`)

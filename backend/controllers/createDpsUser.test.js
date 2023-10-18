@@ -1,9 +1,15 @@
 const { createDpsUserFactory } = require('./createDpsUser')
+const { auditService } = require('../services/auditService')
 
 describe('create user factory', () => {
   const getCaseloads = jest.fn()
   const createUser = jest.fn()
   const createDpsUser = createDpsUserFactory(getCaseloads, createUser, '/create-user', '/manage-dps-users')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call create user render', async () => {
@@ -54,6 +60,8 @@ describe('create user factory', () => {
   })
 
   describe('post', () => {
+    const username = 'username'
+    const session = { userDetails: { username } }
     it('should create user and redirect', async () => {
       const req = {
         params: {},
@@ -69,7 +77,7 @@ describe('create user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
 
@@ -88,6 +96,22 @@ describe('create user factory', () => {
       expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
+      })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_DPS_USER',
+        subjectId: 'BOB_ADM',
+        subjectType: 'USER_ID',
+        details: {
+          user: {
+            defaultCaseloadId: 'MDI',
+            email: 'bob@digital.justice.gov.uk',
+            firstName: 'bob',
+            lastName: 'smith',
+            userType: 'DPS_GEN',
+            username: 'BOB_ADM',
+          },
+        },
+        who: 'username',
       })
     })
 
@@ -106,7 +130,7 @@ describe('create user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createUser.mockResolvedValue({ username: 'BOB_OSHEA', primaryEmail: 'bob@digital.justice.gov.uk' })
 
@@ -125,6 +149,22 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_OSHEA/details',
         email: 'bob@digital.justice.gov.uk',
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: {
+          user: {
+            defaultCaseloadId: 'MDI',
+            email: 'bob@digital.justice.gov.uk',
+            firstName: "O'Shea",
+            lastName: "O'Mark-Lewis",
+            userType: 'DPS_GEN',
+            username: 'BOB_OSHEA',
+          },
+        },
+        who: 'username',
+        subjectId: 'BOB_OSHEA',
+        subjectType: 'USER_ID',
+      })
     })
 
     it('should trim fields, create user and redirect', async () => {
@@ -139,7 +179,7 @@ describe('create user factory', () => {
           userType: 'DPS_GEN',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
 
       createUser.mockResolvedValue({ username: 'BOB_ADM', primaryEmail: 'bob@digital.justice.gov.uk' })
@@ -159,6 +199,22 @@ describe('create user factory', () => {
       expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
+      })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: {
+          user: {
+            defaultCaseloadId: 'MDI',
+            email: 'bob@digital.justice.gov.uk',
+            firstName: 'bob',
+            lastName: 'smith',
+            userType: 'DPS_GEN',
+            username: 'BOB_ADM',
+          },
+        },
+        who: 'username',
+        subjectId: 'BOB_ADM',
+        subjectType: 'USER_ID',
       })
     })
 
@@ -190,6 +246,7 @@ describe('create user factory', () => {
           text: 'Select a default caseload',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should show error if an email is invalid', async () => {
@@ -216,6 +273,7 @@ describe('create user factory', () => {
           text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -238,6 +296,7 @@ describe('create user factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createDpsUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -246,6 +305,7 @@ describe('create user factory', () => {
           text: 'something went wrong',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -269,6 +329,7 @@ describe('create user factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createDpsUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -278,6 +339,7 @@ describe('create user factory', () => {
           text: 'Username already exists',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email domain is invalid', async () => {
@@ -301,6 +363,7 @@ describe('create user factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createDpsUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -310,6 +373,7 @@ describe('create user factory', () => {
           text: 'Invalid Email domain',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })

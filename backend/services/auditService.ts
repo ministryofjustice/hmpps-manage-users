@@ -13,93 +13,103 @@ class AuditService {
 
   async addRolesToUser({
     adminId,
-    userId,
+    subjectId,
     roles,
     logErrors,
   }: {
     adminId: string
-    userId: string
+    subjectId: string
     roles: Array<string>
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'ADD_USER_ROLES',
       who: adminId,
-      details: JSON.stringify({ adminId, userId, roles }),
+      subjectId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      details: JSON.stringify({ roles }),
       logErrors,
     })
   }
 
   async removeRoleFromUser({
     adminId,
-    userId,
+    subjectId,
     role,
     logErrors,
   }: {
     adminId: string
-    userId: string
+    subjectId: string
     role: string
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'REMOVE_USER_ROLE',
       who: adminId,
-      details: JSON.stringify({ adminId, userId, role }),
+      subjectId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      details: JSON.stringify({ role }),
       logErrors,
     })
   }
 
   async createGroup({
     adminId,
-    userId,
+    subjectId,
     group,
     logErrors,
   }: {
     adminId: string
-    userId: string
+    subjectId: string
     group: object
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'CREATE_GROUP',
       who: adminId,
-      details: JSON.stringify({ adminId, userId, group }),
+      subjectId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      details: JSON.stringify({ group }),
       logErrors,
     })
   }
 
   async enableUser({
     adminId,
-    userId,
+    subjectId,
     logErrors,
   }: {
     adminId: string
-    userId: string
+    subjectId: string
     group: object
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'ENABLE_USER',
       who: adminId,
-      details: JSON.stringify({ adminId, userId }),
+      subjectId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      details: null,
       logErrors,
     })
   }
 
   async disableUser({
     adminId,
-    userId,
+    subjectId,
     logErrors,
   }: {
     adminId: string
-    userId: string
+    subjectId: string
     group: object
     logErrors: boolean
   }) {
     return this.sendAuditMessage({
       action: 'DISABLE_USER',
       who: adminId,
-      details: JSON.stringify({ adminId, userId }),
+      subjectId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      details: null,
       logErrors,
     })
   }
@@ -108,20 +118,26 @@ class AuditService {
     action,
     who,
     timestamp = new Date(),
+    subjectId,
+    subjectType,
     details,
-    logErrors,
+    logErrors = true,
   }: {
     action: string
     who: string
     timestamp?: Date
-    details: string
-    logErrors: boolean
+    subjectId?: string
+    subjectType?: string
+    details?: string
+    logErrors?: boolean
   }) {
     try {
       const message = JSON.stringify({
         what: action,
         when: timestamp,
         who,
+        subjectId,
+        subjectType,
         service: config.apis.audit.serviceName,
         details,
       })
@@ -142,4 +158,5 @@ class AuditService {
   }
 }
 
-module.exports = { AuditService }
+export const auditService = new AuditService()
+export const USER_ID_SUBJECT_TYPE = 'USER_ID'

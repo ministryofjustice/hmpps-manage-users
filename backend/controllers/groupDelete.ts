@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { auditService, USER_ID_SUBJECT_TYPE } from '../services/auditService'
 
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
   const stashStateAndRedirectToIndex = (
@@ -39,9 +40,19 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
   }
 
   const deleteGroup = async (req: Request, res: Response) => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const { username } = req.session.userDetails
     const { group } = req.params
+    const { userId } = req.params
     try {
       await deleteGroupApi(res.locals, group)
+      await auditService.sendAuditMessage({
+        action: 'DELETE_GROUP',
+        who: username,
+        subjectId: userId,
+        subjectType: USER_ID_SUBJECT_TYPE,
+      })
       res.redirect(`${maintainUrl}`)
     } catch (error) {
       if (error.status === 400) {

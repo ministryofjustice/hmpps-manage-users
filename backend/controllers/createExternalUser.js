@@ -1,5 +1,6 @@
 const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const createExternalUserFactory = (
   getAssignableGroupsApi,
@@ -47,7 +48,14 @@ const createExternalUserFactory = (
         const groupCodes = user.groupCode !== '' ? [user.groupCode] : undefined
         const updatedUser = { email: user.email, firstName: user.firstName, lastName: user.lastName, groupCodes }
         const userId = await createExternalUser(res.locals, updatedUser)
-
+        const { username } = req.session.userDetails
+        await auditService.sendAuditMessage({
+          action: 'CREATE_DPS_USER',
+          who: username,
+          subjectId: userId,
+          subjectType: USER_ID_SUBJECT_TYPE,
+          details: { user },
+        })
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}?user=${encodeURIComponent(user.email)}`
         res.render('createExternalUserSuccess.njk', {

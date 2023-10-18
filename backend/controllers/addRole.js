@@ -1,4 +1,4 @@
-const { AuditService } = require('../services/auditService')
+const { auditService } = require('../services/auditService')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -33,7 +33,6 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   }
 
   const post = async (req, res) => {
-    const auditService = new AuditService()
     const { userId } = req.params
     const { roles } = req.body
     const { username } = req.session.userDetails
@@ -47,7 +46,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       await saveRoles(res.locals, userId, roleArray)
       await auditService.addRolesToUser({
         adminId: username,
-        userId,
+        subjectId: userId,
         roles: roleArray,
         logErrors: true,
       })

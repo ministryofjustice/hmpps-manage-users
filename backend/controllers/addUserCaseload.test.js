@@ -1,9 +1,16 @@
+const { auditService } = require('../services/auditService')
+
 const { selectCaseloadsFactory } = require('./addUserCaseload')
 
 describe('select caseloads factory', () => {
   const getUserAssignableCaseloads = jest.fn()
   const saveCaseloads = jest.fn()
   const addUserCaseload = selectCaseloadsFactory(getUserAssignableCaseloads, saveCaseloads, '/manage-dps-users')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call addUserCaseload render', async () => {
@@ -57,11 +64,13 @@ describe('select caseloads factory', () => {
   })
 
   describe('post', () => {
+    const username = 'username'
     it('should add the caseload and redirect', async () => {
       const req = {
         params: { userId: 'TEST_USER' },
         body: { caseloads: ['LEI', 'PVI'] },
         flash: jest.fn(),
+        session: { userDetails: { username } },
       }
 
       const redirect = jest.fn()
@@ -69,6 +78,13 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI', 'PVI'])
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'ADD_USER_CASELOAD',
+        subjectId: 'TEST_USER',
+        subjectType: 'USER_ID',
+        who: username,
+        details: '{"caseloads":["LEI","PVI"]}',
+      })
     })
 
     it('should cope with single caseload being added', async () => {
@@ -76,6 +92,7 @@ describe('select caseloads factory', () => {
         params: { userId: 'TEST_USER' },
         body: { caseloads: 'LEI' },
         flash: jest.fn(),
+        session: { userDetails: { username } },
       }
 
       const redirect = jest.fn()
@@ -83,6 +100,13 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI'])
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'ADD_USER_CASELOAD',
+        subjectId: 'TEST_USER',
+        subjectType: 'USER_ID',
+        who: username,
+        details: '{"caseloads":["LEI"]}',
+      })
     })
 
     it('should stash the errors and redirect if no caseloads selected', async () => {
@@ -91,6 +115,7 @@ describe('select caseloads factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session: { userDetails: { username } },
       }
 
       const redirect = jest.fn()
@@ -99,6 +124,7 @@ describe('select caseloads factory', () => {
       expect(req.flash).toBeCalledWith('addCaseloadErrors', [
         { href: '#caseloads', text: 'Select at least one caseload' },
       ])
+      expect(auditService.sendAuditMessage).not.toBeCalled()
     })
   })
 })

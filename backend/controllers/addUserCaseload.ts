@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { auditService, USER_ID_SUBJECT_TYPE } from '../services/auditService'
 
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
   const stashStateAndRedirectToIndex = (req: Request, res: Response, errors: Array<Record<string, string>>) => {
@@ -28,6 +29,7 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
   }
 
   const post = async (req: Request, res: Response) => {
+    const { username } = req.session.userDetails
     const { userId } = req.params
     const { caseloads } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
@@ -38,6 +40,13 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
     } else {
       const caseloadArray = Array.isArray(caseloads) ? caseloads : [caseloads]
       await saveCaseloads(res.locals, userId, caseloadArray)
+      await auditService.sendAuditMessage({
+        action: 'ADD_USER_CASELOAD',
+        who: username,
+        subjectId: userId,
+        subjectType: USER_ID_SUBJECT_TYPE,
+        details: JSON.stringify({ caseloads: caseloadArray }),
+      })
       res.redirect(`${staffUrl}`)
     }
   }

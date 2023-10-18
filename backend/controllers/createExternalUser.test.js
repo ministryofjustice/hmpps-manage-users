@@ -1,4 +1,5 @@
 const { createExternalUserFactory } = require('./createExternalUser')
+const { auditService } = require('../services/auditService')
 
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()
@@ -11,6 +12,11 @@ describe('create user factory', () => {
     '/manage-external-users',
     'Search for an external user',
   )
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call create user render', async () => {
@@ -43,6 +49,7 @@ describe('create user factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should create user and redirect', async () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
@@ -53,7 +60,7 @@ describe('create user factory', () => {
           groupCode: 'SITE_1_GROUP_1',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
       createExternalUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
@@ -69,6 +76,20 @@ describe('create user factory', () => {
         firstName: 'bob',
         lastName: 'smith',
         groupCodes: ['SITE_1_GROUP_1'],
+      })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: {
+          user: {
+            email: 'bob@digital.justice.gov.uk',
+            firstName: 'bob',
+            groupCode: 'SITE_1_GROUP_1',
+            lastName: 'smith',
+          },
+        },
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -82,7 +103,7 @@ describe('create user factory', () => {
           groupCode: 'SITE_1_GROUP_1',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
       createExternalUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
@@ -99,6 +120,20 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: ['SITE_1_GROUP_1'],
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: {
+          user: {
+            email: 'bob@digital.justice.gov.uk',
+            firstName: 'bob',
+            groupCode: 'SITE_1_GROUP_1',
+            lastName: 'smith',
+          },
+        },
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
+      })
     })
 
     it('should create user without group and redirect', async () => {
@@ -111,7 +146,7 @@ describe('create user factory', () => {
           groupCode: '',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
 
       createExternalUserApi.mockResolvedValue('00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
@@ -129,6 +164,20 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: undefined,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: {
+          user: {
+            email: 'bob@digital.justice.gov.uk',
+            firstName: 'bob',
+            groupCode: '',
+            lastName: 'smith',
+          },
+        },
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
+      })
     })
 
     it('should stash away the search results url in the session', async () => {
@@ -141,7 +190,7 @@ describe('create user factory', () => {
           groupCode: '',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
 
       const render = jest.fn()
@@ -150,6 +199,13 @@ describe('create user factory', () => {
       expect(req.session).toEqual({
         searchUrl: '/search-external-users',
         searchResultsUrl: '/search-external-users?user=bob%40digital.justice.gov.uk',
+        userDetails: { username: 'username' },
+      })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'CREATE_DPS_USER',
+        details: { user: { email: 'bob@digital.justice.gov.uk', firstName: 'bob', groupCode: '', lastName: 'smith' } },
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -173,6 +229,7 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email not valid', async () => {
@@ -197,6 +254,7 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if email already exists', async () => {
@@ -227,6 +285,7 @@ describe('create user factory', () => {
           text: 'Email already exists',
         },
       ])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
