@@ -89,9 +89,6 @@ describe('user detail factory', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
-    jest.spyOn(auditService, 'enableUser').mockResolvedValue()
-    jest.spyOn(auditService, 'disableUser').mockResolvedValue()
-    jest.spyOn(auditService, 'removeRoleFromUser').mockResolvedValue()
   })
 
   describe('index', () => {
@@ -240,11 +237,12 @@ describe('user detail factory', () => {
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
-      expect(auditService.removeRoleFromUser).toHaveBeenCalledWith({
-        adminId: 'username',
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'REMOVE_USER_ROLE',
+        details: '{"role":"role1"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        roles: ['role1'],
-        logErrors: true,
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -261,6 +259,7 @@ describe('user detail factory', () => {
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 
@@ -379,10 +378,11 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(auditService.enableUser).toHaveBeenCalledWith({
-        adminId: 'username',
-        logErrors: true,
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: 'ENABLE_USER',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
       expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
@@ -394,10 +394,11 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(auditService.disableUser).toBeCalledWith({
-        adminId: 'username',
-        logErrors: true,
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'DISABLE_USER',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
