@@ -37,7 +37,7 @@ describe('create group factory', () => {
   describe('post', () => {
     it('should create group and redirect', async () => {
       const req = {
-        body: { groupCode: 'BOB1', groupName: 'group name' },
+        body: { groupCode: 'BOB1', groupName: 'group name', _csrf: 'csrf' },
         flash: jest.fn(),
         session: { userDetails: { username: 'username' } },
         params: { userId: 'userId' },
@@ -50,6 +50,7 @@ describe('create group factory', () => {
       expect(createGroupApi).toBeCalledWith(locals, {
         groupCode: 'BOB1',
         groupName: 'group name',
+        _csrf: 'csrf',
       })
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_GROUP',

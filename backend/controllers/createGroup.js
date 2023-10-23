@@ -32,12 +32,13 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
     } else {
       try {
         await createGroup(res.locals, group)
+        const { _csrf, ...groupWithoutCsrf } = group
         await auditService.sendAuditMessage({
           action: 'CREATE_GROUP',
           who: username,
           subjectId: userId,
           subjectType: USER_ID_SUBJECT_TYPE,
-          details: JSON.stringify({ group }),
+          details: JSON.stringify({ group: groupWithoutCsrf }),
         })
         res.redirect(`${manageGroupUrl}/${group.groupCode}`)
       } catch (err) {
