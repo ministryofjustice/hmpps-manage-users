@@ -80,7 +80,7 @@ describe('change email factory', () => {
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
-        details: { email: 'bob@digital.justice.gov.uk' },
+        details: '{"email":"bob@digital.justice.gov.uk"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
@@ -104,7 +104,7 @@ describe('change email factory', () => {
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
-        details: { email: 'bob@digital.justice.gov.uk' },
+        details: '{"email":"bob@digital.justice.gov.uk"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
@@ -129,7 +129,7 @@ describe('change email factory', () => {
       expect(req.flash).toBeCalledWith('changeEmail', 'bob@digital.justice.gov.uk')
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CHANGE_EMAIL_ADDRESS',
-        details: { email: 'bob@digital.justice.gov.uk' },
+        details: '{"email":"bob@digital.justice.gov.uk"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',

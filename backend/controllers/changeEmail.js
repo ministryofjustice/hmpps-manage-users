@@ -52,7 +52,7 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
           who: username,
           subjectId: userId,
           subjectType: 'USER_ID',
-          details: { email },
+          details: JSON.stringify({ email }),
         })
         const successUrl = `${manageUrl}/${userId}/change-email-success`
         req.flash('changeEmail', email)

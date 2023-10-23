@@ -50,11 +50,11 @@ const createExternalUserFactory = (
         const userId = await createExternalUser(res.locals, updatedUser)
         const { username } = req.session.userDetails
         await auditService.sendAuditMessage({
-          action: 'CREATE_DPS_USER',
+          action: 'CREATE_EXTERNAL_USER',
           who: username,
           subjectId: userId,
           subjectType: USER_ID_SUBJECT_TYPE,
-          details: { user },
+          details: JSON.stringify({ user }),
         })
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}?user=${encodeURIComponent(user.email)}`

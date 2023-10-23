@@ -78,15 +78,9 @@ describe('create user factory', () => {
         groupCodes: ['SITE_1_GROUP_1'],
       })
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_DPS_USER',
-        details: {
-          user: {
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            groupCode: 'SITE_1_GROUP_1',
-            lastName: 'smith',
-          },
-        },
+        action: 'CREATE_EXTERNAL_USER',
+        details:
+          '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":"SITE_1_GROUP_1"}}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
@@ -121,15 +115,9 @@ describe('create user factory', () => {
         groupCodes: ['SITE_1_GROUP_1'],
       })
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_DPS_USER',
-        details: {
-          user: {
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            groupCode: 'SITE_1_GROUP_1',
-            lastName: 'smith',
-          },
-        },
+        action: 'CREATE_EXTERNAL_USER',
+        details:
+          '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":"SITE_1_GROUP_1"}}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
@@ -165,15 +153,8 @@ describe('create user factory', () => {
         groupCodes: undefined,
       })
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_DPS_USER',
-        details: {
-          user: {
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            groupCode: '',
-            lastName: 'smith',
-          },
-        },
+        action: 'CREATE_EXTERNAL_USER',
+        details: '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":""}}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
@@ -202,8 +183,8 @@ describe('create user factory', () => {
         userDetails: { username: 'username' },
       })
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_DPS_USER',
-        details: { user: { email: 'bob@digital.justice.gov.uk', firstName: 'bob', groupCode: '', lastName: 'smith' } },
+        action: 'CREATE_EXTERNAL_USER',
+        details: '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":""}}',
         subjectType: 'USER_ID',
         who: 'username',
       })
