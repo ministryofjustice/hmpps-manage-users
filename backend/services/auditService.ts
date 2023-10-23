@@ -11,113 +11,9 @@ class AuditService {
     })
   }
 
-  async addRolesToUser({
-    adminId,
-    subjectId,
-    roles,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    roles: Array<string>
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'ADD_USER_ROLES',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: JSON.stringify({ roles }),
-      logErrors,
-    })
-  }
-
-  async removeRoleFromUser({
-    adminId,
-    subjectId,
-    role,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    role: string
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'REMOVE_USER_ROLE',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: JSON.stringify({ role }),
-      logErrors,
-    })
-  }
-
-  async createGroup({
-    adminId,
-    subjectId,
-    group,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    group: object
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'CREATE_GROUP',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: JSON.stringify({ group }),
-      logErrors,
-    })
-  }
-
-  async enableUser({
-    adminId,
-    subjectId,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    group: object
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'ENABLE_USER',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: null,
-      logErrors,
-    })
-  }
-
-  async disableUser({
-    adminId,
-    subjectId,
-    logErrors,
-  }: {
-    adminId: string
-    subjectId: string
-    group: object
-    logErrors: boolean
-  }) {
-    return this.sendAuditMessage({
-      action: 'DISABLE_USER',
-      who: adminId,
-      subjectId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      details: null,
-      logErrors,
-    })
-  }
-
   async sendAuditMessage({
     action,
     who,
-    timestamp = new Date(),
     subjectId,
     subjectType,
     details,
@@ -125,7 +21,6 @@ class AuditService {
   }: {
     action: string
     who: string
-    timestamp?: Date
     subjectId?: string
     subjectType?: string
     details?: string
@@ -134,7 +29,7 @@ class AuditService {
     try {
       const message = JSON.stringify({
         what: action,
-        when: timestamp,
+        when: new Date(),
         who,
         subjectId,
         subjectType,

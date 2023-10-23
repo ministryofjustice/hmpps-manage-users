@@ -4,7 +4,7 @@ const { auditService } = require('../services/auditService')
 describe('create group factory', () => {
   beforeEach(() => {
     jest.resetAllMocks()
-    jest.spyOn(auditService, 'createGroup').mockResolvedValue()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   const createGroupApi = jest.fn()
@@ -37,7 +37,7 @@ describe('create group factory', () => {
   describe('post', () => {
     it('should create group and redirect', async () => {
       const req = {
-        body: { groupCode: 'BOB1', groupName: 'group name' },
+        body: { groupCode: 'BOB1', groupName: 'group name', _csrf: 'csrf' },
         flash: jest.fn(),
         session: { userDetails: { username: 'username' } },
         params: { userId: 'userId' },
@@ -50,15 +50,14 @@ describe('create group factory', () => {
       expect(createGroupApi).toBeCalledWith(locals, {
         groupCode: 'BOB1',
         groupName: 'group name',
+        _csrf: 'csrf',
       })
-      expect(auditService.createGroup).toBeCalledWith({
-        adminId: 'username',
-        logErrors: true,
-        group: {
-          groupCode: 'BOB1',
-          groupName: 'group name',
-        },
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_GROUP',
+        details: '{"group":{"groupCode":"BOB1","groupName":"group name"}}',
         subjectId: 'userId',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -78,14 +77,12 @@ describe('create group factory', () => {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
-      expect(auditService.createGroup).toBeCalledWith({
-        adminId: 'username',
-        logErrors: true,
-        group: {
-          groupCode: 'BOB1',
-          groupName: 'group name',
-        },
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_GROUP',
+        details: '{"group":{"groupCode":"BOB1","groupName":"group name"}}',
         subjectId: 'userId',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -105,14 +102,12 @@ describe('create group factory', () => {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
-      expect(auditService.createGroup).toBeCalledWith({
-        adminId: 'username',
-        logErrors: true,
-        group: {
-          groupCode: 'BOB1',
-          groupName: 'group name',
-        },
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CREATE_GROUP',
+        details: '{"group":{"groupCode":"BOB1","groupName":"group name"}}',
         subjectId: 'userId',
+        subjectType: 'USER_ID',
+        who: 'username',
       })
     })
 
@@ -132,7 +127,7 @@ describe('create group factory', () => {
         { href: '#groupCode', text: 'Enter a group code' },
         { href: '#groupName', text: 'Enter a group name' },
       ])
-      expect(auditService.createGroup).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should stash the group and redirect if no code or name entered', async () => {
@@ -148,7 +143,7 @@ describe('create group factory', () => {
       await createGroup.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('group', [{ groupCode: '', groupName: '' }])
-      expect(auditService.createGroup).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if group already exists', async () => {
@@ -175,7 +170,7 @@ describe('create group factory', () => {
           text: 'Group code already exists',
         },
       ])
-      expect(auditService.createGroup).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })

@@ -1,4 +1,4 @@
-const { auditService } = require('../services/auditService')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -44,11 +44,12 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
       await saveRoles(res.locals, userId, roleArray)
-      await auditService.addRolesToUser({
-        adminId: username,
+      await auditService.sendAuditMessage({
+        action: 'ADD_USER_ROLES',
+        who: username,
         subjectId: userId,
-        roles: roleArray,
-        logErrors: true,
+        subjectType: USER_ID_SUBJECT_TYPE,
+        details: JSON.stringify({ roles: roleArray }),
       })
       res.redirect(`${staffUrl}`)
     }

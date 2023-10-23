@@ -63,11 +63,12 @@ const userDetailsFactory = (
 
     try {
       await removeUserRoleApi(res.locals, userId, role)
-      await auditService.removeRoleFromUser({
-        adminId: username,
+      await auditService.sendAuditMessage({
+        action: 'REMOVE_USER_ROLE',
+        who: username,
         subjectId: userId,
-        roles: [role],
-        logErrors: true,
+        subjectType: USER_ID_SUBJECT_TYPE,
+        details: JSON.stringify({ role }),
       })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
@@ -138,10 +139,11 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${userId}`
 
     await enableUserApi(res.locals, userId)
-    await auditService.enableUser({
-      adminId: username,
+    await auditService.sendAuditMessage({
+      action: 'ENABLE_USER',
+      who: username,
       subjectId: userId,
-      logErrors: true,
+      subjectType: USER_ID_SUBJECT_TYPE,
     })
     res.redirect(`${staffUrl}/details`)
   }
@@ -152,10 +154,11 @@ const userDetailsFactory = (
     const staffUrl = `${manageUrl}/${userId}`
 
     await disableUserApi(res.locals, userId)
-    await auditService.disableUser({
-      adminId: username,
+    await auditService.sendAuditMessage({
+      action: 'DISABLE_USER',
+      who: username,
       subjectId: userId,
-      logErrors: true,
+      subjectType: USER_ID_SUBJECT_TYPE,
     })
     res.redirect(`${staffUrl}/details`)
   }

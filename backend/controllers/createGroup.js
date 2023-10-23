@@ -1,6 +1,6 @@
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService } = require('../services/auditService')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
@@ -32,11 +32,13 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
     } else {
       try {
         await createGroup(res.locals, group)
-        await auditService.createGroup({
-          adminId: username,
+        const { _csrf, ...groupWithoutCsrf } = group
+        await auditService.sendAuditMessage({
+          action: 'CREATE_GROUP',
+          who: username,
           subjectId: userId,
-          group,
-          logErrors: true,
+          subjectType: USER_ID_SUBJECT_TYPE,
+          details: JSON.stringify({ group: groupWithoutCsrf }),
         })
         res.redirect(`${manageGroupUrl}/${group.groupCode}`)
       } catch (err) {
