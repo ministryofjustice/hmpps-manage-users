@@ -101,16 +101,8 @@ describe('create user factory', () => {
         action: 'CREATE_DPS_USER',
         subjectId: 'BOB_ADM',
         subjectType: 'USER_ID',
-        details: {
-          user: {
-            defaultCaseloadId: 'MDI',
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            lastName: 'smith',
-            userType: 'DPS_GEN',
-            username: 'BOB_ADM',
-          },
-        },
+        details:
+          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
         who: 'username',
       })
     })
@@ -151,16 +143,8 @@ describe('create user factory', () => {
       })
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
-        details: {
-          user: {
-            defaultCaseloadId: 'MDI',
-            email: 'bob@digital.justice.gov.uk',
-            firstName: "O'Shea",
-            lastName: "O'Mark-Lewis",
-            userType: 'DPS_GEN',
-            username: 'BOB_OSHEA',
-          },
-        },
+        details:
+          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_OSHEA","firstName":"O\'Shea","lastName":"O\'Mark-Lewis","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
         who: 'username',
         subjectId: 'BOB_OSHEA',
         subjectType: 'USER_ID',
@@ -202,16 +186,8 @@ describe('create user factory', () => {
       })
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'CREATE_DPS_USER',
-        details: {
-          user: {
-            defaultCaseloadId: 'MDI',
-            email: 'bob@digital.justice.gov.uk',
-            firstName: 'bob',
-            lastName: 'smith',
-            userType: 'DPS_GEN',
-            username: 'BOB_ADM',
-          },
-        },
+        details:
+          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","defaultCaseloadId":"MDI","userType":"DPS_GEN"}}',
         who: 'username',
         subjectId: 'BOB_ADM',
         subjectType: 'USER_ID',

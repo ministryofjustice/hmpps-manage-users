@@ -331,9 +331,7 @@ describe('user detail factory', () => {
       expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: 'REMOVE_USER_CASELOAD',
-        details: {
-          caseload: 'TEST_CASELOAD',
-        },
+        details: '{"caseload":"TEST_CASELOAD"}',
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
         who: 'username',

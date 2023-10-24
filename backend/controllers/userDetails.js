@@ -118,7 +118,7 @@ const userDetailsFactory = (
         who: username,
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
-        details: { caseload },
+        details: JSON.stringify({ caseload }),
       })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
