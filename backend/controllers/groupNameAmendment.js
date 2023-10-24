@@ -1,5 +1,6 @@
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditService } = require('../services/auditService')
 
 const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {
@@ -34,6 +35,12 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
         await changeGroupNameApi(res.locals, group, groupName)
+        const { username } = req.session.userDetails
+        await auditService.sendAuditMessage({
+          action: 'CREATE_EXTERNAL_USER',
+          who: username,
+          details: JSON.stringify({ group, newGroupName: groupName }),
+        })
         res.redirect(groupUrl)
       }
     } catch (err) {
