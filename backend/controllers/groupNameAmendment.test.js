@@ -66,7 +66,7 @@ describe('group amendment factory', () => {
       expect(redirect).toBeCalledWith('/manage-groups/group1')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
+        action: 'CHANGE_GROUP_NAME',
         details: '{"group":"group1","newGroupName":"GroupA"}',
         who: 'username',
       })
@@ -86,7 +86,7 @@ describe('group amendment factory', () => {
       expect(redirect).toBeCalledWith('/manage-groups/group1')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
+        action: 'CHANGE_GROUP_NAME',
         details: '{"group":"group1","newGroupName":"GroupA"}',
         who: 'username',
       })

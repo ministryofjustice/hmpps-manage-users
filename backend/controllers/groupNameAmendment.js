@@ -37,7 +37,7 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
         await changeGroupNameApi(res.locals, group, groupName)
         const { username } = req.session.userDetails
         await auditService.sendAuditMessage({
-          action: 'CREATE_EXTERNAL_USER',
+          action: 'CHANGE_GROUP_NAME',
           who: username,
           details: JSON.stringify({ group, newGroupName: groupName }),
         })

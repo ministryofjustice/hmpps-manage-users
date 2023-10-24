@@ -1,5 +1,6 @@
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditService } = require('../services/auditService')
 
 const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {
@@ -34,6 +35,12 @@ const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRo
         stashStateAndRedirectToIndex(req, res, errors, [roleName])
       } else {
         await changeRoleNameApi(res.locals, role, roleName)
+        const { username } = req.session.userDetails
+        await auditService.sendAuditMessage({
+          action: 'CHANGE_ROLE_NAME',
+          who: username,
+          details: JSON.stringify({ role, newRoleName: roleName }),
+        })
         res.redirect(roleUrl)
       }
     } catch (err) {

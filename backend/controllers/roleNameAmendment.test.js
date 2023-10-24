@@ -1,9 +1,15 @@
 const { roleNameAmendmentFactory } = require('./roleNameAmendment')
+const { auditService } = require('../services/auditService')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
   const changeRoleNameApi = jest.fn()
   const changeRoleName = roleNameAmendmentFactory(getRoleDetailsApi, changeRoleNameApi, '/manage-roles')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call roleName render', async () => {
@@ -40,11 +46,13 @@ describe('role amendment factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should change the role name and redirect', async () => {
       const req = {
         params: { role: 'role1' },
         body: { roleName: 'RoleA' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -52,6 +60,11 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleNameApi).toBeCalledWith(locals, 'role1', 'RoleA')
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CHANGE_ROLE_NAME',
+        details: '{"role":"role1","newRoleName":"RoleA"}',
+        who: 'username',
+      })
     })
 
     it('should trim, change the role name and redirect', async () => {
@@ -59,6 +72,7 @@ describe('role amendment factory', () => {
         params: { role: 'role1' },
         body: { roleName: ' RoleA ' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -66,6 +80,11 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleNameApi).toBeCalledWith(locals, 'role1', 'RoleA')
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: 'CHANGE_ROLE_NAME',
+        details: '{"role":"role1","newRoleName":"RoleA"}',
+        who: 'username',
+      })
     })
 
     it('should stash the errors and redirect if no role name entered', async () => {
@@ -80,6 +99,7 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#roleName', text: 'Enter a role name' }])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should stash the role name and redirect if no role name entered', async () => {
@@ -94,6 +114,7 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeRoleName', [undefined])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if role name not valid', async () => {
@@ -110,6 +131,7 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
 
     it('should fail gracefully if role name not found', async () => {
@@ -126,6 +148,7 @@ describe('role amendment factory', () => {
       await changeRoleName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
