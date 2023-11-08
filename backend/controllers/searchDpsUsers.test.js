@@ -1,5 +1,6 @@
 const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config').default
+const { auditService } = require('../services/auditService')
 
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
@@ -9,6 +10,8 @@ describe('search factory', () => {
 
   beforeEach(() => {
     getSearchableRolesApi.mockReset()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+    jest.clearAllMocks()
   })
 
   describe('DPS', () => {
@@ -32,8 +35,15 @@ describe('search factory', () => {
       get: jest.fn().mockReturnValue('localhost'),
       protocol: 'http',
       originalUrl: '/',
-      session: {},
+      session: { userDetails: { username: 'some username' } },
     }
+    const uuidRegex = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    const expectedViewDpsUserAttemptAuditMessage = expect.objectContaining({
+      action: 'VIEW_DPS_USERS_ATTEMPT',
+      correlationId: expect.stringMatching(uuidRegex),
+      who: 'some username',
+    })
+
     beforeEach(() => {
       getCaseloadsApi.mockReset()
       getSearchableRolesApi.mockResolvedValue([{ roleName: 'Access Role Admin', roleCode: 'ACCESS_ROLE_ADMIN' }])
@@ -77,7 +87,32 @@ describe('search factory', () => {
           maintainUrl: '/manage-dps-users',
           downloadRecordLimit: 100,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
+      it('should publish attempt and failure audit messages when userDetail render fails', async () => {
+        const render = jest.fn()
+        findUsersApi.mockRejectedValue(new Error('Error for test'))
+
+        try {
+          await search({ ...standardReq, query: {} }, { render })
+          expect(true).toBe(false)
+        } catch (error) {
+          expect(error).toBeInstanceOf(Error)
+          expect(error.message).toEqual('Error for test')
+        }
+
+        expect(render).not.toHaveBeenCalled()
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+          expect.objectContaining({
+            action: 'VIEW_DPS_USERS_FAILURE',
+            correlationId: expect.stringMatching(uuidRegex),
+            who: 'some username',
+          }),
+        )
+      })
+
       it('should call renderer with download url when download is allowed', async () => {
         allowDownload.mockReturnValue(true)
 
@@ -95,7 +130,9 @@ describe('search factory', () => {
               '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=&showOnlyLSAs=',
           }),
         )
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should not call renderer with download url when download is not allowed', async () => {
         allowDownload.mockReturnValue(false)
 
@@ -113,6 +150,7 @@ describe('search factory', () => {
               '/search-with-filter-dps-users/user-download?user=&status=ALL&roleCode=&groupCode=&restrictToActiveGroup=true&size=undefined',
           }),
         )
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
 
       it('should set current filter with single query parameters', async () => {
@@ -147,6 +185,7 @@ describe('search factory', () => {
               '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&groupCode=MDI&restrictToActiveGroup=false&inclusiveRoles=true&showOnlyLSAs=true',
           }),
         )
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
 
       it('should set list current filters to undefined when no values', async () => {
@@ -182,6 +221,7 @@ describe('search factory', () => {
               '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=&groupCode=&restrictToActiveGroup=true&inclusiveRoles=&showOnlyLSAs=',
           }),
         )
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
 
       it('should set current filter with multiple role and prison query parameters', async () => {
@@ -216,7 +256,9 @@ describe('search factory', () => {
               '/search-with-filter-dps-users/user-download?user=Andy&status=INACTIVE&roleCode=ACCESS_ROLE_ADMIN&roleCode=ACCESS_ROLE_GENERAL&groupCode=MDI&groupCode=BXI&restrictToActiveGroup=true&inclusiveRoles=true&showOnlyLSAs=true',
           }),
         )
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should replace previous breadcrumb information', async () => {
         const req = {
           ...standardReq,
@@ -229,8 +271,10 @@ describe('search factory', () => {
         expect(req.session.searchResultsUrl).toEqual(req.originalUrl)
         expect(req.session.searchTitle).toEqual('Search for a DPS user')
         expect(req.session.searchUrl).toEqual(req.originalUrl)
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
     })
+
     describe('search api call', () => {
       const render = jest.fn()
       const locals = { pageable: { offset: 20, size: 10, totalElements: 123 } }
@@ -252,6 +296,7 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
 
       it('should trim username of any leading or trailing spaces', async () => {
@@ -271,6 +316,7 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
 
       it('should search with current page and page defaults', async () => {
@@ -291,7 +337,9 @@ describe('search factory', () => {
           size: 20,
           page: 3,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for user with any status with just user filter set', async () => {
         const req = {
           ...standardReq,
@@ -309,7 +357,9 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for prison with active caseload with just group filter set', async () => {
         const req = {
           ...standardReq,
@@ -327,7 +377,9 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for prison with active caseload with group filter and restrictToActiveGroup is set to true', async () => {
         const req = {
           ...standardReq,
@@ -345,7 +397,9 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for prison without active caseload with group filter and restrictToActiveGroup is set to false set', async () => {
         const req = {
           ...standardReq,
@@ -363,7 +417,9 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for users with role of any status with just role filter set', async () => {
         const req = {
           ...standardReq,
@@ -381,7 +437,9 @@ describe('search factory', () => {
           status: 'ALL',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for inactive users with inactive status filter set', async () => {
         const req = {
           ...standardReq,
@@ -399,7 +457,9 @@ describe('search factory', () => {
           status: 'INACTIVE',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search for active users with active status filter set', async () => {
         const req = {
           ...standardReq,
@@ -417,7 +477,9 @@ describe('search factory', () => {
           status: 'ACTIVE',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
+
       it('should search with all filters when all set', async () => {
         const req = {
           ...standardReq,
@@ -435,6 +497,7 @@ describe('search factory', () => {
           status: 'ACTIVE',
           size: 20,
         })
+        expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewDpsUserAttemptAuditMessage)
       })
     })
   })
