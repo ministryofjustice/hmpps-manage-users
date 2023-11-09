@@ -16,6 +16,7 @@ class AuditService {
     who,
     subjectId,
     subjectType,
+    correlationId,
     details,
     logErrors = true,
   }: {
@@ -23,6 +24,7 @@ class AuditService {
     who: string
     subjectId?: string
     subjectType?: string
+    correlationId?: string
     details?: string
     logErrors?: boolean
   }) {
@@ -33,6 +35,7 @@ class AuditService {
         who,
         subjectId,
         subjectType,
+        correlationId,
         service: config.apis.audit.serviceName,
         details,
       })

@@ -1,3 +1,4 @@
+const { v4 } = require('uuid')
 const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const userDetailsFactory = (
@@ -20,40 +21,59 @@ const userDetailsFactory = (
 
   const index = async (req, res) => {
     const { userId } = req.params
-    const staffUrl = `${manageUrl}/${userId}`
-    const hasMaintainAuthUsers = Boolean(res.locals?.user?.maintainAuthUsers)
-    const hasMaintainDpsUsersAdmin = Boolean(res.locals?.user?.maintainAccessAdmin)
-    const hasManageDPSUserAccount = Boolean(res.locals?.user?.manageDPSUserAccount)
-
-    const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
-    const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
-    const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
-
-    const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
-      res.locals,
-      userId,
-      hasMaintainDpsUsersAdmin,
-      hasMaintainAuthUsers,
-    )
-
-    res.render('userDetails.njk', {
-      searchTitle,
-      searchResultsUrl,
-      searchUrl,
-      staff: { ...user, name: `${user.firstName} ${user.lastName}` },
-      staffUrl,
-      roles,
-      groups,
-      caseloads: caseloads?.sort(sortAlphabetically),
-      hasMaintainDpsUsersAdmin,
-      errors: req.flash('deleteGroupErrors'),
-      canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
-      showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
-      showGroups: Boolean(removeGroupApi),
-      showExtraUserDetails,
-      showUsername: user.email !== user.username.toLowerCase(),
-      displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
+    const { username } = req.session.userDetails
+    const auditCorrelationId = v4()
+    await auditService.sendAuditMessage({
+      action: 'VIEW_USER_ATTEMPT',
+      who: username,
+      subjectId: userId,
+      subjectType: USER_ID_SUBJECT_TYPE,
+      correlationId: auditCorrelationId,
     })
+    try {
+      const staffUrl = `${manageUrl}/${userId}`
+      const hasMaintainAuthUsers = Boolean(res.locals?.user?.maintainAuthUsers)
+      const hasMaintainDpsUsersAdmin = Boolean(res.locals?.user?.maintainAccessAdmin)
+      const hasManageDPSUserAccount = Boolean(res.locals?.user?.manageDPSUserAccount)
+
+      const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
+      const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
+      const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
+
+      const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
+        res.locals,
+        userId,
+        hasMaintainDpsUsersAdmin,
+        hasMaintainAuthUsers,
+      )
+      res.render('userDetails.njk', {
+        searchTitle,
+        searchResultsUrl,
+        searchUrl,
+        staff: { ...user, name: `${user.firstName} ${user.lastName}` },
+        staffUrl,
+        roles,
+        groups,
+        caseloads: caseloads?.sort(sortAlphabetically),
+        hasMaintainDpsUsersAdmin,
+        errors: req.flash('deleteGroupErrors'),
+        canAutoEnableDisableUser: Boolean(canAutoEnableDisableUser),
+        showEnableDisable: Boolean(canAutoEnableDisableUser || hasManageDPSUserAccount),
+        showGroups: Boolean(removeGroupApi),
+        showExtraUserDetails,
+        showUsername: user.email !== user.username.toLowerCase(),
+        displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
+      })
+    } catch (error) {
+      await auditService.sendAuditMessage({
+        action: 'VIEW_USER_FAILURE',
+        who: username,
+        subjectId: userId,
+        subjectType: USER_ID_SUBJECT_TYPE,
+        correlationId: auditCorrelationId,
+      })
+      throw error
+    }
   }
 
   const removeRole = async (req, res) => {

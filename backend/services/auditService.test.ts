@@ -5,6 +5,7 @@ import { auditService } from './auditService'
 const adminId = 'some admin'
 const userId = 'some user'
 const userIdSubjectType = 'USER_ID'
+const someCorrelationId = 'some correlation ID'
 
 describe('Audit service', () => {
   beforeEach(() => {
@@ -26,11 +27,12 @@ describe('Audit service', () => {
       who: adminId,
       subjectId: userId,
       subjectType: userIdSubjectType,
+      correlationId: someCorrelationId,
       details: JSON.stringify({ something: 'some details' }),
     })
 
     const { MessageBody, QueueUrl } = (SQSClient.prototype.send as jest.Mock).mock.calls[0][0].input
-    const { what, when, who, service, subjectId, subjectType, details } = JSON.parse(MessageBody)
+    const { what, when, who, service, subjectId, subjectType, correlationId, details } = JSON.parse(MessageBody)
 
     expect(QueueUrl).toEqual('http://localhost:4566/000000000000/mainQueue')
     expect(what).toEqual(expectedWhat)
@@ -38,6 +40,7 @@ describe('Audit service', () => {
     expect(who).toEqual(adminId)
     expect(subjectId).toEqual(subjectId)
     expect(subjectType).toEqual(userIdSubjectType)
+    expect(correlationId).toEqual(someCorrelationId)
     expect(service).toEqual('hmpps-manage-users')
     expect(details).toEqual('{"something":"some details"}')
   })

@@ -92,10 +92,20 @@ describe('user detail factory', () => {
   })
 
   describe('index', () => {
+    const uuidRegex = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
+    const expectedViewUserAttemptAuditMessage = expect.objectContaining({
+      action: 'VIEW_USER_ATTEMPT',
+      correlationId: expect.stringMatching(uuidRegex),
+      subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+      subjectType: 'USER_ID',
+      who: 'username',
+    })
+
     it('should call userDetail render', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(req, { render })
       expect(render).toBeCalledWith('userDetails.njk', expectedUserDetails)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should set showUsername to false if email same as username', async () => {
@@ -110,6 +120,7 @@ describe('user detail factory', () => {
         staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
         showUsername: false,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should order and set caseloads, if returned', async () => {
@@ -128,6 +139,7 @@ describe('user detail factory', () => {
           },
         ],
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should set displayEmailChangeInProgress to true if auth email is not verified and different to nomis', async () => {
@@ -142,6 +154,7 @@ describe('user detail factory', () => {
         staff: { ...expectedUserDetails.staff, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
         displayEmailChangeInProgress: true,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should only have groups set to showRemove when group manager is member of group', async () => {
@@ -161,6 +174,7 @@ describe('user detail factory', () => {
           { groupName: 'groupName3', groupCode: 'groupCode3', showRemove: false },
         ],
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
@@ -170,6 +184,7 @@ describe('user detail factory', () => {
         ...expectedUserDetails,
         hasMaintainDpsUsersAdmin: true,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should pass through show fields if not set', async () => {
@@ -186,12 +201,13 @@ describe('user detail factory', () => {
         showExtraUserDetails: false,
         showGroups: false,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should copy the search results url through from the session', async () => {
       const searchResultsReq = {
         ...req,
-        session: { searchResultsUrl: '/some-url' },
+        session: { searchResultsUrl: '/some-url', userDetails: { username: 'username' } },
       }
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(searchResultsReq, { render })
@@ -199,6 +215,7 @@ describe('user detail factory', () => {
         ...expectedUserDetails,
         searchResultsUrl: '/some-url',
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should call getUserRolesAndGroupsApi with maintain admin flag set to false', async () => {
@@ -206,6 +223,7 @@ describe('user detail factory', () => {
       const locals = { user: { maintainAuthUsers: true } }
       await userDetails.index(req, { render: jest.fn(), locals })
       expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('should call getUserRolesAndGroupsApi with maintain admin flag set to true', async () => {
@@ -213,15 +231,41 @@ describe('user detail factory', () => {
       const locals = { user: { maintainAccessAdmin: true } }
       await userDetails.index(req, { render: jest.fn(), locals })
       expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('uses default search results url when nothing provided through session', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
-      await userDetails.index({ ...req, session: {} }, { render })
+      await userDetails.index({ ...req, session: { userDetails: { username: 'username' } } }, { render })
       expect(render).toBeCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         searchResultsUrl: defaultSearchUrl,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
+    })
+
+    it('should publish attempt and failure audit messages when userDetail render fails', async () => {
+      getUserRolesAndGroupsApi.mockRejectedValue(new Error('Error for test'))
+
+      try {
+        await userDetails.index(req, { render })
+        expect(true).toBe(false)
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        expect(error.message).toBe('Error for test')
+      }
+
+      expect(render).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'VIEW_USER_FAILURE',
+          correlationId: expect.stringMatching(uuidRegex),
+          subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+          subjectType: 'USER_ID',
+          who: 'username',
+        }),
+      )
     })
   })
 
