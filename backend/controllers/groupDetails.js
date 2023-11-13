@@ -1,3 +1,6 @@
+const { v4 } = require('uuid')
+const { auditService } = require('../services/auditService')
+
 const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
     req.flash('deleteGroupErrors', errors)
@@ -8,6 +11,14 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
   const index = async (req, res) => {
     const { group } = req.params
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
+    const auditCorrelationId = v4()
+    const { username } = req.session.userDetails
+    await auditService.sendAuditMessage({
+      action: 'VIEW_GROUP_DETAILS_ATTEMPT',
+      who: username,
+      correlationId: auditCorrelationId,
+      details: JSON.stringify({ groupCode: group }),
+    })
 
     try {
       const groupDetails = await getGroupDetailsApi(res.locals, group)
@@ -19,6 +30,12 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
         errors: req.flash('deleteGroupErrors'),
       })
     } catch (error) {
+      await auditService.sendAuditMessage({
+        action: 'VIEW_GROUP_DETAILS_FAILURE',
+        who: username,
+        correlationId: auditCorrelationId,
+        details: JSON.stringify({ groupCode: group }),
+      })
       if (error.status === 404) {
         const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
         req.flash('groupError', groupError)

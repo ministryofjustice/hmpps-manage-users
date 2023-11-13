@@ -1,6 +1,7 @@
 const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config').default
 const { auditService } = require('../services/auditService')
+const { UUID_REGEX } = require('../utils/testConstants')
 
 describe('search factory', () => {
   const paginationService = { getPagination: jest.fn() }
@@ -37,10 +38,9 @@ describe('search factory', () => {
       originalUrl: '/',
       session: { userDetails: { username: 'some username' } },
     }
-    const uuidRegex = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
     const expectedViewDpsUserAttemptAuditMessage = expect.objectContaining({
       action: 'VIEW_DPS_USERS_ATTEMPT',
-      correlationId: expect.stringMatching(uuidRegex),
+      correlationId: expect.stringMatching(UUID_REGEX),
       who: 'some username',
     })
 
@@ -96,7 +96,6 @@ describe('search factory', () => {
 
         try {
           await search({ ...standardReq, query: {} }, { render })
-          expect(true).toBe(false)
         } catch (error) {
           expect(error).toBeInstanceOf(Error)
           expect(error.message).toEqual('Error for test')
@@ -107,7 +106,7 @@ describe('search factory', () => {
         expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
           expect.objectContaining({
             action: 'VIEW_DPS_USERS_FAILURE',
-            correlationId: expect.stringMatching(uuidRegex),
+            correlationId: expect.stringMatching(UUID_REGEX),
             who: 'some username',
           }),
         )
