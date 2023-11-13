@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-const { stubFor, getFor, stubJson, getMatchingRequests } = require('./wiremock')
+const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
 const { stubUserMe, stubUserMeRoles } = require('./manageusers')
 
 const createToken = (tokenRoles) => {

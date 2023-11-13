@@ -8,7 +8,7 @@ const CreateGroupPage = require('../pages/createGroupPage')
 const GroupDeletePage = require('../pages/groupDeletePage')
 const AuthErrorPage = require('../pages/authErrorPage')
 const ExternalUserSearchPage = require('../pages/authUserSearchPage')
-const { replicateUser, searchForUser } = require('../support/externaluser.helpers')
+const { replicateUser } = require('../support/externaluser.helpers')
 
 context('Groups', () => {
   before(() => {

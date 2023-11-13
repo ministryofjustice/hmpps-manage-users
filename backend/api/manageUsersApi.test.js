@@ -749,8 +749,6 @@ describe('manageUsersApi tests', () => {
   })
 
   describe('changeDPSEmail', () => {
-    const user = { user: { email: 'joe@digital.justice.gov.uk', firstName: 'joe', lastName: 'smith' } }
-
     beforeEach(() => {
       client.post = jest.fn().mockReturnValue({
         then: () => {},
