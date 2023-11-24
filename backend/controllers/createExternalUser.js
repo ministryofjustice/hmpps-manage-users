@@ -1,6 +1,6 @@
+const { auditService, USER_ID_SUBJECT_TYPE } = require('hmpps-audit-client')
 const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService, USER_ID_SUBJECT_TYPE } = require('hmpps-audit-client')
 
 const createExternalUserFactory = (
   getAssignableGroupsApi,

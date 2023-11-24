@@ -1,6 +1,6 @@
+const { auditService } = require('hmpps-audit-client')
 const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config').default
-const { auditService } = require('hmpps-audit-client')
 const { UUID_REGEX } = require('../utils/testConstants')
 
 describe('search factory', () => {

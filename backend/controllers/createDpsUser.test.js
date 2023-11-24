@@ -1,5 +1,5 @@
-const { createDpsUserFactory } = require('./createDpsUser')
 const { auditService } = require('hmpps-audit-client')
+const { createDpsUserFactory } = require('./createDpsUser')
 
 describe('create user factory', () => {
   const getCaseloads = jest.fn()

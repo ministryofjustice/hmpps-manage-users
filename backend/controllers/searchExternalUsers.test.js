@@ -1,5 +1,5 @@
-const { searchFactory } = require('./searchExternalUsers')
 const { auditService } = require('hmpps-audit-client')
+const { searchFactory } = require('./searchExternalUsers')
 const { UUID_REGEX } = require('../utils/testConstants')
 
 const results = [

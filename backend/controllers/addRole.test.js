@@ -1,5 +1,5 @@
-const { selectRolesFactory } = require('./addRole')
 const { auditService } = require('hmpps-audit-client')
+const { selectRolesFactory } = require('./addRole')
 
 describe('select roles factory', () => {
   beforeEach(() => {

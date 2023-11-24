@@ -1,4 +1,4 @@
-import { auditService } from 'hmpps-audit-client'
+const { auditService } = require('hmpps-audit-client')
 
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')

@@ -1,5 +1,5 @@
-const { changeEmailFactory } = require('./changeEmail')
 const { auditService } = require('hmpps-audit-client')
+const { changeEmailFactory } = require('./changeEmail')
 
 const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => ({
   ...new Error('This failed'),

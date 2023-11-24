@@ -1,6 +1,4 @@
 const express = require('express')
-// eslint-disable-next-line no-unused-vars
-const { AuditService } = require('./services/auditService')
 
 const menuRouter = require('./routes/menuRouter')
 const manageAuthUserRouter = require('./routes/manageAuthUserRouter')

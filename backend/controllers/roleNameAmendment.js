@@ -1,6 +1,6 @@
+const { auditService } = require('hmpps-audit-client')
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService } = require('hmpps-audit-client')
 
 const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {
