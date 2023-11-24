@@ -1,5 +1,5 @@
 const { groupDeleteFactory } = require('./groupDelete')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 describe('group delete factory', () => {
   const getGroupDetailsApi = jest.fn()

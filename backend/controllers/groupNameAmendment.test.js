@@ -1,5 +1,5 @@
 const { groupAmendmentFactory } = require('./groupNameAmendment')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 describe('group amendment factory', () => {
   const getGroupDetailsApi = jest.fn()

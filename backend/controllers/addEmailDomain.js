@@ -1,6 +1,7 @@
+import { auditService } from 'hmpps-audit-client'
+
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')
-const { auditService } = require('../services/auditService')
 
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, domain) => {

@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { auditService, USER_ID_SUBJECT_TYPE } from '../services/auditService'
+import { auditService, USER_ID_SUBJECT_TYPE } from 'hmpps-audit-client'
 
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
   const stashStateAndRedirectToIndex = (req: Request, res: Response, errors: Array<Record<string, string>>) => {

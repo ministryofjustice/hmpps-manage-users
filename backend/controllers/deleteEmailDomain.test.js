@@ -1,5 +1,5 @@
 const { deleteEmailDomainFactory } = require('./deleteEmailDomain')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 describe('delete email domain factory', () => {
   beforeEach(() => {

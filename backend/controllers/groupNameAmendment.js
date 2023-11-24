@@ -1,6 +1,6 @@
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {

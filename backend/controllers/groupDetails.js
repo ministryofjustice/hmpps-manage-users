@@ -1,5 +1,5 @@
 const { v4 } = require('uuid')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {

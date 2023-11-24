@@ -1,5 +1,6 @@
+import { auditService } from 'hmpps-audit-client'
+
 const { createEmailDomainFactory } = require('./addEmailDomain')
-const { auditService } = require('../services/auditService')
 
 describe('create email domain factory', () => {
   beforeEach(() => {

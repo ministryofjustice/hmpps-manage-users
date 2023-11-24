@@ -1,5 +1,5 @@
 const { groupDetailsFactory } = require('./groupDetails')
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 const { UUID_REGEX } = require('../utils/testConstants')
 
 describe('Group details factory', () => {

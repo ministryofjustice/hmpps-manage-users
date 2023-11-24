@@ -1,4 +1,4 @@
-const { auditService } = require('../services/auditService')
+const { auditService } = require('hmpps-audit-client')
 
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
