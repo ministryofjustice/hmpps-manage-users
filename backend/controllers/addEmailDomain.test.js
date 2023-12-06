@@ -1,4 +1,4 @@
-import { auditService } from 'hmpps-audit-client'
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 
 const { createEmailDomainFactory } = require('./addEmailDomain')
 

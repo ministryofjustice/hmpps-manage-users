@@ -1,4 +1,4 @@
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { groupDeleteFactory } = require('./groupDelete')
 
 describe('group delete factory', () => {

@@ -1,4 +1,4 @@
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { selectRolesFactory } = require('./addRole')
 
 describe('select roles factory', () => {

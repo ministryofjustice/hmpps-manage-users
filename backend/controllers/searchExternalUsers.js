@@ -1,6 +1,6 @@
 const querystring = require('querystring')
 const { v4 } = require('uuid')
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 
 const mapUsernameAndEmail = (u) => {
   if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`

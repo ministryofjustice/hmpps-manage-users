@@ -1,4 +1,4 @@
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
 

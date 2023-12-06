@@ -1,4 +1,4 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('hmpps-audit-client')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {

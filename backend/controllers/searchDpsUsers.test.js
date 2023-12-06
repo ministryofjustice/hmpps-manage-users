@@ -1,4 +1,4 @@
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { searchFactory } = require('./searchDpsUsers')
 const config = require('../config').default
 const { UUID_REGEX } = require('../utils/testConstants')

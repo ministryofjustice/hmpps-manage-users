@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { auditService, USER_ID_SUBJECT_TYPE } from 'hmpps-audit-client'
+import { auditService, USER_ID_SUBJECT_TYPE } from '@ministryofjustice/hmpps-audit-client'
 
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
   const stashStateAndRedirectToIndex = (

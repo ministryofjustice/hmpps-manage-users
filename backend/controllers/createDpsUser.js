@@ -1,4 +1,4 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('hmpps-audit-client')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
 

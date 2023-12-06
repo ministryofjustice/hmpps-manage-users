@@ -1,6 +1,6 @@
 const querystring = require('querystring')
 const { v4 } = require('uuid')
-const { auditService } = require('hmpps-audit-client')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const config = require('../config').default
 
 const size = 20
