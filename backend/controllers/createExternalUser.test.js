@@ -84,6 +84,7 @@ describe('create user factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -121,6 +122,7 @@ describe('create user factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -158,6 +160,7 @@ describe('create user factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -187,6 +190,7 @@ describe('create user factory', () => {
         details: '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":""}}',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 

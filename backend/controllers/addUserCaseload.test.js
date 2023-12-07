@@ -83,6 +83,7 @@ describe('select caseloads factory', () => {
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
         who: username,
+        service: 'hmpps-manage-users',
         details: '{"caseloads":["LEI","PVI"]}',
       })
     })
@@ -106,6 +107,7 @@ describe('select caseloads factory', () => {
         subjectType: 'USER_ID',
         who: username,
         details: '{"caseloads":["LEI"]}',
+        service: 'hmpps-manage-users',
       })
     })
 

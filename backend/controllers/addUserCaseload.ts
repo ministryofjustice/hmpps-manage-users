@@ -46,6 +46,7 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
         details: JSON.stringify({ caseloads: caseloadArray }),
+        service: 'hmpps-manage-users',
       })
       res.redirect(`${staffUrl}`)
     }

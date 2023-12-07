@@ -104,6 +104,7 @@ describe('create user factory', () => {
         details:
           '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -148,6 +149,7 @@ describe('create user factory', () => {
         who: 'username',
         subjectId: 'BOB_OSHEA',
         subjectType: 'USER_ID',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -191,6 +193,7 @@ describe('create user factory', () => {
         who: 'username',
         subjectId: 'BOB_ADM',
         subjectType: 'USER_ID',
+        service: 'hmpps-manage-users',
       })
     })
 

@@ -52,6 +52,7 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
           who: username,
           subjectId: userId,
           subjectType: 'USER_ID',
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ email }),
         })
         const successUrl = `${manageUrl}/${userId}/change-email-success`

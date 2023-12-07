@@ -52,6 +52,7 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
         who: username,
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
+        service: 'hmpps-manage-users',
         details: JSON.stringify({ group }),
       })
       res.redirect(`${maintainUrl}`)

@@ -36,6 +36,7 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
           action: 'CREATE_EMAIL_DOMAIN',
           who: username,
           details: JSON.stringify({ domain: newDomain }),
+          service: 'hmpps-manage-users',
         })
         res.redirect('/email-domains')
       } catch (err) {

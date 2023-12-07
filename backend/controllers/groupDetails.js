@@ -17,6 +17,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
       action: 'VIEW_GROUP_DETAILS_ATTEMPT',
       who: username,
       correlationId: auditCorrelationId,
+      service: 'hmpps-manage-users',
       details: JSON.stringify({ groupCode: group }),
     })
 
@@ -34,6 +35,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
         action: 'VIEW_GROUP_DETAILS_FAILURE',
         who: username,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
         details: JSON.stringify({ groupCode: group }),
       })
       if (error.status === 404) {
