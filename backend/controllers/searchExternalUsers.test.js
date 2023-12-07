@@ -1,4 +1,6 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { searchFactory } = require('./searchExternalUsers')
+const { UUID_REGEX } = require('../utils/testConstants')
 
 const results = [
   {
@@ -76,7 +78,7 @@ describe('search factory', () => {
     get: jest.fn().mockReturnValue('localhost'),
     protocol: 'http',
     originalUrl: '/',
-    session: {},
+    session: { userDetails: { username: 'some username' } },
   }
 
   beforeEach(() => {
@@ -86,6 +88,14 @@ describe('search factory', () => {
     pagingApi.mockReset()
     allowDownload.mockReset()
     getAssignableGroupsApi.mockReset()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+    jest.clearAllMocks()
+  })
+
+  const expectedViewExternalUserAttemptAuditMessage = expect.objectContaining({
+    action: 'VIEW_EXTERNAL_USERS_ATTEMPT',
+    correlationId: expect.stringMatching(UUID_REGEX),
+    who: 'some username',
   })
 
   it('should call search user render', async () => {
@@ -114,6 +124,7 @@ describe('search factory', () => {
       downloadUrl: undefined,
       errors: undefined,
     })
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
   })
 
   describe('results', () => {
@@ -125,7 +136,6 @@ describe('search factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/search-external-users',
-        session: {},
       }
       paginationService.getPagination.mockReturnValue(pagination)
       mockGroupsAndRolesCalls()
@@ -153,6 +163,7 @@ describe('search factory', () => {
         },
         downloadUrl: undefined,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
     })
 
     it('should call external search api', async () => {
@@ -179,6 +190,7 @@ describe('search factory', () => {
         page: undefined,
         size: 20,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
     })
 
     it('should call external search api for all parameters', async () => {
@@ -205,6 +217,7 @@ describe('search factory', () => {
         page: undefined,
         size: 20,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
     })
 
     it('should call external search api with page and size', async () => {
@@ -231,6 +244,7 @@ describe('search factory', () => {
         page: 3,
         size: 20,
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
     })
 
     it('should call getPagination with total elements, page, size and url', async () => {
@@ -240,7 +254,7 @@ describe('search factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session: { userDetails: { username: 'some username' } },
       }
       paginationService.getPagination.mockReturnValue(pagination)
       mockGroupsAndRolesCalls()
@@ -251,6 +265,7 @@ describe('search factory', () => {
       await search(req, { render })
 
       expect(paginationService.getPagination).toBeCalledWith(pageable, new URL('http://localhost/'))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
     })
 
     it('should pass downloadUrl if user has correct permission', async () => {
@@ -269,6 +284,30 @@ describe('search factory', () => {
 
       expect(render.mock.calls[0][1].downloadUrl.toString()).toEqual(
         '/search-external-users/download?user=joe&status=ALL&roleCode=&groupCode=&size=123',
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
+    })
+
+    it('should publish attempt and failure audit messages when userDetail render fails', async () => {
+      mockGroupsAndRolesCalls()
+      searchApi.mockRejectedValue(new Error('Error for test'))
+      const render = jest.fn()
+
+      try {
+        await search({ ...standardReq, query: {} }, { render })
+      } catch (error) {
+        expect(error).toBeInstanceOf(Error)
+        expect(error.message).toEqual('Error for test')
+      }
+
+      expect(render).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewExternalUserAttemptAuditMessage)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        expect.objectContaining({
+          action: 'VIEW_EXTERNAL_USERS_FAILURE',
+          correlationId: expect.stringMatching(UUID_REGEX),
+          who: 'some username',
+        }),
       )
     })
   })

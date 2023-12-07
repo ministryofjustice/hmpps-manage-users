@@ -1,5 +1,5 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createGroupFactory } = require('./createGroup')
-const { auditService } = require('../services/auditService')
 
 describe('create group factory', () => {
   beforeEach(() => {

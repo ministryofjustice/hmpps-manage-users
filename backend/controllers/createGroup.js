@@ -1,6 +1,6 @@
+const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {

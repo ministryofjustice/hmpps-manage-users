@@ -1,5 +1,5 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { roleNameAmendmentFactory } = require('./roleNameAmendment')
-const { auditService } = require('../services/auditService')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()

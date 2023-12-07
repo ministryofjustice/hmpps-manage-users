@@ -1,5 +1,6 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { userDetailsFactory } = require('./userDetails')
-const { auditService } = require('../services/auditService')
+const { UUID_REGEX } = require('../utils/testConstants')
 
 describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
@@ -92,10 +93,9 @@ describe('user detail factory', () => {
   })
 
   describe('index', () => {
-    const uuidRegex = '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$'
     const expectedViewUserAttemptAuditMessage = expect.objectContaining({
       action: 'VIEW_USER_ATTEMPT',
-      correlationId: expect.stringMatching(uuidRegex),
+      correlationId: expect.stringMatching(UUID_REGEX),
       subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
       subjectType: 'USER_ID',
       who: 'username',
@@ -260,7 +260,7 @@ describe('user detail factory', () => {
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
         expect.objectContaining({
           action: 'VIEW_USER_FAILURE',
-          correlationId: expect.stringMatching(uuidRegex),
+          correlationId: expect.stringMatching(UUID_REGEX),
           subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
           subjectType: 'USER_ID',
           who: 'username',

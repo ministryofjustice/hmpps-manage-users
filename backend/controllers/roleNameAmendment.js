@@ -1,6 +1,6 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService } = require('../services/auditService')
 
 const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {

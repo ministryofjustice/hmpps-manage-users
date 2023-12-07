@@ -1,6 +1,6 @@
+const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
-const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {

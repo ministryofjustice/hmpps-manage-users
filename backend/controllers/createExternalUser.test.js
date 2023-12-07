@@ -1,5 +1,5 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createExternalUserFactory } = require('./createExternalUser')
-const { auditService } = require('../services/auditService')
 
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()

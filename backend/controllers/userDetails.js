@@ -1,5 +1,5 @@
 const { v4 } = require('uuid')
-const { auditService, USER_ID_SUBJECT_TYPE } = require('../services/auditService')
+const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,

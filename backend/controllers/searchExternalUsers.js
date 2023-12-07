@@ -1,4 +1,6 @@
 const querystring = require('querystring')
+const { v4 } = require('uuid')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 
 const mapUsernameAndEmail = (u) => {
   if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`
@@ -36,40 +38,56 @@ const searchFactory = (
     delete req.session.searchTitle
     delete req.session.searchUrl
 
-    const searchResults = await searchApi({
-      locals: res.locals,
-      user: currentFilter.user,
-      groupCode: currentFilter.groupCode,
-      roleCode: currentFilter.roleCode,
-      status: currentFilter.status,
-      page,
-      size,
-    })
+    const auditCorrelationId = v4()
+    const { username } = req.session.userDetails
+    try {
+      await auditService.sendAuditMessage({
+        action: 'VIEW_EXTERNAL_USERS_ATTEMPT',
+        who: username,
+        correlationId: auditCorrelationId,
+      })
+      const searchResults = await searchApi({
+        locals: res.locals,
+        user: currentFilter.user,
+        groupCode: currentFilter.groupCode,
+        roleCode: currentFilter.roleCode,
+        status: currentFilter.status,
+        page,
+        size,
+      })
 
-    const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
-      usernameAndEmail: mapUsernameAndEmail(u),
-      ...u,
-    }))
+      const searchResultsWithUsernameEmailCombined = searchResults.map((u) => ({
+        usernameAndEmail: mapUsernameAndEmail(u),
+        ...u,
+      }))
 
-    res.render('searchExternalUsers.njk', {
-      searchTitle,
-      searchUrl,
-      maintainUrl,
-      results: searchResultsWithUsernameEmailCombined,
-      pagination: paginationService.getPagination(
-        pagingApi(res.locals),
-        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
-      ),
-      currentFilter,
-      groupDropdownValues,
-      roleDropdownValues,
-      errors: req.flash('errors'),
-      downloadUrl:
-        allowDownload(res) &&
-        `/search-external-users/download?${querystring.stringify(currentFilter)}&size=${
-          res.locals.pageable.totalElements
-        }`,
-    })
+      res.render('searchExternalUsers.njk', {
+        searchTitle,
+        searchUrl,
+        maintainUrl,
+        results: searchResultsWithUsernameEmailCombined,
+        pagination: paginationService.getPagination(
+          pagingApi(res.locals),
+          new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
+        ),
+        currentFilter,
+        groupDropdownValues,
+        roleDropdownValues,
+        errors: req.flash('errors'),
+        downloadUrl:
+          allowDownload(res) &&
+          `/search-external-users/download?${querystring.stringify(currentFilter)}&size=${
+            res.locals.pageable.totalElements
+          }`,
+      })
+    } catch (error) {
+      await auditService.sendAuditMessage({
+        action: 'VIEW_EXTERNAL_USERS_FAILURE',
+        who: username,
+        correlationId: auditCorrelationId,
+      })
+      throw error
+    }
   }
 }
 

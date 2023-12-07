@@ -1,6 +1,6 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditService } = require('../services/auditService')
 
 function mapDescription(error, errorDescription) {
   switch (error) {
