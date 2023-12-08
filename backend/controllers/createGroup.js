@@ -38,6 +38,7 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
           who: username,
           subjectId: userId,
           subjectType: USER_ID_SUBJECT_TYPE,
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ group: groupWithoutCsrf }),
         })
         res.redirect(`${manageGroupUrl}/${group.groupCode}`)

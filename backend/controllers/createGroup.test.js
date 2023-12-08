@@ -58,6 +58,7 @@ describe('create group factory', () => {
         subjectId: 'userId',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -83,6 +84,7 @@ describe('create group factory', () => {
         subjectId: 'userId',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -108,6 +110,7 @@ describe('create group factory', () => {
         subjectId: 'userId',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 

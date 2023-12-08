@@ -50,6 +50,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
         details: JSON.stringify({ roles: roleArray }),
+        service: 'hmpps-manage-users',
       })
       res.redirect(`${staffUrl}`)
     }

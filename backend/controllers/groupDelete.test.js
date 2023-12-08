@@ -72,6 +72,7 @@ describe('group delete factory', () => {
         subjectId: 'user id',
         subjectType: 'USER_ID',
         who: username,
+        service: 'hmpps-manage-users',
         details: '{"group":"group1"}',
       })
     })

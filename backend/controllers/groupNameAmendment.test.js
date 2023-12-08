@@ -69,6 +69,7 @@ describe('group amendment factory', () => {
         action: 'CHANGE_GROUP_NAME',
         details: '{"group":"group1","newGroupName":"GroupA"}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -89,6 +90,7 @@ describe('group amendment factory', () => {
         action: 'CHANGE_GROUP_NAME',
         details: '{"group":"group1","newGroupName":"GroupA"}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 

@@ -25,6 +25,7 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
       await auditService.sendAuditMessage({
         action: 'DELETE_EMAIL_DOMAIN',
         who: username,
+        service: 'hmpps-manage-users',
         details: JSON.stringify({ domainId }),
       })
       res.redirect('/email-domains')

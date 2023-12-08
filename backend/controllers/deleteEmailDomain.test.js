@@ -48,6 +48,7 @@ describe('delete email domain factory', () => {
         action: 'DELETE_EMAIL_DOMAIN',
         details: '{"domainId":"1234"}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 

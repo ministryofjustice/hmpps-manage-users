@@ -39,6 +39,7 @@ const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRo
         await auditService.sendAuditMessage({
           action: 'CHANGE_ROLE_NAME',
           who: username,
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ role, newRoleName: roleName }),
         })
         res.redirect(roleUrl)

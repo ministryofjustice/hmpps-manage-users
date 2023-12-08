@@ -39,6 +39,7 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
         await auditService.sendAuditMessage({
           action: 'CHANGE_GROUP_NAME',
           who: username,
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ group, newGroupName: groupName }),
         })
         res.redirect(groupUrl)

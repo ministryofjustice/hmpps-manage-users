@@ -29,6 +29,7 @@ const userDetailsFactory = (
       subjectId: userId,
       subjectType: USER_ID_SUBJECT_TYPE,
       correlationId: auditCorrelationId,
+      service: 'hmpps-manage-users',
     })
     try {
       const staffUrl = `${manageUrl}/${userId}`
@@ -89,6 +90,7 @@ const userDetailsFactory = (
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
         details: JSON.stringify({ role }),
+        service: 'hmpps-manage-users',
       })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
@@ -139,6 +141,7 @@ const userDetailsFactory = (
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
         details: JSON.stringify({ caseload }),
+        service: 'hmpps-manage-users',
       })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
@@ -164,6 +167,7 @@ const userDetailsFactory = (
       who: username,
       subjectId: userId,
       subjectType: USER_ID_SUBJECT_TYPE,
+      service: 'hmpps-manage-users',
     })
     res.redirect(`${staffUrl}/details`)
   }
@@ -179,6 +183,7 @@ const userDetailsFactory = (
       who: username,
       subjectId: userId,
       subjectType: USER_ID_SUBJECT_TYPE,
+      service: 'hmpps-manage-users',
     })
     res.redirect(`${staffUrl}/details`)
   }

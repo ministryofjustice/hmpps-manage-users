@@ -40,6 +40,7 @@ const searchFactory = (
         action: 'VIEW_DPS_USERS_ATTEMPT',
         who: username,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
       })
       const { searchResults, totalElements, number } = await findUsersApi({
         locals: res.locals,
@@ -84,6 +85,7 @@ const searchFactory = (
         action: 'VIEW_DPS_USERS_FAILURE',
         who: username,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
       })
       throw error
     }

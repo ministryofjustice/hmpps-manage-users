@@ -71,6 +71,7 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
           who: username,
           subjectId: userDetails.username,
           subjectType: USER_ID_SUBJECT_TYPE,
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ user }),
         })
         res.render('createDpsUserSuccess.njk', {

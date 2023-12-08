@@ -64,6 +64,7 @@ describe('role amendment factory', () => {
         action: 'CHANGE_ROLE_NAME',
         details: '{"role":"role1","newRoleName":"RoleA"}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -84,6 +85,7 @@ describe('role amendment factory', () => {
         action: 'CHANGE_ROLE_NAME',
         details: '{"role":"role1","newRoleName":"RoleA"}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
