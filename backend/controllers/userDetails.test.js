@@ -287,6 +287,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -379,6 +380,7 @@ describe('user detail factory', () => {
         subjectId: 'TEST_USER',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -425,6 +427,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
       expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
@@ -441,6 +444,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })

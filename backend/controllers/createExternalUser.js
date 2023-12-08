@@ -54,6 +54,7 @@ const createExternalUserFactory = (
           who: username,
           subjectId: userId,
           subjectType: USER_ID_SUBJECT_TYPE,
+          service: 'hmpps-manage-users',
           details: JSON.stringify({ user }),
         })
         req.session.searchUrl = searchUrl

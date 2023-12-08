@@ -45,6 +45,7 @@ const searchFactory = (
         action: 'VIEW_EXTERNAL_USERS_ATTEMPT',
         who: username,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
       })
       const searchResults = await searchApi({
         locals: res.locals,
@@ -85,6 +86,7 @@ const searchFactory = (
         action: 'VIEW_EXTERNAL_USERS_FAILURE',
         who: username,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
       })
       throw error
     }

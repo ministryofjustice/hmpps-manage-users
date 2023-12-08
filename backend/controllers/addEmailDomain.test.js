@@ -65,6 +65,7 @@ describe('create email domain factory', () => {
         action: 'CREATE_EMAIL_DOMAIN',
         details: '{"domain":{"name":"DOMAIN1","description":"DOMAINDESCRIPTION1"}}',
         who: 'username',
+        service: 'hmpps-manage-users',
       })
     })
 
