@@ -97,6 +97,10 @@ const downloadFactoryBetaSearch = (downloadUserSearch, allowDownload) => {
         label: 'email',
         value: 'email',
       },
+      {
+        label: 'dpsRoleCount',
+        value: 'dpsRoleCount',
+      },
     ]
 
     const json2csvParser = new Parser({ fields })
