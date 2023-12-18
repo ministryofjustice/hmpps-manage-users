@@ -11,11 +11,11 @@ export interface ClientFactoryParams {
 }
 
 export interface OAuthEnabledClient {
-    get: (context: any, path: string, resultLimit?: number) => Promise<superagent.Response>;
-    getWithCustomTimeout: (context: any, path: string, params: { resultLimit?: number, customTimeout?: number }) => Promise<superagent.Response>;
-    post: (context: any, path: string, body: any) => Promise<superagent.Response>;
-    put: (context: any, path: string, body: any) => Promise<superagent.Response>;
-    del: (context: any, path: string, body: any) => Promise<superagent.Response>;
+    get: (context: any, path: string, resultLimit?: number) => Promise<Response>;
+    getWithCustomTimeout: (context: any, path: string, params: { resultLimit?: number, customTimeout?: number }) => Promise<Response>;
+    post: (context: any, path: string, body: any) => Promise<Response>;
+    put: (context: any, path: string, body: any) => Promise<Response>;
+    del: (context: any, path: string, body: any) => Promise<Response>;
     getStream: (context: any, path: string) => Promise<Readable>;
 }
 
@@ -47,7 +47,7 @@ export const OAuthEnabledClientFactory = (params : ClientFactoryParams): OAuthEn
     const keepaliveAgent = remoteUrl.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions);
 
     const get = (context: any, path: string, resultLimit?: number) =>
-        new Promise<superagent.Response>((resolve, reject) => {
+        new Promise<Response>((resolve, reject) => {
             superagent
                 .get(remoteUrl + path)
                 .agent(keepaliveAgent)
@@ -64,7 +64,7 @@ export const OAuthEnabledClientFactory = (params : ClientFactoryParams): OAuthEn
         });
 
     const getWithCustomTimeout = (context: any, path: string, { resultLimit, customTimeout }: { resultLimit?: number, customTimeout?: number }) =>
-        new Promise<superagent.Response>((resolve, reject) => {
+        new Promise<Response>((resolve, reject) => {
             superagent
                 .get(remoteUrl + path)
                 .agent(keepaliveAgent)
@@ -81,7 +81,7 @@ export const OAuthEnabledClientFactory = (params : ClientFactoryParams): OAuthEn
         });
 
     const post = (context: any, path: string, body: any) =>
-        new Promise<superagent.Response>((resolve, reject) => {
+        new Promise<Response>((resolve, reject) => {
             superagent
                 .post(remoteUrl + path)
                 .send(body)
@@ -93,7 +93,7 @@ export const OAuthEnabledClientFactory = (params : ClientFactoryParams): OAuthEn
         });
 
     const put = (context: any, path: string, body: any) =>
-        new Promise<superagent.Response>((resolve, reject) => {
+        new Promise<Response>((resolve, reject) => {
             superagent
                 .put(remoteUrl + path)
                 .send(body)
@@ -105,7 +105,7 @@ export const OAuthEnabledClientFactory = (params : ClientFactoryParams): OAuthEn
         });
 
     const del = (context: any, path: string, body: any) =>
-        new Promise<superagent.Response>((resolve, reject) => {
+        new Promise<Response>((resolve, reject) => {
             superagent
                 .del(remoteUrl + path)
                 .send(body)
