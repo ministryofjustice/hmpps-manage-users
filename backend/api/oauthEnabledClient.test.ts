@@ -1,7 +1,8 @@
-import nock from 'nock';
-import contextProperties from '../contextProperties';
-import { OAuthEnabledClientFactory, OAuthEnabledClient } from './oauthEnabledClient';
-const hostname = 'http://localhost:8080';
+import nock from 'nock'
+import contextProperties from '../contextProperties'
+import { OAuthEnabledClientFactory } from './oauthEnabledClient'
+
+const hostname = 'http://localhost:8080'
 
 describe('Test clients built by oauthEnabledClient', () => {
   it('should build something', () => {
@@ -28,12 +29,12 @@ describe('Test clients built by oauthEnabledClient', () => {
       const response = await client.get(context, '/api/users/me')
 
       expect(response.status).toEqual(200)
-      // expect(response.request.header.authorization).toEqual('Bearer a')
+      expect(response.request.header.authorization).toEqual('Bearer a')
     })
 
     it('Should succeed when there are no authorization headers', async () => {
       const response = await client.get({}, '/api/users/me')
-      // expect(response.request.header.authorization).toBeUndefined()
+      expect(response.request.header.authorization).toBeUndefined()
     })
 
     it('Should set the pagination headers on requests', async () => {
@@ -51,7 +52,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       const response = await client.get(context, '/api/users/me', 500)
 
-      // expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '500' }))
+      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '500' }))
     })
   })
 
@@ -66,12 +67,12 @@ describe('Test clients built by oauthEnabledClient', () => {
     describe('get', () => {
       it('Should retry twice if request fails', async () => {
         mock
-            .get('/api/users/me')
-            .reply(500, { failure: 'one' })
-            .get('/api/users/me')
-            .reply(500, { failure: 'two' })
-            .get('/api/users/me')
-            .reply(200, { hi: 'bob' })
+          .get('/api/users/me')
+          .reply(500, { failure: 'one' })
+          .get('/api/users/me')
+          .reply(500, { failure: 'two' })
+          .get('/api/users/me')
+          .reply(200, { hi: 'bob' })
 
         const response = await client.get({}, '/api/users/me')
         expect(response.body).toEqual({ hi: 'bob' })
@@ -79,14 +80,14 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       it('Should retry twice if request times out', async () => {
         mock
-            .get('/api/users/me')
-            .delay(10000) // delay set to 10s, timeout to 900/3=300ms
-            .reply(200, { failure: 'one' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'two' })
-            .get('/api/users/me')
-            .reply(200, { hi: 'bob' })
+          .get('/api/users/me')
+          .delay(10000) // delay set to 10s, timeout to 900/3=300ms
+          .reply(200, { failure: 'one' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'two' })
+          .get('/api/users/me')
+          .reply(200, { hi: 'bob' })
 
         const response = await client.get({}, '/api/users/me')
         expect(response.body).toEqual({ hi: 'bob' })
@@ -94,33 +95,33 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       it('Should fail if request times out three times', async () => {
         mock
-            .get('/api/users/me')
-            .delay(10000) // delay set to 10s, timeout to 900/3=300ms
-            .reply(200, { failure: 'one' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'two' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'three' })
+          .get('/api/users/me')
+          .delay(10000) // delay set to 10s, timeout to 900/3=300ms
+          .reply(200, { failure: 'one' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'two' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'three' })
 
         await expect(client.get({}, '/api/users/me')).rejects.toThrow('Timeout of 300ms exceeded')
       })
 
       it('Should fail if request times out three with custom time out', async () => {
         mock
-            .get('/api/users/me')
-            .delay(200)
-            .reply(200, { failure: 'one' })
-            .get('/api/users/me')
-            .delay(200)
-            .reply(200, { failure: 'two' })
-            .get('/api/users/me')
-            .delay(200)
-            .reply(200, { failure: 'three' })
+          .get('/api/users/me')
+          .delay(200)
+          .reply(200, { failure: 'one' })
+          .get('/api/users/me')
+          .delay(200)
+          .reply(200, { failure: 'two' })
+          .get('/api/users/me')
+          .delay(200)
+          .reply(200, { failure: 'three' })
 
         await expect(client.getWithCustomTimeout({}, '/api/users/me', { customTimeout: 100 })).rejects.toThrow(
-            'Timeout of 100ms exceeded',
+          'Timeout of 100ms exceeded',
         )
       })
     })
@@ -128,12 +129,12 @@ describe('Test clients built by oauthEnabledClient', () => {
     describe('getStream', () => {
       it('Should retry twice if request fails', async () => {
         mock
-            .get('/api/users/me')
-            .reply(500, { failure: 'one' })
-            .get('/api/users/me')
-            .reply(500, { failure: 'two' })
-            .get('/api/users/me')
-            .reply(200, '{"hi":"bob"}', ['Content-Type', 'image/png'])
+          .get('/api/users/me')
+          .reply(500, { failure: 'one' })
+          .get('/api/users/me')
+          .reply(500, { failure: 'two' })
+          .get('/api/users/me')
+          .reply(200, '{"hi":"bob"}', ['Content-Type', 'image/png'])
 
         const response = await client.getStream({}, '/api/users/me')
         expect(response.read().toString()).toEqual('{"hi":"bob"}')
@@ -141,14 +142,14 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       it('Should retry twice if request times out', async () => {
         mock
-            .get('/api/users/me')
-            .delay(10000) // delay set to 10s, timeout to 900/3=300ms
-            .reply(200, { failure: 'one' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'two' })
-            .get('/api/users/me')
-            .reply(200, '{"hi":"bob"}', ['Content-Type', 'image/png'])
+          .get('/api/users/me')
+          .delay(10000) // delay set to 10s, timeout to 900/3=300ms
+          .reply(200, { failure: 'one' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'two' })
+          .get('/api/users/me')
+          .reply(200, '{"hi":"bob"}', ['Content-Type', 'image/png'])
 
         const response = await client.getStream({}, '/api/users/me')
         expect(response.read().toString()).toEqual('{"hi":"bob"}')
@@ -156,15 +157,15 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       it('Should fail if request times out three times', async () => {
         mock
-            .get('/api/users/me')
-            .delay(10000) // delay set to 10s, timeout to 900/3=300ms
-            .reply(200, { failure: 'one' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'two' })
-            .get('/api/users/me')
-            .delay(10000)
-            .reply(200, { failure: 'three' })
+          .get('/api/users/me')
+          .delay(10000) // delay set to 10s, timeout to 900/3=300ms
+          .reply(200, { failure: 'one' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'two' })
+          .get('/api/users/me')
+          .delay(10000)
+          .reply(200, { failure: 'three' })
 
         await expect(client.getStream({}, '/api/users/me')).rejects.toThrow('Timeout of 300ms exceeded')
       })
@@ -185,7 +186,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       const response = await client.get(context, '/api/users/me')
 
-      // expect(response.request.url).toEqual('http://localhost:8080/api/users/me')
+      expect(response.request.url).toEqual('http://localhost:8080/api/users/me')
     })
 
     it("Should set the url correctly if doesn't end with a /", async () => {
@@ -197,7 +198,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       const response = await client.get(context, '/api/users/me')
 
-      // expect(response.request.url).toEqual('http://localhost:8080/api/users/me')
+      expect(response.request.url).toEqual('http://localhost:8080/api/users/me')
     })
   })
 })
