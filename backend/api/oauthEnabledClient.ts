@@ -3,6 +3,7 @@ import { Readable } from 'stream'
 import Agent, { HttpsAgent } from 'agentkeepalive'
 import logger from '../log'
 import { getHeaders } from './axios-config-decorators'
+import { Context } from '../interfaces/context'
 
 export interface ClientFactoryParams {
   baseUrl: string
@@ -10,24 +11,24 @@ export interface ClientFactoryParams {
 }
 
 export interface OAuthEnabledClient {
-  get: (context: any, path: string, resultLimit?: number) => Promise<superagent.Response>
+  get: (context: Context, path: string, resultLimit?: number) => Promise<superagent.Response>
   getWithCustomTimeout: (
-    context: any,
+    context: Context,
     path: string,
     params: { resultLimit?: number; customTimeout?: number },
   ) => Promise<superagent.Response>
-  post: (context: any, path: string, body: any) => Promise<superagent.Response>
-  put: (context: any, path: string, body: any) => Promise<superagent.Response>
-  del: (context: any, path: string, body: any) => Promise<superagent.Response>
-  getStream: (context: any, path: string) => Promise<Readable>
+  post: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
+  put: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
+  del: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
+  getStream: (context: Context, path: string) => Promise<Readable>
 }
 
-const resultLogger = (result: any) => {
+const resultLogger = (result: superagent.Response) => {
   logger.debug(`${result.req.method} ${result.req.path} ${result.status}`)
   return result
 }
 
-const errorLogger = (error: any) => {
+const errorLogger = (error: superagent.ResponseError) => {
   const status = error.response ? error.response.status : '-'
   const responseData = error.response ? error.response.body : '-'
   if (error.response && error.response.req) {
@@ -49,7 +50,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
   }
   const keepaliveAgent = remoteUrl.startsWith('https') ? new HttpsAgent(agentOptions) : new Agent(agentOptions)
 
-  const get = (context: any, path: string, resultLimit?: number) =>
+  const get = (context: Context, path: string, resultLimit?: number) =>
     new Promise<superagent.Response>((resolve, reject) => {
       superagent
         .get(remoteUrl + path)
@@ -67,7 +68,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
     })
 
   const getWithCustomTimeout = (
-    context: any,
+    context: Context,
     path: string,
     { resultLimit, customTimeout }: { resultLimit?: number; customTimeout?: number },
   ) =>
@@ -87,7 +88,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const post = (context: any, path: string, body: any) =>
+  const post = (context: Context, path: string, body: string | object) =>
     new Promise<superagent.Response>((resolve, reject) => {
       superagent
         .post(remoteUrl + path)
@@ -99,7 +100,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const put = (context: any, path: string, body: any) =>
+  const put = (context: Context, path: string, body: string | object) =>
     new Promise<superagent.Response>((resolve, reject) => {
       superagent
         .put(remoteUrl + path)
@@ -111,7 +112,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const del = (context: any, path: string, body: any) =>
+  const del = (context: Context, path: string, body: string | object) =>
     new Promise<superagent.Response>((resolve, reject) => {
       superagent
         .del(remoteUrl + path)
@@ -123,7 +124,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const getStream = (context: any, path: string) =>
+  const getStream = (context: Context, path: string) =>
     new Promise<Readable>((resolve, reject) => {
       superagent
         .get(remoteUrl + path)
@@ -139,7 +140,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
           else if (response) {
             resultLogger(response)
             const s = new Readable()
-            s._read = () => {}
+            s._read = () => {} // eslint-disable-line no-underscore-dangle,@typescript-eslint/no-empty-function
             s.push(response.body)
             s.push(null)
             resolve(s)

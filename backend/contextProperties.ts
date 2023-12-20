@@ -4,29 +4,18 @@
  * Note that by convention the controller(s) and Middleware use the res.locals property as the request scoped context.
  * From controllers down to clients, client interceptors etc the context object is called 'context'.
  */
-interface Context {
-  access_token?: string
-  refresh_token?: string
-  authSource?: string
-  requestHeaders?: {
-    'page-offset'?: string
-    'page-limit'?: string
-  }
-  offsetPageable?: {
-    totalElements?: number
-    offset?: number
-    limit?: number
-  }
-  pageable?: {
-    totalElements: number
-    page: number
-    size: number
-  }
-}
+import { Context } from './interfaces/context'
 
-// eslint-disable-next-line camelcase
 const setTokens = (
-  { access_token, refresh_token, authSource }: { access_token: string; refresh_token: string; authSource: string },
+  {
+    access_token, // eslint-disable-line camelcase
+    refresh_token, // eslint-disable-line camelcase
+    authSource,
+  }: {
+    access_token: string // eslint-disable-line camelcase
+    refresh_token: string // eslint-disable-line camelcase
+    authSource: string
+  },
   context: Context,
 ): void => {
   // eslint-disable-next-line camelcase
@@ -55,43 +44,70 @@ const normalizeHeaderNames = (srcHeaders: Record<string, string>): Record<string
   )
 
 const copyNamedHeaders = (headerNames: string[], srcHeaders: Record<string, string>): Record<string, string> =>
-    headerNames.reduce((previous, name) => {
-      if (srcHeaders[name]) {
-        return {
-          ...previous,
-          [name]: srcHeaders[name],
-        };
+  headerNames.reduce((previous, name) => {
+    if (srcHeaders[name]) {
+      return {
+        ...previous,
+        [name]: srcHeaders[name],
       }
-      return previous;
-    }, {});
-const setRequestPagination = (context: Context, { offset, size }: { offset?: string, size?: string }): void => {
-  if (offset || size) context.requestHeaders = { 'page-offset': offset || '0', 'page-limit': size || '0' };
+    }
+    return previous
+  }, {})
+const setRequestPagination = (
+  context: Context,
+  {
+    offset,
+    size,
+  }: {
+    offset?: string
+    size?: string
+  },
+): void => {
+  if (offset || size) context.requestHeaders = { 'page-offset': offset || '0', 'page-limit': size || '0' }
 }
 
-const getRequestPagination = (context: Context): Record<string, string> => context.requestHeaders || {};
+const getRequestPagination = (context: Context): Record<string, string> => context.requestHeaders || {}
 
 const setResponsePagination = (context: Context, headers: Record<string, string>): void => {
-  const headerNames = ['page-offset', 'page-limit', 'total-records'];
+  const headerNames = ['page-offset', 'page-limit', 'total-records']
 
   const {
     'total-records': totalElements,
     'page-offset': offset,
     'page-limit': limit,
-  } = copyNamedHeaders(headerNames, (headers && normalizeHeaderNames(headers)) || {});
+  } = copyNamedHeaders(headerNames, (headers && normalizeHeaderNames(headers)) || {})
   context.offsetPageable = {
     totalElements: totalElements ? parseInt(totalElements, 10) : undefined,
     offset: offset ? parseInt(offset, 10) : undefined,
     limit: limit ? parseInt(limit, 10) : undefined,
-  };
+  }
 }
 
-const getResponsePagination = (context: Context): Record<string, number | undefined> => context.offsetPageable || {};
+const getResponsePagination = (context: Context): Record<string, number | undefined> => context.offsetPageable || {}
 
-const setPageable = (context: Context, { totalElements = 0, pageable: { pageNumber = 0, pageSize = 20 } }: { totalElements?: number, pageable: { pageNumber?: number, pageSize?: number } }): void => {
-  context.pageable = { totalElements, page: pageNumber, size: pageSize };
+const setPageable = (
+  context: Context,
+  {
+    totalElements = 0,
+    pageable: { pageNumber = 0, pageSize = 20 },
+  }: {
+    totalElements?: number
+    pageable: {
+      pageNumber?: number
+      pageSize?: number
+    }
+  },
+): void => {
+  context.pageable = { totalElements, page: pageNumber, size: pageSize }
 }
 
-const getPageable = (context: Context): { totalElements: number, page: number, size: number } => context.pageable;
+const getPageable = (
+  context: Context,
+): {
+  totalElements: number
+  page: number
+  size: number
+} => context.pageable
 
 export {
   setTokens,
@@ -104,5 +120,4 @@ export {
   getResponsePagination,
   setPageable,
   getPageable,
-  Context,
-};
+}

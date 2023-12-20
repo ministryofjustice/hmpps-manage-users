@@ -1,6 +1,7 @@
 import nock from 'nock'
 import * as contextProperties from '../contextProperties'
 import { oauthEnabledClientFactory } from './oauthEnabledClient'
+import { Context } from '../interfaces/context'
 
 const hostname = 'http://localhost:8080'
 
@@ -23,7 +24,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the authorization header with "Bearer <access token>"', async () => {
-      const context: contextProperties.Context = {}
+      const context: Context = {}
       contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
       const response = await client.get(context, '/api/users/me')
@@ -38,16 +39,16 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the pagination headers on requests', async () => {
-      const context: contextProperties.Context = {}
+      const context: Context = {}
       contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me')
 
-      // expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '10' }))
+      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '10' }))
     })
 
     it('Should set the results limit header override on requests', async () => {
-      const context: contextProperties.Context = {}
+      const context: Context = {}
       contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me', 500)
