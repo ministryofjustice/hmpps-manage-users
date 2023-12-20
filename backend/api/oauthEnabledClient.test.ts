@@ -1,17 +1,17 @@
 import nock from 'nock'
-import contextProperties from '../contextProperties'
-import { OAuthEnabledClientFactory } from './oauthEnabledClient'
+import * as contextProperties from '../contextProperties'
+import { oauthEnabledClientFactory } from './oauthEnabledClient'
 
 const hostname = 'http://localhost:8080'
 
 describe('Test clients built by oauthEnabledClient', () => {
   it('should build something', () => {
-    const client = OAuthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
+    const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
     expect(client).not.toBeNull()
   })
 
   describe('Assert client behaviour', () => {
-    const client = OAuthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
+    const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
     const getRequest = nock(hostname)
 
     beforeEach(() => {
@@ -23,7 +23,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the authorization header with "Bearer <access token>"', async () => {
-      const context: any = {}
+      const context: contextProperties.Context = {}
       contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
       const response = await client.get(context, '/api/users/me')
@@ -38,7 +38,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the pagination headers on requests', async () => {
-      const context: any = {}
+      const context: contextProperties.Context = {}
       contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me')
@@ -47,7 +47,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the results limit header override on requests', async () => {
-      const context: any = {}
+      const context: contextProperties.Context = {}
       contextProperties.setRequestPagination(context, { offset: '0', size: '10' })
 
       const response = await client.get(context, '/api/users/me', 500)
@@ -57,7 +57,7 @@ describe('Test clients built by oauthEnabledClient', () => {
   })
 
   describe('retry and timeout behaviour', () => {
-    const client = OAuthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 900 })
+    const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 900 })
     const mock = nock(hostname)
 
     afterEach(() => {
@@ -178,7 +178,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it('Should set the url correctly if ends with a /', async () => {
-      const client = OAuthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
+      const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
       nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}
@@ -190,7 +190,7 @@ describe('Test clients built by oauthEnabledClient', () => {
     })
 
     it("Should set the url correctly if doesn't end with a /", async () => {
-      const client = OAuthEnabledClientFactory({ baseUrl: hostname, timeout: 2000 })
+      const client = oauthEnabledClientFactory({ baseUrl: hostname, timeout: 2000 })
       nock(hostname).get('/api/users/me').reply(200, {})
 
       const context = {}

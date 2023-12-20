@@ -38,7 +38,7 @@ const errorLogger = (error: any) => {
   return error
 }
 
-export const OAuthEnabledClientFactory = (params: ClientFactoryParams): OAuthEnabledClient => {
+export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEnabledClient => {
   const { baseUrl, timeout } = params
   const remoteUrl = baseUrl.endsWith('/') ? baseUrl.substring(0, baseUrl.length - 1) : baseUrl
 
