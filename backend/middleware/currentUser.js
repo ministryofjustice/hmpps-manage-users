@@ -2,6 +2,7 @@ const { forenameToInitial } = require('../utils/utils')
 const config = require('../config').default
 
 const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode === roleCode)
+const hasAnyRole = (userRoles, roleCodes) => roleCodes.some((role) => hasRole(userRoles, role))
 
 module.exports =
   ({ nomisUsersAndRolesApi, manageUsersApi }) =>
@@ -21,6 +22,7 @@ module.exports =
           maintainAuthUsers: hasRole(roles, 'MAINTAIN_OAUTH_USERS'),
           groupManager: hasRole(roles, 'AUTH_GROUP_MANAGER'),
           maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
+          viewAdministrableUserRoles: hasAnyRole(roles, ['ROLES_ADMIN', 'VIEW_ADMINISTRABLE_USER_ROLES']),
           createDPSUsers: hasRole(roles, 'CREATE_USER'),
           manageDPSUserAccount: hasRole(roles, 'MANAGE_NOMIS_USER_ACCOUNT'),
           manageEmailDomains: hasRole(roles, 'MAINTAIN_EMAIL_DOMAINS'),

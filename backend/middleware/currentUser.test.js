@@ -42,6 +42,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -74,6 +75,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -94,6 +96,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -112,6 +115,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -130,6 +134,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -148,6 +153,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -166,6 +172,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
   it('should set maintain dps user', async () => {
@@ -183,6 +190,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: true,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -201,6 +209,7 @@ describe('Current user', () => {
       maintainRoles: true,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      viewAdministrableUserRoles: true,
     })
   })
 
@@ -219,6 +228,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: true,
+      viewAdministrableUserRoles: false,
     })
   })
 
@@ -247,6 +257,26 @@ describe('Current user', () => {
       maintainRoles: true,
       manageDPSUserAccount: true,
       manageEmailDomains: true,
+      viewAdministrableUserRoles: true,
+    })
+  })
+
+  it('should set view user roles', async () => {
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'VIEW_ADMINISTRABLE_USER_ROLES' }])
+    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: false,
+      viewAdministrableUserRoles: true,
     })
   })
 
