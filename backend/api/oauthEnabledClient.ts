@@ -17,9 +17,9 @@ export interface OAuthEnabledClient {
     path: string,
     params: { resultLimit?: number; customTimeout?: number },
   ) => Promise<superagent.Response>
-  post: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
+  post: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
   put: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
-  del: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
+  del: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
   getStream: (context: Context, path: string) => Promise<Readable>
 }
 

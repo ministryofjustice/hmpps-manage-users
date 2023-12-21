@@ -1,4 +1,4 @@
-import axios, {AxiosError} from "axios";
+import axios, {AxiosError, AxiosInstance} from "axios";
 import logger from "../../logger";
 
 /** @type {any} */
@@ -10,6 +10,10 @@ export const AuthClientError = (message: string) => ({ name: AuthClientErrorName
 
 export const apiClientCredentials = (clientId: string, clientSecret:string) => Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
+export interface OAuthApi {
+    refresh: (refreshToken: string) => Promise<{ access_token: string, refresh_token: string }>
+    oauthAxios: AxiosInstance
+}
 /**
  * Return an oauthApi built using the supplied configuration.
  * @param client
@@ -19,8 +23,8 @@ export const apiClientCredentials = (clientId: string, clientSecret:string) => B
  * @param {string} params.url
  * @returns a configured oauthApi instance
  */
-export const oauthApiFactory = (client: string, { clientId, clientSecret, url } : { clientId: string, clientSecret: string, url: string}) => {
-  const oauthAxios = axios.create({
+export const oauthApiFactory = (client: string, { clientId, clientSecret, url } : { clientId: string, clientSecret: string, url: string}) : OAuthApi => {
+  const oauthAxios: AxiosInstance = axios.create({
     baseURL: `${url}/oauth/token`,
     method: 'post',
     timeout: 30000,

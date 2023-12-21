@@ -1,5 +1,5 @@
 const { Parser } = require('json2csv')
-const logger = require('../log')
+const logger = require('../log').default
 const { parseFilter } = require('./searchDpsUsers')
 
 const downloadFactory = (searchApi, json2CsvParse, allowDownload) => {
