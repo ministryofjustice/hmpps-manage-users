@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-expressions */
-const contextProperties = require('./contextProperties')
+import * as contextProperties from './contextProperties'
+import {Context} from "./interfaces/context";
 
 describe('Should read/write properties', () => {
   describe('Should set / get tokens', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
     it('should set the access token', () => {
@@ -66,7 +67,7 @@ describe('Should read/write properties', () => {
   })
 
   it('Should set the request pagination properties', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setRequestPagination(context, { offset: 1, size: 10 })
     expect(contextProperties.getRequestPagination(context)).toEqual({
       'page-offset': 1,

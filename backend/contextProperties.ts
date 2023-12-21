@@ -59,14 +59,17 @@ const setRequestPagination = (
     offset,
     size,
   }: {
-    offset?: string
-    size?: string
+    offset?: string | number
+    size?: string | number
   },
 ): void => {
-  if (offset || size) context.requestHeaders = { 'page-offset': offset || '0', 'page-limit': size || '0' }
+  if (offset || size) context.requestHeaders = {
+      'page-offset': parseInt(`${offset}`, 10) || 0,
+      'page-limit': parseInt(`${size}`, 10) || 0
+  }
 }
 
-const getRequestPagination = (context: Context): Record<string, string> => context.requestHeaders || {}
+const getRequestPagination = (context: Context): Record<string, number> => context.requestHeaders || {}
 
 const setResponsePagination = (context: Context, headers: Record<string, string>): void => {
   const headerNames = ['page-offset', 'page-limit', 'total-records']

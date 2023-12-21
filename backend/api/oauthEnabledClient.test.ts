@@ -44,7 +44,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       const response = await client.get(context, '/api/users/me')
 
-      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '10' }))
+      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': 0, 'page-limit': 10 }))
     })
 
     it('Should set the results limit header override on requests', async () => {
@@ -53,7 +53,7 @@ describe('Test clients built by oauthEnabledClient', () => {
 
       const response = await client.get(context, '/api/users/me', 500)
 
-      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': '0', 'page-limit': '500' }))
+      expect(response.request.header).toEqual(expect.objectContaining({ 'page-offset': 0, 'page-limit': 500 }))
     })
   })
 

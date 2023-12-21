@@ -3,8 +3,8 @@ export interface Context {
   refresh_token?: string
   authSource?: string
   requestHeaders?: {
-    'page-offset'?: string
-    'page-limit'?: string
+    'page-offset'?: number
+    'page-limit'?: number
   }
   offsetPageable?: {
     totalElements?: number
