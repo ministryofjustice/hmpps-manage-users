@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-const errorStatusCode = require('../error-status-code')
+import errorStatusCode from "../error-status-code";
 
 describe('Should translate errors', () => {
   describe('error has response', () => {
@@ -7,7 +7,7 @@ describe('Should translate errors', () => {
       expect(errorStatusCode({ response: { status: 'code' } })).toEqual('code')
     })
     it('should ignore response if no status', () => {
-      expect(errorStatusCode({ response: { joe: 'code' } })).toEqual(500)
+      expect(errorStatusCode({ response: {} })).toEqual(500)
     })
   })
   describe('error has code', () => {
