@@ -1,6 +1,7 @@
-const contextProperties = require('../contextProperties')
+import {Context} from "../interfaces/context";
+import * as contextProperties from "../contextProperties";
 
-const getHeaders = (context, resultsLimit) => {
+export const getHeaders = (context: Context, resultsLimit?: number) => {
   const paginationHeaders = contextProperties.getRequestPagination(context)
   const accessToken = contextProperties.getAccessToken(context)
 
@@ -9,8 +10,4 @@ const getHeaders = (context, resultsLimit) => {
     ...(resultsLimit && { 'page-limit': resultsLimit.toString() }),
     ...(accessToken && { authorization: `Bearer ${accessToken}` }),
   }
-}
-
-module.exports = {
-  getHeaders,
 }
