@@ -1,6 +1,16 @@
+import {OAuthEnabledClient} from "./oauthEnabledClient";
+
 const { nomisUsersAndRolesFactory } = require('./nomisUsersAndRolesApi')
 
-const client = {}
+const client: OAuthEnabledClient = {
+  get: jest.fn(),
+  getWithCustomTimeout: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+  del: jest.fn(),
+  getStream: jest.fn(),
+};
+
 const nomisUsersAndRolesApi = nomisUsersAndRolesFactory(client)
 const context = { some: 'context' }
 
@@ -93,7 +103,7 @@ describe('nomis users and roles API tests', () => {
 
   describe('removeUserRole', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
@@ -171,7 +181,7 @@ describe('nomis users and roles API tests', () => {
 
   describe('addUserCaseloads', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.post = jest.fn().mockReturnValue({
@@ -190,7 +200,7 @@ describe('nomis users and roles API tests', () => {
 
   describe('removeUserCaseload', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
