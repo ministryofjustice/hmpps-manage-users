@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-expressions */
 import * as contextProperties from './contextProperties'
-import {Context} from "./interfaces/context";
+import { Context } from "./interfaces/context";
 
 describe('Should read/write properties', () => {
   describe('Should set / get tokens', () => {

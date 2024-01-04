@@ -1,12 +1,20 @@
 /** @type {any} */
-const nock = require('nock')
-const { oauthApiFactory } = require('./oauthApi')
+import { oauthApiFactory } from "./oauthApi";
+import nock from "nock";
+import {OAuthEnabledClient} from "./oauthEnabledClient";
 
 const clientId = 'clientId'
 const url = 'http://localhost'
 const clientSecret = 'clientSecret'
 
-const client = {}
+const client: OAuthEnabledClient = {
+    get: jest.fn(),
+    getWithCustomTimeout: jest.fn(),
+    post: jest.fn(),
+    put: jest.fn(),
+    del: jest.fn(),
+    getStream: jest.fn(),
+}
 const oauthApi = oauthApiFactory(client, { url, clientId, clientSecret })
 const mock = nock(url, { reqheaders: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 

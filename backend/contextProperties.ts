@@ -63,10 +63,11 @@ const setRequestPagination = (
     size?: string | number
   },
 ): void => {
-  if (offset || size) context.requestHeaders = {
+  if (offset || size)
+    context.requestHeaders = {
       'page-offset': parseInt(`${offset}`, 10) || 0,
-      'page-limit': parseInt(`${size}`, 10) || 0
-  }
+      'page-limit': parseInt(`${size}`, 10) || 0,
+    }
 }
 
 const getRequestPagination = (context: Context): Record<string, number> => context.requestHeaders || {}

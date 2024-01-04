@@ -1,10 +1,10 @@
-const errorStatusCode = (error?: object ): number => {
+const errorStatusCode = (error?: object): number => {
   if (error) {
-    if (error['response'] && error['response']['status']) return error['response']['status'];
-    if (error['code'] === 'ECONNREFUSED') return 503;
+    if (error['response'] && error['response']['status']) return error['response']['status']
+    if (error['code'] === 'ECONNREFUSED') return 503
   }
 
-  return 500;
+  return 500
 }
 
-export default errorStatusCode;
+export default errorStatusCode

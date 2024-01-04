@@ -1,5 +1,6 @@
-import axios, {AxiosError, AxiosInstance} from "axios";
-import logger from "../../logger";
+import axios, { AxiosError, AxiosInstance } from 'axios'
+import logger from '../../logger'
+import {OAuthEnabledClient} from "./oauthEnabledClient";
 
 /** @type {any} */
 const querystring = require('querystring')
@@ -8,12 +9,14 @@ const errorStatusCode = require('../error-status-code')
 export const AuthClientErrorName = 'AuthClientError'
 export const AuthClientError = (message: string) => ({ name: AuthClientErrorName, message, stack: new Error().stack })
 
-export const apiClientCredentials = (clientId: string, clientSecret:string) => Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
+export const apiClientCredentials = (clientId: string, clientSecret: string) =>
+  Buffer.from(`${clientId}:${clientSecret}`).toString('base64')
 
 export interface OAuthApi {
-    refresh: (refreshToken: string) => Promise<{ access_token: string, refresh_token: string }>
-    oauthAxios: AxiosInstance
+  refresh: (refreshToken: string) => Promise<{ access_token: string; refresh_token: string }>
+  oauthAxios: AxiosInstance
 }
+
 /**
  * Return an oauthApi built using the supplied configuration.
  * @param client
@@ -23,7 +26,10 @@ export interface OAuthApi {
  * @param {string} params.url
  * @returns a configured oauthApi instance
  */
-export const oauthApiFactory = (client: string, { clientId, clientSecret, url } : { clientId: string, clientSecret: string, url: string}) : OAuthApi => {
+export const oauthApiFactory = (
+  client: OAuthEnabledClient,
+  { clientId, clientSecret, url }: { clientId: string; clientSecret: string; url: string },
+): OAuthApi => {
   const oauthAxios: AxiosInstance = axios.create({
     baseURL: `${url}/oauth/token`,
     method: 'post',
@@ -35,7 +41,10 @@ export const oauthApiFactory = (client: string, { clientId, clientSecret, url } 
   })
 
   // eslint-disable-next-line camelcase
-  const parseOauthTokens = ({ access_token, refresh_token }: { access_token:string, refresh_token:string }) => ({ access_token, refresh_token })
+  const parseOauthTokens = ({ access_token, refresh_token }: { access_token: string; refresh_token: string }) => ({
+    access_token,
+    refresh_token,
+  })
 
   const translateAuthClientError = (error: string) => {
     logger.info(`Sign in error description = ${error}`)
@@ -50,12 +59,13 @@ export const oauthApiFactory = (client: string, { clientId, clientSecret, url } 
   }
 
   interface ErrorData {
-    error_description?: string;
+    error_description?: string
   }
-  const getErrorDescription = (error: AxiosError) => ((error.response && error.response.data) as ErrorData)?.error_description || null
+
+  const getErrorDescription = (error: AxiosError) =>
+    ((error.response && error.response.data) as ErrorData)?.error_description || null
 
   const makeTokenRequest = (data: string, msg: string) =>
-
     oauthAxios({ data })
       .then((response) => {
         logger.debug(

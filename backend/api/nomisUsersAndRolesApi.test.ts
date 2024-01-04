@@ -1,6 +1,5 @@
-import {OAuthEnabledClient} from "./oauthEnabledClient";
-
-const { nomisUsersAndRolesFactory } = require('./nomisUsersAndRolesApi')
+import { OAuthEnabledClient } from './oauthEnabledClient'
+import nomisUsersAndRolesFactory from './nomisUsersAndRolesApi'
 
 const client: OAuthEnabledClient = {
   get: jest.fn(),
@@ -9,7 +8,7 @@ const client: OAuthEnabledClient = {
   put: jest.fn(),
   del: jest.fn(),
   getStream: jest.fn(),
-};
+}
 
 const nomisUsersAndRolesApi = nomisUsersAndRolesFactory(client)
 const context = { some: 'context' }
@@ -82,8 +81,8 @@ describe('nomis users and roles API tests', () => {
         activeCaseload: 'BXI',
         size: 30,
         page: 3,
-        inclusiveRoles: true,
-        showOnlyLSAs: true,
+        inclusiveRoles: 'true',
+        showOnlyLSAs: 'true',
       })
       expect(client.get).toBeCalledWith(
         context,

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-import errorStatusCode from "../error-status-code";
+import errorStatusCode from '../error-status-code'
 
 describe('Should translate errors', () => {
   describe('error has response', () => {
