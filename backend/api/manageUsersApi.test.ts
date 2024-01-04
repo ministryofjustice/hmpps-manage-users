@@ -1,7 +1,16 @@
+import { OAuthEnabledClient } from './oauthEnabledClient'
+
 const nock = require('nock')
 const { manageUsersApiFactory } = require('./manageUsersApi')
 
-const client = {}
+const client: OAuthEnabledClient = {
+  get: jest.fn(),
+  getWithCustomTimeout: jest.fn(),
+  post: jest.fn(),
+  put: jest.fn(),
+  del: jest.fn(),
+  getStream: jest.fn(),
+}
 const manageUsersApi = manageUsersApiFactory(client)
 const context = { some: 'context' }
 
@@ -12,7 +21,7 @@ describe('manageUsersApi tests', () => {
 
   describe('currentUser', () => {
     const userDetails = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -31,7 +40,7 @@ describe('manageUsersApi tests', () => {
 
   describe('getUser', () => {
     const userDetails = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -67,13 +76,13 @@ describe('manageUsersApi tests', () => {
     })
     it('should cope with not found from endpoint', async () => {
       const error = { ...new Error('User not found'), status: 404 }
-      client.get.mockRejectedValue(error)
+      client.get = jest.fn().mockRejectedValue(error)
       const actual = await manageUsersApi.getUserEmail(context, { username: 'joe' })
       expect(actual).toEqual({})
     })
     it('should rethrow other errors', async () => {
       const error = new Error('User not found')
-      client.get.mockRejectedValue(error)
+      client.get = jest.fn().mockRejectedValue(error)
       expect(async () => manageUsersApi.getUserEmail(context, { username: 'joe' })).rejects.toThrow(error)
     })
   })
@@ -198,7 +207,7 @@ describe('manageUsersApi tests', () => {
 
   describe('roleDetails', () => {
     const roles = { role: { roleName: 'hello there' } }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -217,7 +226,7 @@ describe('manageUsersApi tests', () => {
 
   describe('allRoles', () => {
     const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -236,7 +245,7 @@ describe('manageUsersApi tests', () => {
 
   describe('allRolesWithFilters', () => {
     const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -255,7 +264,7 @@ describe('manageUsersApi tests', () => {
 
   describe('allPagedRoles', () => {
     const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -274,7 +283,7 @@ describe('manageUsersApi tests', () => {
 
   describe('allPagedRolesWithFilters', () => {
     const roles = [{ roleCode: 'RC1', roleName: 'hello there' }]
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -338,7 +347,7 @@ describe('manageUsersApi tests', () => {
 
   describe('contextUserRoles', () => {
     const roles = { username: 'joe', dpsRoles: [{ code: 'CODE1' }] }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -357,7 +366,7 @@ describe('manageUsersApi tests', () => {
 
   describe('externalUserAddRoles', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.post = jest.fn().mockReturnValue({
@@ -381,7 +390,7 @@ describe('manageUsersApi tests', () => {
 
   describe('externalUserRoles', () => {
     const roles = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -400,7 +409,7 @@ describe('manageUsersApi tests', () => {
 
   describe('removeExternalUserRole', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
@@ -422,7 +431,7 @@ describe('manageUsersApi tests', () => {
 
   describe('assignableRoles', () => {
     const roles = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -441,7 +450,7 @@ describe('manageUsersApi tests', () => {
 
   describe('groupDetails', () => {
     const groups = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -460,7 +469,7 @@ describe('manageUsersApi tests', () => {
 
   describe('childGroupDetails', () => {
     const groups = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -479,7 +488,7 @@ describe('manageUsersApi tests', () => {
 
   describe('deleteGroup', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
@@ -498,7 +507,7 @@ describe('manageUsersApi tests', () => {
 
   describe('deleteChildGroup', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
@@ -517,7 +526,7 @@ describe('manageUsersApi tests', () => {
 
   describe('assignableGroups', () => {
     const groups = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -566,7 +575,7 @@ describe('manageUsersApi tests', () => {
 
   describe('addUserGroup', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.put = jest.fn().mockReturnValue({
@@ -591,7 +600,7 @@ describe('manageUsersApi tests', () => {
   })
   describe('userGroups', () => {
     const groups = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -612,7 +621,7 @@ describe('manageUsersApi tests', () => {
   })
   describe('removeUserGroup', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.del = jest.fn().mockReturnValue({
@@ -634,7 +643,7 @@ describe('manageUsersApi tests', () => {
 
   describe('enableExternalUser', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.put = jest.fn().mockReturnValue({
@@ -657,7 +666,7 @@ describe('manageUsersApi tests', () => {
 
   describe('disableExternalUser', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.put = jest.fn().mockReturnValue({
@@ -680,7 +689,7 @@ describe('manageUsersApi tests', () => {
 
   describe('deactivateExternalUser', () => {
     const errorResponse = { field: 'hello' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.put = jest.fn().mockReturnValue({
@@ -704,7 +713,7 @@ describe('manageUsersApi tests', () => {
 
   describe('externalUserSearch', () => {
     const userDetails = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -731,7 +740,7 @@ describe('manageUsersApi tests', () => {
 
   describe('currentRoles', () => {
     const roles = { bob: 'hello there' }
-    let actual
+    let actual: any
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
