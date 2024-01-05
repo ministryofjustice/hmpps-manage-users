@@ -1,5 +1,5 @@
 import { OAuthEnabledClient } from './oauthEnabledClient'
-import nomisUsersAndRolesFactory from './nomisUsersAndRolesApi'
+import { nomisUsersAndRolesFactory } from './nomisUsersAndRolesApi'
 
 const client: OAuthEnabledClient = {
   get: jest.fn(),

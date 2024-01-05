@@ -1,11 +1,9 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
-import logger from '../../logger'
-import {OAuthEnabledClient} from "./oauthEnabledClient";
+import querystring from 'querystring'
+import logger from '../log'
+import errorStatusCode from '../error-status-code'
 
 /** @type {any} */
-const querystring = require('querystring')
-const errorStatusCode = require('../error-status-code')
-
 export const AuthClientErrorName = 'AuthClientError'
 export const AuthClientError = (message: string) => ({ name: AuthClientErrorName, message, stack: new Error().stack })
 
@@ -17,26 +15,27 @@ export interface OAuthApi {
   oauthAxios: AxiosInstance
 }
 
+export interface OAuthApiFactoryParams {
+  apiClientId: string
+  apiClientSecret: string
+  url: string
+}
+
 /**
  * Return an oauthApi built using the supplied configuration.
- * @param client
  * @param {object} params
- * @param {string} params.clientId
- * @param {string} params.clientSecret
- * @param {string} params.url
  * @returns a configured oauthApi instance
  */
 export const oauthApiFactory = (
-  client: OAuthEnabledClient,
-  { clientId, clientSecret, url }: { clientId: string; clientSecret: string; url: string },
+  params: OAuthApiFactoryParams,
 ): OAuthApi => {
   const oauthAxios: AxiosInstance = axios.create({
-    baseURL: `${url}/oauth/token`,
+    baseURL: `${params.url}/oauth/token`,
     method: 'post',
     timeout: 30000,
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
-      authorization: `Basic ${apiClientCredentials(clientId, clientSecret)}`,
+      authorization: `Basic ${apiClientCredentials(params.apiClientId, params.apiClientSecret)}`,
     },
   })
 
@@ -77,7 +76,7 @@ export const oauthApiFactory = (
         const status = errorStatusCode(error)
         const errorDesc = getErrorDescription(error)
 
-        if (parseInt(status, 10) < 500 && errorDesc !== null) {
+        if (status < 500 && errorDesc !== null) {
           logger.info(`${msg} ${error.config.method} ${error.config.url} ${status} ${errorDesc}`)
 
           throw AuthClientError(translateAuthClientError(errorDesc))

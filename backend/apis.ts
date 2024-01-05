@@ -1,17 +1,11 @@
-const config = require('./config').default
-const { oauthEnabledClientFactory } = require('./api/oauthEnabledClient')
-const { oauthApiFactory } = require('./api/oauthApi')
-const { manageUsersApiFactory } = require('./api/manageUsersApi')
-const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
-const { nomisUsersAndRolesFactory } = require('./api/nomisUsersAndRolesApi')
+import { oauthApiFactory } from './api/oauthApi'
+import { oauthEnabledClientFactory } from './api/oauthEnabledClient'
+import config from './config'
+import { tokenVerificationApiFactory } from './api/tokenVerificationApi'
+import { nomisUsersAndRolesFactory } from './api/nomisUsersAndRolesApi'
+import { manageUsersApiFactory } from './api/manageUsersApi'
 
-const oauthApi = oauthApiFactory(
-  oauthEnabledClientFactory({
-    baseUrl: config.apis.hmppsAuth.url,
-    timeout: config.apis.hmppsAuth.timeoutSeconds * 1000,
-  }),
-  { ...config.apis.hmppsAuth },
-)
+const oauthApi = oauthApiFactory(config.apis.hmppsAuth)
 
 const manageUsersApi = manageUsersApiFactory(
   oauthEnabledClientFactory({

@@ -3,9 +3,9 @@ import { oauthApiFactory } from "./oauthApi";
 import nock from "nock";
 import {OAuthEnabledClient} from "./oauthEnabledClient";
 
-const clientId = 'clientId'
+const apiClientId = 'clientId'
 const url = 'http://localhost'
-const clientSecret = 'clientSecret'
+const apiClientSecret = 'clientSecret'
 
 const client: OAuthEnabledClient = {
     get: jest.fn(),
@@ -15,7 +15,7 @@ const client: OAuthEnabledClient = {
     del: jest.fn(),
     getStream: jest.fn(),
 }
-const oauthApi = oauthApiFactory(client, { url, clientId, clientSecret })
+const oauthApi = oauthApiFactory({ url, apiClientId, apiClientSecret })
 const mock = nock(url, { reqheaders: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 
 describe('oauthApi tests', () => {
@@ -27,7 +27,7 @@ describe('oauthApi tests', () => {
     it('should save access token', async () => {
       mock
         .post('/oauth/token', { grant_type: 'refresh_token', refresh_token: 'refreshToken' })
-        .basicAuth({ user: clientId, pass: clientSecret })
+        .basicAuth({ user: apiClientId, pass: apiClientSecret })
         .reply(200, {
           token_type: 'bearer',
           expires_in: 59,

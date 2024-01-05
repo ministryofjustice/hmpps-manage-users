@@ -17,8 +17,8 @@ interface User {
   username: string
 }
 
-interface NomisUsersAndRolesApi {
-  userSearch: (context: any, options: UserSearchOptions) => Promise<any>
+export interface NomisUsersAndRolesApi {
+  userSearch: (context: any, options: UserSearchOptions) => Promise<NomisUserSearchResponse>
   downloadUserSearch: (context: any, options: UserSearchOptions) => Promise<any>
   getRoles: (context: any, hasAdminRole: boolean) => Promise<any>
   getCaseloads: (context: any) => Promise<any>
@@ -34,7 +34,7 @@ interface NomisUsersAndRolesApi {
   removeUserCaseload: (context: any, username: string, caseloadId: string) => Promise<any>
 }
 
-const nomisUsersAndRolesFactory = (client: OAuthEnabledClient): NomisUsersAndRolesApi => {
+export const nomisUsersAndRolesFactory = (client: OAuthEnabledClient): NomisUsersAndRolesApi => {
   const get = (context: any, path: string) => client.get(context, path).then((response) => response.body)
   const post = (context: any, path: string, data: any) =>
     client.post(context, path, data).then((response) => response.body)
@@ -138,5 +138,3 @@ const nomisUsersAndRolesFactory = (client: OAuthEnabledClient): NomisUsersAndRol
     removeUserCaseload,
   }
 }
-
-export default nomisUsersAndRolesFactory

@@ -16,7 +16,7 @@ const processPageResponse = (context: Context) => (response: Response) => {
   return response.body
 }
 
-interface ManageUsersApi {
+export interface ManageUsersApi {
   getNotificationBannerMessage: (context: Context, notificationType: string) => Promise<any>
   searchUserByUserName: (context: Context, username: string) => Promise<any>
   currentUser: (context: Context) => Promise<any>
@@ -77,7 +77,7 @@ interface ManageUsersApi {
   deleteExternalUserRole: (context: Context, { userId, role }: { userId: string; role: string }) => Promise<Response>
 }
 
-const manageUsersApiFactory = (client: OAuthEnabledClient): ManageUsersApi => {
+export const manageUsersApiFactory = (client: OAuthEnabledClient): ManageUsersApi => {
   const get = (context: Context, path: string): Promise<Response> =>
     client.get(context, path).then((response) => response.body)
   const post = (context: Context, path: string, body?: string | object): Promise<Response> =>
@@ -273,4 +273,3 @@ const manageUsersApiFactory = (client: OAuthEnabledClient): ManageUsersApi => {
   }
 }
 
-module.exports = { manageUsersApiFactory }
