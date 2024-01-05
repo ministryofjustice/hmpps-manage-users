@@ -6,8 +6,11 @@ const clientId = 'clientId'
 const url = 'http://localhost'
 const clientSecret = 'clientSecret'
 
-const client = {}
-const oauthApi = oauthApiFactory(client, { url, clientId, clientSecret })
+const oauthApi = oauthApiFactory({
+  url,
+  apiClientId: clientId,
+  apiClientSecret: clientSecret,
+})
 const mock = nock(url, { reqheaders: { 'Content-Type': 'application/x-www-form-urlencoded' } })
 
 describe('oauthApi tests', () => {

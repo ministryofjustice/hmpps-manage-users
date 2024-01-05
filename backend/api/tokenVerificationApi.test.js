@@ -1,13 +1,13 @@
 const nock = require('nock')
 
-const clientFactory = require('./oauthEnabledClient')
+const { oauthEnabledClientFactory } = require('./oauthEnabledClient')
 const { tokenVerificationApiFactory } = require('./tokenVerificationApi')
 const config = require('../config').default
 
 const hostname = 'http://localhost:8080'
 
 describe('token verification api tests', () => {
-  const client = clientFactory({ baseUrl: `${hostname}`, timeout: 2000 })
+  const client = oauthEnabledClientFactory({ baseUrl: `${hostname}`, timeout: 2000 })
   const tokenVerificationApi = tokenVerificationApiFactory(client)
   const mock = nock(hostname)
 
