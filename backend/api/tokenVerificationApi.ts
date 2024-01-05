@@ -1,5 +1,5 @@
 import { default as config } from '../config'
-import log from '../log'
+import log from '../../logger'
 import { OAuthEnabledClient } from './oauthEnabledClient' // Assuming this is the correct import for OAuthEnabledClient
 
 /** @type {any} */

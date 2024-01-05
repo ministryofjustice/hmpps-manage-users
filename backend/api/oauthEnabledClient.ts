@@ -1,7 +1,7 @@
 import superagent from 'superagent'
 import { Readable } from 'stream'
 import Agent, { HttpsAgent } from 'agentkeepalive'
-import logger from '../log'
+import logger from '../../logger'
 import { getHeaders } from './axios-config-decorators'
 import { Context } from '../interfaces/context'
 

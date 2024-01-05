@@ -1,6 +1,6 @@
 import jwtDecode from 'jwt-decode'
 import type { RequestHandler } from 'express'
-import logger from '../log'
+import logger from '../../logger'
 
 enum AuthRole {
   CREATE_USER = 'ROLE_CREATE_USER',

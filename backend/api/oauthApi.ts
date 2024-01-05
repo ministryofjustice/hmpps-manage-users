@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosInstance } from 'axios'
 import querystring from 'querystring'
-import logger from '../log'
+import logger from '../../logger'
 import errorStatusCode from '../error-status-code'
 
 /** @type {any} */
