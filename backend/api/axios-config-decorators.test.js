@@ -25,6 +25,6 @@ describe('Axios request configuration decorator tests', () => {
     contextProperties.setRequestPagination(context, { offset: undefined, size: '5' })
 
     const headers = decorators.getHeaders(context)
-    expect(headers).toEqual({ 'page-offset': 0, 'page-limit': '5' })
+    expect(headers).toEqual({ 'page-offset': 0, 'page-limit': 5 })
   })
 })
