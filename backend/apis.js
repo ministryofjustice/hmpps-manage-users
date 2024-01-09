@@ -5,13 +5,11 @@ const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
 const { nomisUsersAndRolesFactory } = require('./api/nomisUsersAndRolesApi')
 const { oauthEnabledClientFactory } = require('./api/oauthEnabledClient')
 
-const oauthApi = oauthApiFactory(
-  oauthEnabledClientFactory({
-    baseUrl: config.apis.hmppsAuth.url,
-    timeout: config.apis.hmppsAuth.timeoutSeconds * 1000,
-  }),
-  { ...config.apis.hmppsAuth },
-)
+const oauthApi = oauthApiFactory({
+  apiClientId: config.apis.hmppsAuth.apiClientId,
+  apiClientSecret: config.apis.hmppsAuth.apiClientSecret,
+  url: config.apis.hmppsAuth.url,
+})
 
 const manageUsersApi = manageUsersApiFactory(
   oauthEnabledClientFactory({
