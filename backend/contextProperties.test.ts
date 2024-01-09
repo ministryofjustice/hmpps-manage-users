@@ -1,9 +1,11 @@
 /* eslint-disable no-unused-expressions */
-const contextProperties = require('./contextProperties')
+
+import { Context } from './interfaces/context'
+import * as contextProperties from './contextProperties'
 
 describe('Should read/write properties', () => {
   describe('Should set / get tokens', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setTokens({ access_token: 'a', refresh_token: 'b', authSource: 'joe' }, context)
 
     it('should set the access token', () => {
@@ -18,7 +20,7 @@ describe('Should read/write properties', () => {
   })
 
   describe('Should return null if tokens not present', () => {
-    const context = {}
+    const context: Context = {}
 
     it('access token', () => {
       expect(contextProperties.getAccessToken(context)).toBeNull()
@@ -41,7 +43,7 @@ describe('Should read/write properties', () => {
   })
 
   describe('Should know if the context has tokens', () => {
-    const context = {}
+    const context: Context = {}
 
     it('no tokens', () => {
       contextProperties.setTokens({ access_token: null, refresh_token: null, authSource: null }, context)
@@ -66,7 +68,7 @@ describe('Should read/write properties', () => {
   })
 
   it('Should set the request pagination properties', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setRequestPagination(context, { offset: 1, size: 10 })
     expect(contextProperties.getRequestPagination(context)).toEqual({
       'page-offset': 1,
@@ -79,7 +81,7 @@ describe('Should read/write properties', () => {
   })
 
   it('Should set the response pagination properties', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setResponsePagination(context, {
       'PAGE-offset': '1',
       'page-LIMIT': '10',
@@ -91,7 +93,7 @@ describe('Should read/write properties', () => {
   })
 
   it('Should return an empty responsePagination object if no values were set', () => {
-    const context = {}
+    const context: Context = {}
     contextProperties.setResponsePagination(context, {})
     expect(contextProperties.getResponsePagination(context)).toEqual({})
   })
