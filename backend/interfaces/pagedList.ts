@@ -1,8 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface PagedListItem {
   // Extended by:
-  // Alert
-  // CaseNote
+  // Role
 }
 
 export interface PagedList<TPagedListItem extends PagedListItem> {

@@ -5,7 +5,7 @@ const client = {}
 const manageUsersApi = manageUsersApiFactory(client)
 const context = { some: 'context' }
 
-describe('manageUsersApi tests', () => {
+describe('manageUsersApiImport tests', () => {
   beforeEach(() => {
     nock.cleanAll()
   })
@@ -704,24 +704,23 @@ describe('manageUsersApi tests', () => {
 
   describe('externalUserSearch', () => {
     const userDetails = { bob: 'hello there' }
-    let actual
+    const userSearch = {
+      nameFilter: "joe'fred@bananas%.com",
+      role: '',
+      group: '',
+      status: 'ALL',
+    }
 
     beforeEach(() => {
-      client.get = jest.fn().mockReturnValue({
-        then: () => userDetails,
-      })
-      actual = manageUsersApi.userSearch(context, {
-        nameFilter: "joe'fred@bananas%.com",
-        role: '',
-        group: '',
-        status: 'ALL',
-      })
+      client.get = jest.fn().mockReturnValue({ then: () => userDetails })
     })
 
-    it('should return roles from endpoint', () => {
+    it('should return roles from endpoint', async () => {
+      const actual = await manageUsersApi.userSearch(context, userSearch)
       expect(actual).toEqual(userDetails)
     })
-    it('should call user endpoint', () => {
+    it('should call user endpoint', async () => {
+      await manageUsersApi.userSearch(context, userSearch)
       expect(client.get).toBeCalledWith(
         context,
         "/externalusers/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
