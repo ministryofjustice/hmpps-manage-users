@@ -2,6 +2,7 @@ import { components } from './manageUsersApiImport'
 import { PagedListItem } from '../interfaces/pagedList'
 
 export type Role = components['schemas']['RoleDto']
+export type RoleDetail = components['schemas']['RoleDetail']
 export type UpdateRoleNameRequest = components['schemas']['RoleNameAmendmentDto']
 export type UpdateRoleDescriptionRequest = components['schemas']['RoleDescriptionAmendmentDto']
 export type UpdateRoleAdminTypeRequest = components['schemas']['RoleAdminTypeAmendmentDto']
