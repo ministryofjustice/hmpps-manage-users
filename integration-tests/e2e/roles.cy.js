@@ -321,6 +321,18 @@ context('Roles', () => {
       AuthErrorPage.verifyOnPage()
     })
 
+    it('Should fail attempting to reach "create-role" you only have view roles role - unauthorised', () => {
+      cy.task('stubSignIn', {
+        roles: [{ roleCode: 'VIEW_ADMINISTRABLE_USER_ROLES' }],
+      })
+      cy.signIn()
+      const menuPage = MenuPage.verifyOnPage()
+      menuPage.createRoleTile().should('not.exist')
+
+      cy.visit('/create-role', { failOnStatusCode: false })
+      AuthErrorPage.verifyOnPage()
+    })
+
     it('Should check for CSRF token', () => {
       cy.task('stubSignIn', { roles: [{ roleCode: 'ROLES_ADMIN' }] })
       cy.signIn()

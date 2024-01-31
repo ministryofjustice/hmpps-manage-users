@@ -116,6 +116,8 @@
                 <p class="govuk-body card__description">View roles that are available to be assigned to users</p>
               </div>
             </div>
+          {% endif %}
+          {% if user and user.maintainRoles %}
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="create_roles_link">
                 <h1 class="govuk-heading-m card__heading">
