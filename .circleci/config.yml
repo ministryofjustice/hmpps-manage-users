@@ -120,6 +120,20 @@ workflows:
             - helm_lint
             - build_docker
             - integration_tests
+      - hmpps/deploy_env:
+          name: deploy_stage
+          env: "stage"
+          context:
+            - hmpps-common-vars
+            - hmpps-manage-users-stage
+          filters:
+            branches:
+              only:
+                - main
+          requires:
+            - helm_lint
+            - build_docker
+            - integration_tests
       - request-preprod-approval:
           type: approval
           requires:
