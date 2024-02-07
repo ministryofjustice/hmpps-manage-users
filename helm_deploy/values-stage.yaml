@@ -2,6 +2,7 @@
 # Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
 
 generic-service:
+  serviceAccountName: hmpps-auth-stage
   replicaCount: 2
   ingress:
     host: manage-users-stage.hmpps.service.justice.gov.uk
@@ -17,7 +18,7 @@ generic-service:
     MANAGE_HMPPS_USERS_URL: https://manage-users-stage.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-stage.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-stage.hmpps.service.justice.gov.uk
-    SYSTEM_PHASE: DEV
+    SYSTEM_PHASE: STAGE
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
