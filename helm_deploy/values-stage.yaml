@@ -2,7 +2,6 @@
 # Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
 
 generic-service:
-  serviceAccountName: hmpps-auth-stage
   replicaCount: 2
   ingress:
     host: manage-users-stage.hmpps.service.justice.gov.uk
