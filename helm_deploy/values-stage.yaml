@@ -9,7 +9,7 @@ generic-service:
 
   env:
     MANAGE_USERS_API_ENDPOINT_URL: https://manage-users-api-stage.hmpps.service.justice.gov.uk
-    HMPPS_AUTH_URL: http://hmpps-auth.hmpps-auth-stage.svc.cluster.local/auth
+    HMPPS_AUTH_URL: https://sign-in-stage.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital-stage.prison.service.justice.gov.uk
     NOMIS_USERS_API_ENDPOINT_URL: https://nomis-user-roles-api-dev.prison.service.justice.gov.uk
     HMPPS_COOKIE_NAME: hmpps-session-stage
