@@ -1,4 +1,5 @@
 const { Parser } = require('json2csv')
+const unwind = require('json2csv/lib/transforms/unwind')
 const logger = require('../log')
 const { parseFilter } = require('./searchDpsUsers')
 
@@ -118,7 +119,86 @@ const downloadFactoryBetaSearch = (downloadUserSearch, allowDownload) => {
   return { downloadBetaResults }
 }
 
+const downloadFactoryLsaSearch = (downloadLsaSearch, allowDownload) => {
+  const downloadLsaResults = async (req, res) => {
+    const { ...parameters } = req.query
+
+    if (!allowDownload(res)) {
+      res.writeHead(403, { 'Content-Type': 'text/plain' })
+      return res.end('You are not authorised to the resource')
+    }
+    const currentFilter = parseFilter(req.query)
+
+    const caseload = currentFilter.groupCode && currentFilter.groupCode[0]
+    const { roleCode: accessRoles } = currentFilter
+    const { searchResults } = await downloadLsaSearch({
+      locals: res.locals,
+      user: parameters.user,
+      caseload,
+      accessRoles,
+      activeCaseload: currentFilter.restrictToActiveGroup ? caseload : undefined,
+      status: currentFilter.status,
+      inclusiveRoles: currentFilter.inclusiveRoles,
+      showOnlyLSAs: currentFilter.showOnlyLSAs,
+    })
+
+    const fields = [
+      {
+        label: 'staffId',
+        value: 'staffId',
+      },
+      {
+        label: 'username',
+        value: 'username',
+      },
+      {
+        label: 'firstName',
+        value: 'firstName',
+      },
+      {
+        label: 'lastName',
+        value: 'lastName',
+      },
+      {
+        label: 'activeCaseLoadId',
+        value: 'activeCaseload.id',
+      },
+      {
+        label: 'email',
+        value: 'email',
+      },
+      {
+        label: 'dpsRoleCount',
+        value: 'dpsRoleCount',
+      },
+      {
+        label: 'adminForCode',
+        value: 'groups.code',
+      },
+      {
+        label: 'adminFor',
+        value: 'groups.description',
+      },
+    ]
+    const transforms = [unwind({ paths: ['groups'] })]
+
+    const json2csvParser = new Parser({ fields, transforms })
+    const csv = json2csvParser.parse(searchResults)
+    try {
+      res.header('Content-Type', 'text/csv')
+      res.attachment('lsa-report.csv')
+      return res.send(csv)
+    } catch (err) {
+      logger.error(err)
+      res.writeHead(500, { 'Content-Type': 'text/plain' })
+      return res.end('An error occurred while generating the download')
+    }
+  }
+  return { downloadLsaResults }
+}
+
 module.exports = {
   downloadFactory,
   downloadFactoryBetaSearch,
+  downloadFactoryLsaSearch,
 }

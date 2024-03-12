@@ -1,17 +1,15 @@
 const express = require('express')
 const { searchFactory } = require('../controllers/searchDpsUsers')
 const paginationService = require('../services/paginationService')
-const { downloadFactoryBetaSearch } = require('../controllers/searchDownload')
+const { downloadFactoryBetaSearch, downloadFactoryLsaSearch } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
 const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
-  const { findUsersApi, searchableRoles, caseloads, downloadNomisUserDetails } = searchApiFactory(
-    nomisUsersAndRolesApi,
-    manageUsersApi,
-  )
+  const { findUsersApi, searchableRoles, caseloads, downloadNomisUserDetails, downloadNomisLsaDetails } =
+    searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
 
   const search = searchFactory(
     paginationService,
@@ -24,9 +22,11 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
     allowDownload,
   )
   const { downloadBetaResults } = downloadFactoryBetaSearch(downloadNomisUserDetails, allowDownload)
+  const { downloadLsaResults } = downloadFactoryLsaSearch(downloadNomisLsaDetails, allowDownload)
 
   router.get('/', search)
   router.get('/user-download', downloadBetaResults)
+  router.get('/lsa-download', downloadLsaResults)
   return router
 }
 

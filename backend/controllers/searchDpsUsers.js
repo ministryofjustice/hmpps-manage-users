@@ -78,6 +78,11 @@ const searchFactory = (
           allowDownload(res) && `/search-with-filter-dps-users/user-download?${querystring.stringify(currentFilter)}`,
         hideDownloadLink: allowDownload(res) && totalElements > config.downloadRecordLimit ? true : undefined,
         maintainUrl,
+        lsaDownloadUrl:
+          allowDownload(res) &&
+          currentFilter.showOnlyLSAs &&
+          `/search-with-filter-dps-users/lsa-download?${querystring.stringify(currentFilter)}`,
+        hideLsaDownloadLink: allowDownload(res) && totalElements > config.downloadRecordLimit ? true : undefined,
         downloadRecordLimit: config.downloadRecordLimit,
       })
     } catch (error) {
