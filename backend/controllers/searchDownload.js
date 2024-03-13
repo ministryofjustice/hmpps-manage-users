@@ -172,12 +172,12 @@ const downloadFactoryLsaSearch = (downloadLsaSearch, allowDownload) => {
         value: 'dpsRoleCount',
       },
       {
-        label: 'adminForCode',
-        value: 'groups.code',
+        label: 'lsaCaseloadId',
+        value: 'groups.id',
       },
       {
-        label: 'adminFor',
-        value: 'groups.description',
+        label: 'lsaCaseload',
+        value: 'groups.name',
       },
     ]
     const transforms = [unwind({ paths: ['groups'] })]

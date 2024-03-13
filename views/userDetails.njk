@@ -343,14 +343,14 @@
         {% set rows = [] %}
         {% for group in staff.administratorOfUserGroups %}
           {% set rows = (rows.push([
-            { text: group }
+            { text: group.name }
           ]), rows) %}
         {% endfor %}
 
         {{ govukTable({
-          caption: "Administered local authorities",
+          caption: "LSA Caseloads",
           rows: rows,
-          attributes: { "data-qa": "administered-local-authorities" }
+          attributes: { "data-qa": "lsa-caseloads" }
         }) }}
       {% endif %}
 
