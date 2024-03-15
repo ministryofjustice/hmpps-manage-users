@@ -315,6 +315,7 @@ context('DPS search with filter user functionality', () => {
       })
     })
   })
+
   it('Hide download link and show restriction message', () => {
     const search = goToSearchPage({ totalElements: 2000000 })
     search
@@ -334,5 +335,83 @@ context('DPS search with filter user functionality', () => {
         'More than 20000 results returned, please refine your search if you want to download the results',
       )
     search.getDownloadLinkMessage().should('not.exist', 'Download results')
+  })
+
+  it('Should allow a user to download an LSA report', () => {
+    cy.task('stubLSADownload')
+
+    const validateLsaCsv = (list) => {
+      expect(list, 'number of records').to.have.length(3)
+      expect(list[0], 'header row').to.deep.equal([
+        'staffId',
+        'username',
+        'firstName',
+        'lastName',
+        'activeCaseLoadId',
+        'email',
+        'dpsRoleCount',
+        'lsaCaseloadId',
+        'lsaCaseload',
+      ])
+      expect(list[1], 'first row').to.deep.equal([
+        '1',
+        'ITAG_USER',
+        'Itag',
+        'User',
+        'MDI',
+        'multiple.user.test@digital.justice.gov.uk',
+        '0',
+        'BXI',
+        'Brixton (HMP)',
+      ])
+      expect(list[2], 'second row').to.deep.equal([
+        '1',
+        'ITAG_USER',
+        'Itag',
+        'User',
+        'MDI',
+        'multiple.user.test@digital.justice.gov.uk',
+        '0',
+        'MDI',
+        'Moorland (HMP & YOI)',
+      ])
+      expect(list[2], 'third row').to.deep.equal([
+        '2',
+        'ITAG_USER2',
+        'Itag2',
+        'User',
+        'MDI',
+        'multiple.user.test2@digital.justice.gov.uk',
+        '0',
+        'MAN',
+        'Manchester (HMP)',
+      ])
+    }
+
+    // A workaround for https://github.com/cypress-io/cypress/issues/14857
+    let csv
+    cy.intercept('GET', '*/lsa-download*', (req) => {
+      req.reply((res) => {
+        csv = res.body
+        res.headers.location = '/'
+        res.send(302)
+      })
+    }).as('lsaDownload')
+    console.log('two')
+
+    const results = goToSearchPage({})
+    console.log('three')
+
+    results.filterLSAOnly()
+    results.showOnlyLSAsCheckbox().should('be.checked')
+    console.log('four')
+
+    results.lsaDownload().click()
+    cy.wait('@lsaDownload').then(() => {
+      console.log('five')
+      parse(csv, {}, (err, output) => {
+        validateLsaCsv(output)
+      })
+    })
   })
 })
