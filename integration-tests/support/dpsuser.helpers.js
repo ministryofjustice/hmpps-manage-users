@@ -80,6 +80,7 @@ export const editUser = ({
   activeCaseload = true,
   userCaseloads = null,
   accountStatus,
+  administratorOfUserGroups = null,
 }) => {
   cy.task('stubDpsUserDetails', { accountStatus, active, enabled })
 
