@@ -397,18 +397,14 @@ context('DPS search with filter user functionality', () => {
         res.send(302)
       })
     }).as('lsaDownload')
-    console.log('two')
 
     const results = goToSearchPage({})
-    console.log('three')
 
     results.filterLSAOnly()
     results.showOnlyLSAsCheckbox().should('be.checked')
-    console.log('four')
 
     results.lsaDownload().click()
     cy.wait('@lsaDownload').then(() => {
-      console.log('five')
       parse(csv, {}, (err, output) => {
         validateLsaCsv(output)
       })

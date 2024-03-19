@@ -113,7 +113,7 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: ({ accountStatus, active = true, enabled = true }) =>
+  stubUserDetails: ({ accountStatus, active = true, enabled = true, administratorOfUserGroups = null }) =>
     getFor({
       urlPattern: '/nomisusersandroles/users/.*',
       body: {
@@ -126,6 +126,7 @@ module.exports = {
         active,
         enabled,
         accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
+        administratorOfUserGroups,
       },
     }),
   stubUserDetailsWithoutEmail: () =>
