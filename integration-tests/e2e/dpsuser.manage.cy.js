@@ -56,6 +56,25 @@ context('DPS user manage functionality', () => {
     userPage.caseloadRows().should('have.length', 0)
   })
 
+  it('Should display LAs administered for a user', () => {
+    const userPage = editUser({
+      administratorOfUserGroups: [
+        { id: 'BXI', name: 'Brixton' },
+        { id: 'MDI', name: 'Moorland' },
+      ],
+    })
+    userPage.administeredUserGroups().should('exist')
+    userPage.administeredUserGroupsRows().eq(0).should('contain', 'Brixton')
+    userPage.administeredUserGroupsRows().eq(1).should('contain', 'Moorland')
+  })
+
+  it('Should not display LAs administered details for a user with no LAs', () => {
+    const userPage = editUser({
+      administratorOfUserGroups: null,
+    })
+    userPage.administeredUserGroups().should('not.exist')
+  })
+
   it('Should leave email blank if no email for user ', () => {
     const results = goToSearchPage({})
 

@@ -82,7 +82,7 @@ export const editUser = ({
   accountStatus,
   administratorOfUserGroups = null,
 }) => {
-  cy.task('stubDpsUserDetails', { accountStatus, active, enabled })
+  cy.task('stubDpsUserDetails', { accountStatus, active, enabled, administratorOfUserGroups })
 
   cy.task('stubDpsUserGetRoles', activeCaseload)
   cy.task('stubBannerNoMessage')
