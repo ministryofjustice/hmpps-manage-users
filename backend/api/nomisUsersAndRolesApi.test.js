@@ -70,10 +70,10 @@ describe('nomis users and roles API tests', () => {
         accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
         caseload: 'MDI',
         activeCaseload: 'BXI',
-        size: 30,
-        page: 3,
         inclusiveRoles: true,
         showOnlyLSAs: true,
+        size: 30,
+        page: 3,
       })
       expect(client.get).toBeCalledWith(
         context,
