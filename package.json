@@ -29,7 +29,7 @@
     "csv-parse": "^5.3.10",
     "debug": "^4.3.4",
     "dotenv": "^16.0.3",
-    "express": "^4.18.2",
+    "express": "^4.19.2",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.17.3",
     "final-form": "^4.20.9",
@@ -102,7 +102,7 @@
     "set-cookie-parser": "^2.6.0",
     "supertest": "^6.3.3",
     "ts-jest": "^29.1.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.4.3"
   },
   "scripts": {
     "clean": " rm -Rf build dist .nyc_output coverage test-results",
