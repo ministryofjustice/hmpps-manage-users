@@ -8,6 +8,8 @@ const userPage = (user) =>
     activeCaseloadRow: () => cy.get('[data-qa="user-active-caseload"] tbody tr'),
     activeCaseload: () => cy.get('[data-qa="user-active-caseload"] tbody tr td'),
     caseloadRows: () => cy.get('[data-qa="user-caseloads"] tbody tr'),
+    administeredUserGroups: () => cy.get('[data-qa="prison-user-admin-caseloads"]'),
+    administeredUserGroupsRows: () => cy.get('[data-qa="prison-user-admin-caseloads"] tbody tr'),
     addRole: () => cy.get('[data-qa="add-role-button"]'),
     addGroup: () => cy.get('[data-qa="add-group-button"]'),
     addUserCaseload: () => cy.get('[data-qa="add-caseload-button"]'),

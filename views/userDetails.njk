@@ -339,6 +339,21 @@
         {% endif %}
       {% endif %}
 
+      {% if staff.administratorOfUserGroups.length > 0 %}
+        {% set rows = [] %}
+        {% for group in staff.administratorOfUserGroups %}
+          {% set rows = (rows.push([
+            { text: group.name }
+          ]), rows) %}
+        {% endfor %}
+
+        {{ govukTable({
+          caption: "Prison User Admin Caseloads",
+          rows: rows,
+          attributes: { "data-qa": "prison-user-admin-caseloads" }
+        }) }}
+      {% endif %}
+
       <p class="govuk-body">
         <a href="{{ searchUrl }}" class="govuk-link" data-qa="search-link">Search for a user</a>
       </p>

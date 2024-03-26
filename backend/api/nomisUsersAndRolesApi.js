@@ -42,6 +42,23 @@ const nomisUsersAndRolesFactory = (client) => {
       })}`,
     )
 
+  const downloadLsaSearch = (
+    context,
+    { nameFilter, accessRoles, status, caseload, activeCaseload, inclusiveRoles, showOnlyLSAs },
+  ) =>
+    get(
+      context,
+      `/users/download/admins?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+        inclusiveRoles,
+        showOnlyLSAs,
+      })}`,
+    )
+
   const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
   const getCaseloads = (context) => get(context, '/reference-data/caseloads')
 
@@ -62,6 +79,7 @@ const nomisUsersAndRolesFactory = (client) => {
   return {
     userSearch,
     downloadUserSearch,
+    downloadLsaSearch,
     getRoles,
     getCaseloads,
     currentUserCaseloads,

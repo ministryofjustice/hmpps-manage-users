@@ -30,8 +30,8 @@ module.exports = (on) => {
     ...nomisUsersAndRoles,
     stubDpsGetRoles: nomisUsersAndRoles.stubGetRoles,
     stubDpsGetAdminRoles: nomisUsersAndRoles.stubGetRolesIncludingAdminRoles,
-    stubDpsUserDetails: ({ accountStatus, active = true, enabled = true }) =>
-      nomisUsersAndRoles.stubUserDetails({ accountStatus, active, enabled }),
+    stubDpsUserDetails: ({ accountStatus, active = true, enabled = true, administratorOfUserGroups = null }) =>
+      nomisUsersAndRoles.stubUserDetails({ accountStatus, active, enabled, administratorOfUserGroups }),
     stubDpsUserDetailsWithOutEmail: nomisUsersAndRoles.stubUserDetailsWithoutEmail,
     stubManageUserGetAdminRoles: manageUsersApi.stubGetRolesIncludingAdminRoles,
     stubManageUserGetRoles: manageUsersApi.stubGetRoles,

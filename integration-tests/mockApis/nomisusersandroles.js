@@ -113,7 +113,7 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: ({ accountStatus, active = true, enabled = true }) =>
+  stubUserDetails: ({ accountStatus, active = true, enabled = true, administratorOfUserGroups = null }) =>
     getFor({
       urlPattern: '/nomisusersandroles/users/.*',
       body: {
@@ -126,6 +126,7 @@ module.exports = {
         active,
         enabled,
         accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
+        administratorOfUserGroups,
       },
     }),
   stubUserDetailsWithoutEmail: () =>
@@ -136,6 +137,29 @@ module.exports = {
         username: 'ITAG_USER',
         firstName: 'Itag',
         lastName: 'User',
+      },
+    }),
+  stubUserDetailsLSA: ({ accountStatus, active = true, enabled = true }) =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/.*',
+      body: {
+        staffId: '12345',
+        username: 'ITAG_USER',
+        firstName: 'Itag',
+        lastName: 'User',
+        primaryEmail: `ITAG_USER@gov.uk`,
+        email: `ITAG_USER@gov.uk`,
+        active,
+        enabled,
+        accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
+        activeCaseload: {
+          id: 'BXI',
+          name: 'Brixton (HMP)',
+        },
+        administratorOfUserGroups: [
+          { id: 'BLM', name: 'Belmarsh (HMP)' },
+          { id: 'BXI', name: 'Brixton (HMP)' },
+        ],
       },
     }),
   stubDpsUserEnable: () =>
@@ -238,6 +262,49 @@ module.exports = {
           },
           dpsRoleCount: 0,
           email: 'multiple.user.test@digital.justice.gov.uk',
+        },
+      ],
+    }),
+  stubLSADownload: () =>
+    getFor({
+      urlPattern: '/nomisusersandroles/users/download/admins\\?.*',
+      body: [
+        {
+          username: 'ITAG_USER',
+          staffId: 1,
+          firstName: 'Itag',
+          lastName: 'User',
+          active: true,
+          status: 'OPEN',
+          locked: false,
+          expired: false,
+          activeCaseload: {
+            id: 'MDI',
+            name: 'Moorland Closed (HMP & YOI)',
+          },
+          dpsRoleCount: 0,
+          email: 'multiple.user.test@digital.justice.gov.uk',
+          administratorOfUserGroups: [
+            { id: 'BXI', name: 'Brixton (HMP)' },
+            { id: 'MDI', name: 'Moorland (HMP & YOI)' },
+          ],
+        },
+        {
+          username: 'ITAG_USER2',
+          staffId: 2,
+          firstName: 'Itag2',
+          lastName: 'User',
+          active: true,
+          status: 'OPEN',
+          locked: false,
+          expired: false,
+          activeCaseload: {
+            id: 'MDI',
+            name: 'Moorland Closed (HMP & YOI)',
+          },
+          dpsRoleCount: 0,
+          email: 'multiple.user.test2@digital.justice.gov.uk',
+          administratorOfUserGroups: [{ id: 'MAN', name: 'Manchester (HMP)' }],
         },
       ],
     }),

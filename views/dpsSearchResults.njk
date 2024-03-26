@@ -66,6 +66,11 @@
         }) }}
       </div>
       {{ mojPagination(pagination) }}
+      {% if lsaDownloadUrl %}
+        <div class="pull-right">
+          <a href="{{ lsaDownloadUrl }}" class="govuk-link" data-qa="lsa-download" download="lsa-search.csv" type="text/csv">Download LSA report</a>
+        </div>
+      {% endif %}
       {% if downloadUrl %}
         <div class="pull-right">
           <a href="{{ downloadUrl }}" class="govuk-link" data-qa="download" download="user-search.csv" type="text/csv">Download results</a>
