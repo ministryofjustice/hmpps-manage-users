@@ -28,6 +28,8 @@ export interface PagedUserSearchParams extends UserSearchParams {
   size?: number
 }
 
+export type NomisUsersAndRolesApi = ReturnType<typeof nomisUsersAndRolesFactory>
+
 export const nomisUsersAndRolesFactory = (oauthEnabledClient: OAuthEnabledClient) => {
   const get = (context: Context, path: string) =>
     oauthEnabledClient.get(context, path).then((response) => response.body)
