@@ -70,6 +70,7 @@ const dpsUserSearchPage = () =>
     getHideDownloadLinkMessage: () => cy.get('[data-qa="exceed-download-limit"]'),
     getDownloadLinkMessage: () => cy.get('[data-qa="download"]'),
     download: () => cy.get('a[data-qa="download"]'),
+    lsaDownload: () => cy.get('a[data-qa="lsa-download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
     manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     caseload,
