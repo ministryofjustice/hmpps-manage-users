@@ -7,7 +7,7 @@ export const getHeaders = (context: Context, resultsLimit?: number) => {
 
   return {
     ...paginationHeaders,
-    ...(resultsLimit && { 'page-limit': resultsLimit }),
+    ...(resultsLimit && { 'page-limit': `${resultsLimit}` }),
     ...(accessToken && { authorization: `Bearer ${accessToken}` }),
   }
 }
