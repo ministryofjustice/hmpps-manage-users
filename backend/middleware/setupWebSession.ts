@@ -1,27 +1,24 @@
-import session from 'express-session'
-import connectRedis, { Client } from 'connect-redis'
+import session, { MemoryStore, Store } from 'express-session'
+import RedisStore from 'connect-redis'
 import express, { Router } from 'express'
 import config from '../config'
 import logger from '../log'
 import { createRedisClient } from '../data/redisClient'
 
-const RedisStore = connectRedis(session)
-
 export default function setupWebSession(): Router {
-  const getSessionStore = () => {
-    const client = createRedisClient({ legacyMode: true })
-    if (client != null) {
-      client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
-      return new RedisStore({ client: client as unknown as Client })
-    }
-
-    return null
+  let store: Store
+  if (config.redis.enabled) {
+    const client = createRedisClient()
+    client.connect().catch((err: Error) => logger.error(`Error connecting to Redis`, err))
+    store = new RedisStore({ client })
+  } else {
+    store = new MemoryStore()
   }
 
   const router = express.Router()
   router.use(
     session({
-      store: getSessionStore(),
+      store,
       secret: [config.session.secret],
       resave: false,
       saveUninitialized: false,

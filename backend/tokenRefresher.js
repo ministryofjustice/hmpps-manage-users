@@ -1,4 +1,4 @@
-const jwtDecode = require('jwt-decode')
+const { jwtDecode } = require('jwt-decode')
 const contextProperties = require('./contextProperties')
 const logger = require('./log')
 
