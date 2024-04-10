@@ -41,10 +41,11 @@
 {% block bodyEnd %}
   {# Run JavaScript at end of the
 <body>, to avoid blocking the initial render. #}
-  <script src="/assets/govuk/all.js"></script>
-  <script src="/assets/moj/all.js"></script>
-  <script src="/js/govuk-frontend-init.js"></script>
-  <script src="/js/moj-frontend-init.js"></script>
+
+  <script type="module" src="/assets/govuk/govuk-frontend.min.js"></script>
+  <script src="/assets/moj/all.js" type="text/javascript"></script>
+  <script src="/js/govuk-frontend-init.js" type="text/javascript"></script>
+  <script src="/js/moj-frontend-init.js" type="text/javascript"></script>
 
   {# Javascript block for individual pages #}
   {% block pageScripts %}
