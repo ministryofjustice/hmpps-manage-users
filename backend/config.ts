@@ -43,6 +43,7 @@ export default {
     port: parseInt(process.env.REDIS_PORT, 10) || 6379,
     password: process.env.REDIS_PASSWORD,
     tls_enabled: get('REDIS_TLS_ENABLED', 'false'),
+    enabled: get('REDIS_ENABLED', 'true') === 'true',
   },
   app: {
     port: process.env.PORT || 3001,

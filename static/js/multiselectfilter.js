@@ -3,7 +3,6 @@ window.onload = function () {
     new window.GOVUK.Modules.MultiSelectFilter(filter).init()
   })
 }
-
 ;(window.GOVUK = window.GOVUK || {}),
   (window.GOVUK.Modules = window.GOVUK.Modules || {}),
   (function (root) {
@@ -68,7 +67,7 @@ window.onload = function () {
         for (index = 0; index < multiSelectFilterInstance.$allCheckboxes.length; index++)
           multiSelectFilterInstance.$allCheckboxes[index].style.display = 'none'
         for (index = 0; index < currentlySelected.length; index++)
-          multiSelectFilterInstance.$allCheckboxes[currentlySelected[index]].style.display = 'block'
+          multiSelectFilterInstance.$allCheckboxes[currentlySelected[index]].style.display = ''
         var selectedItems = multiSelectFilterInstance.$optionsContainer.querySelectorAll(
             '.govuk-checkboxes__input:checked',
           ).length,

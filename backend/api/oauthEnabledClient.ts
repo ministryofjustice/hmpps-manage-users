@@ -54,7 +54,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
           return undefined
         })
         .timeout({ deadline: timeout / 3 })
-        .end((error, response) => {
+        .end((error, response: superagent.Response) => {
           if (error) reject(errorLogger(error))
           else if (response) resolve(resultLogger(response))
         })
@@ -66,7 +66,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         .post(remoteUrl + path)
         .send(body)
         .set(getHeaders(context))
-        .end((error, response) => {
+        .end((error, response: superagent.Response) => {
           if (error) reject(errorLogger(error))
           else if (response) resolve(resultLogger(response))
         })
@@ -78,7 +78,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         .put(remoteUrl + path)
         .send(body)
         .set(getHeaders(context))
-        .end((error, response) => {
+        .end((error, response: superagent.Response) => {
           if (error) reject(errorLogger(error))
           else if (response) resolve(resultLogger(response))
         })
@@ -90,7 +90,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         .del(remoteUrl + path)
         .send(body)
         .set(getHeaders(context))
-        .end((error, response) => {
+        .end((error, response: superagent.Response) => {
           if (error) reject(errorLogger(error))
           else if (response) resolve(resultLogger(response))
         })

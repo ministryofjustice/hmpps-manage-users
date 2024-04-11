@@ -1,5 +1,5 @@
-const express = require('express')
-const path = require('path')
+import express from 'express'
+import path from 'path'
 
 const router = express.Router()
 
@@ -7,8 +7,8 @@ module.exports = () => {
   router.use(express.static(path.join(process.cwd(), '/build')))
 
   const assetPaths = [
-    '/node_modules/govuk-frontend/govuk/assets',
-    '/node_modules/govuk-frontend',
+    '/node_modules/govuk-frontend/dist',
+    '/node_modules/govuk-frontend/dist/govuk/assets',
     '/node_modules/@ministryofjustice/frontend',
     '/node_modules/@ministryofjustice/frontend/moj/assets',
     '/node_modules/accessible-autocomplete/dist',

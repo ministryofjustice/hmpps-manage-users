@@ -1,5 +1,5 @@
-import jwtDecode from 'jwt-decode'
 import type { RequestHandler } from 'express'
+import { jwtDecode } from 'jwt-decode'
 import logger from '../log'
 
 enum AuthRole {
