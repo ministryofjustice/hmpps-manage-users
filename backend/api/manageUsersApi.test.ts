@@ -809,4 +809,44 @@ describe('manageUsersApiImport tests', () => {
       expect(client.post).toBeCalledWith(context, '/externalusers/create', request)
     })
   })
+
+  describe('enablePrisonUser', () => {
+    const errorResponse = { field: 'hello' }
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+    })
+
+    it('should return any error from endpoint', async () => {
+      const actual = await manageUsersApi.enablePrisonUser(context, username)
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', async () => {
+      await manageUsersApi.enablePrisonUser(context, username)
+      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/enable-user`, undefined)
+    })
+  })
+
+  describe('disablePrisonUser', () => {
+    const errorResponse = { field: 'hello' }
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+    })
+
+    it('should return any error from endpoint', async () => {
+      const actual = await manageUsersApi.disablePrisonUser(context, username)
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', async () => {
+      await manageUsersApi.disablePrisonUser(context, username)
+      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/disable-user`, undefined)
+    })
+  })
 })
