@@ -6,6 +6,7 @@ import {
   CreateExternalUserRequest,
   CreateLinkedLocalAdminRequest,
   CreateUserRequest,
+  PrisonCaseLoad,
   Role,
   RoleDetail,
   UpdateRoleAdminTypeRequest,
@@ -847,6 +848,27 @@ describe('manageUsersApiImport tests', () => {
     it('should call user endpoint', async () => {
       await manageUsersApi.disablePrisonUser(context, username)
       expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/disable-user`, undefined)
+    })
+  })
+
+  describe('getCaseloads', () => {
+    const response = [{ id: 'MDI', name: 'Moorland' }]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => response,
+      })
+    })
+
+    it('will call /prisonusers/reference-data/caseloads endpoint', () => {
+      manageUsersApi.getCaseloads(context)
+
+      expect(client.get).toBeCalledWith(context, '/prisonusers/reference-data/caseloads')
+    })
+    it('will return the caseloads', () => {
+      const expected: PrisonCaseLoad[] = [{ id: 'MDI', name: 'Moorland' }]
+
+      expect(manageUsersApi.getCaseloads(context)).toEqual(expected)
     })
   })
 })

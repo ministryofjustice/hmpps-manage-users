@@ -41,3 +41,5 @@ export type PrisonStaffNewUser = components['schemas']['NewPrisonUserDto']
 export type CreateLinkedCentralAdminRequest = components['schemas']['CreateLinkedCentralAdminUserRequest']
 export type CreateLinkedGeneralUserRequest = components['schemas']['CreateLinkedGeneralUserRequest']
 export type CreateLinkedLocalAdminRequest = components['schemas']['CreateLinkedLocalAdminUserRequest']
+
+export type PrisonCaseLoad = components['schemas']['PrisonCaseload']
