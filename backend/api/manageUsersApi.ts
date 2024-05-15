@@ -214,6 +214,11 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
   const contextUserRoles = (context: Context, username: string): Promise<UserRoleDetail> =>
     get(context, `/prisonusers/${username}/roles`)
 
+  const enablePrisonUser = (context: Context, username: string) =>
+    put(context, `/prisonusers/${username}/enable-user`, undefined)
+  const disablePrisonUser = (context: Context, username: string) =>
+    put(context, `/prisonusers/${username}/disable-user`, undefined)
+
   return {
     addUserGroup,
     amendUserEmail,
@@ -244,7 +249,9 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     deleteExternalUserRole,
     deleteGroup,
     disableExternalUser,
+    disablePrisonUser,
     enableExternalUser,
+    enablePrisonUser,
     externalUserAddRoles,
     externalUserRoles,
     getAllEmailDomains,

@@ -65,9 +65,8 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
     return { ...user, email: userEmail.email }
   }
 
-  const enableUserApi = (context, username) => nomisUsersAndRolesApi.enableUser(context, { username })
-  const disableUserApi = (context, username) => nomisUsersAndRolesApi.disableUser(context, { username })
-
+  const enableUserApi = (context, username) => manageUsersApi.enablePrisonUser(context, username)
+  const disableUserApi = (context, username) => manageUsersApi.disablePrisonUser(context, username)
   const saveUserRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
   const removeUserRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeUserRole(context, username, role)
 
