@@ -11,8 +11,13 @@ const manageDpsUserRouter = require('./manageDpsUserRouter')
 
 describe('Manage DPS user router', () => {
   const apis = {
-    nomisUsersAndRolesApi: { getUser: jest.fn(), getUserCaseloads: jest.fn() },
-    manageUsersApi: { syncDpsEmail: jest.fn(), contextUserRoles: jest.fn(), getUserEmail: jest.fn() },
+    nomisUsersAndRolesApi: { getUser: jest.fn() },
+    manageUsersApi: {
+      syncDpsEmail: jest.fn(),
+      contextUserRoles: jest.fn(),
+      getUserEmail: jest.fn(),
+      getUserCaseloads: jest.fn(),
+    },
   }
   const router = manageDpsUserRouter(apis)
   // @ts-ignore
@@ -37,7 +42,7 @@ describe('Manage DPS user router', () => {
         activeCaseload: { id: 'MDI', name: 'Moorland' },
       })
       apis.manageUsersApi.getUserEmail.mockResolvedValue({ username: 'joe', email: 'joe@auth', verified: false })
-      apis.nomisUsersAndRolesApi.getUserCaseloads.mockResolvedValue({
+      apis.manageUsersApi.getUserCaseloads.mockResolvedValue({
         caseloads: [
           { id: 'MDI', name: 'Moorland' },
           { id: 'PVI', name: 'Pentonville' },

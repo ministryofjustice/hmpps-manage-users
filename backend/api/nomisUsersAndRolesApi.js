@@ -60,19 +60,11 @@ const nomisUsersAndRolesFactory = (client) => {
     )
 
   const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
-  const getCaseloads = (context) => get(context, '/reference-data/caseloads')
-
-  const currentUserCaseloads = (context, username) =>
-    context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
-
   const getUser = (context, username) => get(context, `/users/${username}`)
-  const enableUser = (context, { username }) => put(context, `/users/${username}/unlock-user`)
-  const disableUser = (context, { username }) => put(context, `/users/${username}/lock-user`)
   const addUserRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
   const removeUserRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
   const addUserCaseloads = (context, username, caseloads) => post(context, `/users/${username}/caseloads`, caseloads)
-  const getUserCaseloads = (context, username) => get(context, `/users/${username}/caseloads`)
   const removeUserCaseload = (context, username, caseloadId) =>
     del(context, `/users/${username}/caseloads/${caseloadId}`)
 
@@ -81,15 +73,10 @@ const nomisUsersAndRolesFactory = (client) => {
     downloadUserSearch,
     downloadLsaSearch,
     getRoles,
-    getCaseloads,
-    currentUserCaseloads,
     getUser,
-    enableUser,
-    disableUser,
     addUserRole,
     addUserRoles,
     removeUserRole,
-    getUserCaseloads,
     addUserCaseloads,
     removeUserCaseload,
   }

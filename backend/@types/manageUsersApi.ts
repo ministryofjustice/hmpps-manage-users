@@ -43,3 +43,4 @@ export type CreateLinkedGeneralUserRequest = components['schemas']['CreateLinked
 export type CreateLinkedLocalAdminRequest = components['schemas']['CreateLinkedLocalAdminUserRequest']
 
 export type PrisonCaseLoad = components['schemas']['PrisonCaseload']
+export type UserCaseloadDetail = components['schemas']['UserCaseloadDetail']

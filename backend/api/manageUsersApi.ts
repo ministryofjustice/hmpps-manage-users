@@ -35,6 +35,7 @@ import {
   PrisonStaffUser,
   UserRoleDetail,
   PrisonCaseLoad,
+  UserCaseloadDetail,
 } from '../@types/manageUsersApi'
 
 const processPageResponse =
@@ -221,6 +222,12 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     put(context, `/prisonusers/${username}/disable-user`, undefined)
   const getCaseloads = (context: Context): Promise<PrisonCaseLoad[]> =>
     get(context, '/prisonusers/reference-data/caseloads')
+  const getUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> =>
+    get(context, `/prisonusers/${username}/caseloads`)
+
+  // TODO - consult with the team to see if this is the correct return type
+  const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | any[] =>
+    context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
 
   return {
     addUserGroup,
@@ -246,6 +253,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     createUser,
     currentRoles,
     currentUser,
+    currentUserCaseloads,
     deactivateExternalUser,
     deleteChildGroup,
     deleteEmailDomain,
@@ -264,6 +272,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     getRoleDetails,
     getRoles,
     getUser,
+    getUserCaseloads,
     getUserEmail,
     groupDetails,
     removeUserGroup,

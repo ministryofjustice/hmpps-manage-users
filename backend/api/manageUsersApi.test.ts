@@ -871,4 +871,27 @@ describe('manageUsersApiImport tests', () => {
       expect(manageUsersApi.getCaseloads(context)).toEqual(expected)
     })
   })
+
+  describe('getUserCaseloads', () => {
+    const response = [{ id: 'MDI', name: 'Moorland' }]
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => response,
+      })
+    })
+
+    it('will call /prisonusers/{username}/caseloads endpoint', () => {
+      manageUsersApi.getUserCaseloads(context, username)
+
+      expect(client.get).toBeCalledWith(context, `/prisonusers/${username}/caseloads`)
+    })
+
+    it('will return the caseloads', () => {
+      const expected: PrisonCaseLoad[] = [{ id: 'MDI', name: 'Moorland' }]
+
+      expect(manageUsersApi.getUserCaseloads(context, username)).toEqual(expected)
+    })
+  })
 })

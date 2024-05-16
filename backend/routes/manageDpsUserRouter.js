@@ -28,7 +28,7 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
       nomisUsersAndRolesApi.getUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       manageUsersApi.getUserEmail(context, { username }),
-      nomisUsersAndRolesApi.getUserCaseloads(context, username),
+      manageUsersApi.getUserCaseloads(context, username),
     ])
 
     return [
@@ -48,8 +48,8 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
   const getUserAssignableCaseloadsApi = async (context, username) => {
     const [user, userCaseloads, allCaseloads] = await Promise.all([
       nomisUsersAndRolesApi.getUser(context, username),
-      nomisUsersAndRolesApi.getUserCaseloads(context, username),
-      nomisUsersAndRolesApi.getCaseloads(context),
+      manageUsersApi.getUserCaseloads(context, username),
+      manageUsersApi.getCaseloads(context),
     ])
     return [
       user,

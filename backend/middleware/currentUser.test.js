@@ -9,11 +9,11 @@ describe('Current user', () => {
   beforeEach(() => {
     manageUsersApi.currentUser = jest.fn()
     manageUsersApi.currentRoles = jest.fn()
-    nomisUsersAndRolesApi.currentUserCaseloads = jest.fn()
+    manageUsersApi.currentUserCaseloads = jest.fn()
 
     manageUsersApi.currentUser.mockReturnValue({ name: 'Bob Smith', activeCaseLoadId: 'MDI' })
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }])
-    nomisUsersAndRolesApi.currentUserCaseloads.mockReturnValue({
+    manageUsersApi.currentUserCaseloads.mockReturnValue({
       username: 'user',
       activeCaseload: { id: 'MDI', name: 'Moorland' },
       caseloads: [

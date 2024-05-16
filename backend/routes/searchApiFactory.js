@@ -100,7 +100,7 @@ function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
   const caseloads = async (context) => {
     const hasAdminRole = Boolean(context?.user?.maintainAccessAdmin)
     if (!hasAdminRole) return []
-    return (await nomisUsersAndRolesApi.getCaseloads(context))
+    return (await manageUsersApi.getCaseloads(context))
       .map((caseload) => ({
         text: caseload.name,
         value: caseload.id,

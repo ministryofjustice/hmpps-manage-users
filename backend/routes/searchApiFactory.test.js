@@ -3,12 +3,12 @@ const searchApiFactory = require('./searchApiFactory')
 describe('Search API Factory', () => {
   const nomisUsersAndRolesApi = {
     getRoles: jest.fn(),
-    getCaseloads: jest.fn(),
     userSearch: jest.fn(),
   }
   const manageUsersApi = {
     getRoles: jest.fn(),
     userEmails: jest.fn(),
+    getCaseloads: jest.fn(),
   }
   const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
 
@@ -287,14 +287,14 @@ describe('Search API Factory', () => {
 
   describe('caseloads', () => {
     it('will get caseloads with admin in context', async () => {
-      nomisUsersAndRolesApi.getCaseloads.mockResolvedValue([
+      manageUsersApi.getCaseloads.mockResolvedValue([
         { name: 'Moorland HMP', id: 'MDI' },
         { name: 'Leeds HMP', id: 'LEI' },
       ])
 
       const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: true } })
 
-      expect(nomisUsersAndRolesApi.getCaseloads).toBeCalledWith({
+      expect(manageUsersApi.getCaseloads).toBeCalledWith({
         user: { maintainAccessAdmin: true },
       })
 
@@ -306,7 +306,7 @@ describe('Search API Factory', () => {
     it('will not get caseloads options when admin not in context', async () => {
       const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: false } })
 
-      expect(nomisUsersAndRolesApi.getCaseloads).not.toHaveBeenCalled()
+      expect(manageUsersApi.getCaseloads).not.toHaveBeenCalled()
 
       expect(caseloadOptions).toEqual([])
     })

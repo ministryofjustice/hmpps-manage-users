@@ -3,8 +3,8 @@ const { createLinkedDpsUserFactory } = require('../controllers/createLinkedDpsUs
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
-  const getAllCaseloads = nomisUsersAndRolesApi.getCaseloads
+const controller = ({ manageUsersApi }) => {
+  const getAllCaseloads = manageUsersApi.getCaseloads
   const createLinkedAdminUser = manageUsersApi.createLinkedCentralAdminUser
   const { createLinkedLsaUser } = manageUsersApi
   const { createLinkedGeneralUser } = manageUsersApi
