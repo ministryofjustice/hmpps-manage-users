@@ -64,9 +64,6 @@ const nomisUsersAndRolesFactory = (client) => {
   const addUserRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
   const removeUserRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
-  const addUserCaseloads = (context, username, caseloads) => post(context, `/users/${username}/caseloads`, caseloads)
-  const removeUserCaseload = (context, username, caseloadId) =>
-    del(context, `/users/${username}/caseloads/${caseloadId}`)
 
   return {
     userSearch,
@@ -77,8 +74,6 @@ const nomisUsersAndRolesFactory = (client) => {
     addUserRole,
     addUserRoles,
     removeUserRole,
-    addUserCaseloads,
-    removeUserCaseload,
   }
 }
 

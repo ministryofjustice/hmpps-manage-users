@@ -71,9 +71,9 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
   const removeUserRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeUserRole(context, username, role)
 
   const saveUserCaseloadsApi = (context, username, caseloads) =>
-    nomisUsersAndRolesApi.addUserCaseloads(context, username, caseloads)
+    manageUsersApi.addUserCaseloads(context, username, caseloads)
   const removeUserCaseloadApi = (context, username, caseload) =>
-    nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
+    manageUsersApi.removeUserCaseload(context, username, caseload)
 
   const changeEmailApi = (context, username, email) => manageUsersApi.changeDpsEmail(context, username, { email })
 

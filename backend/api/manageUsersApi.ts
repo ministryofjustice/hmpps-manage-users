@@ -34,7 +34,7 @@ import {
   PrisonStaffNewUser,
   PrisonStaffUser,
   UserRoleDetail,
-  PrisonCaseLoad,
+  PrisonCaseload,
   UserCaseloadDetail,
 } from '../@types/manageUsersApi'
 
@@ -220,16 +220,21 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     put(context, `/prisonusers/${username}/enable-user`, undefined)
   const disablePrisonUser = (context: Context, username: string): Promise<Response> =>
     put(context, `/prisonusers/${username}/disable-user`, undefined)
-  const getCaseloads = (context: Context): Promise<PrisonCaseLoad[]> =>
+  const getCaseloads = (context: Context): Promise<PrisonCaseload[]> =>
     get(context, '/prisonusers/reference-data/caseloads')
   const getUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> =>
     get(context, `/prisonusers/${username}/caseloads`)
 
   // TODO - consult with the team to see if this is the correct return type
-  const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | any[] =>
+  const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | [] =>
     context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
+  const addUserCaseloads = (context: Context, username: string, caseloads: string[]): Promise<UserCaseloadDetail> =>
+    post(context, `/prisonusers/${username}/caseloads`, caseloads)
+  const removeUserCaseload = (context: Context, username: string, caseloadId: string): Promise<UserCaseloadDetail> =>
+    del(context, `/prisonusers/${username}/caseloads/${caseloadId}`)
 
   return {
+    addUserCaseloads,
     addUserGroup,
     amendUserEmail,
     assignableGroups,
@@ -275,6 +280,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     getUserCaseloads,
     getUserEmail,
     groupDetails,
+    removeUserCaseload,
     removeUserGroup,
     searchUserByUserName,
     searchableRoles,

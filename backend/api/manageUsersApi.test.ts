@@ -6,13 +6,14 @@ import {
   CreateExternalUserRequest,
   CreateLinkedLocalAdminRequest,
   CreateUserRequest,
-  PrisonCaseLoad,
+  PrisonCaseload,
   Role,
   RoleDetail,
   UpdateRoleAdminTypeRequest,
   UpdateRoleDescriptionRequest,
   UpdateRoleNameRequest,
   UpdateUserEmailRequest,
+  UserCaseloadDetail,
   UserRoleDetail,
 } from '../@types/manageUsersApi'
 import { Context } from '../interfaces/context'
@@ -866,7 +867,7 @@ describe('manageUsersApiImport tests', () => {
       expect(client.get).toBeCalledWith(context, '/prisonusers/reference-data/caseloads')
     })
     it('will return the caseloads', () => {
-      const expected: PrisonCaseLoad[] = [{ id: 'MDI', name: 'Moorland' }]
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
 
       expect(manageUsersApi.getCaseloads(context)).toEqual(expected)
     })
@@ -889,9 +890,47 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('will return the caseloads', () => {
-      const expected: PrisonCaseLoad[] = [{ id: 'MDI', name: 'Moorland' }]
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
 
       expect(manageUsersApi.getUserCaseloads(context, username)).toEqual(expected)
+    })
+  })
+
+  describe('addUserCaseloads', () => {
+    const errorResponse = { field: 'hello' }
+    let actual: UserCaseloadDetail
+
+    beforeEach(async () => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = await manageUsersApi.addUserCaseloads(context, 'TEST_USER', ['TEST_CASELOAD'])
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads', ['TEST_CASELOAD'])
+    })
+  })
+
+  describe('removeUserCaseload', () => {
+    const errorResponse = { field: 'hello' }
+    let actual: UserCaseloadDetail
+
+    beforeEach(async () => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = await manageUsersApi.removeUserCaseload(context, 'TEST_USER', 'TEST_CASELOAD')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call remove user caseload endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads/TEST_CASELOAD')
     })
   })
 })
