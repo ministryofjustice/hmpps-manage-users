@@ -141,10 +141,10 @@ describe('manageUsersApiImport tests', () => {
     })
   })
 
-  describe('searchUserByUsername', () => {
+  describe('getDpsUser', () => {
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue(mockResponse)
-      manageUsersApi.searchUserByUserName(context, 'JOE_GEN')
+      manageUsersApi.getDpsUser(context, 'JOE_GEN')
     })
     it('should call create manage user endpoint', () => {
       expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN')

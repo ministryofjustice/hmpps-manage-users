@@ -197,7 +197,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     { userId, reason }: { userId: string; reason: string },
   ): Promise<Response> => put(context, `/externalusers/${userId}/disable`, { reason })
 
-  const searchUserByUserName = (context: Context, username: string): Promise<UserDetails> =>
+  const getDpsUser = (context: Context, username: string): Promise<UserDetails> =>
     get(context, `/prisonusers/${username}`)
   const createUser = (context: Context, user: CreateUserRequest): Promise<PrisonStaffNewUser> =>
     post(context, '/prisonusers', user)
@@ -272,6 +272,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     externalUserRoles,
     getAllEmailDomains,
     getCaseloads,
+    getDpsUser,
     getNotificationBannerMessage,
     getPagedRoles,
     getRoleDetails,
@@ -282,7 +283,6 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     groupDetails,
     removeUserCaseload,
     removeUserGroup,
-    searchUserByUserName,
     searchableRoles,
     syncDpsEmail,
     userGroups,

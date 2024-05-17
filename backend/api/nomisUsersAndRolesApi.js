@@ -60,7 +60,6 @@ const nomisUsersAndRolesFactory = (client) => {
     )
 
   const getRoles = (context, hasAdminRole) => get(context, `/roles?admin-roles=${hasAdminRole}`)
-  const getUser = (context, username) => get(context, `/users/${username}`)
   const addUserRole = (context, username, roleCode) => put(context, `/users/${username}/roles/${roleCode}`)
   const addUserRoles = (context, username, roles) => post(context, `/users/${username}/roles`, roles)
   const removeUserRole = (context, username, roleCode) => del(context, `/users/${username}/roles/${roleCode}`)
@@ -70,7 +69,6 @@ const nomisUsersAndRolesFactory = (client) => {
     downloadUserSearch,
     downloadLsaSearch,
     getRoles,
-    getUser,
     addUserRole,
     addUserRoles,
     removeUserRole,

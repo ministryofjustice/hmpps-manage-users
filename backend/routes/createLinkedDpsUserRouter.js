@@ -8,14 +8,14 @@ const controller = ({ manageUsersApi }) => {
   const createLinkedAdminUser = manageUsersApi.createLinkedCentralAdminUser
   const { createLinkedLsaUser } = manageUsersApi
   const { createLinkedGeneralUser } = manageUsersApi
-  const searchUser = manageUsersApi.searchUserByUserName
+  const { getDpsUser } = manageUsersApi
 
   const { index: linkedDpsUser, post: postLinkedDpsUser } = createLinkedDpsUserFactory(
     getAllCaseloads,
     createLinkedAdminUser,
     createLinkedLsaUser,
     createLinkedGeneralUser,
-    searchUser,
+    getDpsUser,
     '/create-linked-dps-user',
     '/create-dps-user',
     '/create-user',
