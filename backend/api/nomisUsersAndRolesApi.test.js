@@ -90,23 +90,4 @@ describe('nomis users and roles API tests', () => {
       expect(actual).toEqual(userResponse)
     })
   })
-
-  describe('removeUserRole', () => {
-    const errorResponse = { field: 'hello' }
-    let actual
-
-    beforeEach(() => {
-      client.del = jest.fn().mockReturnValue({
-        then: () => errorResponse,
-      })
-      actual = nomisUsersAndRolesApi.removeUserRole(context, 'TEST_USER', 'TEST_ROLE')
-    })
-
-    it('should return any error from endpoint', () => {
-      expect(actual).toEqual(errorResponse)
-    })
-    it('should call remove user role endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/users/TEST_USER/roles/TEST_ROLE')
-    })
-  })
 })

@@ -147,7 +147,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.getDpsUser(context, 'JOE_GEN')
     })
     it('should call create manage user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN')
+      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN/details')
     })
   })
 

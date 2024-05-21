@@ -198,7 +198,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
   ): Promise<Response> => put(context, `/externalusers/${userId}/disable`, { reason })
 
   const getDpsUser = (context: Context, username: string): Promise<UserDetails> =>
-    get(context, `/prisonusers/${username}`)
+    get(context, `/prisonusers/${username}/details`)
+
   const createUser = (context: Context, user: CreateUserRequest): Promise<PrisonStaffNewUser> =>
     post(context, '/prisonusers', user)
   const createLinkedCentralAdminUser = (
@@ -233,7 +234,13 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
   const removeUserCaseload = (context: Context, username: string, caseloadId: string): Promise<UserCaseloadDetail> =>
     del(context, `/prisonusers/${username}/caseloads/${caseloadId}`)
 
+  const addDpsUserRoles = (context: Context, username: string, roles: string[]): Promise<UserRoleDetail> =>
+    post(context, `/prisonusers/${username}/roles`, roles)
+  const removeDpsUserRole = (context: Context, username: string, roleCode: string): Promise<UserRoleDetail> =>
+    del(context, `/prisonusers/${username}/roles/${roleCode}`)
+
   return {
+    addDpsUserRoles,
     addUserCaseloads,
     addUserGroup,
     amendUserEmail,
@@ -281,6 +288,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     getUserCaseloads,
     getUserEmail,
     groupDetails,
+    removeDpsUserRole,
     removeUserCaseload,
     removeUserGroup,
     searchableRoles,
