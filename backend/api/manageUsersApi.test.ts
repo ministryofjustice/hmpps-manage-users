@@ -933,4 +933,204 @@ describe('manageUsersApiImport tests', () => {
       expect(client.del).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads/TEST_CASELOAD')
     })
   })
+
+  describe('dpsUserSearch', () => {
+    const userResponse = {
+      content: [
+        {
+          username: 'VQA73T',
+          staffId: 402634,
+          firstName: 'Aanathar',
+          lastName: 'Aalasha',
+          active: false,
+          activeCaseload: null,
+          dpsRoleCount: 0,
+        },
+        {
+          username: 'TQQ74V',
+          staffId: 19232,
+          firstName: 'Admdasa',
+          lastName: 'Aalasha',
+          active: true,
+          activeCaseload: {
+            id: 'WEI',
+            name: 'Wealstun (HMP)',
+          },
+          dpsRoleCount: 2,
+        },
+      ],
+      pageable: {
+        sort: {
+          empty: false,
+          sorted: true,
+          unsorted: false,
+        },
+        offset: 0,
+        pageSize: 10,
+        pageNumber: 0,
+        paged: true,
+        unpaged: false,
+      },
+      last: false,
+      totalPages: 10159,
+      totalElements: 101584,
+      size: 2,
+      number: 0,
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      first: true,
+      numberOfElements: 2,
+      empty: false,
+    }
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.dpsUserSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        size: 30,
+        page: 3,
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/search?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true&page=3&size=30',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.dpsUserSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/search?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=&page=0&size=20',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+  })
+
+  describe('downloadUserSearch', () => {
+    const userResponse = [
+      {
+        username: 'VQA73T',
+        staffId: 402634,
+        firstName: 'Aanathar',
+        lastName: 'Aalasha',
+        active: false,
+        activeCaseload: null,
+        dpsRoleCount: 0,
+      },
+      {
+        username: 'TQQ74V',
+        staffId: 19232,
+        firstName: 'Admdasa',
+        lastName: 'Aalasha',
+        active: true,
+        activeCaseload: {
+          id: 'WEI',
+          name: 'Wealstun (HMP)',
+        },
+        dpsRoleCount: 2,
+      },
+    ]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.downloadUserSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.downloadUserSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+  })
+
+  describe('downloadLsaSearch', () => {
+    const userResponse = [
+      {
+        username: 'VQA73T',
+        staffId: 402634,
+        firstName: 'Aanathar',
+        lastName: 'Aalasha',
+        active: false,
+        activeCaseload: null,
+        dpsRoleCount: 0,
+      },
+      {
+        username: 'TQQ74V',
+        staffId: 19232,
+        firstName: 'Admdasa',
+        lastName: 'Aalasha',
+        active: true,
+        activeCaseload: {
+          id: 'WEI',
+          name: 'Wealstun (HMP)',
+        },
+        dpsRoleCount: 2,
+      },
+    ]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.downloadLsaSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download/admins?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.downloadLsaSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download/admins?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+  })
 })

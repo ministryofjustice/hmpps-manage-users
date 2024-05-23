@@ -1,16 +1,13 @@
 const searchApiFactory = require('./searchApiFactory')
 
 describe('Search API Factory', () => {
-  const nomisUsersAndRolesApi = {
-    getRoles: jest.fn(),
-    userSearch: jest.fn(),
-  }
   const manageUsersApi = {
+    dpsUserSearch: jest.fn(),
     getRoles: jest.fn(),
     userEmails: jest.fn(),
     getCaseloads: jest.fn(),
   }
-  const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
+  const { searchableRoles, caseloads, findUsersApi } = searchApiFactory(manageUsersApi)
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -34,7 +31,7 @@ describe('Search API Factory', () => {
       empty: true,
     }
     it('will call userSearch with admin role context', async () => {
-      nomisUsersAndRolesApi.userSearch.mockResolvedValue(noResults)
+      manageUsersApi.dpsUserSearch.mockResolvedValue(noResults)
 
       await findUsersApi({
         locals: { user: { maintainAccessAdmin: true } },
@@ -47,7 +44,7 @@ describe('Search API Factory', () => {
         page: 2,
       })
 
-      expect(nomisUsersAndRolesApi.userSearch).toBeCalledWith(
+      expect(manageUsersApi.dpsUserSearch).toBeCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
@@ -63,7 +60,7 @@ describe('Search API Factory', () => {
       )
     })
     it('will call userSearch without admin role context', async () => {
-      nomisUsersAndRolesApi.userSearch.mockResolvedValue(noResults)
+      manageUsersApi.dpsUserSearch.mockResolvedValue(noResults)
 
       await findUsersApi({
         locals: { user: { maintainAccessAdmin: false } },
@@ -74,7 +71,7 @@ describe('Search API Factory', () => {
         page: 2,
       })
 
-      expect(nomisUsersAndRolesApi.userSearch).toBeCalledWith(
+      expect(manageUsersApi.dpsUserSearch).toBeCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },

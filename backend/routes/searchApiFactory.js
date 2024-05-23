@@ -1,4 +1,4 @@
-function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
+function searchApiFacade(manageUsersApi) {
   const findUsersApi = async ({
     locals: context,
     user: nameFilter,
@@ -11,16 +11,16 @@ function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
     inclusiveRoles,
     showOnlyLSAs,
   }) => {
-    const { content, totalElements, number } = await nomisUsersAndRolesApi.userSearch(context, {
+    const { content, totalElements, number } = await manageUsersApi.dpsUserSearch(context, {
       nameFilter,
       accessRoles,
       caseload,
       activeCaseload,
       status,
-      size,
-      page,
       inclusiveRoles,
       showOnlyLSAs,
+      size,
+      page,
     })
 
     if (content.length === 0)
@@ -46,7 +46,7 @@ function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
     inclusiveRoles,
     showOnlyLSAs,
   }) => {
-    const result = await nomisUsersAndRolesApi.downloadUserSearch(context, {
+    const result = await manageUsersApi.downloadUserSearch(context, {
       nameFilter,
       accessRoles,
       caseload,
@@ -74,7 +74,7 @@ function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
     inclusiveRoles,
     showOnlyLSAs,
   }) => {
-    const result = await nomisUsersAndRolesApi.downloadLsaSearch(context, {
+    const result = await manageUsersApi.downloadLsaSearch(context, {
       nameFilter,
       accessRoles,
       caseload,
@@ -117,4 +117,4 @@ function searchApiFacade(nomisUsersAndRolesApi, manageUsersApi) {
   }
 }
 
-module.exports = (nomisUsersAndRolesApi, manageUsersApi) => searchApiFacade(nomisUsersAndRolesApi, manageUsersApi)
+module.exports = (manageUsersApi) => searchApiFacade(manageUsersApi)

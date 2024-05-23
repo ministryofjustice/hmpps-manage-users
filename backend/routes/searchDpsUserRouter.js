@@ -7,9 +7,9 @@ const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const { findUsersApi, searchableRoles, caseloads, downloadNomisUserDetails, downloadNomisLsaDetails } =
-    searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
+    searchApiFactory(manageUsersApi)
 
   const search = searchFactory(
     paginationService,

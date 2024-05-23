@@ -25,6 +25,20 @@ export interface paths {
      */
     put: operations['amendRoleAdminType']
   }
+  '/prisonusers/{username}/enable-user': {
+    /**
+     * Unlock user account
+     * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+     */
+    put: operations['enableUser']
+  }
+  '/prisonusers/{username}/disable-user': {
+    /**
+     * Lock user account
+     * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+     */
+    put: operations['disableUser']
+  }
   '/groups/{group}': {
     /**
      * Group detail.
@@ -343,12 +357,25 @@ export interface paths {
      */
     get: operations['getUserDetails']
   }
+  '/prisonusers/search': {
+    /**
+     * Get all users filtered as specified
+     * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
+     */
+    get: operations['getUsers']
+  }
   '/prisonusers/reference-data/caseloads': {
     /**
      * Retrieves all caseloads
      * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
      */
     get: operations['getCaseload']
+  }
+  '/prisonusers/download': {
+    get: operations['downloadUsersByFilters']
+  }
+  '/prisonusers/download/admins': {
+    get: operations['downloadPrisonAdminsByFilter']
   }
   '/notification/banner/{page}': {
     /**
@@ -1109,22 +1136,6 @@ export interface components {
       /** @example MDI */
       activeCaseLoadId?: string
     }
-    PrisonUser: {
-      username: string
-      firstName: string
-      /** Format: int32 */
-      staffId: number
-      lastName: string
-      activeCaseloadId?: string
-      primaryEmail?: string
-      enabled?: boolean
-      dpsRoleCodes: string[]
-      /** Format: int32 */
-      userId: number
-      name: string
-      /** @enum {string} */
-      authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
-    }
     /** @description Prison User Information */
     PrisonUserDetails: {
       /**
@@ -1180,9 +1191,9 @@ export interface components {
        */
       primaryEmail?: string
       /** @description List of associated DPS Role Codes */
-      dpsRoleCodes: string[]
+      dpsRoleCodes?: string[]
       /** @description List of user groups administered */
-      administratorOfUserGroups: components['schemas']['PrisonUserGroupDetail'][]
+      administratorOfUserGroups?: components['schemas']['PrisonUserGroupDetail'][]
       /** @description Account is not locked */
       accountNonLocked?: boolean
       /** @description Credentials are not expired flag */
@@ -1213,6 +1224,84 @@ export interface components {
     PrisonUserGroupDetail: {
       id: string
       name: string
+    }
+    Pageable: {
+      /** Format: int32 */
+      page?: number
+      /** Format: int32 */
+      size?: number
+      sort?: string[]
+    }
+    PagedResponsePrisonUserSearchSummary: {
+      content: components['schemas']['PrisonUserSearchSummary'][]
+      pageable: components['schemas']['PageDetails']
+      last: boolean
+      /** Format: int32 */
+      totalPages: number
+      /** Format: int64 */
+      totalElements: number
+      /** Format: int32 */
+      size: number
+      /** Format: int32 */
+      number: number
+      sort: components['schemas']['PageSort']
+      /** Format: int32 */
+      numberOfElements: number
+      first: boolean
+      empty: boolean
+    }
+    PrisonUserSearchSummary: {
+      username: string
+      /** Format: int32 */
+      staffId: number
+      firstName: string
+      lastName: string
+      active: boolean
+      status: string
+      locked: boolean
+      expired: boolean
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      /** Format: int32 */
+      dpsRoleCount: number
+      email?: string
+      staffStatus: string
+    }
+    PrisonUserSummary: {
+      username: string
+      staffId: string
+      firstName: string
+      lastName: string
+      active: boolean
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      email?: string
+    }
+    /** @description Summary User Information with Email Address */
+    PrisonAdminUserSummary: {
+      username: string
+      /** Format: int64 */
+      staffId: number
+      firstName: string
+      lastName: string
+      active: boolean
+      /** @enum {string} */
+      status?:
+        | 'OPEN'
+        | 'EXPIRED'
+        | 'EXPIRED_GRACE'
+        | 'LOCKED_TIMED'
+        | 'LOCKED'
+        | 'EXPIRED_LOCKED_TIMED'
+        | 'EXPIRED_GRACE_LOCKED_TIMED'
+        | 'EXPIRED_LOCKED'
+        | 'EXPIRED_GRACE_LOCKED'
+      locked: boolean
+      expired: boolean
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      /** Format: int32 */
+      dpsRoleCount: number
+      email?: string
+      groups: components['schemas']['PrisonUserGroupDetail'][]
+      staffStatus?: string
     }
     /** @description Notification message */
     NotificationMessage: {
@@ -1526,6 +1615,84 @@ export interface operations {
     }
   }
   /**
+   * Unlock user account
+   * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+   */
+  enableUser: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example testuser1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description User account unlocked */
+      200: {
+        content: never
+      }
+      /** @description Incorrect request to unlock user */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to unlock a user */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Lock user account
+   * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+   */
+  disableUser: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example testuser1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description User account locked */
+      200: {
+        content: never
+      }
+      /** @description Incorrect request to lock user */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to lock a user */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Group detail.
    * @description return Group Details
    */
@@ -1821,7 +1988,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Forbidden. Requires authorisation with correct role. */
+      /** @description Unable to maintain user, the user is not within one of your groups. */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -2058,7 +2225,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Forbidden. Requires authorisation with correct role. */
+      /** @description Unable to enable user, the user is not within one of your groups. */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
@@ -3430,7 +3597,7 @@ export interface operations {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['PrisonUser']
+          'application/json': components['schemas']['NewPrisonUserDto']
         }
       }
       /** @description Bad Request */
@@ -3495,6 +3662,71 @@ export interface operations {
     }
   }
   /**
+   * Get all users filtered as specified
+   * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
+   */
+  getUsers: {
+    parameters: {
+      query: {
+        pageRequest: components['schemas']['Pageable']
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
+      }
+    }
+    responses: {
+      /** @description Pageable list of user summaries */
+      200: {
+        content: {
+          '*/*': components['schemas']['PagedResponsePrisonUserSearchSummary']
+        }
+      }
+      /** @description Incorrect filter supplied */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Retrieves all caseloads
    * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
    */
@@ -3504,6 +3736,114 @@ export interface operations {
       401: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  downloadUsersByFilters: {
+    parameters: {
+      query?: {
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['PrisonUserSummary'][]
+        }
+      }
+    }
+  }
+  downloadPrisonAdminsByFilter: {
+    parameters: {
+      query?: {
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['PrisonAdminUserSummary'][]
         }
       }
     }
@@ -3815,7 +4155,7 @@ export interface operations {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Forbidden. Requires authorisation with correct role. */
+      /** @description Unable to view user, either you do not have authority or the user is not within one of your groups. */
       403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']

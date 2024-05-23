@@ -36,6 +36,7 @@ import {
   UserRoleDetail,
   PrisonCaseload,
   UserCaseloadDetail,
+  PrisonUserSearchSummary,
 } from '../@types/manageUsersApi'
 
 const processPageResponse =
@@ -225,8 +226,6 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     get(context, '/prisonusers/reference-data/caseloads')
   const getUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> =>
     get(context, `/prisonusers/${username}/caseloads`)
-
-  // TODO - consult with the team to see if this is the correct return type
   const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | [] =>
     context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
   const addUserCaseloads = (context: Context, username: string, caseloads: string[]): Promise<UserCaseloadDetail> =>
@@ -238,6 +237,116 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     post(context, `/prisonusers/${username}/roles`, roles)
   const removeDpsUserRole = (context: Context, username: string, roleCode: string): Promise<UserRoleDetail> =>
     del(context, `/prisonusers/${username}/roles/${roleCode}`)
+
+  const dpsUserSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+      size = 20,
+      page = 0,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+      size?: number
+      page?: number
+    },
+  ): Promise<PagedList<PrisonUserSearchSummary>> =>
+    get(
+      context,
+      `/prisonusers/search?${querystring.stringify(
+        {
+          nameFilter,
+          accessRoles,
+          status,
+          caseload,
+          activeCaseload,
+          inclusiveRoles,
+          showOnlyLSAs,
+          page,
+          size,
+        },
+        undefined,
+        undefined,
+        { encodeURIComponent: querystring.unescape },
+      )}`,
+    )
+
+  const downloadUserSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+    },
+  ) =>
+    get(
+      context,
+      `/prisonusers/download?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+        inclusiveRoles,
+        showOnlyLSAs,
+      })}`,
+    )
+
+  const downloadLsaSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+    },
+  ) =>
+    get(
+      context,
+      `/prisonusers/download/admins?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+        inclusiveRoles,
+        showOnlyLSAs,
+      })}`,
+    )
 
   return {
     addDpsUserRoles,
@@ -273,6 +382,9 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     deleteGroup,
     disableExternalUser,
     disablePrisonUser,
+    downloadUserSearch,
+    dpsUserSearch,
+    downloadLsaSearch,
     enableExternalUser,
     enablePrisonUser,
     externalUserAddRoles,

@@ -1,7 +1,6 @@
 const currentUser = require('./currentUser')
 
 describe('Current user', () => {
-  const nomisUsersAndRolesApi = {}
   const manageUsersApi = {}
   let req
   let res
@@ -27,7 +26,7 @@ describe('Current user', () => {
   })
 
   it('should request and store user details', async () => {
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
     await controller(req, res, () => {})
 
     expect(manageUsersApi.currentUser).toHaveBeenCalled()
@@ -49,7 +48,7 @@ describe('Current user', () => {
 
   it('should stash data into res.locals', async () => {
     req.get.mockReturnValue('host')
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
     expect(res.locals.user).toEqual({
@@ -85,7 +84,7 @@ describe('Current user', () => {
 
   it('should set group manager', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'AUTH_GROUP_MANAGER' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -105,7 +104,7 @@ describe('Current user', () => {
 
   it('should set maintain access', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -125,7 +124,7 @@ describe('Current user', () => {
 
   it('should set maintain access admin', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -145,7 +144,7 @@ describe('Current user', () => {
 
   it('should set Search for an external user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_OAUTH_USERS' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -165,7 +164,7 @@ describe('Current user', () => {
 
   it('should set create dps user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'CREATE_USER' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -184,7 +183,7 @@ describe('Current user', () => {
   })
   it('should set maintain dps user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -204,7 +203,7 @@ describe('Current user', () => {
 
   it('should set Role admin for an external user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'ROLES_ADMIN' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -224,7 +223,7 @@ describe('Current user', () => {
 
   it('should set Role manage email domains for an external user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MAINTAIN_EMAIL_DOMAINS' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -254,7 +253,7 @@ describe('Current user', () => {
       { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' },
       { roleCode: 'MAINTAIN_EMAIL_DOMAINS' },
     ])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -274,7 +273,7 @@ describe('Current user', () => {
 
   it('should set view user roles', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'VIEW_ADMINISTRABLE_USER_ROLES' }])
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
 
@@ -293,7 +292,7 @@ describe('Current user', () => {
   })
 
   it('ignore xhr requests', async () => {
-    const controller = currentUser({ nomisUsersAndRolesApi, manageUsersApi })
+    const controller = currentUser({ manageUsersApi })
     req.xhr = true
 
     const next = jest.fn()
