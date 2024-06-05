@@ -313,11 +313,10 @@ context('DPS user manage functionality', () => {
 
       cy.task('stubDpsAddUserRoles')
       addRole.choose('OAUTH_ADMIN').should('not.exist')
-
     })
 
     it('As an OAUTH_ADMIN role admin user should add role to a user', () => {
-      const results = goToSearchPage({isOauthAdmin: true})
+      const results = goToSearchPage({ isOauthAdmin: true })
 
       cy.task('stubDpsUserDetails', {})
       cy.task('stubDpsUserGetRoles')

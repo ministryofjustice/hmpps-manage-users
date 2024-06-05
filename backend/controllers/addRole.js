@@ -10,7 +10,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}/details`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
-    const isOauthAdmin = Boolean( res.locals?.user?.maintainOAuthAdmin)
+    const isOauthAdmin = Boolean(res.locals?.user?.maintainOAuthAdmin)
 
     const [user, assignableRoles, bannerMessage] = await getUserRolesAndMessage(res.locals, userId, hasAdminRole)
 

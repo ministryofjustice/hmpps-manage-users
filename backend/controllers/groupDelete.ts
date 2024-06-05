@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { auditService, USER_ID_SUBJECT_TYPE } from '@ministryofjustice/hmpps-audit-client'
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
   const stashStateAndRedirectToIndex = (
     req: Request,

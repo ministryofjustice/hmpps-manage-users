@@ -419,7 +419,7 @@ module.exports = {
       urlPattern: '/roles\\?adminTypes=DPS_ADM',
       body: content,
     }),
- stubGetRolesIncludingOAUTHAdminRoles: ({
+  stubGetRolesIncludingOAUTHAdminRoles: ({
     content = [
       {
         roleCode: 'MAINTAIN_ACCESS_ROLES',

@@ -11,10 +11,15 @@ export const goToSearchPage = ({
   userCaseloads = null,
 }) => {
   const basicRoleCode = isAdmin
-      ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
-      : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }],
-    oauthAdminRoleCodes = [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }, { roleCode: 'OAUTH_ADMIN' }],
-    userRoleCodes = isOauthAdmin ? oauthAdminRoleCodes : roleCodes == null ? basicRoleCode : roleCodes
+    ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
+    : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
+  const oauthAdminRoleCodes = [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }, { roleCode: 'OAUTH_ADMIN' }]
+  let userRoleCodes
+  if (isOauthAdmin) {
+    userRoleCodes = oauthAdminRoleCodes
+  } else {
+    userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
+  }
   cy.task('stubBannerNoMessage')
   cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads })
   cy.signIn()
