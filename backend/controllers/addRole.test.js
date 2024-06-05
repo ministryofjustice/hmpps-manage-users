@@ -36,6 +36,32 @@ describe('select roles factory', () => {
       })
     })
 
+    it('should call addRole render  exclude oauth admin', async () => {
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+      }
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { roleName: 'name', roleCode: 'code' },
+          { roleName: 'Oauth admin', roleCode: 'OAUTH_ADMIN' },
+        ],
+        { message: 'roles message' },
+      ])
+
+      const render = jest.fn()
+      await addRole.index(req, { render })
+      expect(render).toBeCalledWith('addRole.njk', {
+        errors: undefined,
+        roleDropdownValues: [{ text: 'name', value: 'code' }],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
+      })
+    })
+
     it('should copy any flash errors over', async () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
