@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { auditService, USER_ID_SUBJECT_TYPE } from '@ministryofjustice/hmpps-audit-client'
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
   const stashStateAndRedirectToIndex = (req: Request, res: Response, errors: Array<Record<string, string>>) => {
     req.flash('addCaseloadErrors', errors)

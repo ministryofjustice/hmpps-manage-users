@@ -4,6 +4,7 @@ const MenuPage = require('../pages/menuPage')
 
 export const goToSearchPage = ({
   isAdmin = true,
+  isOauthAdmin = false,
   totalElements = 21,
   size = 10,
   roleCodes = null,
@@ -12,7 +13,13 @@ export const goToSearchPage = ({
   const basicRoleCode = isAdmin
     ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
     : [{ roleCode: 'MAINTAIN_ACCESS_ROLES' }]
-  const userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
+  const oauthAdminRoleCodes = [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }, { roleCode: 'OAUTH_ADMIN' }]
+  let userRoleCodes
+  if (isOauthAdmin) {
+    userRoleCodes = oauthAdminRoleCodes
+  } else {
+    userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
+  }
   cy.task('stubBannerNoMessage')
   cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads })
   cy.signIn()

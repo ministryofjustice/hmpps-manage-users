@@ -419,6 +419,84 @@ module.exports = {
       urlPattern: '/roles\\?adminTypes=DPS_ADM',
       body: content,
     }),
+  stubGetRolesIncludingOAUTHAdminRoles: ({
+    content = [
+      {
+        roleCode: 'MAINTAIN_ACCESS_ROLES',
+        roleName: 'Maintain Roles',
+        roleDescription: 'Maintaining roles for everyone',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'DPS_LSA',
+            adminTypeName: 'DPS Local System Administrator',
+          },
+        ],
+      },
+      {
+        roleCode: 'USER_ADMIN',
+        roleName: 'User Admin',
+        roleDescription: 'Administering users',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'DPS_LSA',
+            adminTypeName: 'DPS Local System Administrator',
+          },
+        ],
+      },
+      {
+        roleCode: 'ANOTHER_ADMIN_ROLE',
+        roleName: 'Another admin role',
+        roleDescription: 'Some text for another Admin Role',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+        ],
+      },
+      {
+        roleCode: 'ANOTHER_GENERAL_ROLE',
+        roleName: 'Another general role',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'EXT_ADM',
+            adminTypeName: 'External Administrator',
+          },
+        ],
+      },
+      {
+        roleCode: 'OAUTH_ADMIN',
+        roleName: 'Oauth Admin',
+        roleDescription: 'Some text for oauth admin',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'EXT_ADM',
+            adminTypeName: 'External Administrator',
+          },
+        ],
+      },
+    ],
+  }) =>
+    getFor({
+      urlPattern: '/roles\\?adminTypes=DPS_ADM',
+      body: content,
+    }),
 
   stubHealth: (status = 200) =>
     stubFor({
@@ -525,6 +603,36 @@ module.exports = {
           },
         }),
         dpsRoles: [
+          {
+            code: 'MAINTAIN_ACCESS_ROLES',
+            name: 'Maintain Roles',
+            adminRoleOnly: false,
+          },
+          {
+            code: 'ANOTHER_GENERAL_ROLE',
+            name: 'Another general role',
+            adminRoleOnly: false,
+          },
+        ],
+      },
+    }),
+
+  stubDpsUserGetRolesIncludingOauthAdmin: (activeCaseload = true) =>
+    getFor({
+      urlPattern: '/prisonusers/.*/roles',
+      body: {
+        ...(activeCaseload && {
+          activeCaseload: {
+            id: 'MDI',
+            name: 'Moorland',
+          },
+        }),
+        dpsRoles: [
+          {
+            code: 'OAUTH_ADMIN',
+            name: 'Oauth Admin',
+            adminRoleOnly: true,
+          },
           {
             code: 'MAINTAIN_ACCESS_ROLES',
             name: 'Maintain Roles',

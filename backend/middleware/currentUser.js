@@ -20,6 +20,7 @@ module.exports =
           maintainAccess: hasRole(roles, 'MAINTAIN_ACCESS_ROLES'),
           maintainAccessAdmin: hasRole(roles, 'MAINTAIN_ACCESS_ROLES_ADMIN'),
           maintainAuthUsers: hasRole(roles, 'MAINTAIN_OAUTH_USERS'),
+          maintainOAuthAdmin: hasRole(roles, 'OAUTH_ADMIN'),
           groupManager: hasRole(roles, 'AUTH_GROUP_MANAGER'),
           maintainRoles: hasRole(roles, 'ROLES_ADMIN'),
           viewAdministrableUserRoles: hasAnyRole(roles, ['ROLES_ADMIN', 'VIEW_ADMINISTRABLE_USER_ROLES']),

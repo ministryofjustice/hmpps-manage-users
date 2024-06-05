@@ -34,6 +34,7 @@ module.exports = (on) => {
       nomisUsersAndRoles.stubUserDetails({ accountStatus, active, enabled, administratorOfUserGroups }),
     stubDpsUserDetailsWithOutEmail: nomisUsersAndRoles.stubUserDetailsWithoutEmail,
     stubManageUserGetAdminRoles: manageUsersApi.stubGetRolesIncludingAdminRoles,
+    stubManageUserGetOauthAdminRoles: manageUsersApi.stubGetRolesIncludingOAUTHAdminRoles,
     stubManageUserGetRoles: manageUsersApi.stubGetRoles,
   })
 }

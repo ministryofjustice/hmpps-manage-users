@@ -10,10 +10,15 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     const { userId } = req.params
     const staffUrl = `${manageUrl}/${userId}/details`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
+    const isOauthAdmin = Boolean(res.locals?.user?.maintainOAuthAdmin)
 
     const [user, assignableRoles, bannerMessage] = await getUserRolesAndMessage(res.locals, userId, hasAdminRole)
 
-    const roleDropdownValues = assignableRoles.map((r) => ({
+    const allowedAssignableRoles = isOauthAdmin
+      ? assignableRoles
+      : assignableRoles.filter((role) => role.roleCode !== 'OAUTH_ADMIN')
+
+    const roleDropdownValues = allowedAssignableRoles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
       ...(r.roleDescription && {

@@ -292,6 +292,61 @@ context('DPS user manage functionality', () => {
       })
     })
 
+    it('As an OAUTH_ADMIN role admin user should not see role is list of available roles', () => {
+      const results = goToSearchPage({})
+
+      cy.task('stubDpsUserDetails', {})
+      cy.task('stubDpsUserGetRoles')
+      cy.task('stubBannerNoMessage')
+      cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
+
+      results.manageLinkForUser('ITAG_USER5').click()
+      const userPage = UserPage.verifyOnPage('Itag User')
+      userPage.roleRows().should('have.length', 2)
+      userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+      userPage.roleRows().eq(1).should('contain', 'Another general role')
+
+      cy.task('stubManageUserGetOauthAdminRoles', {})
+      userPage.addRole().click()
+      const addRole = UserAddRolePage.verifyOnPage()
+      addRole.hint('User Admin').should('contain.text', 'Administering users')
+
+      cy.task('stubDpsAddUserRoles')
+      addRole.choose('OAUTH_ADMIN').should('not.exist')
+    })
+
+    it('As an OAUTH_ADMIN role admin user should add role to a user', () => {
+      const results = goToSearchPage({ isOauthAdmin: true })
+
+      cy.task('stubDpsUserDetails', {})
+      cy.task('stubDpsUserGetRoles')
+      cy.task('stubBannerNoMessage')
+      cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
+
+      results.manageLinkForUser('ITAG_USER5').click()
+      const userPage = UserPage.verifyOnPage('Itag User')
+      userPage.roleRows().should('have.length', 2)
+      userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
+      userPage.roleRows().eq(1).should('contain', 'Another general role')
+
+      cy.task('stubManageUserGetOauthAdminRoles', {})
+      userPage.addRole().click()
+      const addRole = UserAddRolePage.verifyOnPage()
+      addRole.hint('Oauth Admin').should('contain.text', 'Some text for oauth admin')
+
+      cy.task('stubDpsAddUserRoles')
+      addRole.choose('OAUTH_ADMIN')
+      addRole.addRoleButton().click()
+
+      cy.task('verifyDpsAddUserRoles').should((requests) => {
+        expect(requests).to.have.lengthOf(1)
+
+        expect(JSON.parse(requests[0].body)).to.deep.equal(['OAUTH_ADMIN'])
+      })
+
+      UserPage.verifyOnPage('Itag User')
+    })
+
     it('Should check for CSRF token', () => {
       editUser({})
 
