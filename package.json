@@ -3,10 +3,7 @@
   "description": "Nodejs application to support managing staff user account in hmpps auth",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "^20",
-    "npm": "^10"
-  },
+
   "dependencies": {
     "@aws-sdk/client-sqs": "^3.540.0",
     "@ministryofjustice/frontend": "^2.1.2",
@@ -14,7 +11,6 @@
     "accessible-autocomplete": "^2.0.4",
     "agentkeepalive": "^4.3.0",
     "applicationinsights": "^2.9.5",
-    "applicationinsights-native-metrics": "^0.0.9",
     "axios": "^1.4.0",
     "babel-jest": "^29.7.0",
     "body-parser": "^1.20.2",
@@ -129,58 +125,67 @@
     "watch-compile-sass": "npm run compile-sass && sass --load-path=. ./sass:./build/stylesheets --watch --style compressed",
     "prepare": "husky install"
   },
-  "nyc": {
-    "all": true,
-    "include": [
-      "backend/**/*.js"
-    ],
-    "reporter": [
-      "html"
-    ]
+  "engines": {
+    "node": "^20",
+    "npm": "^10"
   },
   "jest": {
-    "preset": "ts-jest",
+    "transform": {
+      "^.+\\.tsx?$": [
+        "ts-jest",
+        {
+          "isolatedModules": true
+        }
+      ]
+    },
     "collectCoverageFrom": [
-      "backend/**/*.{js,mjs}"
-    ],
-    "globalSetup": "<rootDir>/config/jest/globalSetup.js",
-    "setupFilesAfterEnv": [
-      "<rootDir>/config/jest/setupTests.js"
+      "server/**/*.{ts,js,jsx,mjs}"
     ],
     "testMatch": [
-      "<rootDir>/(backend|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
+      "<rootDir>/(server|job)/**/?(*.)(cy|test).{ts,js,jsx,mjs}"
     ],
     "testEnvironment": "node",
-    "testPathIgnorePatterns": [
-      "<rootDir>/integration-tests/"
+    "reporters": [
+      "default",
+      [
+        "jest-junit",
+        {
+          "outputDirectory": "test_results/jest/"
+        }
+      ],
+      [
+        "./node_modules/jest-html-reporter",
+        {
+          "outputPath": "test_results/unit-test-reports.html"
+        }
+      ]
     ],
     "moduleFileExtensions": [
       "web.js",
       "js",
       "json",
       "node",
-      "mjs",
       "ts"
-    ]
-  },
-  "lint-staged": {
-    "*.{ts,js,css}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.{json}": [
-      "prettier --write"
     ]
   },
   "nodemonConfig": {
     "ignore": [
       ".circleci/*",
       "migrations/*",
-      "seeds/*",
       "node_modules/*",
-      "integration-tests/*"
+      "test/*",
+      "integration_tests/*"
     ],
     "delay": 2500,
-    "ext": "js,njk"
+    "ext": "js,json,html,njk"
+  },
+  "lint-staged": {
+    "*.{ts,js,css}": [
+      "prettier --write",
+      "eslint --fix"
+    ],
+    "*.json": [
+      "prettier --write"
+    ]
   }
 }
