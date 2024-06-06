@@ -14,7 +14,6 @@
     "accessible-autocomplete": "^2.0.4",
     "agentkeepalive": "^4.3.0",
     "applicationinsights": "^2.9.5",
-    "applicationinsights-native-metrics": "^0.0.9",
     "axios": "^1.4.0",
     "babel-jest": "^29.7.0",
     "body-parser": "^1.20.2",
