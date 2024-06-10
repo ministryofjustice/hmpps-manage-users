@@ -217,7 +217,6 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     post(context, `/prisonusers/${username}/email/sync`, null)
   const contextUserRoles = (context: Context, username: string): Promise<UserRoleDetail> =>
     get(context, `/prisonusers/${username}/roles`)
-
   const enablePrisonUser = (context: Context, username: string): Promise<Response> =>
     put(context, `/prisonusers/${username}/enable-user`, undefined)
   const disablePrisonUser = (context: Context, username: string): Promise<Response> =>
