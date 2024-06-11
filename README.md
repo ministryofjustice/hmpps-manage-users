@@ -110,7 +110,7 @@ docker stop redis && docker rm redis && docker-compose -f docker-compose-test.ya
 # Cypress Integration tests
 
 The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the HMPPS Manage Users, HMPPS Auth and NOMIS User-roles RESTful APIs.
+These tests WireMock to stub the application's dependencies on the HMPPS Manage Users and HMPPS Auth RESTful APIs.
 
 ## Running the feature tests
 
