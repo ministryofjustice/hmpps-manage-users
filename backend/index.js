@@ -111,7 +111,7 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(routes({ ...apis }))
+app.use(routes(apis))
 
 app.use(errorHandler)
 
