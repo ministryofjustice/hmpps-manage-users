@@ -41,3 +41,10 @@ export type PrisonStaffNewUser = components['schemas']['NewPrisonUserDto']
 export type CreateLinkedCentralAdminRequest = components['schemas']['CreateLinkedCentralAdminUserRequest']
 export type CreateLinkedGeneralUserRequest = components['schemas']['CreateLinkedGeneralUserRequest']
 export type CreateLinkedLocalAdminRequest = components['schemas']['CreateLinkedLocalAdminUserRequest']
+
+export type PrisonCaseload = components['schemas']['PrisonCaseload']
+export type UserCaseloadDetail = components['schemas']['UserCaseloadDetail']
+
+export type PrisonUserSearchSummary = components['schemas']['PrisonUserSearchSummary']
+export type PrisonUserSummary = components['schemas']['PrisonUserSummary']
+export type PrisonAdminUserSummary = components['schemas']['PrisonAdminUserSummary']

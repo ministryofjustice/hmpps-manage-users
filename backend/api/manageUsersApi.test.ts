@@ -6,12 +6,14 @@ import {
   CreateExternalUserRequest,
   CreateLinkedLocalAdminRequest,
   CreateUserRequest,
+  PrisonCaseload,
   Role,
   RoleDetail,
   UpdateRoleAdminTypeRequest,
   UpdateRoleDescriptionRequest,
   UpdateRoleNameRequest,
   UpdateUserEmailRequest,
+  UserCaseloadDetail,
   UserRoleDetail,
 } from '../@types/manageUsersApi'
 import { Context } from '../interfaces/context'
@@ -139,13 +141,13 @@ describe('manageUsersApiImport tests', () => {
     })
   })
 
-  describe('searchUserByUsername', () => {
+  describe('getDpsUser', () => {
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue(mockResponse)
-      manageUsersApi.searchUserByUserName(context, 'JOE_GEN')
+      manageUsersApi.getDpsUser(context, 'JOE_GEN')
     })
     it('should call create manage user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN')
+      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN/details')
     })
   })
 
@@ -807,6 +809,328 @@ describe('manageUsersApiImport tests', () => {
     it('should call external user endpoint', async () => {
       await manageUsersApi.createExternalUser(context, request)
       expect(client.post).toBeCalledWith(context, '/externalusers/create', request)
+    })
+  })
+
+  describe('enablePrisonUser', () => {
+    const errorResponse = { field: 'hello' }
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+    })
+
+    it('should return any error from endpoint', async () => {
+      const actual = await manageUsersApi.enablePrisonUser(context, username)
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', async () => {
+      await manageUsersApi.enablePrisonUser(context, username)
+      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/enable-user`, undefined)
+    })
+  })
+
+  describe('disablePrisonUser', () => {
+    const errorResponse = { field: 'hello' }
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.put = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+    })
+
+    it('should return any error from endpoint', async () => {
+      const actual = await manageUsersApi.disablePrisonUser(context, username)
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', async () => {
+      await manageUsersApi.disablePrisonUser(context, username)
+      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/disable-user`, undefined)
+    })
+  })
+
+  describe('getCaseloads', () => {
+    const response = [{ id: 'MDI', name: 'Moorland' }]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => response,
+      })
+    })
+
+    it('will call /prisonusers/reference-data/caseloads endpoint', () => {
+      manageUsersApi.getCaseloads(context)
+
+      expect(client.get).toBeCalledWith(context, '/prisonusers/reference-data/caseloads')
+    })
+    it('will return the caseloads', () => {
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
+
+      expect(manageUsersApi.getCaseloads(context)).toEqual(expected)
+    })
+  })
+
+  describe('getUserCaseloads', () => {
+    const response = [{ id: 'MDI', name: 'Moorland' }]
+    const username = 'bob'
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => response,
+      })
+    })
+
+    it('will call /prisonusers/{username}/caseloads endpoint', () => {
+      manageUsersApi.getUserCaseloads(context, username)
+
+      expect(client.get).toBeCalledWith(context, `/prisonusers/${username}/caseloads`)
+    })
+
+    it('will return the caseloads', () => {
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
+
+      expect(manageUsersApi.getUserCaseloads(context, username)).toEqual(expected)
+    })
+  })
+
+  describe('addUserCaseloads', () => {
+    const errorResponse = { field: 'hello' }
+    let actual: UserCaseloadDetail
+
+    beforeEach(async () => {
+      client.post = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = await manageUsersApi.addUserCaseloads(context, 'TEST_USER', ['TEST_CASELOAD'])
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call user endpoint', () => {
+      expect(client.post).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads', ['TEST_CASELOAD'])
+    })
+  })
+
+  describe('removeUserCaseload', () => {
+    const errorResponse = { field: 'hello' }
+    let actual: UserCaseloadDetail
+
+    beforeEach(async () => {
+      client.del = jest.fn().mockReturnValue({
+        then: () => errorResponse,
+      })
+      actual = await manageUsersApi.removeUserCaseload(context, 'TEST_USER', 'TEST_CASELOAD')
+    })
+
+    it('should return any error from endpoint', () => {
+      expect(actual).toEqual(errorResponse)
+    })
+    it('should call remove user caseload endpoint', () => {
+      expect(client.del).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads/TEST_CASELOAD')
+    })
+  })
+
+  describe('dpsUserSearch', () => {
+    const userResponse = {
+      content: [
+        {
+          username: 'VQA73T',
+          staffId: 402634,
+          firstName: 'Aanathar',
+          lastName: 'Aalasha',
+          active: false,
+          activeCaseload: null,
+          dpsRoleCount: 0,
+        },
+        {
+          username: 'TQQ74V',
+          staffId: 19232,
+          firstName: 'Admdasa',
+          lastName: 'Aalasha',
+          active: true,
+          activeCaseload: {
+            id: 'WEI',
+            name: 'Wealstun (HMP)',
+          },
+          dpsRoleCount: 2,
+        },
+      ],
+      pageable: {
+        sort: {
+          empty: false,
+          sorted: true,
+          unsorted: false,
+        },
+        offset: 0,
+        pageSize: 10,
+        pageNumber: 0,
+        paged: true,
+        unpaged: false,
+      },
+      last: false,
+      totalPages: 10159,
+      totalElements: 101584,
+      size: 2,
+      number: 0,
+      sort: {
+        empty: false,
+        sorted: true,
+        unsorted: false,
+      },
+      first: true,
+      numberOfElements: 2,
+      empty: false,
+    }
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.dpsUserSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        size: 30,
+        page: 3,
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/search?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true&page=3&size=30',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.dpsUserSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/search?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=&page=0&size=20',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+  })
+
+  describe('downloadUserSearch', () => {
+    const userResponse = [
+      {
+        username: 'VQA73T',
+        staffId: 402634,
+        firstName: 'Aanathar',
+        lastName: 'Aalasha',
+        active: false,
+        activeCaseload: null,
+        dpsRoleCount: 0,
+      },
+      {
+        username: 'TQQ74V',
+        staffId: 19232,
+        firstName: 'Admdasa',
+        lastName: 'Aalasha',
+        active: true,
+        activeCaseload: {
+          id: 'WEI',
+          name: 'Wealstun (HMP)',
+        },
+        dpsRoleCount: 2,
+      },
+    ]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.downloadUserSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.downloadUserSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+  })
+
+  describe('downloadLsaSearch', () => {
+    const userResponse = [
+      {
+        username: 'VQA73T',
+        staffId: 402634,
+        firstName: 'Aanathar',
+        lastName: 'Aalasha',
+        active: false,
+        activeCaseload: null,
+        dpsRoleCount: 0,
+      },
+      {
+        username: 'TQQ74V',
+        staffId: 19232,
+        firstName: 'Admdasa',
+        lastName: 'Aalasha',
+        active: true,
+        activeCaseload: {
+          id: 'WEI',
+          name: 'Wealstun (HMP)',
+        },
+        dpsRoleCount: 2,
+      },
+    ]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({
+        then: () => userResponse,
+      })
+    })
+
+    it('should call get users endpoint passing request parameters', () => {
+      const actual = manageUsersApi.downloadLsaSearch(context, {
+        nameFilter: 'RAJ',
+        status: 'ACTIVE',
+        accessRoles: ['OMIC_ADMIN', 'OMIC_USER'],
+        caseload: 'MDI',
+        activeCaseload: 'BXI',
+        inclusiveRoles: true,
+        showOnlyLSAs: true,
+      })
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download/admins?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
+      )
+      expect(actual).toEqual(userResponse)
+    })
+    it('should call get users endpoint with default parameters', () => {
+      const actual = manageUsersApi.downloadLsaSearch(context, {})
+      expect(client.get).toBeCalledWith(
+        context,
+        '/prisonusers/download/admins?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
+      )
+      expect(actual).toEqual(userResponse)
     })
   })
 })

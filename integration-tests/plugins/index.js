@@ -1,7 +1,7 @@
 const hmppsAuth = require('../mockApis/auth')
 const manageUsersApi = require('../mockApis/manageusers')
 const tokenVerification = require('../mockApis/tokenverification')
-const nomisUsersAndRoles = require('../mockApis/nomisusersandroles')
+const manageUserApiDps = require('../mockApis/manageusersdps')
 
 const { resetStubs } = require('../mockApis/wiremock')
 
@@ -13,26 +13,19 @@ module.exports = (on) => {
       Promise.all([
         hmppsAuth.stubSignIn(username, roles),
         manageUsersApi.stubUserMe({}),
-        nomisUsersAndRoles.stubUserCaseloads(userCaseloads),
+        manageUserApiDps.stubUserCaseloads(userCaseloads),
         tokenVerification.stubVerifyToken(true),
       ]),
     stubAuthHealth: (status) => hmppsAuth.stubHealth(status),
     stubHealthAllHealthy: () =>
-      Promise.all([
-        hmppsAuth.stubHealth(),
-        manageUsersApi.stubHealth(),
-        tokenVerification.stubHealth(),
-        nomisUsersAndRoles.stubHealth(),
-      ]),
+      Promise.all([hmppsAuth.stubHealth(), manageUsersApi.stubHealth(), tokenVerification.stubHealth()]),
     stubVerifyToken: (active = true) => tokenVerification.stubVerifyToken(active),
     stubSignInPage: hmppsAuth.redirect,
     ...manageUsersApi,
-    ...nomisUsersAndRoles,
-    stubDpsGetRoles: nomisUsersAndRoles.stubGetRoles,
-    stubDpsGetAdminRoles: nomisUsersAndRoles.stubGetRolesIncludingAdminRoles,
+    ...manageUserApiDps,
     stubDpsUserDetails: ({ accountStatus, active = true, enabled = true, administratorOfUserGroups = null }) =>
-      nomisUsersAndRoles.stubUserDetails({ accountStatus, active, enabled, administratorOfUserGroups }),
-    stubDpsUserDetailsWithOutEmail: nomisUsersAndRoles.stubUserDetailsWithoutEmail,
+      manageUserApiDps.stubUserDetails({ accountStatus, active, enabled, administratorOfUserGroups }),
+    stubDpsUserDetailsWithOutEmail: manageUserApiDps.stubUserDetailsWithoutEmail,
     stubManageUserGetAdminRoles: manageUsersApi.stubGetRolesIncludingAdminRoles,
     stubManageUserGetOauthAdminRoles: manageUsersApi.stubGetRolesIncludingOAUTHAdminRoles,
     stubManageUserGetRoles: manageUsersApi.stubGetRoles,

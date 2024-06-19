@@ -59,12 +59,7 @@ app.use(
   }),
 )
 
-const health = healthFactory(
-  config.apis.hmppsAuth.url,
-  config.apis.manageUsers.url,
-  config.apis.tokenVerification.url,
-  config.apis.nomisUsersAndRoles.url,
-)
+const health = healthFactory(config.apis.hmppsAuth.url, config.apis.manageUsers.url, config.apis.tokenVerification.url)
 
 app.get('/health', (req, res, next) => {
   health((err, result) => {

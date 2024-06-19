@@ -19,22 +19,22 @@ const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config').default
 
-const configureRoutes = ({ manageUsersApi, nomisUsersAndRolesApi }) => {
+const configureRoutes = ({ manageUsersApi }) => {
   const router = express.Router()
 
-  router.use(currentUser({ nomisUsersAndRolesApi, manageUsersApi }))
+  router.use(currentUser({ manageUsersApi }))
   router.use(featureSwitches(config))
 
   router.use('/', menuRouter({ manageUsersApi }))
   router.use('/create-user', creatUserRouter())
   router.use('/create-user-options', creatUserOptionsRouter())
-  router.use('/create-linked-dps-user', createLinkedDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
-  router.use('/create-dps-user', createDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
+  router.use('/create-linked-dps-user', createLinkedDpsUserRouter({ manageUsersApi }))
+  router.use('/create-dps-user', createDpsUserRouter({ manageUsersApi }))
   router.use('/create-external-user', createExternalUserRouter({ manageUsersApi }))
   router.use('/search-external-users', searchExternalUserRouter({ manageUsersApi }))
-  router.use('/search-with-filter-dps-users', searchDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
+  router.use('/search-with-filter-dps-users', searchDpsUserRouter({ manageUsersApi }))
   router.use('/manage-external-users/:userId', manageAuthUserRouter({ manageUsersApi }))
-  router.use('/manage-dps-users/:userId', manageDpsUserRouter({ nomisUsersAndRolesApi, manageUsersApi }))
+  router.use('/manage-dps-users/:userId', manageDpsUserRouter({ manageUsersApi }))
   router.use('/manage-groups', manageGroupsRouter({ manageUsersApi }))
   router.use('/manage-roles', manageRolesRouter({ manageUsersApi }))
   router.use('/email-domains', manageEmailDomainsRouter({ manageUsersApi }))

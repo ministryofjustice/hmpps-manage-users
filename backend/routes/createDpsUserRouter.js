@@ -3,8 +3,8 @@ const { createDpsUserFactory } = require('../controllers/createDpsUser')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
-  const getAllCaseloads = nomisUsersAndRolesApi.getCaseloads
+const controller = ({ manageUsersApi }) => {
+  const getAllCaseloads = manageUsersApi.getCaseloads
   const createUser = (context, user) => manageUsersApi.createUser(context, user)
 
   const { index: createDpsUser, post: postDpsUser } = createDpsUserFactory(

@@ -2,7 +2,6 @@ const config = require('./config').default
 const { oauthApiFactory } = require('./api/oauthApi')
 const { manageUsersApiFactory } = require('./api/manageUsersApi')
 const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
-const { nomisUsersAndRolesFactory } = require('./api/nomisUsersAndRolesApi')
 const { oauthEnabledClientFactory } = require('./api/oauthEnabledClient')
 
 const oauthApi = oauthApiFactory({
@@ -25,15 +24,8 @@ const tokenVerificationApi = tokenVerificationApiFactory(
   }),
 )
 
-const nomisUsersAndRolesApi = nomisUsersAndRolesFactory(
-  oauthEnabledClientFactory({
-    baseUrl: config.apis.nomisUsersAndRoles.url,
-    timeout: config.apis.nomisUsersAndRoles.timeoutSeconds * 1000,
-  }),
-)
 module.exports = {
   oauthApi,
   manageUsersApi,
   tokenVerificationApi,
-  nomisUsersAndRolesApi,
 }

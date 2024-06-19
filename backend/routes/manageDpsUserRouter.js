@@ -6,10 +6,10 @@ const { userDetailsFactory } = require('../controllers/userDetails')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const getUserAssignableRolesAndMessageApi = async (context, username, hasAdminRole) => {
     const [user, userRoles, allRoles, bannerMessage] = await Promise.all([
-      nomisUsersAndRolesApi.getUser(context, username),
+      manageUsersApi.getDpsUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       manageUsersApi.getRoles(context, { adminTypes: hasAdminRole ? 'DPS_ADM' : 'DPS_LSA' }),
       manageUsersApi.getNotificationBannerMessage(context, 'ROLES'),
@@ -25,10 +25,10 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
     await manageUsersApi.syncDpsEmail(context, username)
 
     const [user, roles, userEmail, userCaseloads] = await Promise.all([
-      nomisUsersAndRolesApi.getUser(context, username),
+      manageUsersApi.getDpsUser(context, username),
       manageUsersApi.contextUserRoles(context, username),
       manageUsersApi.getUserEmail(context, { username }),
-      nomisUsersAndRolesApi.getUserCaseloads(context, username),
+      manageUsersApi.getUserCaseloads(context, username),
     ])
 
     return [
@@ -47,9 +47,9 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
 
   const getUserAssignableCaseloadsApi = async (context, username) => {
     const [user, userCaseloads, allCaseloads] = await Promise.all([
-      nomisUsersAndRolesApi.getUser(context, username),
-      nomisUsersAndRolesApi.getUserCaseloads(context, username),
-      nomisUsersAndRolesApi.getCaseloads(context),
+      manageUsersApi.getDpsUser(context, username),
+      manageUsersApi.getUserCaseloads(context, username),
+      manageUsersApi.getCaseloads(context),
     ])
     return [
       user,
@@ -59,22 +59,21 @@ const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
 
   const getUserApi = async (context, username) => {
     const [user, userEmail] = await Promise.all([
-      nomisUsersAndRolesApi.getUser(context, username),
+      manageUsersApi.getDpsUser(context, username),
       manageUsersApi.getUserEmail(context, { username }),
     ])
     return { ...user, email: userEmail.email }
   }
 
-  const enableUserApi = (context, username) => nomisUsersAndRolesApi.enableUser(context, { username })
-  const disableUserApi = (context, username) => nomisUsersAndRolesApi.disableUser(context, { username })
-
-  const saveUserRolesApi = (context, username, roles) => nomisUsersAndRolesApi.addUserRoles(context, username, roles)
-  const removeUserRoleApi = (context, username, role) => nomisUsersAndRolesApi.removeUserRole(context, username, role)
+  const enableUserApi = (context, username) => manageUsersApi.enablePrisonUser(context, username)
+  const disableUserApi = (context, username) => manageUsersApi.disablePrisonUser(context, username)
+  const saveUserRolesApi = (context, username, roles) => manageUsersApi.addDpsUserRoles(context, username, roles)
+  const removeUserRoleApi = (context, username, role) => manageUsersApi.removeDpsUserRole(context, username, role)
 
   const saveUserCaseloadsApi = (context, username, caseloads) =>
-    nomisUsersAndRolesApi.addUserCaseloads(context, username, caseloads)
+    manageUsersApi.addUserCaseloads(context, username, caseloads)
   const removeUserCaseloadApi = (context, username, caseload) =>
-    nomisUsersAndRolesApi.removeUserCaseload(context, username, caseload)
+    manageUsersApi.removeUserCaseload(context, username, caseload)
 
   const changeEmailApi = (context, username, email) => manageUsersApi.changeDpsEmail(context, username, { email })
 
