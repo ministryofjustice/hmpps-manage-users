@@ -11,7 +11,7 @@
     "@aws-sdk/client-sqs": "^3.540.0",
     "@ministryofjustice/frontend": "^2.1.2",
     "@ministryofjustice/hmpps-audit-client": "^1.0.18",
-    "accessible-autocomplete": "^2.0.4",
+    "accessible-autocomplete": "^3.0.0",
     "agentkeepalive": "^4.3.0",
     "applicationinsights": "^2.9.5",
     "axios": "^1.4.0",
