@@ -53,7 +53,7 @@
     "redis": "^4.6.13",
     "sass": "^1.62.1",
     "spin.js": "^4.1.1",
-    "superagent": "8.1.2",
+    "superagent": "9.0.2",
     "url-value-parser": "^2.2.0",
     "uuid": "^9.0.1",
     "validatorjs": "^3.22.1",
