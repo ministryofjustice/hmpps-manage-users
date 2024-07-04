@@ -18,7 +18,7 @@ RUN CYPRESS_INSTALL_BINARY=0 npm ci --no-audit && \
 
 RUN npm prune --production
 
-FROM node:20.13-bookworm-slim
+FROM node:20.15-bookworm-slim
 LABEL maintainer="HMPPS Digital Studio <info@digital.justice.gov.uk>"
 
 RUN apt-get update && \
