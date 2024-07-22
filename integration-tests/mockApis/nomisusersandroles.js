@@ -8,6 +8,7 @@ const replicateUser = (times) =>
     email: `ITAG_USER${i}@gov.uk`,
     firstName: 'Itag',
     lastName: `User${i}`,
+    lastLogonDate: '2023-12-25T12:57:50',
     activeCaseload: {
       id: 'BXI',
       name: 'Brixton (HMP)',
@@ -123,6 +124,7 @@ module.exports = {
         lastName: 'User',
         primaryEmail: `ITAG_USER@gov.uk`,
         email: `ITAG_USER@gov.uk`,
+        lastLogonDate: '2023-12-25T12:57:50',
         active,
         enabled,
         accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
@@ -137,6 +139,7 @@ module.exports = {
         username: 'ITAG_USER',
         firstName: 'Itag',
         lastName: 'User',
+        lastLogonDate: '2024-01-25T11:00:01',
       },
     }),
   stubUserDetailsLSA: ({ accountStatus, active = true, enabled = true }) =>
@@ -149,6 +152,7 @@ module.exports = {
         lastName: 'User',
         primaryEmail: `ITAG_USER@gov.uk`,
         email: `ITAG_USER@gov.uk`,
+        lastLogonDate: '2023-12-25T12:57:50',
         active,
         enabled,
         accountStatus: accountStatus || (active ? 'OPEN' : 'LOCKED'),
