@@ -235,7 +235,7 @@ context('DPS user manage functionality', () => {
       cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
       })
     })
 
@@ -293,7 +293,7 @@ context('DPS user manage functionality', () => {
       cy.task('verifyDpsRemoveUserRole').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/roles/ANOTHER_GENERAL_ROLE')
       })
     })
 
@@ -382,7 +382,7 @@ context('DPS user manage functionality', () => {
 
       cy.task('verifyDpsRemoveUserCaseload').should((requests) => {
         expect(requests).to.have.lengthOf(1)
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/caseloads/LEI')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/caseloads/LEI')
       })
     })
 
@@ -496,8 +496,8 @@ context('DPS user manage functionality', () => {
       userPage.caseloadRows().should('have.length', 3)
       userPage.caseloadRows().eq(1).should('contain', 'Moorland')
 
+      cy.task('stubUserCaseloads')
       cy.task('stubDpsGetCaseloads')
-      cy.task('stubUserCaseloads', {})
 
       userPage.addUserCaseload().click()
       const addUserCaseload = UserAddCaseloadPage.verifyOnPage()
@@ -564,7 +564,7 @@ context('DPS user manage functionality', () => {
       cy.task('verifyDpsUserDisable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/disable-user')
       })
       userPage.enabled().should('contain.text', ' Inactive')
     })
@@ -585,7 +585,7 @@ context('DPS user manage functionality', () => {
       cy.task('verifyDpsUserDisable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/lock-user')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/disable-user')
       })
       userPage.enabled().should('contain.text', ' Inactive')
     })
@@ -606,7 +606,7 @@ context('DPS user manage functionality', () => {
       cy.task('verifyDpsUserEnable').should((requests) => {
         expect(requests).to.have.lengthOf(1)
 
-        expect(requests[0].url).to.equal('/nomisusersandroles/users/ITAG_USER5/unlock-user')
+        expect(requests[0].url).to.equal('/prisonusers/ITAG_USER5/enable-user')
       })
       userPage.enabled().should('contain.text', ' Active')
     })

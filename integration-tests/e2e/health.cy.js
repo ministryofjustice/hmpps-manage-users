@@ -11,7 +11,6 @@ context('Health page reports health correctly', () => {
       expect(response.body.api).to.deep.equal({
         hmppsAuth: { timeout: 1000, code: 'ECONNABORTED', errno: 'ETIMEDOUT', retries: 2 },
         manageUsers: 'UP',
-        nomisUsersAndRoles: 'UP',
         tokenVerification: 'UP',
       })
     })
@@ -29,7 +28,6 @@ context('Health page reports health correctly', () => {
         hmppsAuth: 'UP',
         manageUsers: 'UP',
         tokenVerification: 'UP',
-        nomisUsersAndRoles: 'UP',
       })
     })
   })

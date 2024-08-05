@@ -3,18 +3,21 @@ const { stubFor, getFor, getMatchingRequests, stubJson } = require('./wiremock')
 const replicateUser = (times) =>
   [...Array(times).keys()].map((i) => ({
     username: `ITAG_USER${i}`,
-    active: i % 2 === 0,
-    primaryEmail: `ITAG_USER${i}@gov.uk`,
-    email: `ITAG_USER${i}@gov.uk`,
+    staffId: i,
     firstName: 'Itag',
     lastName: `User${i}`,
+    active: i % 2 === 0,
+    status: i % 2 === 0 ? 'OPEN' : 'LOCKED',
+    locked: false,
+    expired: false,
     lastLogonDate: '2023-12-25T12:57:50',
     activeCaseload: {
       id: 'BXI',
       name: 'Brixton (HMP)',
     },
     dpsRoleCount: i,
-    status: i % 2 === 0 ? 'OPEN' : 'LOCKED',
+    email: `ITAG_USER${i}@gov.uk`,
+    staffStatus: 'ACTIVE',
   }))
 
 module.exports = {
@@ -22,7 +25,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'GET',
-        urlPath: '/nomisusersandroles/users',
+        urlPath: '/prisonusers/search',
       },
       response: {
         status: 200,
@@ -41,26 +44,11 @@ module.exports = {
   verifyDpsFindUsers: () =>
     getMatchingRequests({
       method: 'GET',
-      urlPathPattern: '/nomisusersandroles/users',
+      urlPathPattern: '/prisonusers/search',
     }).then((data) => data.body.requests),
-  stubHealth: (status = 200) => {
-    return stubFor({
-      request: {
-        method: 'GET',
-        urlPattern: '/nomisusersandroles/health/ping',
-      },
-      response: {
-        status,
-        headers: {
-          'Content-Type': 'application/json;charset=UTF-8',
-        },
-        fixedDelayMilliseconds: status === 500 ? 5000 : '',
-      },
-    })
-  },
   stubDpsGetCaseloads: () =>
     getFor({
-      urlPath: '/nomisusersandroles/reference-data/caseloads',
+      urlPath: '/prisonusers/reference-data/caseloads',
       body: [
         {
           id: 'MDI',
@@ -72,51 +60,9 @@ module.exports = {
         },
       ],
     }),
-  stubGetRoles: ({
-    content = [
-      {
-        code: 'MAINTAIN_ACCESS_ROLES',
-        name: 'Maintain Roles',
-      },
-      {
-        code: 'USER_ADMIN',
-        name: 'User Admin',
-      },
-    ],
-  }) =>
+  stubUserDetails: ({ accountStatus = 'OPEN', active = true, enabled = true, administratorOfUserGroups = null }) =>
     getFor({
-      urlPath: '/nomisusersandroles/roles',
-      body: content,
-    }),
-  stubGetRolesIncludingAdminRoles: () =>
-    getFor({
-      urlPattern: '/nomisusersandroles/roles\\?admin-roles=true',
-      body: [
-        {
-          code: 'MAINTAIN_ACCESS_ROLES',
-          name: 'Maintain Roles',
-          adminRoleOnly: false,
-        },
-        {
-          code: 'USER_ADMIN',
-          name: 'User Admin',
-          adminRoleOnly: true,
-        },
-        {
-          code: 'ANOTHER_ADMIN_ROLE',
-          name: 'Another admin role',
-          adminRoleOnly: true,
-        },
-        {
-          code: 'ANOTHER_GENERAL_ROLE',
-          name: 'Another general role',
-          adminRoleOnly: false,
-        },
-      ],
-    }),
-  stubUserDetails: ({ accountStatus, active = true, enabled = true, administratorOfUserGroups = null }) =>
-    getFor({
-      urlPattern: '/nomisusersandroles/users/.*',
+      urlPattern: '/prisonusers/.*/details',
       body: {
         staffId: '12345',
         username: 'ITAG_USER',
@@ -133,7 +79,7 @@ module.exports = {
     }),
   stubUserDetailsWithoutEmail: () =>
     getFor({
-      urlPattern: '/nomisusersandroles/users/.*',
+      urlPattern: '/prisonusers/.*/details',
       body: {
         staffId: '12345',
         username: 'ITAG_USER',
@@ -144,7 +90,7 @@ module.exports = {
     }),
   stubUserDetailsLSA: ({ accountStatus, active = true, enabled = true }) =>
     getFor({
-      urlPattern: '/nomisusersandroles/users/.*',
+      urlPattern: '/prisonusers/.*/details',
       body: {
         staffId: '12345',
         username: 'ITAG_USER',
@@ -169,19 +115,18 @@ module.exports = {
   stubDpsUserEnable: () =>
     stubJson({
       method: 'PUT',
-      urlPattern: '/nomisusersandroles/users/.*/unlock-user',
+      urlPattern: '/prisonusers/.*/enable-user',
     }),
-
   stubDpsUserDisable: () =>
     stubJson({
       method: 'PUT',
-      urlPattern: '/nomisusersandroles/users/.*/lock-user',
+      urlPattern: '/prisonusers/.*/disable-user',
     }),
   stubDpsAddUserRoles: () =>
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: '/nomisusersandroles/users/.*/roles',
+        urlPattern: '/prisonusers/.*/roles',
       },
       response: { status: 200 },
     }),
@@ -189,7 +134,7 @@ module.exports = {
     stubFor({
       request: {
         method: 'POST',
-        urlPattern: '/nomisusersandroles/users/.*/caseloads',
+        urlPattern: '/prisonusers/.*/caseloads',
       },
       response: { status: 200 },
     }),
@@ -197,13 +142,13 @@ module.exports = {
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/nomisusersandroles/users/.*/roles/.*',
+        urlPattern: '/prisonusers/.*/roles/.*',
       },
       response: { status: 200 },
     }),
   stubUserCaseloads: (caseloads) =>
     getFor({
-      urlPattern: '/nomisusersandroles/users/.*/caseloads',
+      urlPattern: '/prisonusers/.*/caseloads',
       body: caseloads || {
         username: 'ITAG_USER',
         activeCaseload: {
@@ -230,13 +175,13 @@ module.exports = {
     stubFor({
       request: {
         method: 'DELETE',
-        urlPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+        urlPattern: '/prisonusers/.*/caseloads/.*',
       },
       response: { status: 200 },
     }),
   stubDownload: () =>
     getFor({
-      urlPattern: '/nomisusersandroles/users/download\\?.*',
+      urlPattern: '/prisonusers/download\\?.*',
       body: [
         {
           username: 'LOCKED_USER',
@@ -271,7 +216,7 @@ module.exports = {
     }),
   stubLSADownload: () =>
     getFor({
-      urlPattern: '/nomisusersandroles/users/download/admins\\?.*',
+      urlPattern: '/prisonusers/download/admins\\?.*',
       body: [
         {
           username: 'ITAG_USER',
@@ -315,31 +260,31 @@ module.exports = {
   verifyDpsAddUserRoles: () =>
     getMatchingRequests({
       method: 'POST',
-      urlPathPattern: '/nomisusersandroles/users/.*/roles',
+      urlPathPattern: '/prisonusers/.*/roles',
     }).then((data) => data.body.requests),
   verifyDpsRemoveUserRole: () =>
     getMatchingRequests({
       method: 'DELETE',
-      urlPathPattern: '/nomisusersandroles/users/.*/roles/.*',
+      urlPathPattern: '/prisonusers/.*/roles/.*',
     }).then((data) => data.body.requests),
   verifyDpsAddUserCaseloads: () =>
     getMatchingRequests({
       method: 'POST',
-      urlPathPattern: '/nomisusersandroles/users/.*/caseloads',
+      urlPathPattern: '/prisonusers/.*/caseloads',
     }).then((data) => data.body.requests),
   verifyDpsRemoveUserCaseload: () =>
     getMatchingRequests({
       method: 'DELETE',
-      urlPathPattern: '/nomisusersandroles/users/.*/caseloads/.*',
+      urlPathPattern: '/prisonusers/.*/caseloads/.*',
     }).then((data) => data.body.requests),
   verifyDpsUserEnable: () =>
     getMatchingRequests({
       method: 'PUT',
-      urlPathPattern: '/nomisusersandroles/users/.*/unlock-user',
+      urlPathPattern: '/prisonusers/.*/enable-user',
     }).then((data) => data.body.requests),
   verifyDpsUserDisable: () =>
     getMatchingRequests({
       method: 'PUT',
-      urlPathPattern: '/nomisusersandroles/users/.*/lock-user',
+      urlPathPattern: '/prisonusers/.*/disable-user',
     }).then((data) => data.body.requests),
 }

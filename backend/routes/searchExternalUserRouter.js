@@ -1,7 +1,7 @@
 const express = require('express')
 const json2csv = require('json2csv')
 const { searchFactory } = require('../controllers/searchExternalUsers')
-const paginationService = require('../services/paginationService')
+const paginationService = require('../services/paginationService').default
 const contextProperties = require('../contextProperties')
 const { downloadFactory } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')

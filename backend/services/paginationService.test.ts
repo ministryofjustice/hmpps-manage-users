@@ -1,4 +1,4 @@
-const service = require('./paginationService')
+import service from './paginationService'
 
 describe('Pagination service 2', () => {
   it('should display one to ten when the page count is above ten', () => {

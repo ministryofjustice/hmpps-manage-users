@@ -84,10 +84,6 @@ export default {
       timeoutSeconds: Number(get('TOKEN_VERIFICATION_API_TIMEOUT_SECONDS', 10)),
       enabled: get('TOKEN_VERIFICATION_ENABLED', 'false') === 'true',
     },
-    nomisUsersAndRoles: {
-      url: get('NOMIS_USERS_API_ENDPOINT_URL', 'http://localhost:8082', requiredInProduction),
-      timeoutSeconds: Number(get('NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS', 30)),
-    },
   },
   analytics: {
     googleTagManagerId: get('GOOGLE_TAG_MANAGER_ID', ''),

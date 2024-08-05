@@ -34,6 +34,9 @@ import {
   PrisonStaffNewUser,
   PrisonStaffUser,
   UserRoleDetail,
+  PrisonCaseload,
+  UserCaseloadDetail,
+  PrisonUserSearchSummary,
 } from '../@types/manageUsersApi'
 
 const processPageResponse =
@@ -195,8 +198,9 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     { userId, reason }: { userId: string; reason: string },
   ): Promise<Response> => put(context, `/externalusers/${userId}/disable`, { reason })
 
-  const searchUserByUserName = (context: Context, username: string): Promise<UserDetails> =>
-    get(context, `/prisonusers/${username}`)
+  const getDpsUser = (context: Context, username: string): Promise<UserDetails> =>
+    get(context, `/prisonusers/${username}/details`)
+
   const createUser = (context: Context, user: CreateUserRequest): Promise<PrisonStaffNewUser> =>
     post(context, '/prisonusers', user)
   const createLinkedCentralAdminUser = (
@@ -213,8 +217,139 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     post(context, `/prisonusers/${username}/email/sync`, null)
   const contextUserRoles = (context: Context, username: string): Promise<UserRoleDetail> =>
     get(context, `/prisonusers/${username}/roles`)
+  const enablePrisonUser = (context: Context, username: string): Promise<Response> =>
+    put(context, `/prisonusers/${username}/enable-user`, undefined)
+  const disablePrisonUser = (context: Context, username: string): Promise<Response> =>
+    put(context, `/prisonusers/${username}/disable-user`, undefined)
+  const getCaseloads = (context: Context): Promise<PrisonCaseload[]> =>
+    get(context, '/prisonusers/reference-data/caseloads')
+  const getUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> =>
+    get(context, `/prisonusers/${username}/caseloads`)
+  const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | [] =>
+    context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
+  const addUserCaseloads = (context: Context, username: string, caseloads: string[]): Promise<UserCaseloadDetail> =>
+    post(context, `/prisonusers/${username}/caseloads`, caseloads)
+  const removeUserCaseload = (context: Context, username: string, caseloadId: string): Promise<UserCaseloadDetail> =>
+    del(context, `/prisonusers/${username}/caseloads/${caseloadId}`)
+
+  const addDpsUserRoles = (context: Context, username: string, roles: string[]): Promise<UserRoleDetail> =>
+    post(context, `/prisonusers/${username}/roles`, roles)
+  const removeDpsUserRole = (context: Context, username: string, roleCode: string): Promise<UserRoleDetail> =>
+    del(context, `/prisonusers/${username}/roles/${roleCode}`)
+
+  const dpsUserSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+      size = 20,
+      page = 0,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+      size?: number
+      page?: number
+    },
+  ): Promise<PagedList<PrisonUserSearchSummary>> =>
+    get(
+      context,
+      `/prisonusers/search?${querystring.stringify(
+        {
+          nameFilter,
+          accessRoles,
+          status,
+          caseload,
+          activeCaseload,
+          inclusiveRoles,
+          showOnlyLSAs,
+          page,
+          size,
+        },
+        undefined,
+        undefined,
+        { encodeURIComponent: querystring.unescape },
+      )}`,
+    )
+
+  const downloadUserSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+    },
+  ) =>
+    get(
+      context,
+      `/prisonusers/download?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+        inclusiveRoles,
+        showOnlyLSAs,
+      })}`,
+    )
+
+  const downloadLsaSearch = (
+    context: Context,
+    {
+      nameFilter,
+      accessRoles,
+      status,
+      caseload,
+      activeCaseload,
+      inclusiveRoles,
+      showOnlyLSAs,
+    }: {
+      nameFilter?: string
+      accessRoles?: string[]
+      status?: string
+      caseload?: string
+      activeCaseload?: string
+      inclusiveRoles?: boolean
+      showOnlyLSAs?: boolean
+    },
+  ) =>
+    get(
+      context,
+      `/prisonusers/download/admins?${querystring.stringify({
+        nameFilter,
+        accessRoles,
+        status,
+        caseload,
+        activeCaseload,
+        inclusiveRoles,
+        showOnlyLSAs,
+      })}`,
+    )
 
   return {
+    addDpsUserRoles,
+    addUserCaseloads,
     addUserGroup,
     amendUserEmail,
     assignableGroups,
@@ -238,25 +373,35 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     createUser,
     currentRoles,
     currentUser,
+    currentUserCaseloads,
     deactivateExternalUser,
     deleteChildGroup,
     deleteEmailDomain,
     deleteExternalUserRole,
     deleteGroup,
     disableExternalUser,
+    disablePrisonUser,
+    downloadUserSearch,
+    dpsUserSearch,
+    downloadLsaSearch,
     enableExternalUser,
+    enablePrisonUser,
     externalUserAddRoles,
     externalUserRoles,
     getAllEmailDomains,
+    getCaseloads,
+    getDpsUser,
     getNotificationBannerMessage,
     getPagedRoles,
     getRoleDetails,
     getRoles,
     getUser,
+    getUserCaseloads,
     getUserEmail,
     groupDetails,
+    removeDpsUserRole,
+    removeUserCaseload,
     removeUserGroup,
-    searchUserByUserName,
     searchableRoles,
     syncDpsEmail,
     userGroups,

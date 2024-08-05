@@ -5,12 +5,12 @@ const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode 
 const hasAnyRole = (userRoles, roleCodes) => roleCodes.some((role) => hasRole(userRoles, role))
 
 module.exports =
-  ({ nomisUsersAndRolesApi, manageUsersApi }) =>
+  ({ manageUsersApi }) =>
   async (req, res, next) => {
     if (!req.xhr) {
       if (!req.session.userDetails) {
         req.session.userDetails = await manageUsersApi.currentUser(res.locals)
-        req.session.allCaseloads = await nomisUsersAndRolesApi.currentUserCaseloads(
+        req.session.allCaseloads = await manageUsersApi.currentUserCaseloads(
           res.locals,
           req.session.userDetails.username,
         )

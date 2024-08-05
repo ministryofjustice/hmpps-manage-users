@@ -1,15 +1,15 @@
 const express = require('express')
 const { searchFactory } = require('../controllers/searchDpsUsers')
-const paginationService = require('../services/paginationService')
+const paginationService = require('../services/paginationService').default
 const { downloadFactoryBetaSearch, downloadFactoryLsaSearch } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
 const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
 
-const controller = ({ nomisUsersAndRolesApi, manageUsersApi }) => {
+const controller = ({ manageUsersApi }) => {
   const { findUsersApi, searchableRoles, caseloads, downloadNomisUserDetails, downloadNomisLsaDetails } =
-    searchApiFactory(nomisUsersAndRolesApi, manageUsersApi)
+    searchApiFactory(manageUsersApi)
 
   const search = searchFactory(
     paginationService,
