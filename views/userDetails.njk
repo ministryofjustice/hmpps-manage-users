@@ -204,6 +204,11 @@
               {text: "Verified"},
               {text: staff.verified | formatYesNo()},
               {text: ''}
+            ],
+            [
+              {text: "Last logged in"},
+              {text: staff.lastLogonDate  | formatDate('D MMMM YYYY - HH:mm:ss')},
+              {text: ''}
             ]
           ]) %}
         {% endif %}

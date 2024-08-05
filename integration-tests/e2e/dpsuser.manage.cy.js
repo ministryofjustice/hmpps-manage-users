@@ -22,6 +22,7 @@ context('DPS user manage functionality', () => {
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
     userPage.userRows().eq(2).should('contain', 'Yes')
+    userPage.userRows().eq(3).should('contain', '25 December 2023 - 12:57:50')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
@@ -49,6 +50,7 @@ context('DPS user manage functionality', () => {
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(1).should('contain', 'ITAG_USER@gov.uk')
     userPage.userRows().eq(2).should('contain', 'Yes')
+    userPage.userRows().eq(3).should('contain', '25 December 2023 - 12:57:50')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
@@ -87,6 +89,7 @@ context('DPS user manage functionality', () => {
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(2).should('contain', 'No')
+    userPage.userRows().eq(3).should('contain', '25 January 2024 - 11:00:01')
     userPage
       .userRows()
       .eq(1)
@@ -105,6 +108,7 @@ context('DPS user manage functionality', () => {
       .then(($cell) => {
         expect($cell.text().trim().replace(/\s\s*/g, ' ')).to.equal('Email ITAG_USER@gov.uk Change email')
       })
+    userPage.userRows().eq(3).should('contain', '25 December 2023 - 12:57:50')
     userPage.roleRows().should('have.length', 2)
     userPage.roleRows().eq(0).should('contain', 'Maintain Roles')
     userPage.roleRows().eq(1).should('contain', 'Another general role')
@@ -122,6 +126,7 @@ context('DPS user manage functionality', () => {
     const userPage = UserPage.verifyOnPage('Itag User')
     userPage.userRows().eq(0).should('contain', 'ITAG_USER')
     userPage.userRows().eq(2).should('contain', 'No')
+    userPage.userRows().eq(3).should('contain', '25 December 2023 - 12:57:50')
     userPage
       .userRows()
       .eq(1)
