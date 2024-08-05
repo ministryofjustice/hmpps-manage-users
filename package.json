@@ -52,7 +52,7 @@
     "qs": "^6.12.3",
     "redis": "^4.6.15",
     "spin.js": "^4.1.2",
-    "superagent": "9.0.2",
+    "superagent": "10.0.0",
     "url-value-parser": "^2.2.0",
     "uuid": "^10.0.0",
     "validatorjs": "^3.22.1",
