@@ -25,6 +25,20 @@ export interface paths {
      */
     put: operations['amendRoleAdminType']
   }
+  '/prisonusers/{username}/enable-user': {
+    /**
+     * Unlock user account
+     * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+     */
+    put: operations['enableUser']
+  }
+  '/prisonusers/{username}/disable-user': {
+    /**
+     * Lock user account
+     * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+     */
+    put: operations['disableUser']
+  }
   '/groups/{group}': {
     /**
      * Group detail.
@@ -121,6 +135,18 @@ export interface paths {
      */
     post: operations['createUser']
   }
+  '/prisonusers/{username}/roles': {
+    /**
+     * Get list of roles associated with the users account
+     * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+     */
+    get: operations['getUserRoles']
+    /**
+     * Add a role to the specified user account, all roles will be added to DPS caseload unless specified
+     * @description Adds a role to a user, user must have caseload (if specified). Default caseload is DPS caseload (NWEB).  Cannot add an existing role to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+     */
+    post: operations['addRoles']
+  }
   '/prisonusers/{username}/email': {
     /**
      * Amend a prison user email address.
@@ -134,6 +160,18 @@ export interface paths {
      * @description Run process to check for differences in email address between Auth and NOMIS and updates Auth if required.<br/> Requires role ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
      */
     post: operations['syncUserEmail']
+  }
+  '/prisonusers/{username}/caseloads': {
+    /**
+     * Get list of caseloads associated with the users account
+     * @description Caseloads for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES"
+     */
+    get: operations['getUserCaseloads']
+    /**
+     * Add multiple caseloads to the specified user account
+     * @description Adds caseloads to a user, caseloads must exist. Cannot add an existing caseload to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
+     */
+    post: operations['addCaseloads']
   }
   '/linkedprisonusers/lsa': {
     /**
@@ -277,6 +315,13 @@ export interface paths {
      */
     get: operations['myEmail']
   }
+  '/users/me/caseloads': {
+    /**
+     * Get list of caseloads associated with the current user
+     * @description Caseloads for the current user
+     */
+    get: operations['getMyCaseloads']
+  }
   '/roles/{role}': {
     /**
      * Get role details
@@ -305,12 +350,32 @@ export interface paths {
      */
     get: operations['findUserByUsername']
   }
-  '/prisonusers/{username}/roles': {
+  '/prisonusers/{username}/details': {
     /**
-     * Get list of roles associated with the users account
-     * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+     * Get specified user details
+     * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
      */
-    get: operations['getUserRoles']
+    get: operations['getUserDetails']
+  }
+  '/prisonusers/search': {
+    /**
+     * Get all users filtered as specified
+     * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
+     */
+    get: operations['getUsers']
+  }
+  '/prisonusers/reference-data/caseloads': {
+    /**
+     * Retrieves all caseloads
+     * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
+     */
+    get: operations['getCaseload']
+  }
+  '/prisonusers/download': {
+    get: operations['downloadUsersByFilters']
+  }
+  '/prisonusers/download/admins': {
+    get: operations['downloadPrisonAdminsByFilter']
   }
   '/notification/banner/{page}': {
     /**
@@ -383,6 +448,20 @@ export interface paths {
      * @description Delete email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     delete: operations['deleteEmailDomain']
+  }
+  '/prisonusers/{username}/roles/{roleCode}': {
+    /**
+     * Remove a role from a user
+     * @description The user must already have the role to be removed. Default role caseload is a DPS role unless specified. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+     */
+    delete: operations['removeRoleFromUser']
+  }
+  '/prisonusers/{username}/caseloads/{caseloadId}': {
+    /**
+     * Remove a caseload from a user
+     * @description The user must already have the caseload to be removed. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
+     */
+    delete: operations['removeCaseload']
   }
 }
 
@@ -498,12 +577,111 @@ export interface components {
        */
       lastName: string
     }
+    /** @description Roles in caseload information */
+    CaseloadRoleDetail: {
+      caseload: components['schemas']['PrisonCaseload']
+      /** @description NOMIS Roles assigned to this user */
+      roles: components['schemas']['RoleDetail'][]
+    }
+    /** @description Caseload for the listed roles */
+    PrisonCaseload: {
+      /**
+       * @description identify for caseload
+       * @example WWI
+       */
+      id: string
+      /**
+       * @description name of caseload, typically prison name
+       * @example WANDSWORTH (HMP)
+       */
+      name: string
+    }
+    /** @description Role Information */
+    RoleDetail: {
+      /**
+       * @description Role Code
+       * @example GLOBAL_SEARCH
+       */
+      code: string
+      /**
+       * @description Role Name
+       * @example Global Search Role
+       */
+      name: string
+      /**
+       * Format: int32
+       * @description Role Sequence
+       * @default 1
+       * @example 1
+       */
+      sequence?: number
+      /**
+       * @description Role Type
+       * @default APP
+       * @example APP
+       * @enum {string}
+       */
+      type?: 'APP' | 'INST' | 'COMM'
+      /**
+       * @description Admin only role
+       * @default false
+       * @example true
+       */
+      adminRoleOnly?: boolean
+      parentRole?: components['schemas']['RoleDetail']
+    }
+    /** @description User & Role Information */
+    UserRoleDetail: {
+      /**
+       * @description Username
+       * @example TESTUSER1
+       */
+      username: string
+      /**
+       * @description Indicates that the user is active
+       * @example true
+       */
+      active: boolean
+      /**
+       * @description Type of user account
+       * @example GENERAL
+       * @enum {string}
+       */
+      accountType: 'GENERAL' | 'ADMIN'
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      /** @description DPS Roles assigned to this user */
+      dpsRoles: components['schemas']['RoleDetail'][]
+      /** @description NOMIS Roles assigned to this user per caseload */
+      nomisRoles?: components['schemas']['CaseloadRoleDetail'][]
+    }
     AmendEmail: {
       /**
        * @description Email address
        * @example prison.user@someagency.justice.gov.uk
        */
       email: string
+    }
+    /** @description User & Caseload Information */
+    UserCaseloadDetail: {
+      /**
+       * @description Username
+       * @example TESTUSER1
+       */
+      username: string
+      /**
+       * @description Indicates that the user is active
+       * @example true
+       */
+      active: boolean
+      /**
+       * @description Type of user account
+       * @example GENERAL
+       * @enum {string}
+       */
+      accountType: 'GENERAL' | 'ADMIN'
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      /** @description Caseloads available for this user */
+      caseloads: components['schemas']['PrisonCaseload'][]
     }
     /** @description Linking a new Local admin account to an existing general user */
     CreateLinkedLocalAdminUserRequest: {
@@ -958,82 +1136,172 @@ export interface components {
       /** @example MDI */
       activeCaseLoadId?: string
     }
-    /** @description Roles in caseload information */
-    CaseloadRoleDetail: {
-      caseload: components['schemas']['PrisonCaseload']
-      /** @description NOMIS Roles assigned to this user */
-      roles: components['schemas']['RoleDetail'][]
-    }
-    /** @description Caseload for the listed roles */
-    PrisonCaseload: {
-      /**
-       * @description identify for caseload
-       * @example WWI
-       */
-      id: string
-      /**
-       * @description name of caseload, typically prison name
-       * @example WANDSWORTH (HMP)
-       */
-      name: string
-    }
-    /** @description Role Information */
-    RoleDetail: {
-      /**
-       * @description Role Code
-       * @example GLOBAL_SEARCH
-       */
-      code: string
-      /**
-       * @description Role Name
-       * @example Global Search Role
-       */
-      name: string
-      /**
-       * Format: int32
-       * @description Role Sequence
-       * @default 1
-       * @example 1
-       */
-      sequence: number
-      /**
-       * @description Role Type
-       * @default APP
-       * @example APP
-       * @enum {string}
-       */
-      type?: 'APP' | 'INST' | 'COMM'
-      /**
-       * @description Admin only role
-       * @default false
-       * @example true
-       */
-      adminRoleOnly: boolean
-      parentRole?: components['schemas']['RoleDetail']
-    }
-    /** @description User & Role Information */
-    UserRoleDetail: {
+    /** @description Prison User Information */
+    PrisonUserDetails: {
       /**
        * @description Username
-       * @example TESTUSER1
+       * @example testuser1
        */
       username: string
       /**
-       * @description Indicates that the user is active
-       * @example true
+       * Format: int64
+       * @description Staff ID
+       * @example 324323
        */
-      active: boolean
+      staffId: number
+      /**
+       * @description First name of the user
+       * @example John
+       */
+      firstName: string
+      /**
+       * @description Last name of the user
+       * @example Smith
+       */
+      lastName: string
+      /**
+       * @description Active Caseload of the user
+       * @example BXI
+       */
+      activeCaseloadId?: string
+      /**
+       * @description Status of the user
+       * @example OPEN
+       * @enum {string}
+       */
+      accountStatus?:
+        | 'OPEN'
+        | 'EXPIRED'
+        | 'EXPIRED_GRACE'
+        | 'LOCKED_TIMED'
+        | 'LOCKED'
+        | 'EXPIRED_LOCKED_TIMED'
+        | 'EXPIRED_GRACE_LOCKED_TIMED'
+        | 'EXPIRED_LOCKED'
+        | 'EXPIRED_GRACE_LOCKED'
       /**
        * @description Type of user account
        * @example GENERAL
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
+      /**
+       * @description Email addresses of user
+       * @example test@test.com
+       */
+      primaryEmail?: string
+      /** @description List of associated DPS Role Codes */
+      dpsRoleCodes?: string[]
+      /** @description List of user groups administered */
+      administratorOfUserGroups?: components['schemas']['PrisonUserGroupDetail'][]
+      /** @description Account is not locked */
+      accountNonLocked?: boolean
+      /** @description Credentials are not expired flag */
+      credentialsNonExpired?: boolean
+      /** @description User is enabled flag */
+      enabled: boolean
+      /** @description User is admin flag */
+      admin?: boolean
+      /** @description User is active flag */
+      active: boolean
+      /**
+       * @description Staff Status
+       * @example ACTIVE
+       */
+      staffStatus?: string
+      /**
+       * Format: date-time
+       * @description Last logon date
+       */
+      lastLogonDate?: string
+      /** Format: int64 */
+      userId: number
+      name: string
+      /** @enum {string} */
+      authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
+    }
+    /** @description User Group Information */
+    PrisonUserGroupDetail: {
+      id: string
+      name: string
+    }
+    Pageable: {
+      /** Format: int32 */
+      page?: number
+      /** Format: int32 */
+      size?: number
+      sort?: string[]
+    }
+    PagedResponsePrisonUserSearchSummary: {
+      content: components['schemas']['PrisonUserSearchSummary'][]
+      pageable: components['schemas']['PageDetails']
+      last: boolean
+      /** Format: int32 */
+      totalPages: number
+      /** Format: int64 */
+      totalElements: number
+      /** Format: int32 */
+      size: number
+      /** Format: int32 */
+      number: number
+      sort: components['schemas']['PageSort']
+      /** Format: int32 */
+      numberOfElements: number
+      first: boolean
+      empty: boolean
+    }
+    PrisonUserSearchSummary: {
+      username: string
+      /** Format: int32 */
+      staffId: number
+      firstName: string
+      lastName: string
+      active: boolean
+      status: string
+      locked: boolean
+      expired: boolean
       activeCaseload?: components['schemas']['PrisonCaseload']
-      /** @description DPS Roles assigned to this user */
-      dpsRoles: components['schemas']['RoleDetail'][]
-      /** @description NOMIS Roles assigned to this user per caseload */
-      nomisRoles?: components['schemas']['CaseloadRoleDetail'][]
+      /** Format: int32 */
+      dpsRoleCount: number
+      email?: string
+      staffStatus: string
+    }
+    PrisonUserSummary: {
+      username: string
+      staffId: string
+      firstName: string
+      lastName: string
+      active: boolean
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      email?: string
+    }
+    /** @description Summary User Information with Email Address */
+    PrisonAdminUserSummary: {
+      username: string
+      /** Format: int64 */
+      staffId: number
+      firstName: string
+      lastName: string
+      active: boolean
+      /** @enum {string} */
+      status?:
+        | 'OPEN'
+        | 'EXPIRED'
+        | 'EXPIRED_GRACE'
+        | 'LOCKED_TIMED'
+        | 'LOCKED'
+        | 'EXPIRED_LOCKED_TIMED'
+        | 'EXPIRED_GRACE_LOCKED_TIMED'
+        | 'EXPIRED_LOCKED'
+        | 'EXPIRED_GRACE_LOCKED'
+      locked: boolean
+      expired: boolean
+      activeCaseload?: components['schemas']['PrisonCaseload']
+      /** Format: int32 */
+      dpsRoleCount: number
+      email?: string
+      groups: components['schemas']['PrisonUserGroupDetail'][]
+      staffStatus?: string
     }
     /** @description Notification message */
     NotificationMessage: {
@@ -1340,6 +1608,84 @@ export interface operations {
       }
       /** @description The role trying to update does not exist */
       404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Unlock user account
+   * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+   */
+  enableUser: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example testuser1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description User account unlocked */
+      200: {
+        content: never
+      }
+      /** @description Incorrect request to unlock user */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to unlock a user */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Lock user account
+   * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
+   */
+  disableUser: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example testuser1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description User account locked */
+      200: {
+        content: never
+      }
+      /** @description Incorrect request to lock user */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to lock a user */
+      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -2051,6 +2397,100 @@ export interface operations {
     }
   }
   /**
+   * Get list of roles associated with the users account
+   * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+   */
+  getUserRoles: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example TEST_USER1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserRoleDetail']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Add a role to the specified user account, all roles will be added to DPS caseload unless specified
+   * @description Adds a role to a user, user must have caseload (if specified). Default caseload is DPS caseload (NWEB).  Cannot add an existing role to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+   */
+  addRoles: {
+    parameters: {
+      query?: {
+        /**
+         * @description Caseload Id
+         * @example NWEB
+         */
+        caseloadId?: string
+      }
+      path: {
+        /**
+         * @description Username of the account to add roles
+         * @example TEST_USER2
+         */
+        username: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': string
+      }
+    }
+    responses: {
+      /** @description User information with role details */
+      201: {
+        content: {
+          'application/json': components['schemas']['UserRoleDetail']
+        }
+      }
+      /** @description Incorrect request to add a role to a user account */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add a role to this account */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
    * Amend a prison user email address.
    * @description Amend a prison user email address. Requires role MAINTAIN_ACCESS_ROLES_ADMIN
    */
@@ -2135,6 +2575,93 @@ export interface operations {
       }
       /** @description User not found. */
       404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Get list of caseloads associated with the users account
+   * @description Caseloads for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES"
+   */
+  getUserCaseloads: {
+    parameters: {
+      path: {
+        /**
+         * @description Username
+         * @example TEST_USER1
+         */
+        username: string
+      }
+    }
+    responses: {
+      /** @description User caseload list */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserCaseloadDetail']
+        }
+      }
+      /** @description Incorrect request to get caseloads for a user */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get a caseload for a user */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Add multiple caseloads to the specified user account
+   * @description Adds caseloads to a user, caseloads must exist. Cannot add an existing caseload to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
+   */
+  addCaseloads: {
+    parameters: {
+      path: {
+        /**
+         * @description Username of the account to add caseloads
+         * @example TEST_USER2
+         */
+        username: string
+      }
+    }
+    requestBody: {
+      content: {
+        'application/json': string[]
+      }
+    }
+    responses: {
+      /** @description User information with caseload details */
+      201: {
+        content: {
+          'application/json': components['schemas']['UserCaseloadDetail']
+        }
+      }
+      /** @description Incorrect request to add caseloads to a user account */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to add caseloads to account */
+      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -2931,6 +3458,20 @@ export interface operations {
     }
   }
   /**
+   * Get list of caseloads associated with the current user
+   * @description Caseloads for the current user
+   */
+  getMyCaseloads: {
+    responses: {
+      /** @description OK */
+      200: {
+        content: {
+          '*/*': components['schemas']['UserCaseloadDetail']
+        }
+      }
+    }
+  }
+  /**
    * Get role details
    * @description Get role details, role required is ROLE_ROLES_ADMIN
    */
@@ -3080,42 +3621,229 @@ export interface operations {
     }
   }
   /**
-   * Get list of roles associated with the users account
-   * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+   * Get specified user details
+   * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
    */
-  getUserRoles: {
+  getUserDetails: {
     parameters: {
       path: {
         /**
          * @description Username
-         * @example TEST_USER1
+         * @example testuser1
          */
         username: string
+      }
+    }
+    responses: {
+      /** @description User Information Returned */
+      200: {
+        content: {
+          'application/json': components['schemas']['PrisonUserDetails']
+        }
+      }
+      /** @description Incorrect request to get user information */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to get a user */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Get all users filtered as specified
+   * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
+   */
+  getUsers: {
+    parameters: {
+      query: {
+        pageRequest: components['schemas']['Pageable']
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
+      }
+    }
+    responses: {
+      /** @description Pageable list of user summaries */
+      200: {
+        content: {
+          '*/*': components['schemas']['PagedResponsePrisonUserSearchSummary']
+        }
+      }
+      /** @description Incorrect filter supplied */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Retrieves all caseloads
+   * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
+   */
+  getCaseload: {
+    responses: {
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  downloadUsersByFilters: {
+    parameters: {
+      query?: {
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
       }
     }
     responses: {
       /** @description OK */
       200: {
         content: {
-          'application/json': components['schemas']['UserRoleDetail']
+          '*/*': components['schemas']['PrisonUserSummary'][]
         }
       }
-      /** @description Bad Request */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
+    }
+  }
+  downloadPrisonAdminsByFilter: {
+    parameters: {
+      query?: {
+        /**
+         * @description Filter results by name (first name and/or last name in any order), username or email address.
+         * @example Raj
+         */
+        nameFilter?: string
+        /**
+         * @description Filter will match users that have all DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        accessRoles?: string[]
+        /**
+         * @description Filter will match users that have the NOMIS role specified, should be used with a caseloadId or will get duplicates
+         * @example 201
+         */
+        nomisRole?: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload?: string
+        /**
+         * @description Filter results to include only those users that have access to the specified caseload (irrespective of whether it is currently active or not
+         * @example MDI
+         */
+        caseload?: string
+        /**
+         * @description Returns result inclusive of selected roles
+         * @example true
+         */
+        inclusiveRoles?: boolean
+        /**
+         * @description Returns all active LSAs
+         * @example true
+         */
+        showOnlyLSAs?: boolean
       }
-      /** @description Unauthorized */
-      401: {
+    }
+    responses: {
+      /** @description OK */
+      200: {
         content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden. Requires authorisation with correct role. */
-      403: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
+          '*/*': components['schemas']['PrisonAdminUserSummary'][]
         }
       }
     }
@@ -3519,6 +4247,105 @@ export interface operations {
       }
       /** @description Email domain not found */
       404: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Remove a role from a user
+   * @description The user must already have the role to be removed. Default role caseload is a DPS role unless specified. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
+   */
+  removeRoleFromUser: {
+    parameters: {
+      query?: {
+        /**
+         * @description Caseload Id
+         * @example NWEB
+         */
+        caseloadId?: string
+      }
+      path: {
+        /**
+         * @description Username of the account to remove role
+         * @example TEST_USER2
+         */
+        username: string
+        /**
+         * @description Role Code
+         * @example GLOBAL_SEARCH
+         */
+        roleCode: string
+      }
+    }
+    responses: {
+      /** @description User information with role details */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserRoleDetail']
+        }
+      }
+      /** @description Incorrect request to remove a role from a user account */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to remove a role this user account */
+      403: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  /**
+   * Remove a caseload from a user
+   * @description The user must already have the caseload to be removed. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
+   */
+  removeCaseload: {
+    parameters: {
+      path: {
+        /**
+         * @description Username to remove caseload from
+         * @example TEST_USER2
+         */
+        username: string
+        /**
+         * @description Caseload ID to remove from this user
+         * @example LEI
+         */
+        caseloadId: string
+      }
+    }
+    responses: {
+      /** @description User information with caseload details */
+      200: {
+        content: {
+          'application/json': components['schemas']['UserCaseloadDetail']
+        }
+      }
+      /** @description Incorrect request to remove a caseload from a user account */
+      400: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized to access this endpoint */
+      401: {
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Incorrect permissions to remove a caseload this user account */
+      403: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }

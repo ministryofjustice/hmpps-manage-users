@@ -72,6 +72,7 @@ const userDetailsFactory = (
         subjectId: userId,
         subjectType: USER_ID_SUBJECT_TYPE,
         correlationId: auditCorrelationId,
+        service: 'hmpps-manage-users',
       })
       throw error
     }

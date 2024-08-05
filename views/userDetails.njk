@@ -113,8 +113,9 @@
                 {% endif %}
               {% else %}
                 <td class="govuk-table__cell">
+                  {% if staff.accountStatus %}{% set tagText = 'Inactive account - ' + staff.accountStatus %}{% else %}{% set tagText = 'Inactive account' %}{% endif %}
                 {{ govukTag({
-                  text: 'Inactive account - ' + staff.accountStatus,
+                  text: tagText,
                   classes: "govuk-tag--pink",
                   attributes: { "data-qa": "enabled" }
                 }) }}
