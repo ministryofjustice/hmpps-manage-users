@@ -1,6 +1,6 @@
 const express = require('express')
 const { searchFactory } = require('../controllers/searchDpsUsers')
-const paginationService = require('../services/paginationService')
+const paginationService = require('../services/paginationService').default
 const { downloadFactoryBetaSearch, downloadFactoryLsaSearch } = require('../controllers/searchDownload')
 const { allowDownload } = require('../services/downloadService')
 const searchApiFactory = require('./searchApiFactory')

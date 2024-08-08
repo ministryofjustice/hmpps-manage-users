@@ -4,7 +4,7 @@ const { roleDetailsFactory } = require('../controllers/roleDetails')
 const { roleNameAmendmentFactory } = require('../controllers/roleNameAmendment')
 const { roleDescriptionAmendmentFactory } = require('../controllers/roleDescriptionAmendment')
 const { roleAdminTypeAmendmentFactory } = require('../controllers/roleAdminTypeAmendment')
-const paginationService = require('../services/paginationService')
+const paginationService = require('../services/paginationService').default
 const contextProperties = require('../contextProperties')
 const { createRoleFactory } = require('../controllers/createRole')
 
