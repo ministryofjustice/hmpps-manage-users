@@ -32,6 +32,7 @@ generic-service:
       SecAuditLogType Serial
       {{ end -}}
       SecRuleRemoveById 920300
+      SecRuleUpdateTargetById 913101 "!REQUEST_HEADERS:/User-Agent/"
       SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/hmpps-session-dev/"
       SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/hmpps-session-preprod/"
       SecRuleUpdateTargetById 942440 "!REQUEST_COOKIES:/hmpps-session-prod/"
