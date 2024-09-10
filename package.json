@@ -25,7 +25,7 @@
     "csurf": "^1.11.0",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
-    "express": "^4.19.2",
+    "express": "^4.20.0",
     "express-async-errors": "^3.1.1",
     "express-session": "^1.18.0",
     "govuk-frontend": "^5.5.0",
