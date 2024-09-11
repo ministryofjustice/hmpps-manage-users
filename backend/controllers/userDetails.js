@@ -1,5 +1,7 @@
-const { v4 } = require('uuid')
 const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
+const { auditWithSubject } = require('../audit/manageUsersAudit')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
@@ -22,15 +24,9 @@ const userDetailsFactory = (
   const index = async (req, res) => {
     const { userId } = req.params
     const { username } = req.session.userDetails
-    const auditCorrelationId = v4()
-    await auditService.sendAuditMessage({
-      action: 'VIEW_USER_ATTEMPT',
-      who: username,
-      subjectId: userId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      correlationId: auditCorrelationId,
-      service: 'hmpps-manage-users',
-    })
+    const audit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID)
+    await audit(ManageUsersEvent.VIEW_USER_ATTEMPT)
+
     try {
       const staffUrl = `${manageUrl}/${userId}`
       const hasMaintainAuthUsers = Boolean(res.locals?.user?.maintainAuthUsers)
@@ -66,14 +62,7 @@ const userDetailsFactory = (
         displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
       })
     } catch (error) {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_USER_FAILURE',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-      })
+      await audit(ManageUsersEvent.VIEW_USER_FAILURE)
       throw error
     }
   }
@@ -83,18 +72,14 @@ const userDetailsFactory = (
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
+    const audit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { role })
+    await audit(ManageUsersEvent.REMOVE_USER_ROLE_ATTEMPT)
+
     try {
       await removeUserRoleApi(res.locals, userId, role)
-      await auditService.sendAuditMessage({
-        action: 'REMOVE_USER_ROLE',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        details: JSON.stringify({ role }),
-        service: 'hmpps-manage-users',
-      })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
+      await audit(ManageUsersEvent.REMOVE_USER_ROLE_FAILURE)
       if (error.status === 400) {
         // role already removed from group
         res.redirect(req.originalUrl)

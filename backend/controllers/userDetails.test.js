@@ -1,6 +1,9 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { userDetailsFactory } = require('./userDetails')
 const { UUID_REGEX } = require('../utils/testConstants')
+const config = require('../config')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 
 describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
@@ -94,10 +97,10 @@ describe('user detail factory', () => {
 
   describe('index', () => {
     const expectedViewUserAttemptAuditMessage = expect.objectContaining({
-      action: 'VIEW_USER_ATTEMPT',
+      action: ManageUsersEvent.VIEW_USER_ATTEMPT,
       correlationId: expect.stringMatching(UUID_REGEX),
       subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-      subjectType: 'USER_ID',
+      subjectType: ManageUsersSubjectType.USER_ID,
       who: 'username',
     })
 
@@ -257,12 +260,14 @@ describe('user detail factory', () => {
 
       expect(render).not.toHaveBeenCalled()
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
+
+      // Check audit message
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
         expect.objectContaining({
-          action: 'VIEW_USER_FAILURE',
+          action: ManageUsersEvent.VIEW_USER_FAILURE,
           correlationId: expect.stringMatching(UUID_REGEX),
           subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-          subjectType: 'USER_ID',
+          subjectType: ManageUsersSubjectType.USER_ID,
           who: 'username',
         }),
       )
@@ -279,15 +284,19 @@ describe('user detail factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
+
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
+
+      // Check audit message
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'REMOVE_USER_ROLE',
+        action: ManageUsersEvent.REMOVE_USER_ROLE_ATTEMPT,
         details: '{"role":"role1"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
+        correlationId: expect.stringMatching(UUID_REGEX),
       })
     })
 
@@ -297,14 +306,24 @@ describe('user detail factory', () => {
       removeUserRoleApi.mockRejectedValue(error)
       await userDetails.removeRole(
         {
-          params: { role: 'role99' },
+          params: { role: 'role99', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
           originalUrl: '/some-location',
           session: { userDetails: { username: 'username' } },
         },
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+
+      // Check audit message
+      expect(auditService.sendAuditMessage).toHaveBeenLastCalledWith({
+        action: ManageUsersEvent.REMOVE_USER_ROLE_FAILURE,
+        details: '{"role":"role99"}',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: 'USER_ID',
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.stringMatching(UUID_REGEX),
+      })
     })
   })
 
