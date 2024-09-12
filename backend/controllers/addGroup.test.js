@@ -1,9 +1,17 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { selectGroupFactory } = require('./addGroup')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 
 describe('select groups factory', () => {
   const getUserAndGroups = jest.fn()
   const saveGroup = jest.fn()
   const addGroup = selectGroupFactory(getUserAndGroups, saveGroup, '/maintain-external-users', '/manage-external-users')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call addGroup render', async () => {
@@ -16,6 +24,8 @@ describe('select groups factory', () => {
 
       const render = jest.fn()
       await addGroup.index(req, { render })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.VIEW_USER_GROUPS_ATTEMPT))
+
       expect(render).toBeCalledWith('addGroup.njk', {
         errors: undefined,
         groupDropdownValues: [{ text: 'name', value: 'code' }],
@@ -64,11 +74,13 @@ describe('select groups factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should add the group and redirect', async () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { group: 'GLOBAL_SEARCH' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -76,6 +88,8 @@ describe('select groups factory', () => {
       await addGroup.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveGroup).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
@@ -84,6 +98,7 @@ describe('select groups factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
@@ -102,10 +117,14 @@ describe('select groups factory', () => {
           body: { group: 'GLOBAL_SEARCH' },
           flash: jest.fn(),
           originalUrl: '/some-location',
+          session,
         },
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
 
     it('should fail gracefully if group manager not allowed to maintain user', async () => {
@@ -118,10 +137,14 @@ describe('select groups factory', () => {
           body: { group: 'GLOBAL_SEARCH' },
           flash: jest.fn(),
           originalUrl: '/some-location',
+          session,
         },
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
   })
 })

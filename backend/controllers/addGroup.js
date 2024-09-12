@@ -1,3 +1,7 @@
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { auditWithSubject } = require('../audit/manageUsersAudit')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+
 const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addGroupErrors', errors)
@@ -14,6 +18,9 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
       .filter((g) => !userGroupsCodes.has(g.groupCode))
       .map((g) => ({ text: g.groupName, value: g.groupCode }))
 
+    const audit = auditWithSubject(user.username, userId, ManageUsersSubjectType.USER_ID)
+    await audit(ManageUsersEvent.VIEW_USER_GROUPS_ATTEMPT)
+
     res.render('addGroup.njk', {
       staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
@@ -26,6 +33,10 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
     const { userId } = req.params
     const { group } = req.body
     const staffUrl = `${manageUrl}/${userId}/details`
+    const audit = auditWithSubject(req.session.userDetails.username, userId, ManageUsersSubjectType.USER_ID, {
+      groupCode: group,
+    })
+    await audit(ManageUsersEvent.CREATE_GROUP_ATTEMPT)
 
     if (!group) {
       const errors = [{ href: '#group', text: 'Select a group' }]
@@ -35,6 +46,8 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
         await saveGroup(res.locals, userId, group)
         res.redirect(`${staffUrl}`)
       } catch (error) {
+        await audit(ManageUsersEvent.CREATE_GROUP_FAILURE)
+
         if (error.status === 403) {
           // user is already in the group
           const errors = [
