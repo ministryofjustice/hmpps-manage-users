@@ -1,7 +1,7 @@
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
-
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')
+const { audit } = require('../audit/manageUsersAudit')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, domain) => {
@@ -28,18 +28,17 @@ const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, li
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [domain])
     } else {
+      const newDomain = { name: domain.domainName, description: domain.domainDescription }
+      const { username } = req.session.userDetails
+      const sendAudit = audit(username, { domain: newDomain })
+      await sendAudit(ManageUsersEvent.CREATE_EMAIL_DOMAIN_ATTEMPT)
+
       try {
-        const newDomain = { name: domain.domainName, description: domain.domainDescription }
         await createEmailDomainApi(res.locals, newDomain)
-        const { username } = req.session.userDetails
-        await auditService.sendAuditMessage({
-          action: 'CREATE_EMAIL_DOMAIN',
-          who: username,
-          details: JSON.stringify({ domain: newDomain }),
-          service: 'hmpps-manage-users',
-        })
         res.redirect('/email-domains')
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_EMAIL_DOMAIN_FAILURE)
+
         if (err.status === 409 && err.response && err.response.body) {
           const domainError = [{ href: '#domainName', text: err.response.body.userMessage }]
           stashStateAndRedirectToIndex(req, res, domainError, [domain])
