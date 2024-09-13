@@ -36,7 +36,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
     const audit = auditWithSubject(req.session.userDetails.username, userId, ManageUsersSubjectType.USER_ID, {
       groupCode: group,
     })
-    await audit(ManageUsersEvent.CREATE_GROUP_ATTEMPT)
+    await audit(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT)
 
     if (!group) {
       const errors = [{ href: '#group', text: 'Select a group' }]
@@ -46,7 +46,7 @@ const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) =
         await saveGroup(res.locals, userId, group)
         res.redirect(`${staffUrl}`)
       } catch (error) {
-        await audit(ManageUsersEvent.CREATE_GROUP_FAILURE)
+        await audit(ManageUsersEvent.ADD_USER_GROUP_FAILURE)
 
         if (error.status === 403) {
           // user is already in the group
