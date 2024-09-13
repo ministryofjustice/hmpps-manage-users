@@ -4,6 +4,7 @@ const { UUID_REGEX } = require('../utils/testConstants')
 const config = require('../config')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { auditAction } = require('../utils/testUtils')
 
 describe('user detail factory', () => {
   const defaultSearchUrl = '/search-external-users'
@@ -394,12 +395,13 @@ describe('user detail factory', () => {
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'REMOVE_USER_CASELOAD',
+        action: ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT,
+        correlationId: expect.stringMatching(UUID_REGEX),
         details: '{"caseload":"TEST_CASELOAD"}',
         subjectId: 'TEST_USER',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
       })
     })
 
@@ -416,7 +418,8 @@ describe('user detail factory', () => {
         { redirect },
       )
       expect(redirect).toBeCalledWith('/some-location')
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE))
     })
 
     it('should refresh user details if user does not have caseload', async () => {
@@ -431,7 +434,9 @@ describe('user detail factory', () => {
         { redirect },
       )
       expect(redirect).toBeCalledWith('/manage-external-users/TEST_USER/details')
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE))
     })
   })
 
