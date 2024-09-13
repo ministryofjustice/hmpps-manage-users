@@ -92,11 +92,17 @@ const userDetailsFactory = (
   const removeGroup = async (req, res) => {
     const { userId, group } = req.params
     const staffUrl = `${manageUrl}/${userId}`
+    const { username } = req.session.userDetails
+
+    const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { group })
+    await sendAudit(ManageUsersEvent.REMOVE_USER_GROUP_ATTEMPT)
 
     try {
       await removeGroupApi(res.locals, userId, group)
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
+      await sendAudit(ManageUsersEvent.REMOVE_USER_GROUP_FAILURE)
+
       if (error.status === 400) {
         // user already removed from group
         res.redirect(req.originalUrl)
