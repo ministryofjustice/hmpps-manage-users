@@ -1,6 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 
 const { selectCaseloadsFactory } = require('./addUserCaseload')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 
 describe('select caseloads factory', () => {
   const getUserAssignableCaseloads = jest.fn()
@@ -78,12 +80,15 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI', 'PVI'])
+
+      // audit check
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'ADD_USER_CASELOAD',
+        action: ManageUsersEvent.ADD_USER_CASELOAD_ATTEMPT,
+        correlationId: expect.any(String),
         subjectId: 'TEST_USER',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: username,
-        service: 'hmpps-manage-users',
+        service: expect.any(String),
         details: '{"caseloads":["LEI","PVI"]}',
       })
     })
@@ -101,13 +106,16 @@ describe('select caseloads factory', () => {
       await addUserCaseload.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
       expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI'])
+
+      // audit check
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'ADD_USER_CASELOAD',
+        action: ManageUsersEvent.ADD_USER_CASELOAD_ATTEMPT,
+        correlationId: expect.any(String),
         subjectId: 'TEST_USER',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: username,
+        service: expect.any(String),
         details: '{"caseloads":["LEI"]}',
-        service: 'hmpps-manage-users',
       })
     })
 
@@ -126,7 +134,7 @@ describe('select caseloads factory', () => {
       expect(req.flash).toBeCalledWith('addCaseloadErrors', [
         { href: '#caseloads', text: 'Select at least one caseload' },
       ])
-      expect(auditService.sendAuditMessage).not.toBeCalled()
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
