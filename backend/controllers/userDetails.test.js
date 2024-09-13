@@ -441,14 +441,17 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'ENABLE_USER',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
       expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: ManageUsersEvent.ENABLE_USER_ATTEMPT,
+        correlationId: expect.stringMatching(UUID_REGEX),
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        details: null,
+      })
     })
   })
 
@@ -458,14 +461,17 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'DISABLE_USER',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
       expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.DISABLE_USER_ATTEMPT,
+        correlationId: expect.stringMatching(UUID_REGEX),
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        details: null,
+      })
     })
   })
 })

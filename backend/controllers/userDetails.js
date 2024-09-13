@@ -141,20 +141,20 @@ const userDetailsFactory = (
       }
     }
   }
-
   const enableUser = async (req, res) => {
     const { userId } = req.params
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
-    await enableUserApi(res.locals, userId)
-    await auditService.sendAuditMessage({
-      action: 'ENABLE_USER',
-      who: username,
-      subjectId: userId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      service: 'hmpps-manage-users',
-    })
+    const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID)
+    await sendAudit(ManageUsersEvent.ENABLE_USER_ATTEMPT)
+
+    try {
+      await enableUserApi(res.locals, userId)
+    } catch (error) {
+      await sendAudit(ManageUsersEvent.ENABLE_USER_FAILURE)
+      throw error
+    }
     res.redirect(`${staffUrl}/details`)
   }
 
@@ -163,14 +163,15 @@ const userDetailsFactory = (
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
-    await disableUserApi(res.locals, userId)
-    await auditService.sendAuditMessage({
-      action: 'DISABLE_USER',
-      who: username,
-      subjectId: userId,
-      subjectType: USER_ID_SUBJECT_TYPE,
-      service: 'hmpps-manage-users',
-    })
+    const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID)
+    await sendAudit(ManageUsersEvent.DISABLE_USER_ATTEMPT)
+
+    try {
+      await disableUserApi(res.locals, userId)
+    } catch (error) {
+      await sendAudit(ManageUsersEvent.DISABLE_USER_FAILURE)
+      throw error
+    }
     res.redirect(`${staffUrl}/details`)
   }
 
