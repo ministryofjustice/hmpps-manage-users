@@ -89,7 +89,7 @@ describe('select groups factory', () => {
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveGroup).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
@@ -123,8 +123,8 @@ describe('select groups factory', () => {
       )
       expect(redirect).toBeCalledWith('/some-location')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
     })
 
     it('should fail gracefully if group manager not allowed to maintain user', async () => {
@@ -143,8 +143,8 @@ describe('select groups factory', () => {
       )
       expect(redirect).toBeCalledWith('/some-location')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
     })
   })
 })
