@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import { auditService, USER_ID_SUBJECT_TYPE } from '@ministryofjustice/hmpps-audit-client'
+import { auditWithSubject } from '../audit/manageUsersAudit'
+import { ManageUsersSubjectType } from '../audit/manageUsersSubjectType'
+import { ManageUsersEvent } from '../audit/manageUsersEvent'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
@@ -40,15 +42,13 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       const caseloadArray = Array.isArray(caseloads) ? caseloads : [caseloads]
-      await saveCaseloads(res.locals, userId, caseloadArray)
-      await auditService.sendAuditMessage({
-        action: 'ADD_USER_CASELOAD',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        details: JSON.stringify({ caseloads: caseloadArray }),
-        service: 'hmpps-manage-users',
-      })
+      const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { caseloads: caseloadArray })
+      await sendAudit(ManageUsersEvent.ADD_USER_CASELOAD_ATTEMPT)
+      try {
+        await saveCaseloads(res.locals, userId, caseloadArray)
+      } catch {
+        await sendAudit(ManageUsersEvent.ADD_USER_CASELOAD_FAILURE)
+      }
       res.redirect(`${staffUrl}`)
     }
   }
