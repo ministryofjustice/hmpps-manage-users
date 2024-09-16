@@ -1,6 +1,9 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { auditWithSubject } = require('../audit/manageUsersAudit')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 
 function mapDescription(error, errorDescription) {
   switch (error) {
@@ -40,26 +43,22 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
     const { userId } = req.params
     const { username } = req.session.userDetails
     const { email } = trimObjValues(req.body)
+    const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { email })
+    await sendAudit(ManageUsersEvent.UPDATE_USER_ATTEMPT)
     try {
       const errors = validateChangeEmail(email)
 
       if (errors.length > 0) {
+        await sendAudit(ManageUsersEvent.UPDATE_USER_FAILURE)
         stashStateAndRedirectToIndex(req, res, errors, [email])
       } else {
         await changeEmail(res.locals, userId, email)
-        await auditService.sendAuditMessage({
-          action: 'CHANGE_EMAIL_ADDRESS',
-          who: username,
-          subjectId: userId,
-          subjectType: 'USER_ID',
-          service: 'hmpps-manage-users',
-          details: JSON.stringify({ email }),
-        })
         const successUrl = `${manageUrl}/${userId}/change-email-success`
         req.flash('changeEmail', email)
         res.redirect(successUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_USER_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error, error_description: errorDescription } = err.response.body
         const description = mapDescription(error, errorDescription)
