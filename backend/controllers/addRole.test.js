@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { selectRolesFactory } = require('./addRole')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 
 describe('select roles factory', () => {
   beforeEach(() => {
@@ -11,6 +14,7 @@ describe('select roles factory', () => {
   const saveRoles = jest.fn()
 
   const addRole = selectRolesFactory(getUserRolesAndMessage, saveRoles, '/manage-external-users')
+  const session = { userDetails: { username: 'JoeAdmin' } }
 
   describe('index', () => {
     it('should call addRole render', async () => {
@@ -18,6 +22,7 @@ describe('select roles factory', () => {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn(),
         get: jest.fn().mockReturnValue('localhost'),
+        session,
       }
       getUserRolesAndMessage.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
@@ -34,6 +39,8 @@ describe('select roles factory', () => {
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         message: 'roles message',
       })
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT))
     })
 
     it('should call addRole render  exclude oauth admin', async () => {
@@ -41,6 +48,7 @@ describe('select roles factory', () => {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn(),
         get: jest.fn().mockReturnValue('localhost'),
+        session,
       }
       getUserRolesAndMessage.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
@@ -67,6 +75,7 @@ describe('select roles factory', () => {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn().mockReturnValue({ error: 'some error' }),
         get: jest.fn().mockReturnValue('localhost'),
+        session,
       }
       getUserRolesAndMessage.mockResolvedValue([
         { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
@@ -99,12 +108,13 @@ describe('select roles factory', () => {
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'ADD_USER_ROLES',
+        action: ManageUsersEvent.ADD_USER_ROLES_ATTEMPT,
         details: '{"roles":["GLOBAL_SEARCH","BOB"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: 'JoeAdmin',
-        service: 'hmpps-manage-users',
+        service: expect.any(String),
+        correlationId: expect.any(String),
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
@@ -122,12 +132,13 @@ describe('select roles factory', () => {
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'ADD_USER_ROLES',
+        action: ManageUsersEvent.ADD_USER_ROLES_ATTEMPT,
         details: '{"roles":["GLOBAL_SEARCH"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: 'JoeAdmin',
-        service: 'hmpps-manage-users',
+        service: expect.any(String),
+        correlationId: expect.any(String),
       })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
@@ -144,9 +155,10 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       await addRole.post(req, { redirect })
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
+
+      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })
   })
 })
