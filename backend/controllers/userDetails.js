@@ -125,18 +125,14 @@ const userDetailsFactory = (
     const { username } = req.session.userDetails
     const staffUrl = `${manageUrl}/${userId}`
 
+    const audit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { caseload })
+    await audit(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT)
+
     try {
       await removeUserCaseloadApi(res.locals, userId, caseload)
-      await auditService.sendAuditMessage({
-        action: 'REMOVE_USER_CASELOAD',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        details: JSON.stringify({ caseload }),
-        service: 'hmpps-manage-users',
-      })
       res.redirect(`${staffUrl}/details`)
     } catch (error) {
+      await audit(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE)
       if (error.status === 400) {
         res.redirect(req.originalUrl)
       } else if (error.status === 404) {
