@@ -1,4 +1,7 @@
 const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
+const { auditWithSubject } = require('../audit/manageUsersAudit')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -28,6 +31,9 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       }),
     }))
 
+    const audit = auditWithSubject(req.session.userDetails, userId, ManageUsersSubjectType.USER_ID)
+    await audit(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT)
+
     res.render('addRole.njk', {
       staff: { username: user.username, name: `${user.firstName} ${user.lastName}` },
       staffUrl,
@@ -48,15 +54,14 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
-      await saveRoles(res.locals, userId, roleArray)
-      await auditService.sendAuditMessage({
-        action: 'ADD_USER_ROLES',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        details: JSON.stringify({ roles: roleArray }),
-        service: 'hmpps-manage-users',
-      })
+      const sendAudit = auditWithSubject(username, userId, USER_ID_SUBJECT_TYPE, { roles: roleArray })
+      await sendAudit(ManageUsersEvent.ADD_USER_ROLES_ATTEMPT)
+
+      try {
+        await saveRoles(res.locals, userId, roleArray)
+      } catch {
+        await sendAudit(ManageUsersEvent.ADD_USER_ROLES_FAILURE)
+      }
       res.redirect(`${staffUrl}`)
     }
   }
