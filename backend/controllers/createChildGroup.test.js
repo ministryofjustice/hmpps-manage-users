@@ -1,8 +1,18 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createChildGroupFactory } = require('./createChildGroup')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { UUID_REGEX } = require('../utils/testConstants')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('create child group factory', () => {
   const createChildGroupApi = jest.fn()
   const createChildGroup = createChildGroupFactory(createChildGroupApi, '/manage-groups')
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call create child group render', async () => {
@@ -29,11 +39,13 @@ describe('create child group factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should create child group and redirect', async () => {
       const req = {
         params: { pgroup: 'P-GROUP' },
         body: { groupCode: 'BOB1', groupName: 'group name' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -45,6 +57,15 @@ describe('create child group factory', () => {
         groupName: 'group name',
         parentGroupCode: 'P-GROUP',
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_GROUP_ATTEMPT,
+        subjectId: 'BOB1',
+        subjectType: ManageUsersSubjectType.GROUP_CODE,
+        who: 'username',
+        service: config.default.productId,
+        details: JSON.stringify({ parentGroup: 'P-GROUP' }),
+        correlationId: expect.stringMatching(UUID_REGEX),
+      })
     })
 
     it('should trim, group name and redirect', async () => {
@@ -52,6 +73,7 @@ describe('create child group factory', () => {
         params: { pgroup: 'P-GROUP' },
         body: { groupCode: 'BOB1', groupName: 'group name ' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -70,6 +92,7 @@ describe('create child group factory', () => {
         params: { pgroup: 'P-GROUP' },
         body: { groupCode: 'bob1', groupName: 'group name ' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -89,6 +112,7 @@ describe('create child group factory', () => {
         body: { groupCode: '', groupName: '' },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
@@ -98,6 +122,9 @@ describe('create child group factory', () => {
         { href: '#groupCode', text: 'Enter a group code' },
         { href: '#groupName', text: 'Enter a group name' },
       ])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
 
     it('should stash the group and redirect if no code or name entered', async () => {
@@ -106,12 +133,16 @@ describe('create child group factory', () => {
         body: { groupCode: '', groupName: '' },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
       await createChildGroup.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('group', [{ groupCode: '', groupName: '', parentGroupCode: 'P-GROUP' }])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
 
     it('should fail gracefully if child group already exists', async () => {
@@ -128,6 +159,7 @@ describe('create child group factory', () => {
         body: { groupCode: 'BOB1', groupName: 'group name' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createChildGroup.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -137,6 +169,9 @@ describe('create child group factory', () => {
           text: 'Group code already exists',
         },
       ])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
   })
 })
