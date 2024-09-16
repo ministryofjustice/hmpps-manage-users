@@ -330,20 +330,33 @@ describe('user detail factory', () => {
 
   describe('remove group', () => {
     it('should remove group and redirect', async () => {
-      const reqWithGroup = { params: { group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' } }
+      const reqWithGroup = {
+        params: { group: 'group1', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        session: { userDetails: { username: 'username' } },
+      }
 
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeGroup(reqWithGroup, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(removeGroupApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: ManageUsersEvent.REMOVE_USER_GROUP_ATTEMPT,
+        details: '{"group":"group1"}',
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.stringMatching(UUID_REGEX),
+      })
     })
 
     it('should ignore if user does not have group', async () => {
       const redirect = jest.fn()
       const error = { ...new Error('This failed'), status: 400 }
       removeGroupApi.mockRejectedValue(error)
-      await userDetails.removeRole(
+      await userDetails.removeGroup(
         {
           params: { role: 'group99' },
           originalUrl: '/some-location',
@@ -356,17 +369,25 @@ describe('user detail factory', () => {
 
     it('should fail gracefully if group Manager tries to delete users last group', async () => {
       const redirect = jest.fn()
-      const error = { ...new Error('This failed'), status: 403 }
+      const error = { ...new Error('This failed'), status: 403, response: { body: 'This failed' } }
       removeGroupApi.mockRejectedValue(error)
-      await userDetails.removeRole(
+      await userDetails.removeGroup(
         {
-          params: { role: 'group99' },
+          params: { role: 'group99', userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
           originalUrl: '/some-location',
           session: { userDetails: { username: 'username' } },
+          flash: jest.fn(),
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
+      expect(redirect).toBeCalledWith(expect.stringMatching(/\/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a\/details$/))
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_GROUP_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_GROUP_FAILURE),
+      )
     })
 
     it('should copy any flash errors over', async () => {

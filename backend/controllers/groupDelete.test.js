@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { groupDeleteFactory } = require('./groupDelete')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 
 describe('group delete factory', () => {
   const getGroupDetailsApi = jest.fn()
@@ -67,12 +70,14 @@ describe('group delete factory', () => {
       await groupDelete.deleteGroup(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups')
       expect(deleteGroupApi).toBeCalledWith(locals, 'group1')
+
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'DELETE_GROUP',
-        subjectId: 'user id',
-        subjectType: 'USER_ID',
+        action: ManageUsersEvent.DELETE_GROUP_ATTEMPT,
+        correlationId: expect.any(String),
+        subjectId: 'group1',
+        subjectType: ManageUsersSubjectType.GROUP_CODE,
         who: username,
-        service: 'hmpps-manage-users',
+        service: expect.any(String),
         details: '{"group":"group1"}',
       })
     })
@@ -97,7 +102,9 @@ describe('group delete factory', () => {
       expect(deleteGroupApi).toBeCalledWith(locals, 'DOES_NOT_EXIST')
       expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
       expect(redirect).toBeCalledWith('/manage-groups')
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_FAILURE))
     })
   })
 })
