@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createExternalUserFactory } = require('./createExternalUser')
+const { ManageUsersEvent } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('create user factory', () => {
   const getAssignableGroupsApi = jest.fn()
@@ -78,13 +81,14 @@ describe('create user factory', () => {
         groupCodes: ['SITE_1_GROUP_1'],
       })
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
+        action: ManageUsersEvent.CREATE_USER_ATTEMPT,
         details:
-          '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":"SITE_1_GROUP_1"}}',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
+          '{"authSource":"external","user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":"SITE_1_GROUP_1"}}',
+        subjectId: null,
+        subjectType: null,
         who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -114,15 +118,6 @@ describe('create user factory', () => {
         firstName: 'bob',
         lastName: 'smith',
         groupCodes: ['SITE_1_GROUP_1'],
-      })
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
-        details:
-          '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":"SITE_1_GROUP_1"}}',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
       })
     })
 
@@ -154,14 +149,6 @@ describe('create user factory', () => {
         lastName: 'smith',
         groupCodes: undefined,
       })
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
-        details: '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":""}}',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
     })
 
     it('should stash away the search results url in the session', async () => {
@@ -185,17 +172,10 @@ describe('create user factory', () => {
         searchResultsUrl: '/search-external-users?user=bob%40digital.justice.gov.uk',
         userDetails: { username: 'username' },
       })
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'CREATE_EXTERNAL_USER',
-        details: '{"user":{"email":"bob@digital.justice.gov.uk","firstName":"bob","lastName":"smith","groupCode":""}}',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
     })
 
     it('should stash the errors and redirect if no details entered', async () => {
-      const req = { params: {}, body: {}, flash: jest.fn(), originalUrl: '/original' }
+      const req = { params: {}, body: {}, flash: jest.fn(), originalUrl: '/original', session }
 
       const redirect = jest.fn()
       await createExternalUser.post(req, { redirect })
@@ -214,7 +194,8 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if email not valid', async () => {
@@ -226,6 +207,7 @@ describe('create user factory', () => {
         body: { email: 'bob@digital.justice.gov.uk' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createExternalUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -239,7 +221,8 @@ describe('create user factory', () => {
           text: 'Enter a last name',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if email already exists', async () => {
@@ -261,6 +244,7 @@ describe('create user factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createExternalUser.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -270,7 +254,8 @@ describe('create user factory', () => {
           text: 'Email already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
   })
 })
