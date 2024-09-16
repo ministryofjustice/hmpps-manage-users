@@ -1,5 +1,7 @@
 import { Request, Response } from 'express'
-import { auditService, USER_ID_SUBJECT_TYPE } from '@ministryofjustice/hmpps-audit-client'
+import { auditWithSubject } from '../audit/manageUsersAudit'
+import { ManageUsersSubjectType } from '../audit/manageUsersSubjectType'
+import { ManageUsersEvent } from '../audit/manageUsersEvent'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
@@ -46,18 +48,13 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
     const { username } = req.session.userDetails
     const { group } = req.params
     const { userId } = req.params
+    const sendAudit = auditWithSubject(username, group, ManageUsersSubjectType.GROUP_CODE, { group })
+    await sendAudit(ManageUsersEvent.DELETE_GROUP_ATTEMPT)
     try {
       await deleteGroupApi(res.locals, group)
-      await auditService.sendAuditMessage({
-        action: 'DELETE_GROUP',
-        who: username,
-        subjectId: userId,
-        subjectType: USER_ID_SUBJECT_TYPE,
-        service: 'hmpps-manage-users',
-        details: JSON.stringify({ group }),
-      })
       res.redirect(`${maintainUrl}`)
     } catch (error) {
+      await sendAudit(ManageUsersEvent.DELETE_GROUP_FAILURE)
       if (error.status === 400) {
         // user already removed from group
         res.redirect(req.originalUrl)
