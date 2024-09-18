@@ -1,5 +1,9 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { changeEmailFactory } = require('./changeEmail')
+const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const config = require('../config')
+const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { auditAction } = require('../utils/testUtils')
 
 const createError = ({ status = 400, errorCode = 'email.somethingelse' }) => ({
   ...new Error('This failed'),
@@ -79,37 +83,13 @@ describe('change email factory', () => {
       )
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CHANGE_EMAIL_ADDRESS',
+        action: ManageUsersEvent.UPDATE_USER_ATTEMPT,
+        correlationId: expect.any(String),
         details: '{"email":"bob@digital.justice.gov.uk"}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
+        subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: 'hmpps-manage-users',
-      })
-    })
-
-    it('should change the email and redirect to new email address', async () => {
-      const req = {
-        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
-        body: { email: 'bob@digital.justice.gov.uk' },
-        flash: jest.fn(),
-        session,
-      }
-
-      const redirect = jest.fn()
-      const locals = jest.fn()
-      await changeEmail.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith(
-        '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/change-email-success',
-      )
-      expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CHANGE_EMAIL_ADDRESS',
-        details: '{"email":"bob@digital.justice.gov.uk"}',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
       })
     })
 
@@ -129,14 +109,7 @@ describe('change email factory', () => {
       )
       expect(saveEmail).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'bob@digital.justice.gov.uk')
       expect(req.flash).toBeCalledWith('changeEmail', 'bob@digital.justice.gov.uk')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CHANGE_EMAIL_ADDRESS',
-        details: '{"email":"bob@digital.justice.gov.uk"}',
-        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
-        subjectType: 'USER_ID',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no email entered', async () => {
@@ -152,7 +125,9 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeEmailErrors', [{ href: '#email', text: 'Enter an email address' }])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
 
     it('should stash the email and redirect if no email entered', async () => {
@@ -168,7 +143,9 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeEmail', [undefined])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
 
     it('should fail gracefully if email not valid', async () => {
@@ -186,7 +163,8 @@ describe('change email factory', () => {
       await changeEmail.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeEmail', ['bob@digital.justice.gov.uk'])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
 
     it('should display work email message if email domain not valid', async () => {
@@ -208,7 +186,8 @@ describe('change email factory', () => {
           text: 'The email domain is not allowed.  Enter a work email address',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
 
     it('should display duplicate email message if email already taken', async () => {
@@ -230,7 +209,8 @@ describe('change email factory', () => {
           text: 'This email address is already assigned to a different user',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
 
     it('should display default error message on client error', async () => {
@@ -252,7 +232,8 @@ describe('change email factory', () => {
           text: 'not valid',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_USER_FAILURE))
     })
   })
 
