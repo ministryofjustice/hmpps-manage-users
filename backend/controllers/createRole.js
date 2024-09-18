@@ -1,4 +1,5 @@
 const { validateCreateRole } = require('./roleValidation')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const createRoleFactory = (createRoleApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, role) => {
@@ -39,7 +40,10 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
 
     const errors = validateCreateRole(role)
 
+    const sendAudit = audit(req.session.userDetails.username, { role })
+    await sendAudit(ManageUsersEvent.CREATE_ROLE_ATTEMPT)
     if (errors.length > 0) {
+      await sendAudit(ManageUsersEvent.CREATE_ROLE_FAILURE)
       stashStateAndRedirectToIndex(req, res, errors, [role])
     } else {
       try {
@@ -47,6 +51,7 @@ const createRoleFactory = (createRoleApi, manageRoleUrl) => {
 
         res.redirect(`${manageRoleUrl}/${role.roleCode}`)
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_ROLE_FAILURE)
         if (err.status === 409 && err.response && err.response.body) {
           //  role code already exists
           const roleError = [{ href: '#roleCode', text: 'Role code already exists' }]
