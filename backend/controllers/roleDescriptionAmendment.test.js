@@ -1,4 +1,8 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { roleDescriptionAmendmentFactory } = require('./roleDescriptionAmendment')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
+const config = require('../config')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
@@ -8,6 +12,11 @@ describe('role amendment factory', () => {
     changeRoleDescriptionApi,
     '/manage-roles',
   )
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call roleDescription render', async () => {
@@ -46,11 +55,20 @@ describe('role amendment factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
+    beforeEach(() => {
+      getRoleDetailsApi.mockResolvedValue({
+        roleDescription: 'role description',
+        roleName: 'Auth Group Manager',
+      })
+    })
+
     it('should change the role description and redirect', async () => {
       const req = {
         params: { role: 'role1' },
         body: { roleDescription: 'RoleADesc' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -58,6 +76,15 @@ describe('role amendment factory', () => {
       await changeRoleDescription.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleDescriptionApi).toBeCalledWith(locals, 'role1', 'RoleADesc')
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.UPDATE_ROLE_ATTEMPT,
+        details: JSON.stringify({ role: 'role1', newRoleDescription: 'RoleADesc' }),
+        subjectId: 'role1',
+        subjectType: ManageUsersSubjectType.ROLE_CODE,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
 
     it('should trim, change the role description and redirect', async () => {
@@ -65,6 +92,7 @@ describe('role amendment factory', () => {
         params: { role: 'role1' },
         body: { roleDescription: ' RoleADesc ' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -72,6 +100,7 @@ describe('role amendment factory', () => {
       await changeRoleDescription.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleDescriptionApi).toBeCalledWith(locals, 'role1', 'RoleADesc')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
     })
 
     it('should stash the role description and redirect if role description is empty', async () => {
@@ -80,6 +109,7 @@ describe('role amendment factory', () => {
         body: { roleDescription: '' },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
@@ -87,6 +117,7 @@ describe('role amendment factory', () => {
       await changeRoleDescription.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleDescriptionApi).toBeCalledWith(locals, 'role1', '')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
     })
 
     it('should not change the role description and redirect if no role description entered', async () => {
@@ -95,6 +126,7 @@ describe('role amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
       const error = { ...new Error('This failed'), status: 400, response: { body: { error_description: 'not valid' } } }
       changeRoleDescriptionApi.mockRejectedValue(error)
@@ -109,6 +141,8 @@ describe('role amendment factory', () => {
           text: undefined,
         },
       ])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
 
     it('should fail gracefully if role description not valid', async () => {
@@ -121,10 +155,13 @@ describe('role amendment factory', () => {
         body: { roleDescription: 'RoleADesc' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await changeRoleDescription.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleDescription', ['RoleADesc'])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
   })
 })
