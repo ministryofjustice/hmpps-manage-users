@@ -1,6 +1,7 @@
 const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
@@ -60,8 +61,15 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
       user.userType !== 'DPS_ADM',
       caseloadText(user),
     )
+    const sendAudit = audit(req.session.userDetails.username, {
+      authSource: 'nomis',
+      user,
+    })
+    await sendAudit(ManageUsersEvent.CREATE_USER_ATTEMPT)
+
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
+      await sendAudit(ManageUsersEvent.CREATE_USER_FAILURE)
     } else {
       try {
         const { username } = req.session.userDetails
@@ -79,6 +87,7 @@ const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manage
           detailsLink: `${manageUrl}/${userDetails.username}/details`,
         })
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_USER_FAILURE)
         if (err.status === 400 && err.response && err.response.body) {
           const { userMessage } = err.response.body
           const errorDetails = [{ text: userMessage }]

@@ -1,6 +1,7 @@
 const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const createExternalUserFactory = (
   getAssignableGroupsApi,
@@ -41,22 +42,21 @@ const createExternalUserFactory = (
 
     const errors = validateCreate(user, isGroupManager)
 
+    const sendAudit = audit(req.session.userDetails.username, {
+      authSource: 'external',
+      user,
+    })
+    await sendAudit(ManageUsersEvent.CREATE_USER_ATTEMPT)
+
     if (errors.length > 0) {
       stashStateAndRedirectToIndex(req, res, errors, [user])
+      await sendAudit(ManageUsersEvent.CREATE_USER_FAILURE)
     } else {
       try {
         const groupCodes = user.groupCode !== '' ? [user.groupCode] : undefined
         const updatedUser = { email: user.email, firstName: user.firstName, lastName: user.lastName, groupCodes }
         const userId = await createExternalUser(res.locals, updatedUser)
         const { username } = req.session.userDetails
-        await auditService.sendAuditMessage({
-          action: 'CREATE_EXTERNAL_USER',
-          who: username,
-          subjectId: userId,
-          subjectType: USER_ID_SUBJECT_TYPE,
-          service: 'hmpps-manage-users',
-          details: JSON.stringify({ user }),
-        })
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}?user=${encodeURIComponent(user.email)}`
         res.render('createExternalUserSuccess.njk', {
@@ -64,6 +64,7 @@ const createExternalUserFactory = (
           detailsLink: `${manageUrl}/${userId}/details`,
         })
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_USER_FAILURE)
         if (err.status === 400 && err.response && err.response.body) {
           const { emailError: error, userMessage: errorDescription } = err.response.body
 
