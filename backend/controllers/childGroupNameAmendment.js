@@ -1,5 +1,6 @@
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 const childGroupAmendmentFactory = (getChildGroupDetailsApi, changeChildGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {
@@ -28,15 +29,22 @@ const childGroupAmendmentFactory = (getChildGroupDetailsApi, changeChildGroupNam
     const { pgroup, group } = req.params
     const { groupName } = trimObjValues(req.body)
     const groupUrl = `${manageGroupUrl}/${pgroup}`
+    const sendAudit = auditWithSubject(req.session.userDetails.username, group, ManageUsersSubjectType.GROUP_CODE, {
+      parentGroup: pgroup,
+      groupName,
+    })
+    await sendAudit(ManageUsersEvent.UPDATE_GROUP_ATTEMPT)
     try {
       const errors = validateGroupName(groupName)
       if (errors.length > 0) {
+        await sendAudit(ManageUsersEvent.UPDATE_GROUP_FAILURE)
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
         await changeChildGroupNameApi(res.locals, group, groupName)
         res.redirect(groupUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_GROUP_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error } = err.response.body
 
