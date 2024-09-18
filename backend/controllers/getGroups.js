@@ -1,11 +1,20 @@
+const { ManageUsersEvent, audit } = require('../audit')
+
 const selectGroupsFactory = (getAssignableGroups, maintainUrl) => {
   const index = async (req, res) => {
-    const assignableGroups = await getAssignableGroups(res.locals)
-    res.render('groups.njk', {
-      groupValues: assignableGroups.map((g) => ({ text: g.groupName, value: g.groupCode })),
-      maintainUrl,
-      errors: req.flash('groupError'),
-    })
+    const sendAudit = audit(req.session.userDetails.username)
+    await sendAudit(ManageUsersEvent.LIST_GROUPS_ATTEMPT)
+    try {
+      const assignableGroups = await getAssignableGroups(res.locals)
+      res.render('groups.njk', {
+        groupValues: assignableGroups.map((g) => ({ text: g.groupName, value: g.groupCode })),
+        maintainUrl,
+        errors: req.flash('groupError'),
+      })
+    } catch (error) {
+      await sendAudit(ManageUsersEvent.LIST_GROUPS_FAILURE)
+      throw error
+    }
   }
 
   const search = async (req, res) => {

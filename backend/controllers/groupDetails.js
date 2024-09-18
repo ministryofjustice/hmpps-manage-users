@@ -1,5 +1,4 @@
-const { v4 } = require('uuid')
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
@@ -11,15 +10,9 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
   const index = async (req, res) => {
     const { group } = req.params
     const hasMaintainAuthUsers = Boolean(res.locals && res.locals.user && res.locals.user.maintainAuthUsers)
-    const auditCorrelationId = v4()
     const { username } = req.session.userDetails
-    await auditService.sendAuditMessage({
-      action: 'VIEW_GROUP_DETAILS_ATTEMPT',
-      who: username,
-      correlationId: auditCorrelationId,
-      service: 'hmpps-manage-users',
-      details: JSON.stringify({ groupCode: group }),
-    })
+    const sendAudit = auditWithSubject(username, group, ManageUsersSubjectType.GROUP_CODE)
+    await sendAudit(ManageUsersEvent.VIEW_GROUP_DETAILS_ATTEMPT)
 
     try {
       const groupDetails = await getGroupDetailsApi(res.locals, group)
@@ -31,13 +24,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
         errors: req.flash('deleteGroupErrors'),
       })
     } catch (error) {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_GROUP_DETAILS_FAILURE',
-        who: username,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-        details: JSON.stringify({ groupCode: group }),
-      })
+      await sendAudit(ManageUsersEvent.VIEW_GROUP_DETAILS_FAILURE)
       if (error.status === 404) {
         const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
         req.flash('groupError', groupError)
@@ -60,10 +47,15 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
   const deleteChildGroup = async (req, res) => {
     const { pgroup, group } = req.params
     const groupUrl = `${maintainUrl}/${pgroup}`
+    const sendAudit = auditWithSubject(req.session.userDetails.username, group, ManageUsersSubjectType.GROUP_CODE, {
+      parentGroup: pgroup,
+    })
+    await sendAudit(ManageUsersEvent.DELETE_GROUP_ATTEMPT)
     try {
       await deleteChildGroupApi(res.locals, group)
       res.redirect(groupUrl)
     } catch (error) {
+      await sendAudit(ManageUsersEvent.DELETE_GROUP_FAILURE)
       if (error.status === 400) {
         // child already removed from group
         res.redirect(req.originalUrl)
