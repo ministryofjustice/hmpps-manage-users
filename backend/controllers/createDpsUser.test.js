@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createDpsUserFactory } = require('./createDpsUser')
+const { ManageUsersEvent } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('create user factory', () => {
   const getCaseloads = jest.fn()
@@ -98,13 +101,14 @@ describe('create user factory', () => {
         email: 'bob@digital.justice.gov.uk',
       })
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CREATE_DPS_USER',
-        subjectId: 'BOB_ADM',
-        subjectType: 'USER_ID',
+        action: ManageUsersEvent.CREATE_USER_ATTEMPT,
         details:
-          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
+          '{"authSource":"nomis","user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
         who: 'username',
-        service: 'hmpps-manage-users',
+        subjectId: null,
+        subjectType: null,
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -142,15 +146,7 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_OSHEA/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CREATE_DPS_USER',
-        details:
-          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_OSHEA","firstName":"O\'Shea","lastName":"O\'Mark-Lewis","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
-        who: 'username',
-        subjectId: 'BOB_OSHEA',
-        subjectType: 'USER_ID',
-        service: 'hmpps-manage-users',
-      })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
     })
 
     it('should trim fields, create user and redirect', async () => {
@@ -186,19 +182,10 @@ describe('create user factory', () => {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CREATE_DPS_USER',
-        details:
-          '{"user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","defaultCaseloadId":"MDI","userType":"DPS_GEN"}}',
-        who: 'username',
-        subjectId: 'BOB_ADM',
-        subjectType: 'USER_ID',
-        service: 'hmpps-manage-users',
-      })
     })
 
     it('should stash the errors and redirect if no details entered', async () => {
-      const req = { params: {}, body: { userType: 'DPS_GEN' }, flash: jest.fn(), originalUrl: '/original' }
+      const req = { params: {}, body: { userType: 'DPS_GEN' }, flash: jest.fn(), originalUrl: '/original', session }
 
       const redirect = jest.fn()
       await createDpsUser.post(req, { redirect })
@@ -225,7 +212,8 @@ describe('create user factory', () => {
           text: 'Select a default caseload',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should show error if an email is invalid', async () => {
@@ -241,6 +229,7 @@ describe('create user factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
@@ -252,7 +241,8 @@ describe('create user factory', () => {
           text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -284,7 +274,8 @@ describe('create user factory', () => {
           text: 'something went wrong',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -318,7 +309,8 @@ describe('create user factory', () => {
           text: 'Username already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if email domain is invalid', async () => {
@@ -352,7 +344,8 @@ describe('create user factory', () => {
           text: 'Invalid Email domain',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
   })
 })
