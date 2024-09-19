@@ -1,3 +1,6 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit')
 const { downloadFactory, downloadFactoryBetaSearch } = require('./searchDownload')
 
 describe('download factory', () => {
@@ -6,9 +9,8 @@ describe('download factory', () => {
   const allowDownload = jest.fn()
 
   beforeEach(() => {
-    searchApi.mockReset()
-    json2csv.mockReset()
-    allowDownload.mockReset()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+    jest.clearAllMocks()
   })
 
   const mockSearchCall = () => {
@@ -59,6 +61,7 @@ describe('download factory', () => {
       throw new Error('some error')
     })
   }
+  const session = { userDetails: { username: 'username' } }
 
   describe('Download CSV', () => {
     const download = downloadFactory(searchApi, json2csv, allowDownload)
@@ -70,7 +73,7 @@ describe('download factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const locals = {}
       mockSearchCall()
@@ -95,6 +98,8 @@ describe('download factory', () => {
         pageSize: 20000,
         pageOffset: 0,
       })
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })
 
     it('should call external search api with all non-page related query parameters', async () => {
@@ -109,7 +114,7 @@ describe('download factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const locals = {}
       mockSearchCall()
@@ -134,6 +139,8 @@ describe('download factory', () => {
         pageSize: 20000,
         pageOffset: 0,
       })
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })
 
     it('should return the csv', async () => {
@@ -143,7 +150,7 @@ describe('download factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const res = {
         locals: { user: { maintainAccessAdmin: true } },
@@ -161,6 +168,8 @@ describe('download factory', () => {
       expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
       expect(res.attachment).toBeCalledWith('user-search.csv')
       expect(res.send).toBeCalledWith(expect.any(String))
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })
 
     it('should return an error if not authorised', async () => {
@@ -170,7 +179,7 @@ describe('download factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const res = {
         locals: {},
@@ -182,10 +191,15 @@ describe('download factory', () => {
       }
       mockSearchCall()
       mockJson2Csv()
+      allowDownload.mockReturnValue(false)
+
       await download.downloadResults(req, res)
 
       expect(res.writeHead).toBeCalledWith(403, { 'Content-Type': 'text/plain' })
       expect(res.end).toBeCalledWith(expect.any(String))
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_FAILURE))
     })
 
     it('should return in error', async () => {
@@ -195,7 +209,7 @@ describe('download factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const res = {
         locals: { user: { maintainAccessAdmin: true } },
@@ -212,6 +226,9 @@ describe('download factory', () => {
 
       expect(res.writeHead).toBeCalledWith(500, { 'Content-Type': 'text/plain' })
       expect(res.end).toBeCalledWith(expect.any(String))
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_FAILURE))
     })
   })
 })
@@ -221,9 +238,8 @@ describe('download beta search factory', () => {
   const json2csv = jest.fn()
   const allowDownload = jest.fn()
   beforeEach(() => {
-    findUsersApi.mockReset()
-    json2csv.mockReset()
-    allowDownload.mockReset()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+    jest.clearAllMocks()
   })
 
   const mockBetaSearchCall = () => {
@@ -294,6 +310,8 @@ describe('download beta search factory', () => {
     )
   }
 
+  const session = { userDetails: { username: 'username' } }
+
   describe('Download CSV from Beta Search', () => {
     const download = downloadFactoryBetaSearch(findUsersApi, json2csv, allowDownload)
 
@@ -304,7 +322,7 @@ describe('download beta search factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const req = {
         ...standardReq,
@@ -346,7 +364,7 @@ describe('download beta search factory', () => {
         get: jest.fn().mockReturnValue('localhost'),
         protocol: 'http',
         originalUrl: '/',
-        session: {},
+        session,
       }
       const res = {
         locals: { user: { maintainAccessAdmin: true } },
@@ -364,6 +382,8 @@ describe('download beta search factory', () => {
       expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
       expect(res.attachment).toBeCalledWith('user-search.csv')
       expect(res.send).toBeCalledWith(expect.any(String))
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })
   })
 })

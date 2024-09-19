@@ -1,6 +1,5 @@
 const querystring = require('querystring')
-const { v4 } = require('uuid')
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const { ManageUsersEvent, audit } = require('../audit')
 const config = require('../config').default
 
 const size = 20
@@ -33,15 +32,11 @@ const searchFactory = (
     const caseload = currentFilter.groupCode && currentFilter.groupCode[0]
     const { roleCode: accessRoles } = currentFilter
 
-    const auditCorrelationId = v4()
     const { username } = req.session.userDetails
+    const sendAudit = audit(username, { authSource: 'nomis', filter: currentFilter })
+    await sendAudit(ManageUsersEvent.SEARCH_USER_ATTEMPT)
+
     try {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_DPS_USERS_ATTEMPT',
-        who: username,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-      })
       const { searchResults, totalElements, number } = await findUsersApi({
         locals: res.locals,
         user: currentFilter.user,
@@ -86,12 +81,7 @@ const searchFactory = (
         downloadRecordLimit: config.downloadRecordLimit,
       })
     } catch (error) {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_DPS_USERS_FAILURE',
-        who: username,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-      })
+      await sendAudit(ManageUsersEvent.SEARCH_USER_FAILURE)
       throw error
     }
   }
