@@ -1,5 +1,6 @@
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const createChildGroupFactory = (createChildGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
@@ -27,7 +28,16 @@ const createChildGroupFactory = (createChildGroup, manageGroupUrl) => {
     group.parentGroupCode = pgroup
     const errors = validateCreateGroup(group)
 
+    const sendAudit = auditWithSubject(
+      req.session.userDetails.username,
+      group.groupCode,
+      ManageUsersSubjectType.GROUP_CODE,
+      { parentGroup: pgroup },
+    )
+    await sendAudit(ManageUsersEvent.CREATE_GROUP_ATTEMPT)
+
     if (errors.length > 0) {
+      await sendAudit(ManageUsersEvent.CREATE_GROUP_FAILURE)
       stashStateAndRedirectToIndex(req, res, errors, [group])
     } else {
       try {
@@ -35,6 +45,7 @@ const createChildGroupFactory = (createChildGroup, manageGroupUrl) => {
 
         res.redirect(`${manageGroupUrl}/${pgroup}`)
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_GROUP_FAILURE)
         if (err.status === 409 && err.response && err.response.body) {
           // child group code already exists
           const emailError = [{ href: '#groupCode', text: 'Group code already exists' }]

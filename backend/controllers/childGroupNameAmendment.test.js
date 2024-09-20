@@ -1,4 +1,8 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { childGroupAmendmentFactory } = require('./childGroupNameAmendment')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('child group amendment factory', () => {
   const getGroupDetailsApi = jest.fn()
@@ -9,6 +13,11 @@ describe('child group amendment factory', () => {
     'Change child group name',
     '/manage-groups',
   )
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call changeGroupName render', async () => {
@@ -53,6 +62,7 @@ describe('child group amendment factory', () => {
         params: { pgroup: 'parent-group', group: 'group1' },
         body: { groupName: 'GroupA' },
         flash: jest.fn(),
+        session: { userDetails: { username: 'username' } },
       }
 
       const redirect = jest.fn()
@@ -60,6 +70,15 @@ describe('child group amendment factory', () => {
       await changeChildGroupName.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups/parent-group')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.UPDATE_GROUP_ATTEMPT,
+        who: 'username',
+        subjectId: 'group1',
+        subjectType: ManageUsersSubjectType.GROUP_CODE,
+        correlationId: expect.any(String),
+        service: config.default.productId,
+        details: JSON.stringify({ parentGroup: 'parent-group', groupName: 'GroupA' }),
+      })
     })
 
     it('should trim, change the group name and redirect', async () => {
@@ -67,6 +86,7 @@ describe('child group amendment factory', () => {
         params: { pgroup: 'parent-group', group: 'group1' },
         body: { groupName: ' GroupA ' },
         flash: jest.fn(),
+        session: { userDetails: { username: 'username' } },
       }
 
       const redirect = jest.fn()
@@ -74,6 +94,7 @@ describe('child group amendment factory', () => {
       await changeChildGroupName.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups/parent-group')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no group name entered', async () => {
@@ -82,12 +103,16 @@ describe('child group amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session: { userDetails: { username: 'username' } },
       }
 
       const redirect = jest.fn()
       await changeChildGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeGroupErrors', [{ href: '#groupName', text: 'Enter a group name' }])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_FAILURE))
     })
 
     it('should stash the group name and redirect if no group name entered', async () => {
@@ -96,12 +121,16 @@ describe('child group amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session: { userDetails: { username: 'username' } },
       }
 
       const redirect = jest.fn()
       await changeChildGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeGroupName', [undefined])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_FAILURE))
     })
 
     it('should fail gracefully if group name not valid', async () => {
@@ -114,10 +143,14 @@ describe('child group amendment factory', () => {
         body: { groupName: 'GroupA' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session: { userDetails: { username: 'username' } },
       }
       await changeChildGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeGroupName', ['GroupA'])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_FAILURE))
     })
   })
 })
