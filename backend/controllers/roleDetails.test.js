@@ -1,12 +1,21 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { roleDetailsFactory } = require('./roleDetails')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const config = require('../config')
 
 describe('Role details factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
+
   const getRoleDetailsApi = jest.fn()
   const roleDetails = roleDetailsFactory(getRoleDetailsApi, '/manage-roles')
+  const session = { userDetails: { username: 'username' } }
 
   describe('index', () => {
     it('should call role details render', async () => {
-      const req = { params: { role: 'R1' }, flash: jest.fn() }
+      const req = { params: { role: 'R1', roleCode: 'code' }, flash: jest.fn(), session }
       getRoleDetailsApi.mockResolvedValue([
         {
           roleName: 'name',
@@ -27,6 +36,16 @@ describe('Role details factory', () => {
         ],
         maintainUrl: '/manage-roles',
       })
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.VIEW_ROLE_DETAILS_ATTEMPT,
+        details: null,
+        subjectId: 'code',
+        subjectType: ManageUsersSubjectType.ROLE_CODE,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
 
     it('should redirect to manage roles if role does not exist', async () => {
@@ -36,7 +55,7 @@ describe('Role details factory', () => {
         response: { body: { error_description: 'not valid' } },
       }
 
-      const req = { params: { role: 'DOES_NOT_EXIST' }, flash: jest.fn() }
+      const req = { params: { role: 'DOES_NOT_EXIST' }, flash: jest.fn(), session }
       const redirect = jest.fn()
       getRoleDetailsApi.mockRejectedValue(error)
 

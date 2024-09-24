@@ -1,19 +1,16 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const exp = require('constants')
 const { groupDetailsFactory } = require('./groupDetails')
 const { UUID_REGEX } = require('../utils/testConstants')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('Group details factory', () => {
   const getGroupDetailsApi = jest.fn()
   const deleteChildGroupApi = jest.fn()
   const groupDetails = groupDetailsFactory(getGroupDetailsApi, deleteChildGroupApi, '/manage-groups')
   const session = { userDetails: { username: 'some username' } }
-
-  const expectedViewGroupDetailsAttemptAuditMessage = expect.objectContaining({
-    action: 'VIEW_GROUP_DETAILS_ATTEMPT',
-    correlationId: expect.stringMatching(UUID_REGEX),
-    who: 'some username',
-    details: '{"groupCode":"G1"}',
-  })
 
   beforeEach(() => {
     jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
@@ -46,7 +43,16 @@ describe('Group details factory', () => {
         maintainUrl: '/manage-groups',
         hasMaintainAuthUsers: false,
       })
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewGroupDetailsAttemptAuditMessage)
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
+        action: ManageUsersEvent.VIEW_GROUP_DETAILS_ATTEMPT,
+        correlationId: expect.stringMatching(UUID_REGEX),
+        who: 'some username',
+        details: null,
+        subjectId: 'G1',
+        subjectType: ManageUsersSubjectType.GROUP_CODE,
+        service: config.default.productId,
+      })
     })
 
     it('should redirect to manage groups if group does not exist', async () => {
@@ -78,14 +84,11 @@ describe('Group details factory', () => {
       }
 
       expect(render).not.toHaveBeenCalled()
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewGroupDetailsAttemptAuditMessage)
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        expect.objectContaining({
-          action: 'VIEW_GROUP_DETAILS_FAILURE',
-          correlationId: expect.stringMatching(UUID_REGEX),
-          who: 'some username',
-          details: '{"groupCode":"G1"}',
-        }),
+        auditAction(ManageUsersEvent.VIEW_GROUP_DETAILS_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.VIEW_GROUP_DETAILS_FAILURE),
       )
     })
   })
@@ -99,6 +102,7 @@ describe('Group details factory', () => {
       await groupDetails.deleteChildGroup(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups/JOE')
       expect(deleteChildGroupApi).toBeCalledWith(locals, 'GROUP1')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_ATTEMPT))
     })
   })
 })

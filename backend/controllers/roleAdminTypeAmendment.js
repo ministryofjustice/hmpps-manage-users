@@ -1,4 +1,5 @@
 const { validateRoleAdminType } = require('./roleValidation')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const adminTypeValues = [
   { value: 'EXT_ADM', text: 'External Administrators', immutable: true },
@@ -51,15 +52,23 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
     adminType = maintainImmutableAdminTypes(originalRoleAdminType, adminType)
 
     const roleUrl = `${manageRoleUrl}/${role}`
+
+    const sendAudit = auditWithSubject(req.session.userDetails.username, role, ManageUsersSubjectType.ROLE_CODE, {
+      role,
+      newRoleAdminType: adminType,
+    })
+    await sendAudit(ManageUsersEvent.UPDATE_ROLE_ATTEMPT)
     try {
       const errors = validateRoleAdminType(adminType)
       if (errors.length > 0) {
+        await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
         stashStateAndRedirectToIndex(req, res, errors, adminType)
       } else {
         await changeRoleAdminTypeApi(res.locals, role, adminType)
         res.redirect(roleUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error } = err.response.body
 

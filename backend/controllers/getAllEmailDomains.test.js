@@ -1,4 +1,7 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { viewEmailDomainsFactory } = require('./getAllEmailDomains')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit')
 
 const allEmailDomains = [
   {
@@ -28,11 +31,12 @@ describe('view email domains listing', () => {
     get: jest.fn().mockReturnValue('localhost'),
     protocol: 'http',
     originalUrl: '/',
-    session: {},
+    session: { userDetails: { username: 'username' } },
   }
 
   beforeEach(() => {
-    getEmailDomainsApi.mockReset()
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   const mockEmailDomainListingCall = () => {
@@ -58,6 +62,7 @@ describe('view email domains listing', () => {
         domains: allEmailDomains,
         errors: undefined,
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.LIST_EMAIL_DOMAINS_ATTEMPT))
     })
   })
 

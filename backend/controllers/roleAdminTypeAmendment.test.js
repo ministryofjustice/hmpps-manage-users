@@ -1,9 +1,18 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { roleAdminTypeAmendmentFactory } = require('./roleAdminTypeAmendment')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
+const config = require('../config')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
   const changeRoleAdminTypeApi = jest.fn()
   const changeRoleAdminType = roleAdminTypeAmendmentFactory(getRoleDetailsApi, changeRoleAdminTypeApi, '/manage-roles')
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call roleAdminType render', async () => {
@@ -52,11 +61,19 @@ describe('role amendment factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
+    beforeEach(() => {
+      getRoleDetailsApi.mockResolvedValue({
+        adminType: [{ adminTypeName: 'LSA role', adminTypeCode: 'DPS_LSA' }],
+        roleName: 'Auth Group Manager',
+      })
+    })
     it('should change the role admin type and redirect', async () => {
       const req = {
         params: { role: 'role1' },
         body: { adminType: ['DPS_ADM'] },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -64,6 +81,15 @@ describe('role amendment factory', () => {
       await changeRoleAdminType.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-roles/role1')
       expect(changeRoleAdminTypeApi).toBeCalledWith(locals, 'role1', ['DPS_ADM'])
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.UPDATE_ROLE_ATTEMPT,
+        details: JSON.stringify({ role: 'role1', newRoleAdminType: ['DPS_ADM'] }),
+        subjectId: 'role1',
+        subjectType: ManageUsersSubjectType.ROLE_CODE,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
     it('should stash the errors and redirect if no role admin type entered', async () => {
       const req = {
@@ -71,12 +97,15 @@ describe('role amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
       await changeRoleAdminType.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#adminType', text: 'Select an admin type' }])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
 
     it('should fail gracefully if role name not valid', async () => {
@@ -94,10 +123,13 @@ describe('role amendment factory', () => {
         body: { adminType: ['DPS_ADM', 'DPS_LSA'] },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await changeRoleAdminType.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#adminType', text: 'not valid' }])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
 
     it('should fail gracefully if role name not found', async () => {
@@ -119,12 +151,15 @@ describe('role amendment factory', () => {
         body: { adminType: ['DPS_ADM'] },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await changeRoleAdminType.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeRoleErrors', [
         { href: '#adminType', text: 'Unexpected error: Unable to get role: role1 with reason: notfound' },
       ])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
   })
 })
