@@ -77,7 +77,7 @@ describe('child group amendment factory', () => {
         subjectType: ManageUsersSubjectType.GROUP_CODE,
         correlationId: expect.any(String),
         service: config.default.productId,
-        details: JSON.stringify({ parentGroup: 'parent-group', groupName: 'GroupA' }),
+        details: JSON.stringify({ parentGroupCode: 'parent-group', newGroupName: 'GroupA' }),
       })
     })
 

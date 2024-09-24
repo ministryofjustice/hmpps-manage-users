@@ -70,7 +70,7 @@ describe('group amendment factory', () => {
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
       expect(auditService.sendAuditMessage).toBeCalledWith({
         action: ManageUsersEvent.UPDATE_GROUP_ATTEMPT,
-        details: '{"group":"group1","newGroupName":"GroupA"}',
+        details: '{"newGroupName":"GroupA"}',
         who: 'username',
         service: config.default.productId,
         correlationId: expect.any(String),
