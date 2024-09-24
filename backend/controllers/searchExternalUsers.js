@@ -1,6 +1,5 @@
 const querystring = require('querystring')
-const { v4 } = require('uuid')
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const { ManageUsersEvent, audit } = require('../audit')
 
 const mapUsernameAndEmail = (u) => {
   if (u.email) return u.username.toLowerCase() === u.email ? u.email : `${u.username} / ${u.email}`
@@ -38,15 +37,9 @@ const searchFactory = (
     delete req.session.searchTitle
     delete req.session.searchUrl
 
-    const auditCorrelationId = v4()
-    const { username } = req.session.userDetails
+    const sendAudit = audit(req.session.userDetails.username, { authSource: 'external', filter: currentFilter })
+    await sendAudit(ManageUsersEvent.SEARCH_USER_ATTEMPT)
     try {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_EXTERNAL_USERS_ATTEMPT',
-        who: username,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-      })
       const searchResults = await searchApi({
         locals: res.locals,
         user: currentFilter.user,
@@ -82,12 +75,7 @@ const searchFactory = (
           }`,
       })
     } catch (error) {
-      await auditService.sendAuditMessage({
-        action: 'VIEW_EXTERNAL_USERS_FAILURE',
-        who: username,
-        correlationId: auditCorrelationId,
-        service: 'hmpps-manage-users',
-      })
+      await sendAudit(ManageUsersEvent.SEARCH_USER_FAILURE)
       throw error
     }
   }
