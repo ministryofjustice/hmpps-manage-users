@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { deleteEmailDomainFactory } = require('./deleteEmailDomain')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('delete email domain factory', () => {
   beforeEach(() => {
@@ -45,10 +48,13 @@ describe('delete email domain factory', () => {
       expect(deleteEmailDomainApi).toBeCalledWith(locals, '1234')
       expect(redirect).toBeCalledWith('/email-domains')
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
-        action: 'DELETE_EMAIL_DOMAIN',
-        details: '{"domainId":"1234"}',
+        action: ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT,
+        details: null,
+        subjectId: '1234',
+        subjectType: ManageUsersSubjectType.EMAIL_DOMAIN_ID,
         who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -72,13 +78,19 @@ describe('delete email domain factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
+        session,
       }
       await emailDomainFactory.deleteEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
       expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
         { href: '#domainName', text: 'Unauthorized to use the delete email domain functionality' },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.DELETE_EMAIL_DOMAIN_FAILURE),
+      )
     })
 
     it('should fail gracefully, if the email domain to be deleted is not found', async () => {
@@ -101,6 +113,7 @@ describe('delete email domain factory', () => {
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
+        session,
       }
       await emailDomainFactory.deleteEmailDomain(req, { locals, redirect })
       expect(redirect).toBeCalledWith('/email-domains')
@@ -110,7 +123,12 @@ describe('delete email domain factory', () => {
           text: 'Email domain not found',
         },
       ])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.DELETE_EMAIL_DOMAIN_FAILURE),
+      )
     })
   })
 })

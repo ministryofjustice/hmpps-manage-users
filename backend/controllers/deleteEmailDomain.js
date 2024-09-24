@@ -1,4 +1,5 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
@@ -18,18 +19,18 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
 
   const deleteEmailDomain = async (req, res) => {
     const { domainId } = req.body
+    const sendAudit = auditWithSubject(
+      req.session.userDetails.username,
+      domainId,
+      ManageUsersSubjectType.EMAIL_DOMAIN_ID,
+    )
+    await sendAudit(ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT)
 
     try {
       await deleteEmailDomainApi(res.locals, domainId)
-      const { username } = req.session.userDetails
-      await auditService.sendAuditMessage({
-        action: 'DELETE_EMAIL_DOMAIN',
-        who: username,
-        service: 'hmpps-manage-users',
-        details: JSON.stringify({ domainId }),
-      })
       res.redirect('/email-domains')
     } catch (error) {
+      await sendAudit(ManageUsersEvent.DELETE_EMAIL_DOMAIN_FAILURE)
       if (error.status === 400) {
         res.redirect(req.originalUrl)
       } else if (error.status === 401 && error.response && error.response.body) {
