@@ -1,5 +1,8 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { groupAmendmentFactory } = require('./groupNameAmendment')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const config = require('../config')
+const { auditAction } = require('../utils/testUtils')
 
 describe('group amendment factory', () => {
   const getGroupDetailsApi = jest.fn()
@@ -66,10 +69,13 @@ describe('group amendment factory', () => {
       expect(redirect).toBeCalledWith('/manage-groups/group1')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
       expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CHANGE_GROUP_NAME',
+        action: ManageUsersEvent.UPDATE_GROUP_ATTEMPT,
         details: '{"group":"group1","newGroupName":"GroupA"}',
         who: 'username',
-        service: 'hmpps-manage-users',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+        subjectId: 'group1',
+        subjectType: ManageUsersSubjectType.GROUP_CODE,
       })
     })
 
@@ -86,12 +92,6 @@ describe('group amendment factory', () => {
       await changeGroupName.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-groups/group1')
       expect(changeGroupNameApi).toBeCalledWith(locals, 'group1', 'GroupA')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
-        action: 'CHANGE_GROUP_NAME',
-        details: '{"group":"group1","newGroupName":"GroupA"}',
-        who: 'username',
-        service: 'hmpps-manage-users',
-      })
     })
 
     it('should stash the errors and redirect if no group name entered', async () => {
@@ -100,13 +100,15 @@ describe('group amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
       await changeGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeGroupErrors', [{ href: '#groupName', text: 'Enter a group name' }])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
     })
 
     it('should stash the group name and redirect if no group name entered', async () => {
@@ -115,13 +117,15 @@ describe('group amendment factory', () => {
         body: {},
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
       await changeGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('changeGroupName', [undefined])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
     })
 
     it('should fail gracefully if group name not valid', async () => {
@@ -134,11 +138,13 @@ describe('group amendment factory', () => {
         body: { groupName: 'GroupA' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await changeGroupName.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
       expect(req.flash).toBeCalledWith('changeGroupName', ['GroupA'])
-      expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.UPDATE_GROUP_ATTEMPT))
     })
   })
 })

@@ -1,6 +1,7 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {
@@ -29,25 +30,24 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
     const { group } = req.params
     const { groupName } = trimObjValues(req.body)
     const groupUrl = `${manageGroupUrl}/${group}`
+    const sendAudit = auditWithSubject(req.session.userDetails.username, group, ManageUsersSubjectType.GROUP_CODE, {
+      group,
+      newGroupName: groupName,
+    })
+    await sendAudit(ManageUsersEvent.UPDATE_GROUP_ATTEMPT)
+
     try {
       const errors = validateGroupName(groupName)
       if (errors.length > 0) {
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
         await changeGroupNameApi(res.locals, group, groupName)
-        const { username } = req.session.userDetails
-        await auditService.sendAuditMessage({
-          action: 'CHANGE_GROUP_NAME',
-          who: username,
-          service: 'hmpps-manage-users',
-          details: JSON.stringify({ group, newGroupName: groupName }),
-        })
         res.redirect(groupUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_GROUP_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error } = err.response.body
-
         const errors = [{ href: '#groupName', text: error }]
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
