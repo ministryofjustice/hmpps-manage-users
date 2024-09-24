@@ -1,6 +1,17 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createLinkedDpsUserFactory } = require('./createLinkedDpsUser')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
+const config = require('../config')
 
 describe('create linked user factory', () => {
+  const session = { userDetails: { username: 'username' } }
+
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
+
   const getCaseloads = jest.fn()
   const createLinkedAdminUser = jest.fn()
   const createLinkedLsaUser = jest.fn()
@@ -106,7 +117,7 @@ describe('create linked user factory', () => {
           searchUser: 'DPS_GEN',
         },
         flash: jest.fn(),
-        session: {},
+        session,
       }
       searchUser.mockResolvedValue({
         email: 'bob@digital.justice.gov.uk',
@@ -119,6 +130,16 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
       expect(searchUser).toBeCalledWith(locals, req.body.existingUsername)
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
+        details: JSON.stringify({ action: 'create-search', existingUsername: 'BOB_ADM' }),
+        subjectId: 'BOB_ADM',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
   })
 
@@ -137,7 +158,7 @@ describe('create linked user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_GEN' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createLinkedGeneralUser.mockResolvedValue({ generalAccount: { username: 'BOB_GEN' } })
 
@@ -152,6 +173,16 @@ describe('create linked user factory', () => {
       })
       expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_GEN/details',
+      })
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
+        details: JSON.stringify({ action: 'create-gen', existingUsername: 'BOB_ADM', generalUsername: 'BOB_GEN' }),
+        subjectId: 'BOB_ADM',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -168,7 +199,7 @@ describe('create linked user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_ADM' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
 
@@ -182,6 +213,15 @@ describe('create linked user factory', () => {
       })
       expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
+      })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
+        details: JSON.stringify({ action: 'create-admin', existingUsername: 'BOB_GEN', adminUsername: 'BOB_ADM' }),
+        subjectId: 'BOB_GEN',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -199,7 +239,7 @@ describe('create linked user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_LSA' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createLinkedLsaUser.mockResolvedValue({ adminAccount: { username: 'BOB_LSA' } })
 
@@ -214,6 +254,16 @@ describe('create linked user factory', () => {
       })
       expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_LSA/details',
+      })
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
+        details: JSON.stringify({ action: 'create-lsa', existingUsername: 'BOB_GEN', adminUsername: 'BOB_LSA' }),
+        subjectId: 'BOB_GEN',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
       })
     })
 
@@ -230,7 +280,7 @@ describe('create linked user factory', () => {
           .fn()
           .mockReturnValueOnce([{ userType: 'DPS_ADM' }])
           .mockReturnValueOnce({ error: 'some error' }),
-        session: {},
+        session,
       }
       createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
 
@@ -245,6 +295,7 @@ describe('create linked user factory', () => {
       expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no details entered for admin to general user linking', async () => {
@@ -257,7 +308,7 @@ describe('create linked user factory', () => {
           createUser: 'create-admin',
         },
         flash: jest.fn(),
-        session: {},
+        session,
         originalUrl: '/original',
       }
       createLinkedAdminUser.mockResolvedValue({ adminAccount: { username: 'BOB_ADM' } })
@@ -287,6 +338,9 @@ describe('create linked user factory', () => {
           text: 'Admin user name must be 2 characters or more',
         },
       ])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -307,7 +361,7 @@ describe('create linked user factory', () => {
           createUser: 'create-admin',
         },
         flash: jest.fn(),
-        session: {},
+        session,
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
@@ -317,6 +371,8 @@ describe('create linked user factory', () => {
           text: 'something went wrong',
         },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -337,7 +393,7 @@ describe('create linked user factory', () => {
           createUser: 'create-admin',
         },
         flash: jest.fn(),
-        session: {},
+        session,
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
@@ -348,6 +404,8 @@ describe('create linked user factory', () => {
           text: 'Username already exists',
         },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
     })
 
     it('should fail gracefully if username already linked', async () => {
@@ -370,7 +428,7 @@ describe('create linked user factory', () => {
           createUser: 'create-admin',
         },
         flash: jest.fn(),
-        session: {},
+        session,
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
@@ -381,6 +439,8 @@ describe('create linked user factory', () => {
           text: 'Username already linked to another account',
         },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
     })
 
     it('should fail gracefully if the Username was not found', async () => {
@@ -401,7 +461,7 @@ describe('create linked user factory', () => {
           createUser: 'create-admin',
         },
         flash: jest.fn(),
-        session: {},
+        session,
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
@@ -412,6 +472,8 @@ describe('create linked user factory', () => {
           text: 'Username not found',
         },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
     })
   })
 })
