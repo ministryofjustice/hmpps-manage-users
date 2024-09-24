@@ -47,7 +47,6 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
     // @ts-ignore
     const { username } = req.session.userDetails
     const { group } = req.params
-    const { userId } = req.params
     const sendAudit = auditWithSubject(username, group, ManageUsersSubjectType.GROUP_CODE, { group })
     await sendAudit(ManageUsersEvent.DELETE_GROUP_ATTEMPT)
     try {

@@ -1,4 +1,3 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
 const { audit, ManageUsersEvent } = require('../audit')
@@ -56,7 +55,6 @@ const createExternalUserFactory = (
         const groupCodes = user.groupCode !== '' ? [user.groupCode] : undefined
         const updatedUser = { email: user.email, firstName: user.firstName, lastName: user.lastName, groupCodes }
         const userId = await createExternalUser(res.locals, updatedUser)
-        const { username } = req.session.userDetails
         req.session.searchUrl = searchUrl
         req.session.searchResultsUrl = `${searchUrl}?user=${encodeURIComponent(user.email)}`
         res.render('createExternalUserSuccess.njk', {

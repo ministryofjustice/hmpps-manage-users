@@ -1,4 +1,3 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { auditWithSubject } = require('../audit/manageUsersAudit')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
@@ -54,7 +53,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       stashStateAndRedirectToIndex(req, res, errors)
     } else {
       const roleArray = Array.isArray(roles) ? roles : [roles]
-      const sendAudit = auditWithSubject(username, userId, USER_ID_SUBJECT_TYPE, { roles: roleArray })
+      const sendAudit = auditWithSubject(username, userId, ManageUsersSubjectType.USER_ID, { roles: roleArray })
       await sendAudit(ManageUsersEvent.ADD_USER_ROLES_ATTEMPT)
 
       try {
