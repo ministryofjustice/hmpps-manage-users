@@ -1,4 +1,8 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { deactivateUserReasonFactory } = require('./deactivateUserReason')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
+const config = require('../config')
 
 describe('deactivate user reason factory', () => {
   const deactivateUserApi = jest.fn()
@@ -7,6 +11,11 @@ describe('deactivate user reason factory', () => {
     '/manage-external-users',
     'Deactivate user reason',
   )
+  const session = { userDetails: { username: 'username' } }
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
 
   describe('index', () => {
     it('should call deactivateUserReason render', async () => {
@@ -42,6 +51,7 @@ describe('deactivate user reason factory', () => {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         body: { reason: 'Left' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -49,6 +59,16 @@ describe('deactivate user reason factory', () => {
       await deactivateUser.post(req, { redirect, locals })
       expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
       expect(deactivateUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'Left')
+
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.DEACTIVATE_USER_ATTEMPT,
+        details: null,
+        subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
+        subjectType: ManageUsersSubjectType.USER_ID,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
   })
 
@@ -62,9 +82,12 @@ describe('deactivate user reason factory', () => {
         body: { group: 'GLOBAL_SEARCH' },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       },
       { redirect },
     )
     expect(redirect).toBeCalledWith('/some-location')
+    expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_ATTEMPT))
+    expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_FAILURE))
   })
 })
