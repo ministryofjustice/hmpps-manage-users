@@ -1,4 +1,7 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { viewRolesFactory } = require('./getAllRoles')
+const { ManageUsersEvent } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
 
 const allRoles = [
   {
@@ -17,6 +20,11 @@ const allRoles = [
 const roles = allRoles.map((r) => ({ text: r.roleName, value: r.roleCode }))
 
 describe('view roles factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
+
   const paginationService = { getPagination: jest.fn() }
   const pagingApi = jest.fn()
   const getPagedRolesApi = jest.fn()
@@ -27,7 +35,7 @@ describe('view roles factory', () => {
     get: jest.fn().mockReturnValue('localhost'),
     protocol: 'http',
     originalUrl: '/',
-    session: {},
+    session: { userDetails: { username: 'username' } },
   }
 
   beforeEach(() => {
@@ -67,6 +75,7 @@ describe('view roles factory', () => {
         errors: undefined,
         pagination,
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.LIST_ROLES_ATTEMPT))
     })
 
     it('should set current filter with single query parameters', async () => {

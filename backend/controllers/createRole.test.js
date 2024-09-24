@@ -1,6 +1,15 @@
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createRoleFactory } = require('./createRole')
+const { ManageUsersEvent } = require('../audit')
+const { auditAction } = require('../utils/testUtils')
+const config = require('../config')
 
 describe('create role factory', () => {
+  beforeEach(() => {
+    jest.resetAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
+
   const createRoleApi = jest.fn()
   const createRole = createRoleFactory(createRoleApi, '/manage-roles')
 
@@ -65,10 +74,12 @@ describe('create role factory', () => {
   })
 
   describe('post', () => {
+    const session = { userDetails: { username: 'username' } }
     it('should create role and redirect', async () => {
       const req = {
         body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -80,12 +91,24 @@ describe('create role factory', () => {
         roleName: 'role name',
         adminType: ['EXT_ADM', 'DPS_ADM'],
       })
+      expect(auditService.sendAuditMessage).toBeCalledWith({
+        action: ManageUsersEvent.CREATE_ROLE_ATTEMPT,
+        details: JSON.stringify({
+          role: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
+        }),
+        subjectId: null,
+        subjectType: null,
+        who: 'username',
+        service: config.default.productId,
+        correlationId: expect.any(String),
+      })
     })
 
     it('should trim, role name and redirect', async () => {
       const req = {
         body: { roleCode: 'BOB1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -103,6 +126,7 @@ describe('create role factory', () => {
       const req = {
         body: { roleCode: 'BOB1', roleName: 'role name ', adminType: 'EXT_ADM' },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -120,6 +144,7 @@ describe('create role factory', () => {
       const req = {
         body: { roleCode: 'bob1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -137,6 +162,7 @@ describe('create role factory', () => {
       const req = {
         body: { roleCode: 'ROLE_bob1', roleName: 'role name ', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
+        session,
       }
 
       const redirect = jest.fn()
@@ -155,6 +181,7 @@ describe('create role factory', () => {
         body: { roleCode: '', roleName: '' },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
@@ -165,6 +192,8 @@ describe('create role factory', () => {
         { href: '#roleName', text: 'Enter a role name' },
         { href: '#adminType', text: 'Select an admin type' },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
 
     it('should stash the role and redirect if no code or name entered', async () => {
@@ -172,12 +201,16 @@ describe('create role factory', () => {
         body: { roleCode: '', roleName: '' },
         flash: jest.fn(),
         originalUrl: '/original',
+        session,
       }
 
       const redirect = jest.fn()
       await createRole.post(req, { redirect })
       expect(redirect).toBeCalledWith('/original')
       expect(req.flash).toBeCalledWith('role', [{ roleCode: '', roleName: '', adminType: [] }])
+
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
 
     it('should fail gracefully if role already exists', async () => {
@@ -193,6 +226,7 @@ describe('create role factory', () => {
         body: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
         flash: jest.fn(),
         originalUrl: '/some-location',
+        session,
       }
       await createRole.post(req, { redirect })
       expect(redirect).toBeCalledWith('/some-location')
@@ -202,6 +236,8 @@ describe('create role factory', () => {
           text: 'Role code already exists',
         },
       ])
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
   })
 })

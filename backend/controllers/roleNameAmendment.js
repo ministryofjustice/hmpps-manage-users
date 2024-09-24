@@ -1,6 +1,7 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateRoleName } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleName) => {
@@ -29,22 +30,22 @@ const roleNameAmendmentFactory = (getRoleDetailsApi, changeRoleNameApi, manageRo
     const { role } = req.params
     const { roleName } = trimObjValues(req.body)
     const roleUrl = `${manageRoleUrl}/${role}`
+    const sendAudit = auditWithSubject(req.session.userDetails.username, role, ManageUsersSubjectType.ROLE_CODE, {
+      role,
+      newRoleName: roleName,
+    })
+    await sendAudit(ManageUsersEvent.UPDATE_ROLE_ATTEMPT)
     try {
       const errors = validateRoleName(roleName)
       if (errors.length > 0) {
+        await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
         stashStateAndRedirectToIndex(req, res, errors, [roleName])
       } else {
         await changeRoleNameApi(res.locals, role, roleName)
-        const { username } = req.session.userDetails
-        await auditService.sendAuditMessage({
-          action: 'CHANGE_ROLE_NAME',
-          who: username,
-          service: 'hmpps-manage-users',
-          details: JSON.stringify({ role, newRoleName: roleName }),
-        })
         res.redirect(roleUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error } = err.response.body
 

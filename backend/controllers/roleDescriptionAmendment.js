@@ -1,5 +1,6 @@
 const { validateRoleDescription } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
+const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const roleDescriptionAmendmentFactory = (getRoleDetailsApi, changeRoleDescriptionApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleDescription) => {
@@ -28,15 +29,22 @@ const roleDescriptionAmendmentFactory = (getRoleDetailsApi, changeRoleDescriptio
     const { role } = req.params
     const { roleDescription } = trimObjValues(req.body)
     const roleUrl = `${manageRoleUrl}/${role}`
+    const sendAudit = auditWithSubject(req.session.userDetails.username, role, ManageUsersSubjectType.ROLE_CODE, {
+      role,
+      newRoleDescription: roleDescription,
+    })
+    await sendAudit(ManageUsersEvent.UPDATE_ROLE_ATTEMPT)
     try {
       const errors = validateRoleDescription(roleDescription)
       if (errors.length > 0) {
+        await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
         stashStateAndRedirectToIndex(req, res, errors, [roleDescription])
       } else {
         await changeRoleDescriptionApi(res.locals, role, roleDescription)
         res.redirect(roleUrl)
       }
     } catch (err) {
+      await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)
       if (err.status === 400 && err.response && err.response.body) {
         const { error } = err.response.body
 
