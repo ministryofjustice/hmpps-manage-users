@@ -1,6 +1,4 @@
-const { auditWithSubject } = require('../audit/manageUsersAudit')
-const { ManageUsersEvent } = require('../audit/manageUsersEvent')
-const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {

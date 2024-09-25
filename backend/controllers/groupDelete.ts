@@ -1,7 +1,5 @@
 import { Request, Response } from 'express'
-import { auditWithSubject } from '../audit/manageUsersAudit'
-import { ManageUsersSubjectType } from '../audit/manageUsersSubjectType'
-import { ManageUsersEvent } from '../audit/manageUsersEvent'
+import { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } from '../audit'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
