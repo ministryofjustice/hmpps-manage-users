@@ -1,4 +1,3 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { auditWithSubject } = require('../audit/manageUsersAudit')
 const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')

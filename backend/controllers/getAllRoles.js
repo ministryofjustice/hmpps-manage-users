@@ -1,4 +1,4 @@
-const { ManageUsersSubjectType, audit, ManageUsersEvent } = require('../audit')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const viewRolesFactory = (paginationService, pagingApi, getPagedRolesApi, maintainUrl) => {
   const index = async (req, res) => {

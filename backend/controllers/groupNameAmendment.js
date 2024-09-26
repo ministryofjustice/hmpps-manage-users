@@ -1,4 +1,3 @@
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')

@@ -5,6 +5,7 @@ const {
   validateLinkedLsaUserCreate,
   validateLinkedGeneralUserCreate,
 } = require('./linkedAccountValidation')
+const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 const createLinkedDpsUserFactory = (
   getCaseloads,
@@ -90,12 +91,12 @@ const createLinkedDpsUserFactory = (
     }
   }
 
-  const post = (req, res) => {
+  const post = async (req, res) => {
     const user = trimObjValues(req.body)
     if (user.createUser !== undefined) {
-      postCreateUser(req, res)
+      await postCreateUser(req, res)
     } else if (user.searchUser !== null) {
-      postSearchUser(req, res)
+      await postSearchUser(req, res)
     }
   }
 
@@ -111,7 +112,19 @@ const createLinkedDpsUserFactory = (
       value: c.id,
     }))
 
+    const sendAudit = auditWithSubject(
+      req.session.userDetails.username,
+      user.existingUsername,
+      ManageUsersSubjectType.USER_ID,
+      {
+        action: 'create-search',
+        existingUsername: user.existingUsername,
+      },
+    )
+    await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT)
+
     if (errors.length > 0) {
+      await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_FAILURE)
       stashStateAndRedirectToLinkedUserIndex(req, res, errors, [user])
     } else {
       try {
@@ -127,6 +140,7 @@ const createLinkedDpsUserFactory = (
           errors: req.flash('createDpsUserErrors'),
         })
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_FAILURE)
         if (err.status === 400 && err.response && err.response.body) {
           const { userMessage } = err.response.body
           const errorDetails = [{ text: userMessage }]
@@ -162,7 +176,22 @@ const createLinkedDpsUserFactory = (
       errors = validateLinkedGeneralUserCreate(user.existingUsername, user.generalUsername, user.defaultCaseloadId)
     }
 
+    const auditMessage = {
+      action: user.createUser,
+      existingUsername: user.existingUsername,
+      adminUsername: user.adminUsername,
+      generalUsername: user.generalUsername,
+    }
+    const sendAudit = auditWithSubject(
+      req.session.userDetails.username,
+      user.existingUsername,
+      ManageUsersSubjectType.USER_ID,
+      auditMessage,
+    )
+    await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT)
+
     if (errors.length > 0) {
+      await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_FAILURE)
       stashStateAndRedirectToLinkedUserIndex(req, res, errors, [user])
     } else {
       try {
@@ -192,6 +221,7 @@ const createLinkedDpsUserFactory = (
           detailsLink: `${manageUserUrl}/${userNameDetailsLink}/details`,
         })
       } catch (err) {
+        await sendAudit(ManageUsersEvent.CREATE_LINKED_USER_FAILURE)
         if (err.status === 400 && err.response && err.response.body) {
           const { userMessage } = err.response.body
           const errorDetails = [{ text: userMessage }]

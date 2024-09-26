@@ -1,4 +1,3 @@
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
 
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {

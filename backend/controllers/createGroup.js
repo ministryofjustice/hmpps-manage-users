@@ -1,7 +1,6 @@
-const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps-audit-client')
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
-const { auditWithSubject, audit, ManageUsersEvent } = require('../audit')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
@@ -28,7 +27,6 @@ const createGroupFactory = (createGroup, manageGroupUrl) => {
 
     const errors = validateCreateGroup(group)
     const { username } = req.session.userDetails
-    const { userId } = req.params
     const sendAudit = audit(username, { group: groupWithoutCsrf })
     await sendAudit(ManageUsersEvent.CREATE_GROUP_ATTEMPT)
 
