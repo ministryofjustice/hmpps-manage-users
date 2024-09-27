@@ -1,8 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
-
 const { selectCaseloadsFactory } = require('./addUserCaseload')
-const { ManageUsersEvent } = require('../audit/manageUsersEvent')
-const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
+const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 describe('select caseloads factory', () => {
   const getUserAssignableCaseloads = jest.fn()

@@ -78,7 +78,7 @@ describe('group delete factory', () => {
         subjectType: ManageUsersSubjectType.GROUP_CODE,
         who: username,
         service: expect.any(String),
-        details: '{"group":"group1"}',
+        details: null,
       })
     })
 

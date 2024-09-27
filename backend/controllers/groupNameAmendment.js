@@ -30,7 +30,6 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
     const { groupName } = trimObjValues(req.body)
     const groupUrl = `${manageGroupUrl}/${group}`
     const sendAudit = auditWithSubject(req.session.userDetails.username, group, ManageUsersSubjectType.GROUP_CODE, {
-      group,
       newGroupName: groupName,
     })
     await sendAudit(ManageUsersEvent.UPDATE_GROUP_ATTEMPT)

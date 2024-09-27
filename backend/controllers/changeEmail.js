@@ -1,8 +1,6 @@
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
-const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
-const { auditWithSubject } = require('../audit/manageUsersAudit')
-const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 
 function mapDescription(error, errorDescription) {
   switch (error) {

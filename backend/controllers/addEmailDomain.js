@@ -1,7 +1,6 @@
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')
-const { audit } = require('../audit/manageUsersAudit')
-const { ManageUsersEvent } = require('../audit/manageUsersEvent')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, domain) => {

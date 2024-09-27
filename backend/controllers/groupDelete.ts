@@ -1,7 +1,5 @@
 import { Request, Response } from 'express'
-import { auditWithSubject } from '../audit/manageUsersAudit'
-import { ManageUsersSubjectType } from '../audit/manageUsersSubjectType'
-import { ManageUsersEvent } from '../audit/manageUsersEvent'
+import { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } from '../audit'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
@@ -47,7 +45,7 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
     // @ts-ignore
     const { username } = req.session.userDetails
     const { group } = req.params
-    const sendAudit = auditWithSubject(username, group, ManageUsersSubjectType.GROUP_CODE, { group })
+    const sendAudit = auditWithSubject(username, group, ManageUsersSubjectType.GROUP_CODE)
     await sendAudit(ManageUsersEvent.DELETE_GROUP_ATTEMPT)
     try {
       await deleteGroupApi(res.locals, group)
