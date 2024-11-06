@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-expressions */
-const errorStatusCode = require('../error-status-code')
+const errorStatusCode = require('../error-status-code').default
 
 describe('Should translate errors', () => {
   describe('error has response', () => {

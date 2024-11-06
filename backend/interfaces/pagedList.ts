@@ -1,8 +1,5 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface PagedListItem {
-  // Extended by:
-  // Role
-}
+// eslint-disable-next-line @typescript-eslint/no-wrapper-object-types, @typescript-eslint/no-empty-object-type
+export interface PagedListItem extends Object {}
 
 export interface PagedList<TPagedListItem extends PagedListItem> {
   content: TPagedListItem[]

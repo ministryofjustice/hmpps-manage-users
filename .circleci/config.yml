@@ -1,22 +1,18 @@
 version: 2.1
 
 orbs:
-  hmpps: ministryofjustice/hmpps@9
-  browser-tools: circleci/browser-tools@1.4
-  slack: circleci/slack@4.12
-
+  hmpps: ministryofjustice/hmpps@10
+  slack: circleci/slack@4
 parameters:
+  node-version:
+    type: string
+    default: 22.11-browsers
   alerts-slack-channel:
     type: string
     default: hmpps_tech_alerts_security
-
   releases-slack-channel:
     type: string
     default: dps-releases
-
-  node-version:
-    type: string
-    default: 18.16-browsers
 
 jobs:
   build:

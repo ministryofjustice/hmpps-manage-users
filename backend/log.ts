@@ -1,6 +1,6 @@
-const Logger = require('bunyan')
+import Logger from 'bunyan'
 
-module.exports = new Logger({
+const logger: Logger = new Logger({
   name: 'hmpps-manage-users',
   streams: [
     {
@@ -9,3 +9,5 @@ module.exports = new Logger({
     },
   ],
 })
+
+export default logger

@@ -1,6 +1,6 @@
 const { Parser } = require('json2csv')
 const unwind = require('json2csv/lib/transforms/unwind')
-const logger = require('../log')
+const logger = require('../log').default
 const { parseFilter } = require('./searchDpsUsers')
 const { audit, ManageUsersEvent } = require('../audit')
 

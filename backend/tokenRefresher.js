@@ -1,6 +1,6 @@
 const { jwtDecode } = require('jwt-decode')
 const contextProperties = require('./contextProperties')
-const logger = require('./log')
+const logger = require('./log').default
 
 /**
  * Does the supplied JWT token expire before the supplied time, expressed as seconds since the Posix Epoch?
