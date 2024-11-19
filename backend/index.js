@@ -117,5 +117,7 @@ app.use(errorHandler)
 
 app.listen(config.app.port, () => {
   // eslint-disable-next-line no-console
-  console.log('Backend running on port', config.app.port)
+  // console.log('Backend running on port', config.app.port) // DO not uncomment this in the cloud. We don't want to expose the port number
+  // eslint-disable-next-line no-console
+  console.log('Backend running')
 })
