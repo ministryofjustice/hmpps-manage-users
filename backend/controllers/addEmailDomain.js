@@ -1,12 +1,13 @@
 const { trimObjValues } = require('../utils/utils')
 const { validateCreateDomain } = require('./emailDomainValidation')
 const { audit, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createEmailDomainFactory = (createEmailDomainApi, createEmailDomainUrl, listEmailDomainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, domain) => {
     req.flash('createEmailDomainErrors', errors)
     req.flash('domain', domain)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

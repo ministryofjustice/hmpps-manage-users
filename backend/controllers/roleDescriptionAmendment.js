@@ -1,12 +1,13 @@
 const { validateRoleDescription } = require('./roleValidation')
 const { trimObjValues } = require('../utils/utils')
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const roleDescriptionAmendmentFactory = (getRoleDetailsApi, changeRoleDescriptionApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, roleDescription) => {
     req.flash('changeRoleErrors', errors)
     req.flash('changeRoleDescription', roleDescription)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {
@@ -41,7 +42,7 @@ const roleDescriptionAmendmentFactory = (getRoleDetailsApi, changeRoleDescriptio
         stashStateAndRedirectToIndex(req, res, errors, [roleDescription])
       } else {
         await changeRoleDescriptionApi(res.locals, role, roleDescription)
-        res.redirect(roleUrl)
+        res.redirect(cleanUpRedirect(roleUrl))
       }
     } catch (err) {
       await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)

@@ -53,6 +53,7 @@ export default {
     tokenRefreshThresholdSeconds: toInt(process.env.TOKEN_REFRESH_THRESHOLD_SECONDS, 60),
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
     url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}`,
+    host: process.env.host || `localhost:${process.env.PORT || 3001}`,
   },
   session: {
     secret: get('SESSION_SECRET', 'notm-insecure-session', requiredInProduction),

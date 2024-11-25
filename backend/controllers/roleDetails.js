@@ -1,4 +1,5 @@
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const roleDetailsFactory = (getRoleDetailsApi, maintainUrl) => {
   const index = async (req, res) => {
@@ -17,7 +18,7 @@ const roleDetailsFactory = (getRoleDetailsApi, maintainUrl) => {
       if (error.status === 404) {
         const roleError = [{ href: '#roleCode', text: 'Role does not exist' }]
         req.flash('roleError', roleError)
-        res.redirect(maintainUrl)
+        res.redirect(cleanUpRedirect(maintainUrl))
       } else {
         throw error
       }

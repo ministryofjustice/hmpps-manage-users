@@ -2,16 +2,17 @@ const { auditService, USER_ID_SUBJECT_TYPE } = require('@ministryofjustice/hmpps
 const { validateDpsUserCreate } = require('./dpsUserValidation')
 const { trimObjValues, removeForwardApostrophe } = require('../utils/utils')
 const { audit, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createDpsUserFactory = (getCaseloads, createDpsUser, createUserUrl, manageUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
-    res.redirect(createUserUrl)
+    res.redirect(cleanUpRedirect(createUserUrl))
   }
 
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createDpsUserErrors', errors)
     req.flash('user', user)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
   const userTypes = new Map()
   userTypes.set('DPS_ADM', 'Central Admin')

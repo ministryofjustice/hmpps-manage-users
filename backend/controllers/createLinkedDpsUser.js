@@ -6,6 +6,7 @@ const {
   validateLinkedGeneralUserCreate,
 } = require('./linkedAccountValidation')
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createLinkedDpsUserFactory = (
   getCaseloads,
@@ -20,23 +21,23 @@ const createLinkedDpsUserFactory = (
 ) => {
   const stashStateAndRedirectToCreateLinkedDpsUser = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(createLinkedDpsUserUrl)
+    res.redirect(cleanUpRedirect(createLinkedDpsUserUrl))
   }
 
   const stashStateAndRedirectToCreateUser = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(createUserUrl)
+    res.redirect(cleanUpRedirect(createUserUrl))
   }
 
   const stashStateAndRedirectToCreateDpsUser = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(creatDpsUserUrl)
+    res.redirect(cleanUpRedirect(creatDpsUserUrl))
   }
 
   const stashStateAndRedirectToLinkedUserIndex = async (req, res, errors, user) => {
     req.flash('createDpsUserErrors', errors)
     req.flash('user', user)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const userTypes = new Map()

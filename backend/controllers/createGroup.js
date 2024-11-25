@@ -1,12 +1,13 @@
 const { validateCreateGroup } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
 const { audit, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createGroupFactory = (createGroup, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group) => {
     req.flash('createGroupErrors', errors)
     req.flash('group', group)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

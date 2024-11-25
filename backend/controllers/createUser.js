@@ -1,3 +1,4 @@
+const cleanUpRedirect = require('../utils/urlUtils').default
 const validateCreate = ({ userType }) => {
   const errors = []
   if (!userType || userType === '--') {
@@ -10,11 +11,11 @@ const createUserFactory = (createDpsUserOptionsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createUserErrors', errors)
     req.flash('user', user)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
   const stashStateAndRedirectToCreateUserOptions = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(createDpsUserOptionsUrl)
+    res.redirect(cleanUpRedirect(createDpsUserOptionsUrl))
   }
 
   const index = async (req, res) => {

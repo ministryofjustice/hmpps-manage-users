@@ -129,7 +129,7 @@ workflows:
           filters:
             branches:
               only:
-                - main
+                - HAAR-2960
           requires:
             - helm_lint
             - build_docker
