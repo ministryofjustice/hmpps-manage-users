@@ -1,4 +1,5 @@
 const cleanUpRedirect = require('../utils/urlUtils').default
+
 const validateCreate = ({ userType }) => {
   const errors = []
   if (!userType || userType === '--') {
