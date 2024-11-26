@@ -8,9 +8,7 @@ export default function cleanUpRedirect(redirectDestination: string): string {
 }
 
 function isNotExpectedHost(redirectDestination: string) {
-  const a = isFullUrl(redirectDestination)
-  const b = hostIsNotEqualToIngressHost(redirectDestination)
-  return a && b
+  return isFullUrl(redirectDestination) && hostIsNotEqualToIngressHost(redirectDestination)
 }
 
 function isFullUrl(url: string): boolean {
