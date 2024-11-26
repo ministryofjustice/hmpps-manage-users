@@ -8,33 +8,33 @@ export default function cleanUpRedirect(redirectDestination: string): string {
 }
 
 function isNotExpectedHost(redirectDestination: string) {
-  return isFullUrl(redirectDestination) && hostIsNotEqualToIngressHost(redirectDestination)
+  const a = isFullUrl(redirectDestination)
+  const b = hostIsNotEqualToIngressHost(redirectDestination)
+  return a && b
 }
 
 function isFullUrl(url: string): boolean {
-  // Check if url contains a domain name or host
-  const fullUrlPattern = /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/
+  const fullUrlPattern = /^(https?:\/\/)?(www\.)?[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(\/.*)?$/
   return fullUrlPattern.test(url)
 }
 
 function hostIsNotEqualToIngressHost(url: string): boolean {
   const ingressHost = getIngressHost()
   try {
-    const urlHost = new URL(url.startsWith('http') ? url : `http://${url}`).host
+    const urlHost = new URL(url.startsWith('http') ? url : `https://${url}`).host
     return urlHost !== ingressHost
-  } catch {
-    // If url constructor fails, it's likely not a full url
+  } catch (error) {
     return false
   }
 }
 
 function getIngressHost(): string {
-  // Retrieve the ingress host from environment variables
   const ingressHost = config.app.host
   if (!ingressHost) {
     throw new Error('Ingress host is not defined in the environment variables')
   }
-  return ingressHost
+  // Normalize to avoid mismatches with URL host parsing
+  return new URL(ingressHost.startsWith('http') ? ingressHost : `http://${ingressHost}`).host
 }
 
 function stripQueryParams(redirectDestination: string) {
