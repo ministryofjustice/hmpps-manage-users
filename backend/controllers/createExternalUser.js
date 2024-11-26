@@ -1,6 +1,7 @@
 const { validateCreate } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
 const { audit, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createExternalUserFactory = (
   getAssignableGroupsApi,
@@ -13,7 +14,7 @@ const createExternalUserFactory = (
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createExternalUserErrors', errors)
     req.flash('user', user)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

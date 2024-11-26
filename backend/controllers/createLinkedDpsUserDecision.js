@@ -1,23 +1,24 @@
 const { validateLinkedUserOptionSelection } = require('./linkedAccountValidation')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createLinkedDpsUserDecisionFactory = (createLinkedUserUrl) => {
   const stashStateAndRedirectToCreateUser = (req, res) => {
-    // res.redirect(createLinkedUserUrl)
+    // res.redirect(cleanUpRedirect(createLinkedUserUrl))
     if (req.originalUrl === '/create-user-options') {
       res.redirect('/create-user')
     } else {
-      res.redirect(req.originalUrl)
+      res.redirect(cleanUpRedirect(req.originalUrl))
     }
   }
   const stashStateAndRedirectToCreateLinkedDpsUser = (req, res, user) => {
     req.flash('user', user)
-    res.redirect(createLinkedUserUrl)
+    res.redirect(cleanUpRedirect(createLinkedUserUrl))
   }
 
   const stashStateAndRedirectToIndex = (req, res, errors, user) => {
     req.flash('createDpsUserErrors', errors)
     req.flash('user', user)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
   const userTypes = new Map()
   userTypes.set('DPS_ADM', 'Central Admin')

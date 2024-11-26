@@ -1,9 +1,10 @@
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addRoleErrors', errors)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

@@ -1,12 +1,13 @@
 const { validateGroupName } = require('./groupValidation')
 const { trimObjValues } = require('../utils/utils')
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, manageGroupUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, groupName) => {
     req.flash('changeGroupErrors', errors)
     req.flash('changeGroupName', groupName)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {
@@ -40,7 +41,7 @@ const groupAmendmentFactory = (getGroupDetailsApi, changeGroupNameApi, title, ma
         stashStateAndRedirectToIndex(req, res, errors, [groupName])
       } else {
         await changeGroupNameApi(res.locals, group, groupName)
-        res.redirect(groupUrl)
+        res.redirect(cleanUpRedirect(groupUrl))
       }
     } catch (err) {
       await sendAudit(ManageUsersEvent.UPDATE_GROUP_FAILURE)

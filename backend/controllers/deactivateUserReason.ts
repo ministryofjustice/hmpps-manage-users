@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import validate from './deactivateUserReasonValidation'
 import { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } from '../audit'
+import cleanUpRedirect from '../utils/urlUtils'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, title: string) => {
   const stashStateAndRedirectToIndex = (
@@ -11,7 +12,7 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
   ) => {
     req.flash('deactivatedUserReasonErrors', errors)
     req.flash('deactivatedUserReason', reason)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req: Request, res: Response) => {

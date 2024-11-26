@@ -2,12 +2,13 @@ import { Request, Response } from 'express'
 import { auditWithSubject } from '../audit/manageUsersAudit'
 import { ManageUsersSubjectType } from '../audit/manageUsersSubjectType'
 import { ManageUsersEvent } from '../audit/manageUsersEvent'
+import cleanUpRedirect from '../utils/urlUtils'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: any, manageUrl: string) => {
   const stashStateAndRedirectToIndex = (req: Request, res: Response, errors: Array<Record<string, string>>) => {
     req.flash('addCaseloadErrors', errors)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req: Request, res: Response) => {

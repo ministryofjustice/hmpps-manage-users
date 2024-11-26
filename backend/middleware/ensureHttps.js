@@ -1,4 +1,5 @@
 const log = require('../log')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 function sanitizeInput(input) {
   return String(input)
@@ -17,5 +18,5 @@ module.exports = function ensureSec(req, res, next) {
   const redirectUrl = `https://${sanitizedHostname}${sanitizedUrl}`
 
   log.info(`Redirecting to ${redirectUrl}`)
-  res.redirect(redirectUrl)
+  res.redirect(cleanUpRedirect(redirectUrl))
 }

@@ -1,9 +1,10 @@
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('deleteEmailDomainErrors', errors)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
   const index = async (req, res) => {
     const { id, name } = req.query
@@ -31,7 +32,7 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
     } catch (error) {
       await sendAudit(ManageUsersEvent.DELETE_EMAIL_DOMAIN_FAILURE)
       if (error.status === 400) {
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else if (error.status === 401 && error.response && error.response.body) {
         const domainUnauthorizedError = [
           {

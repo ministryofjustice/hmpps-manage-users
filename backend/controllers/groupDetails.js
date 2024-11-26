@@ -1,10 +1,11 @@
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
     req.flash('deleteGroupErrors', errors)
     req.flash('group', group)
-    res.redirect(url)
+    res.redirect(cleanUpRedirect(url))
   }
 
   const index = async (req, res) => {
@@ -28,7 +29,7 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
       if (error.status === 404) {
         const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
         req.flash('groupError', groupError)
-        res.redirect(maintainUrl)
+        res.redirect(cleanUpRedirect(maintainUrl))
       } else {
         throw error
       }
@@ -53,12 +54,12 @@ const groupDetailsFactory = (getGroupDetailsApi, deleteChildGroupApi, maintainUr
     await sendAudit(ManageUsersEvent.DELETE_GROUP_ATTEMPT)
     try {
       await deleteChildGroupApi(res.locals, group)
-      res.redirect(groupUrl)
+      res.redirect(cleanUpRedirect(groupUrl))
     } catch (error) {
       await sendAudit(ManageUsersEvent.DELETE_GROUP_FAILURE)
       if (error.status === 400) {
         // child already removed from group
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else {
         throw error
       }

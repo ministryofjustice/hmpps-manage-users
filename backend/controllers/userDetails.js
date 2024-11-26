@@ -1,4 +1,5 @@
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const userDetailsFactory = (
   getUserRolesAndGroupsApi,
@@ -15,7 +16,7 @@ const userDetailsFactory = (
 ) => {
   const stashStateAndRedirectToIndex = (req, res, errors, group, url) => {
     req.flash('deleteGroupErrors', errors)
-    res.redirect(url)
+    res.redirect(cleanUpRedirect(url))
   }
 
   const index = async (req, res) => {
@@ -79,7 +80,7 @@ const userDetailsFactory = (
       await audit(ManageUsersEvent.REMOVE_USER_ROLE_FAILURE)
       if (error.status === 400) {
         // role already removed from group
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else {
         throw error
       }
@@ -102,7 +103,7 @@ const userDetailsFactory = (
 
       if (error.status === 400) {
         // user already removed from group
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else if (error.status === 403 && error.response && error.response.body) {
         const groupError = [
           {
@@ -131,7 +132,7 @@ const userDetailsFactory = (
     } catch (error) {
       await audit(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE)
       if (error.status === 400) {
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else if (error.status === 404) {
         // caseload already removed
         res.redirect(`${staffUrl}/details`)

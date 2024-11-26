@@ -1,5 +1,6 @@
 const { validateRoleAdminType } = require('./roleValidation')
 const { auditWithSubject, ManageUsersSubjectType, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const adminTypeValues = [
   { value: 'EXT_ADM', text: 'External Administrators', immutable: true },
@@ -10,7 +11,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
   const stashStateAndRedirectToIndex = (req, res, errors, roleAdminType) => {
     req.flash('changeRoleErrors', errors)
     req.flash('changeRoleAdminType', roleAdminType)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {
@@ -65,7 +66,7 @@ const roleAdminTypeAmendmentFactory = (getRoleDetailsApi, changeRoleAdminTypeApi
         stashStateAndRedirectToIndex(req, res, errors, adminType)
       } else {
         await changeRoleAdminTypeApi(res.locals, role, adminType)
-        res.redirect(roleUrl)
+        res.redirect(cleanUpRedirect(roleUrl))
       }
     } catch (err) {
       await sendAudit(ManageUsersEvent.UPDATE_ROLE_FAILURE)

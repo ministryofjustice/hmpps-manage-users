@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } from '../audit'
+import cleanUpRedirect from '../utils/urlUtils'
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, maintainUrl: string) => {
@@ -12,7 +13,7 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
   ) => {
     req.flash('deleteGroupErrors', errors)
     req.flash('group', group)
-    res.redirect(url)
+    res.redirect(cleanUpRedirect(url))
   }
 
   const index = async (req: Request, res: Response) => {
@@ -33,7 +34,7 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
       if (error.status === 404) {
         const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
         req.flash('groupError', groupError)
-        res.redirect(maintainUrl)
+        res.redirect(cleanUpRedirect(maintainUrl))
       } else {
         throw error
       }
@@ -54,11 +55,11 @@ const groupDeleteFactory = (getGroupDetailsApi: any, deleteGroupApi: any, mainta
       await sendAudit(ManageUsersEvent.DELETE_GROUP_FAILURE)
       if (error.status === 400) {
         // user already removed from group
-        res.redirect(req.originalUrl)
+        res.redirect(cleanUpRedirect(req.originalUrl))
       } else if (error.status === 404) {
         const groupError = [{ href: '#groupCode', text: 'Group does not exist' }]
         req.flash('groupError', groupError)
-        res.redirect(maintainUrl)
+        res.redirect(cleanUpRedirect(maintainUrl))
       } else if (error.status === 409 && error.response && error.response.body) {
         const groupUrl = `${maintainUrl}/${group}`
         // group has child groups

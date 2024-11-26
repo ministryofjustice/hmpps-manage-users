@@ -1,11 +1,12 @@
 const { validateCreateRole } = require('./roleValidation')
 const { audit, ManageUsersEvent } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const createRoleFactory = (createRoleApi, manageRoleUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, role) => {
     req.flash('createRoleErrors', errors)
     req.flash('role', role)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

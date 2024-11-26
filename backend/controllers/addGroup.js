@@ -1,9 +1,10 @@
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 const selectGroupFactory = (getUserAndGroups, saveGroup, searchUrl, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors) => {
     req.flash('addGroupErrors', errors)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {

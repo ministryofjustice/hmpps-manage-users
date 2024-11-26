@@ -1,6 +1,7 @@
 const { validateChangeEmail } = require('./externalUserValidation')
 const { trimObjValues } = require('../utils/utils')
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const cleanUpRedirect = require('../utils/urlUtils').default
 
 function mapDescription(error, errorDescription) {
   switch (error) {
@@ -17,7 +18,7 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
   const stashStateAndRedirectToIndex = (req, res, errors, email) => {
     req.flash('changeEmailErrors', errors)
     req.flash('changeEmail', email)
-    res.redirect(req.originalUrl)
+    res.redirect(cleanUpRedirect(req.originalUrl))
   }
 
   const index = async (req, res) => {
@@ -52,7 +53,7 @@ const changeEmailFactory = (getUserApi, changeEmail, manageUrl) => {
         await changeEmail(res.locals, userId, email)
         const successUrl = `${manageUrl}/${userId}/change-email-success`
         req.flash('changeEmail', email)
-        res.redirect(successUrl)
+        res.redirect(cleanUpRedirect(successUrl))
       }
     } catch (err) {
       await sendAudit(ManageUsersEvent.UPDATE_USER_FAILURE)
