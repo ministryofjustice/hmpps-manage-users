@@ -29,7 +29,7 @@ module.exports = () => {
 
   router.get('/info', (req, res) =>
     res.send({
-      productId: config.serviceName,
+      productId: config.productId,
     }),
   )
 
