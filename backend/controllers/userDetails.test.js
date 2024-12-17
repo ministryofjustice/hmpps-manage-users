@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { userDetailsFactory } = require('./userDetails')
 const { UUID_REGEX } = require('../utils/testConstants')
-const config = require('../config')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 const { auditAction } = require('../utils/testUtils')
@@ -296,7 +295,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.stringMatching(UUID_REGEX),
       })
     })
@@ -322,7 +321,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: 'USER_ID',
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.stringMatching(UUID_REGEX),
       })
     })
@@ -347,7 +346,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.stringMatching(UUID_REGEX),
       })
     })
@@ -422,7 +421,7 @@ describe('user detail factory', () => {
         subjectId: 'TEST_USER',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
       })
     })
 
@@ -475,7 +474,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         details: null,
       })
     })
@@ -495,7 +494,7 @@ describe('user detail factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         details: null,
       })
     })

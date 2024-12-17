@@ -29,7 +29,7 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
       }),
     }))
 
-    const audit = auditWithSubject(req.session.userDetails, userId, ManageUsersSubjectType.USER_ID)
+    const audit = auditWithSubject(req.session.userDetails.username, userId, ManageUsersSubjectType.USER_ID)
     await audit(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT)
 
     res.render('addRole.njk', {

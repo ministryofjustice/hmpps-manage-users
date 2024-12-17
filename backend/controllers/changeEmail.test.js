@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { changeEmailFactory } = require('./changeEmail')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')
-const config = require('../config')
 const { ManageUsersSubjectType } = require('../audit/manageUsersSubjectType')
 const { auditAction } = require('../utils/testUtils')
 
@@ -89,7 +88,7 @@ describe('change email factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
       })
     })
 

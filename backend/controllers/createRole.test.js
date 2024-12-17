@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createRoleFactory } = require('./createRole')
 const { ManageUsersEvent } = require('../audit')
 const { auditAction } = require('../utils/testUtils')
-const config = require('../config')
 
 describe('create role factory', () => {
   beforeEach(() => {
@@ -99,7 +98,7 @@ describe('create role factory', () => {
         subjectId: null,
         subjectType: null,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

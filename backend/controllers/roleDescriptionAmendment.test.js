@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { roleDescriptionAmendmentFactory } = require('./roleDescriptionAmendment')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 const { auditAction } = require('../utils/testUtils')
-const config = require('../config')
 
 describe('role amendment factory', () => {
   const getRoleDetailsApi = jest.fn()
@@ -82,7 +81,7 @@ describe('role amendment factory', () => {
         subjectId: 'role1',
         subjectType: ManageUsersSubjectType.ROLE_CODE,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

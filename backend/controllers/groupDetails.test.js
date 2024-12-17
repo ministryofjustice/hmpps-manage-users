@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { groupDetailsFactory } = require('./groupDetails')
 const { UUID_REGEX } = require('../utils/testConstants')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('Group details factory', () => {
@@ -50,7 +49,7 @@ describe('Group details factory', () => {
         details: null,
         subjectId: 'G1',
         subjectType: ManageUsersSubjectType.GROUP_CODE,
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
       })
     })
 

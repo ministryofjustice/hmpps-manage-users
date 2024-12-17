@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createChildGroupFactory } = require('./createChildGroup')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 const { UUID_REGEX } = require('../utils/testConstants')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('create child group factory', () => {
@@ -62,7 +61,7 @@ describe('create child group factory', () => {
         subjectId: 'BOB1',
         subjectType: ManageUsersSubjectType.GROUP_CODE,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         details: JSON.stringify({ parentGroup: 'P-GROUP' }),
         correlationId: expect.stringMatching(UUID_REGEX),
       })

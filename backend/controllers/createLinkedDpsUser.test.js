@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createLinkedDpsUserFactory } = require('./createLinkedDpsUser')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 const { auditAction } = require('../utils/testUtils')
-const config = require('../config')
 
 describe('create linked user factory', () => {
   const session = { userDetails: { username: 'username' } }
@@ -137,7 +136,7 @@ describe('create linked user factory', () => {
         subjectId: 'BOB_ADM',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })
@@ -181,7 +180,7 @@ describe('create linked user factory', () => {
         subjectId: 'BOB_ADM',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })
@@ -220,7 +219,7 @@ describe('create linked user factory', () => {
         subjectId: 'BOB_GEN',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })
@@ -262,7 +261,7 @@ describe('create linked user factory', () => {
         subjectId: 'BOB_GEN',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

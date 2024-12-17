@@ -76,7 +76,7 @@ app.get('/health', (req, res, next) => {
 
 app.get('/ping', (req, res) => res.send('pong'))
 
-app.get('/info', (req, res) => res.send({ productId: config.productId }))
+app.get('/info', (req, res) => res.send({ productId: config.serviceName }))
 
 if (config.app.production) {
   app.use(ensureHttps)

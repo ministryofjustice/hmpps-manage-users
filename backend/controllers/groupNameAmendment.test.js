@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { groupAmendmentFactory } = require('./groupNameAmendment')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('group amendment factory', () => {
@@ -72,7 +71,7 @@ describe('group amendment factory', () => {
         action: ManageUsersEvent.UPDATE_GROUP_ATTEMPT,
         details: '{"newGroupName":"GroupA"}',
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
         subjectId: 'group1',
         subjectType: ManageUsersSubjectType.GROUP_CODE,
