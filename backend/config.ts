@@ -16,6 +16,8 @@ function get<T>(name: string, fallback: T, options = { requireInProduction: fals
 
 const requiredInProduction = { requireInProduction: true }
 
+const serviceName = 'hmpps-manage-users'
+
 export class AgentConfig {
   timeout: number
 
@@ -35,6 +37,7 @@ export interface ApiConfig {
 
 export default {
   production,
+  serviceName,
   https: production,
   productId: get('PRODUCT_ID', 'DPS017', requiredInProduction),
   staticResourceCacheDuration: 20,
@@ -63,7 +66,7 @@ export default {
     audit: {
       region: get('AUDIT_SQS_REGION', 'eu-west-2', requiredInProduction),
       queueUrl: get('AUDIT_SQS_QUEUE_URL', 'http://localhost:4566/000000000000/mainQueue', requiredInProduction),
-      serviceName: get('AUDIT_SERVICE_NAME', 'hmpps-manage-users', requiredInProduction),
+      serviceName: get('AUDIT_SERVICE_NAME', serviceName, requiredInProduction),
       enabled: get('AUDIT_ENABLED', 'true') === 'true',
     },
     hmppsAuth: {
