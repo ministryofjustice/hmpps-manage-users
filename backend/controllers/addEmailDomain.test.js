@@ -1,5 +1,4 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
-const config = require('../config')
 const { createEmailDomainFactory } = require('./addEmailDomain')
 const { ManageUsersEvent } = require('../audit/manageUsersEvent')
 
@@ -82,7 +81,7 @@ describe('create email domain factory', () => {
           action: ManageUsersEvent.CREATE_EMAIL_DOMAIN_ATTEMPT,
           details: '{"domain":{"name":"DOMAIN1","description":"DOMAINDESCRIPTION1"}}',
           who: 'username',
-          service: config.default.productId,
+          service: 'hmpps-manage-users',
         }),
       )
     })

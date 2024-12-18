@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createGroupFactory } = require('./createGroup')
 const { ManageUsersEvent } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('create group factory', () => {
@@ -61,7 +60,7 @@ describe('create group factory', () => {
         subjectId: null,
         subjectType: null,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

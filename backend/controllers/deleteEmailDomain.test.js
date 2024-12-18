@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { deleteEmailDomainFactory } = require('./deleteEmailDomain')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('delete email domain factory', () => {
@@ -53,7 +52,7 @@ describe('delete email domain factory', () => {
         subjectId: '1234',
         subjectType: ManageUsersSubjectType.EMAIL_DOMAIN_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

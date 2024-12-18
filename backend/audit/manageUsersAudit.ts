@@ -22,7 +22,7 @@ const sendAuditMessage = async (
       subjectId,
       subjectType,
       correlationId,
-      service: config.productId,
+      service: config.apis.audit.serviceName,
       details: details ? JSON.stringify(details) : null,
     }
     await auditService.sendAuditMessage(auditMessage)

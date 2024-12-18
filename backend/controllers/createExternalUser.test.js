@@ -87,7 +87,7 @@ describe('create user factory', () => {
         subjectId: null,
         subjectType: null,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })

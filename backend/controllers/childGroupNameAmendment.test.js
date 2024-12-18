@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { childGroupAmendmentFactory } = require('./childGroupNameAmendment')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('child group amendment factory', () => {
@@ -76,7 +75,7 @@ describe('child group amendment factory', () => {
         subjectId: 'group1',
         subjectType: ManageUsersSubjectType.GROUP_CODE,
         correlationId: expect.any(String),
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         details: JSON.stringify({ parentGroupCode: 'parent-group', newGroupName: 'GroupA' }),
       })
     })

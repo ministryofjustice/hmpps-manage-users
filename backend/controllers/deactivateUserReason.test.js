@@ -2,7 +2,6 @@ const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { deactivateUserReasonFactory } = require('./deactivateUserReason')
 const { ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
 const { auditAction } = require('../utils/testUtils')
-const config = require('../config')
 
 describe('deactivate user reason factory', () => {
   const deactivateUserApi = jest.fn()
@@ -66,7 +65,7 @@ describe('deactivate user reason factory', () => {
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         subjectType: ManageUsersSubjectType.USER_ID,
         who: 'username',
-        service: config.default.productId,
+        service: 'hmpps-manage-users',
         correlationId: expect.any(String),
       })
     })
