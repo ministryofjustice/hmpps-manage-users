@@ -15,7 +15,7 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
-const csurf = require('csurf')
+const { csrfSync } = require('csrf-sync')
 const noCache = require('nocache')
 
 require('express-async-errors')
@@ -102,8 +102,22 @@ app.use((req, res, next) => {
   next()
 })
 
+const testMode = process.env.NODE_ENV === 'test'
+
 // CSRF protection
-app.use(csurf())
+if (!testMode) {
+  const {
+    csrfSynchronisedProtection, // This is the default CSRF protection middleware.
+  } = csrfSync({
+    // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
+    getTokenFromRequest: (req) => {
+      // eslint-disable-next-line no-underscore-dangle
+      return req.body._csrf
+    },
+  })
+
+  app.use(csrfSynchronisedProtection)
+}
 app.use((req, res, next) => {
   if (typeof req.csrfToken === 'function') {
     res.locals.csrfToken = req.csrfToken()
