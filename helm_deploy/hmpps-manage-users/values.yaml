@@ -42,6 +42,7 @@ generic-service:
       SecRuleUpdateActionById 959100 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
       SecRuleUpdateActionById 950010 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
       SecRuleUpdateActionById 932300 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
+      SecRuleUpdateActionById 932301 "t:none,deny,status:406,logdata:%{SERVER_NAME}"
       SecRuleUpdateTargetById 942100 "!ARGS"  # disable libinjection testing on request args. to disable all SQLi testing, modify rules in the range 942100-942999
       SecRuleUpdateTargetById 942430 "!ARGS:returnTo"
       SecAction \
