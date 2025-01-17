@@ -79,7 +79,7 @@ export default {
     manageUsers: {
       url: get('MANAGE_USERS_API_ENDPOINT_URL', 'http://localhost:9091', requiredInProduction),
       timeout: {
-        response: Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000)),
+        response: Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 180000)),
         deadline: Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_DEADLINE', 60000)),
       },
       agent: new AgentConfig(Number(get('MANAGE_USERS_API_ENDPOINT_TIMEOUT_RESPONSE', 60000))),
