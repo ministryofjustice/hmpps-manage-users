@@ -52,7 +52,7 @@ generic-service:
          nolog,\
          pass,\
          t:none,\
-         setvar:tx.paranoia_level=3"
+         setvar:tx.paranoia_level=2"
 
   livenessProbe:
     httpGet:
