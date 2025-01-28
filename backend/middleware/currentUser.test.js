@@ -291,7 +291,7 @@ describe('Current user', () => {
     })
   })
 
-  it('ignore xhr requests', async () => {
+  it('should not ignore xhr requests', async () => {
     const controller = currentUser({ manageUsersApi })
     req.xhr = true
 
@@ -299,8 +299,21 @@ describe('Current user', () => {
 
     await controller(req, res, next)
 
-    expect(manageUsersApi.currentUser.mock.calls.length).toEqual(0)
-    expect(manageUsersApi.currentRoles.mock.calls.length).toEqual(0)
+    expect(manageUsersApi.currentUser).toHaveBeenCalled()
+    expect(manageUsersApi.currentRoles).toHaveBeenCalled()
+    expect(req.session.userDetails).toEqual({ name: 'Bob Smith', activeCaseLoadId: 'MDI' })
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainOAuthAdmin: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: false,
+      viewAdministrableUserRoles: false,
+    })
     expect(next).toHaveBeenCalled()
   })
 })
