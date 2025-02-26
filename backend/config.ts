@@ -97,7 +97,12 @@ export default {
     name: get('HMPPS_COOKIE_NAME', 'hmpps-session-dev'),
     domain: get('HMPPS_COOKIE_DOMAIN', 'localhost'),
   },
-  featureSwitches: {},
+  featureSwitches: {
+    manageUserAllowList: {
+      enabled: Boolean(get('MANAGE_USER_ALLOW_LIST_ENABLED', true)),
+      environmentLabel: get('MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL', 'localhost'),
+    },
+  },
   phaseName: get('SYSTEM_PHASE', ''),
   downloadRecordLimit: Number(get('DPS_SEARCH_DOWNLOAD_LINK_LIMIT', 20000)),
 }

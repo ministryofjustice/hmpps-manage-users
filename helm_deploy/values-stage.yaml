@@ -17,6 +17,9 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-stage.prison.service.justice.gov.uk
     SUPPORT_URL: https://support-stage.hmpps.service.justice.gov.uk
     SYSTEM_PHASE: STAGE
+    MANAGE_USER_ALLOW_LIST_ENABLED: true
+    MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL: stage
+
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:

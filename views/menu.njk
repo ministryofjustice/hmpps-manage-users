@@ -23,6 +23,7 @@
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
 {% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
 {% set hasManageEmailDomains = user and (user.manageEmailDomains) %}
+{% set hasManageUserAllowList = user and (user.manageUserAllowList) and featureSwitches and featureSwitches.manageUserAllowList.enabled %}
 
 {% block content %}
   {% if message.length > 0 and hasMaintainNomisRolesAccess%}
@@ -37,7 +38,17 @@
       <h1 class="govuk-heading-l">{{ title }}</h1>
       <div class="homepage-content">
         <div class="govuk-grid-row card-group">
-          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains %}
+          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains or hasManageUserAllowList %}
+          {% if hasManageUserAllowList %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="manage_user_allow_list">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/manage-user-allow-list">Manage {{ featureSwitches.manageUserAllowList.environmentLabel }} access for users</a>
+                </h1>
+                <p class="govuk-body card__description">Manage the expiry of, or add user accounts to the {{ featureSwitches.manageUserAllowList.environmentLabel }} allow list.</p>
+              </div>
+            </div>
+          {% endif %}
           {% if hasMaintainNomisRolesAccess %}
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="search_with_filter_dps_users">
