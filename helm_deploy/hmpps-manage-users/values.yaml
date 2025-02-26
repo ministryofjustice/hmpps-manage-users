@@ -70,6 +70,7 @@ generic-service:
     NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS: "120"
     AUDIT_SQS_REGION: "eu-west-2"
     AUDIT_SERVICE_NAME: "hmpps-manage-users"
+    MANAGE_USER_ALLOW_LIST_ENABLED: false
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:

@@ -10,7 +10,6 @@ export default defineConfig({
   reporterOptions: {
     configFile: 'cypress-reporter-config.json',
   },
-  videoUploadOnPasses: false,
   taskTimeout: 60000,
   e2e: {
     // We've imported your old cypress plugins here.

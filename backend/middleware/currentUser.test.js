@@ -42,6 +42,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -76,6 +77,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
@@ -98,6 +100,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -118,6 +121,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -138,6 +142,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -158,6 +163,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -178,6 +184,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -197,6 +204,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: true,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
   })
@@ -217,6 +225,7 @@ describe('Current user', () => {
       maintainRoles: true,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: true,
     })
   })
@@ -237,6 +246,28 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: true,
+      manageUserAllowList: false,
+      viewAdministrableUserRoles: false,
+    })
+  })
+
+  it('should set Role manage user allow list for an external user', async () => {
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MANAGE_USER_ALLOW_LIST' }])
+    const controller = currentUser({ manageUsersApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainOAuthAdmin: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: false,
+      manageUserAllowList: true,
       viewAdministrableUserRoles: false,
     })
   })
@@ -267,6 +298,7 @@ describe('Current user', () => {
       maintainRoles: true,
       manageDPSUserAccount: true,
       manageEmailDomains: true,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: true,
     })
   })
@@ -287,6 +319,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: true,
     })
   })
@@ -312,6 +345,7 @@ describe('Current user', () => {
       maintainRoles: false,
       manageDPSUserAccount: false,
       manageEmailDomains: false,
+      manageUserAllowList: false,
       viewAdministrableUserRoles: false,
     })
     expect(next).toHaveBeenCalled()
