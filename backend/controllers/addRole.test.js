@@ -43,7 +43,7 @@ describe('select roles factory', () => {
       expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT))
     })
 
-    it('should call addRole render  exclude oauth admin', async () => {
+    it('should call addRole render excluding oauth admin', async () => {
       const req = {
         params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
         flash: jest.fn(),
@@ -64,6 +64,125 @@ describe('select roles factory', () => {
       expect(render).toBeCalledWith('addRole.njk', {
         errors: undefined,
         roleDropdownValues: [{ text: 'name', value: 'code' }],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
+      })
+    })
+
+    it('should call addRole render including oauth admin', async () => {
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        session,
+      }
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { roleName: 'name', roleCode: 'code' },
+          { roleName: 'Oauth admin', roleCode: 'OAUTH_ADMIN' },
+        ],
+        { message: 'roles message' },
+      ])
+
+      const render = jest.fn()
+      await addRole.index(req, { render, locals: { user: { maintainOAuthAdmin: true } } })
+      expect(render).toBeCalledWith('addRole.njk', {
+        errors: undefined,
+        roleDropdownValues: [
+          { text: 'name', value: 'code' },
+          { text: 'Oauth admin', value: 'OAUTH_ADMIN' },
+        ],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
+      })
+    })
+
+    it('should call addRole render excluding manage user allow list', async () => {
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        session,
+      }
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { roleName: 'name', roleCode: 'code' },
+          { roleName: 'Manage user allow list', roleCode: 'MANAGE_USER_ALLOW_LIST' },
+        ],
+        { message: 'roles message' },
+      ])
+
+      const render = jest.fn()
+      await addRole.index(req, { render })
+      expect(render).toBeCalledWith('addRole.njk', {
+        errors: undefined,
+        roleDropdownValues: [{ text: 'name', value: 'code' }],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
+      })
+    })
+
+    it('should call addRole render including manage user allow list', async () => {
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        session,
+      }
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { roleName: 'name', roleCode: 'code' },
+          { roleName: 'Manage user allow list', roleCode: 'MANAGE_USER_ALLOW_LIST' },
+        ],
+        { message: 'roles message' },
+      ])
+
+      const render = jest.fn()
+      await addRole.index(req, { render, locals: { user: { manageUserAllowList: true } } })
+      expect(render).toBeCalledWith('addRole.njk', {
+        errors: undefined,
+        roleDropdownValues: [
+          { text: 'name', value: 'code' },
+          { text: 'Manage user allow list', value: 'MANAGE_USER_ALLOW_LIST' },
+        ],
+        staff: { name: 'Billy Bob', username: 'BOB' },
+        staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
+        message: 'roles message',
+      })
+    })
+
+    it('should call addRole render including oauth admin and manage user allow list', async () => {
+      const req = {
+        params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' },
+        flash: jest.fn(),
+        get: jest.fn().mockReturnValue('localhost'),
+        session,
+      }
+      getUserRolesAndMessage.mockResolvedValue([
+        { username: 'BOB', firstName: 'Billy', lastName: 'Bob' },
+        [
+          { roleName: 'name', roleCode: 'code' },
+          { roleName: 'Oauth admin', roleCode: 'OAUTH_ADMIN' },
+          { roleName: 'Manage user allow list', roleCode: 'MANAGE_USER_ALLOW_LIST' },
+        ],
+        { message: 'roles message' },
+      ])
+
+      const render = jest.fn()
+      await addRole.index(req, { render, locals: { user: { maintainOAuthAdmin: true, manageUserAllowList: true } } })
+      expect(render).toBeCalledWith('addRole.njk', {
+        errors: undefined,
+        roleDropdownValues: [
+          { text: 'name', value: 'code' },
+          { text: 'Oauth admin', value: 'OAUTH_ADMIN' },
+          { text: 'Manage user allow list', value: 'MANAGE_USER_ALLOW_LIST' },
+        ],
         staff: { name: 'Billy Bob', username: 'BOB' },
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         message: 'roles message',
