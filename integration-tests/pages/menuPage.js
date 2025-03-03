@@ -1,6 +1,7 @@
 const page = require('./page')
 
-const manageUserAllowList = () => cy.get('[data-qa="manage_user_allow_list"]')
+const searchUserAllowList = () => cy.get('[data-qa="search_user_allow_list"]')
+const addUserToAllowList = () => cy.get('[data-qa="add_user_to_allow_list"]')
 const searchDpsUsers = () => cy.get('[data-qa="search_with_filter_dps_users"]')
 const searchExternalUsers = () => cy.get('[data-qa="maintain_auth_users_link"]')
 const createUser = () => cy.get('[data-qa="create_auth_user_link"]')
@@ -20,9 +21,12 @@ const menuPage = () =>
     message: () => cy.get('[data-qa="banner-message"]'),
     searchExternalUsers: () => searchExternalUsers().click(),
     searchExternalUsersLink: () => searchExternalUsers(),
-    manageUserAllowListTile: () => manageUserAllowList(),
-    manageUserAllowListLink: () => manageUserAllowList().find('.card__link'),
-    manageUserAllowListDescription: () => manageUserAllowList().find('.card__description'),
+    searchUserAllowListTile: () => searchUserAllowList(),
+    searchUserAllowListLink: () => searchUserAllowList().find('.card__link'),
+    searchUserAllowListDescription: () => searchUserAllowList().find('.card__description'),
+    addUserToAllowListTile: () => addUserToAllowList(),
+    addUserToAllowListLink: () => addUserToAllowList().find('.card__link'),
+    addUserToAllowListDescription: () => addUserToAllowList().find('.card__description'),
     createDpsUserTile: () => createDpsUser(),
     createDpsUser: () => createDpsUser().click(),
     createAuthUser: () => createUser().click(),
