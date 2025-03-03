@@ -13,7 +13,6 @@ buildAppInsightsClient()
 const path = require('path')
 const express = require('express')
 const bodyParser = require('body-parser')
-const bunyanMiddleware = require('bunyan-middleware')
 const hsts = require('hsts')
 const { csrfSync } = require('csrf-sync')
 const noCache = require('nocache')
@@ -29,7 +28,6 @@ const config = require('./config').default
 const nunjucksSetup = require('./utils/nunjucksSetup')
 const phaseNameSetup = require('./phaseNameSetup')
 const errorHandler = require('./middleware/errorHandler')
-const log = require('./log')
 
 const sixtyDaysInSeconds = 5184000
 
@@ -49,13 +47,6 @@ app.use(
     maxAge: sixtyDaysInSeconds,
     includeSubDomains: true,
     preload: true,
-  }),
-)
-
-app.use(
-  bunyanMiddleware({
-    logger: log,
-    obscureHeaders: ['Authorization'],
   }),
 )
 
