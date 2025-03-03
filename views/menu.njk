@@ -41,11 +41,19 @@
           {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains or hasManageUserAllowList %}
           {% if hasManageUserAllowList %}
             <div class="govuk-grid-column-one-third">
-              <div class="card card--clickable" data-qa="manage_user_allow_list">
+              <div class="card card--clickable" data-qa="search_user_allow_list">
                 <h1 class="govuk-heading-m card__heading">
-                  <a class="govuk-link card__link" href="/manage-user-allow-list">Manage {{ featureSwitches.manageUserAllowList.environmentLabel }} access for users</a>
+                  <a class="govuk-link card__link" href="/search-user-allow-list">Search the {{ featureSwitches.manageUserAllowList.environmentLabel }} user allow list</a>
                 </h1>
-                <p class="govuk-body card__description">Manage the expiry of, or add user accounts to the {{ featureSwitches.manageUserAllowList.environmentLabel }} allow list.</p>
+                <p class="govuk-body card__description">Search for a user and update their access to {{ featureSwitches.manageUserAllowList.environmentLabel }}</p>
+              </div>
+            </div>
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="add_user_to_allow_list">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/add-user-to-allow-list">Add a user to the {{ featureSwitches.manageUserAllowList.environmentLabel }} allow list</a>
+                </h1>
+                <p class="govuk-body card__description">Add an existing user to the {{ featureSwitches.manageUserAllowList.environmentLabel }} allow list</p>
               </div>
             </div>
           {% endif %}
