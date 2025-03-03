@@ -12,12 +12,13 @@ const selectRolesFactory = (getUserRolesAndMessage, saveRoles, manageUrl) => {
     const staffUrl = `${manageUrl}/${userId}/details`
     const hasAdminRole = Boolean(res.locals && res.locals.user && res.locals.user.maintainAccessAdmin)
     const isOauthAdmin = Boolean(res.locals?.user?.maintainOAuthAdmin)
+    const isManageUserAllowList = Boolean(res.locals?.user?.manageUserAllowList)
 
     const [user, assignableRoles, bannerMessage] = await getUserRolesAndMessage(res.locals, userId, hasAdminRole)
 
-    const allowedAssignableRoles = isOauthAdmin
-      ? assignableRoles
-      : assignableRoles.filter((role) => role.roleCode !== 'OAUTH_ADMIN')
+    const allowedAssignableRoles = assignableRoles
+      .filter((role) => isOauthAdmin || role.roleCode !== 'OAUTH_ADMIN')
+      .filter((role) => isManageUserAllowList || role.roleCode !== 'MANAGE_USER_ALLOW_LIST')
 
     const roleDropdownValues = allowedAssignableRoles.map((r) => ({
       text: r.roleName,
