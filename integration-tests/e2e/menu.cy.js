@@ -14,7 +14,7 @@ context('Menu tiles', () => {
     cy.signIn()
     const menuPage = MenuPage.verifyOnPage()
     menuPage.searchUserAllowListTile().should('exist')
-    menuPage.searchUserAllowListLink().should('contain.text', 'Search the localhost user allow list')
+    menuPage.searchUserAllowListLink().should('contain.text', 'Search the localhost allow list')
     menuPage
       .searchUserAllowListDescription()
       .should('contain.text', 'Search for a user and update their access to localhost')

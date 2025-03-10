@@ -1,0 +1,179 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% set title %}Editing user allow list access for {{ firstName }} {{ lastName }}{% endset %}
+{% set searchLink = allowListSearchTitle %}
+{% set reasonHint %}Please provide a valid business reason for allowing access to {{ allowListEnvironment }}. This will be appended to the existing reason{% endset %}
+
+{% block header %}
+  {{ super() }}
+  <link href="/assets/accessible-autocomplete.min.css" rel="stylesheet" />
+{% endblock %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: searchLink, href: searchUrl },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      {{ govukTable({
+        rows: [
+          [
+            {
+              text: "Username"
+            },
+            {
+              text: username
+            }
+          ],
+          [
+            {
+              text: "Email address"
+            },
+            {
+              text: email
+            }
+          ],
+          [
+            {
+              text: "First name"
+            },
+            {
+              text: firstName
+            }
+          ],
+          [
+            {
+              text: "Last name"
+            },
+            {
+              text: lastName
+            }
+          ]
+        ]
+      }) }}
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukRadios({
+          name: "accessPeriod",
+          fieldset: {
+            legend: {
+              text: "How long does the user need access?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "expire",
+              text: "Expire access",
+              hint: {
+                text: "Instantly remove this user from the allow list"
+              }
+            },
+            {
+              divider: "or"
+            },
+            {
+              value: "one-month",
+              text: "One month",
+              checked: true,
+              hint: {
+                text: "General user"
+              }
+            },
+            {
+              value: "three-months",
+              text: "Three months",
+              hint: {
+                text: "Digital user"
+              }
+            },
+            {
+              value: "six-months",
+              text: "Six months",
+              hint: {
+                text: "Digital user"
+              }
+            },
+            {
+              value: "twelve-months",
+              text: "Twelve months",
+              hint: {
+                text: "Digital user supporting live services"
+              }
+            },
+            {
+              value: "no-restriction",
+              text: "No restriction",
+              hint: {
+                text: "Live support team only"
+              }
+            }
+          ],
+          errorMessage: errors | findError('accessPeriod')
+        }) }}
+
+        {{ govukTextarea({
+          name: "reason",
+          id: "reason",
+          rows: "8",
+          label: {
+            text: "Reason",
+            classes: "govuk-label--s preformatted",
+            isPageHeading: false
+          },
+          hint: {
+            text: reasonHint
+          },
+          errorMessage: errors | findError('reason')
+        }) }}
+
+        {% set reasonHtml %}
+          <div class="preformatted">{{ reason }}</div>
+        {% endset %}
+        {{ govukDetails({
+          summaryText: "Existing reason",
+          html: reasonHtml
+        }) }}
+
+        {{ govukButton({
+          text: "Update",
+          type: "submit",
+          classes: "govuk-!-margin-right-1",
+          attributes: { "data-qa": "create-button" }
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: username | allowListUserView,
+          classes: "govuk-button--secondary"
+        }) }}
+      </form>
+    </div>
+  </div>
+{% endblock %}

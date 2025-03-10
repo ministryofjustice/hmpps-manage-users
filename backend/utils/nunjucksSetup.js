@@ -1,6 +1,7 @@
 const moment = require('moment')
 const nunjucks = require('nunjucks')
 const querystring = require('querystring')
+const paths = require('../routes/paths').default
 
 const config = require('../config').default
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
@@ -176,6 +177,17 @@ module.exports = (app, path) => {
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
   njkEnv.addGlobal('supportUrl', config.app.supportUrl)
   njkEnv.addGlobal('googleTagManagerId', config.analytics.googleTagManagerId)
+  njkEnv.addGlobal('allowListEnvironment', config.featureSwitches.manageUserAllowList.environmentLabel)
+  njkEnv.addGlobal(
+    'allowListSearchTitle',
+    `Search the ${config.featureSwitches.manageUserAllowList.environmentLabel} allow list`,
+  )
+  njkEnv.addFilter('allowListUserView', (username) => paths.userAllowList.viewUser({ username }))
+  njkEnv.addFilter('allowListUserEdit', (username) => paths.userAllowList.editUser({ username }))
+  njkEnv.addFilter('toAllowListExpiry', (expiry) =>
+    moment(expiry).diff(moment(), 'months') > 12 ? 'No restriction' : moment(expiry).format('D MMMM YYYY'),
+  )
+  njkEnv.addFilter('toStatus', (status) => toStatusDescription(status))
 
   njkEnv.addFilter(
     'toUserSearchFilter',
@@ -248,6 +260,44 @@ module.exports = (app, path) => {
       }
     },
   )
+
+  njkEnv.addFilter('toAllowListFilter', (currentFilter, filterOptionsHtml) => {
+    const hrefBase = `${paths.userAllowList.search({})}?`
+    const usernameTags = getUsernameTags(currentFilter, hrefBase)
+    const statusTags = getStatusTags(currentFilter, hrefBase)
+
+    const categories = [
+      {
+        heading: {
+          text: 'Name',
+        },
+        items: usernameTags,
+      },
+      {
+        heading: {
+          text: 'Status',
+        },
+        items: statusTags,
+      },
+    ]
+
+    return {
+      heading: {
+        text: 'Filters',
+      },
+      selectedFilters: {
+        heading: {
+          html: '<div class="moj-action-bar__filter"></div>',
+        },
+        clearLink: {
+          text: 'Clear filters',
+          href: `${paths.userAllowList.search({})}`,
+        },
+        categories: categories.filter((category) => category.items),
+      },
+      optionsHtml: filterOptionsHtml,
+    }
+  })
 
   njkEnv.addFilter('toExternalUserSearchFilter', (currentFilter, groups, roles, filterOptionsHtml) => {
     const hrefBase = '/search-external-users?'
