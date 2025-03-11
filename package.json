@@ -20,7 +20,7 @@
     "bunyan-format": "^0.2.1",
     "concurrently": "^9.1.0",
     "connect-flash": "^0.1.1",
-    "connect-redis": "^7.1.1",
+    "connect-redis": "^8.0.2",
     "csrf-sync": "^4.0.3",
     "csv-parse": "^5.6.0",
     "dotenv": "^16.4.7",
