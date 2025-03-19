@@ -48,3 +48,7 @@ export type UserCaseloadDetail = components['schemas']['UserCaseloadDetail']
 export type PrisonUserSearchSummary = components['schemas']['PrisonUserSearchSummary']
 export type PrisonUserSummary = components['schemas']['PrisonUserSummary']
 export type PrisonAdminUserSummary = components['schemas']['PrisonAdminUserSummary']
+
+export type UserAllowlistDetail = components['schemas']['UserAllowlistDetail']
+export type UserAllowlistAddRequest = components['schemas']['UserAllowlistAddRequest']
+export type UserAllowlistPatchRequest = components['schemas']['UserAllowlistPatchRequest']
