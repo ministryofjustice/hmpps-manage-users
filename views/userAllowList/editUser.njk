@@ -76,6 +76,7 @@
       }) }}
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="id" value="{{ id }}" />
 
         {{ govukRadios({
           name: "accessPeriod",
@@ -88,8 +89,9 @@
           },
           items: [
             {
-              value: "expire",
+              value: "EXPIRE",
               text: "Expire access",
+              checked: accessPeriod == "EXPIRE",
               hint: {
                 text: "Instantly remove this user from the allow list"
               }
@@ -98,37 +100,41 @@
               divider: "or"
             },
             {
-              value: "one-month",
+              value: "ONE_MONTH",
               text: "One month",
-              checked: true,
+              checked: accessPeriod == "ONE_MONTH",
               hint: {
                 text: "General user"
               }
             },
             {
-              value: "three-months",
+              value: "THREE_MONTHS",
               text: "Three months",
+              checked: accessPeriod == "THREE_MONTHS",
               hint: {
                 text: "Digital user"
               }
             },
             {
-              value: "six-months",
+              value: "SIX_MONTHS",
               text: "Six months",
+              checked: accessPeriod == "SIX_MONTHS",
               hint: {
                 text: "Digital user"
               }
             },
             {
-              value: "twelve-months",
+              value: "TWELVE_MONTHS",
               text: "Twelve months",
+              checked: accessPeriod == "TWELVE_MONTHS",
               hint: {
                 text: "Digital user supporting live services"
               }
             },
             {
-              value: "no-restriction",
+              value: "NO_RESTRICTION",
               text: "No restriction",
+              checked: accessPeriod == "NO_RESTRICTION",
               hint: {
                 text: "Live support team only"
               }

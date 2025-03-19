@@ -1,8 +1,9 @@
 import { Request, Response } from 'express'
 import paths from '../paths'
-import AllowListService, { AccessPeriod, AllowListUserRequest } from '../../services/userAllowListService'
+import AllowListService from '../../services/userAllowListService'
 import { validateEmailFormat } from '../../controllers/userValidation'
 import { trimObjValues } from '../../utils/utils'
+import { UserAllowlistAddRequest } from '../../@types/manageUsersApi'
 
 export default class AddUserRoutes {
   allowListService: AllowListService
@@ -11,7 +12,7 @@ export default class AddUserRoutes {
     this.allowListService = allowListService
   }
 
-  private static validate(allowListUserRequest: AllowListUserRequest) {
+  private static validate(allowListUserRequest: UserAllowlistAddRequest) {
     const errors = []
     if (!allowListUserRequest.username) {
       errors.push({ href: '#username', text: 'Enter a valid username' })
@@ -36,7 +37,7 @@ export default class AddUserRoutes {
 
   GET = async (req: Request, res: Response): Promise<void> => {
     const form = req.flash('form')[0]
-    const accessPeriod = form?.accessPeriod ?? 'one-month'
+    const accessPeriod = form?.accessPeriod ?? 'ONE_MONTH'
     res.render('userAllowList/addUser', {
       ...form,
       accessPeriod,
@@ -46,9 +47,8 @@ export default class AddUserRoutes {
 
   POST = async (req: Request, res: Response): Promise<void> => {
     const form = trimObjValues(req.body)
-    const allowListUserRequest: AllowListUserRequest = {
+    const allowListUserRequest: UserAllowlistAddRequest = {
       ...form,
-      expiry: form.accessPeriod as AccessPeriod,
     }
     const errors = AddUserRoutes.validate(allowListUserRequest)
     if (errors.length > 0) {
@@ -56,7 +56,7 @@ export default class AddUserRoutes {
       req.flash('form', form)
       res.redirect(paths.userAllowList.addUser({}))
     } else {
-      await this.allowListService.addAllowListUser(allowListUserRequest, req.session.userDetails.username)
+      await this.allowListService.addAllowListUser(res.locals.access_token, allowListUserRequest)
       res.redirect(paths.userAllowList.search({}))
     }
   }

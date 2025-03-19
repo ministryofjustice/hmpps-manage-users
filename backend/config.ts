@@ -101,6 +101,7 @@ export default {
     manageUserAllowList: {
       enabled: Boolean(get('MANAGE_USER_ALLOW_LIST_ENABLED', true)),
       environmentLabel: get('MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL', 'localhost'),
+      pageSize: Number(get('MANAGE_USER_ALLOW_LIST_PAGE_SIZE', 20)),
     },
   },
   phaseName: get('SYSTEM_PHASE', ''),

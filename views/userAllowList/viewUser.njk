@@ -47,7 +47,7 @@
       {% set userDetails = [
         [
           {text: "Expiry date", classes: 'govuk-!-width-one-quarter' },
-          {text: expiry | toAllowListExpiry, classes: 'govuk-!-width-one-half' },
+          {text: allowlistEndDate | toAllowListExpiry, classes: 'govuk-!-width-one-half' },
           editUserLink
         ],
         [
@@ -63,6 +63,11 @@
         [
           {text: "Last updated"},
           {text: lastUpdated | formatDate('D MMMM YYYY') },
+          {text: ''}
+        ],
+        [
+          {text: "Last updated by"},
+          {text: lastUpdatedBy },
           {text: ''}
         ]
       ] %}

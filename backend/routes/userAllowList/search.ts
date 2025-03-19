@@ -1,10 +1,14 @@
 import { Request, RequestHandler, Response } from 'express'
-import moment from 'moment'
 import AllowListService from '../../services/userAllowListService'
+import { UserAllowlistQuery } from '../../data/manageUsersApiClient'
+import paginationService from '../../services/paginationService'
+import config from '../../config'
+import getAllowlistStatus from './utils'
 
 type QueryParams = {
   user: string
   status: string
+  page: number
 }
 
 export default class SearchRoutes {
@@ -15,16 +19,29 @@ export default class SearchRoutes {
   }
 
   GET: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-    const users = await this.allowListService.getAllAllowListUsers()
-    const currentFilter = this.parseFilter(req.query as QueryParams)
-    const displayUsers = users.map((user) => ({
+    const currentFilter = this.parseFilter(req.query as unknown as QueryParams)
+    const query: UserAllowlistQuery = {
+      name: currentFilter.user,
+      status: currentFilter.status,
+      page: currentFilter.page,
+      size: config.featureSwitches.manageUserAllowList.pageSize,
+    }
+    const { content, totalElements, number } = await this.allowListService.getAllAllowListUsers(
+      res.locals.access_token,
+      query,
+    )
+    const displayUsers = content.map((user) => ({
       ...user,
-      status: moment().isAfter(user.expiry) ? 'EXPIRED' : 'ACTIVE',
+      status: getAllowlistStatus(user),
     }))
 
     res.render('userAllowList/search', {
       currentFilter,
       results: displayUsers,
+      pagination: paginationService.getPagination(
+        { totalElements, page: number, size: query.size },
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
+      ),
     })
   }
 
@@ -32,6 +49,7 @@ export default class SearchRoutes {
     return {
       user: query.user?.trim(),
       status: query.status || 'ALL',
+      page: query.page || 0,
     }
   }
 }
