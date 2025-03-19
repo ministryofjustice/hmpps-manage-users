@@ -11,7 +11,7 @@
     "@ministryofjustice/frontend": "^3.2.1",
     "@ministryofjustice/hmpps-audit-client": "^1.1.1",
     "accessible-autocomplete": "^3.0.1",
-    "agentkeepalive": "^4.5.0",
+    "agentkeepalive": "^4.6.0",
     "applicationinsights": "^2.9.6",
     "axios": "^1.7.9",
     "babel-jest": "^29.7.0",
