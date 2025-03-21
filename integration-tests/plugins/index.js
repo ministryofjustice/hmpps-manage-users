@@ -2,6 +2,7 @@ const hmppsAuth = require('../mockApis/auth')
 const manageUsersApi = require('../mockApis/manageusers')
 const tokenVerification = require('../mockApis/tokenverification')
 const manageUserApiDps = require('../mockApis/manageusersdps')
+const manageUsersAllowList = require('../mockApis/manageUsersAllowList').default
 
 const { resetStubs } = require('../mockApis/wiremock')
 
@@ -29,5 +30,6 @@ module.exports = (on) => {
     stubManageUserGetAdminRoles: manageUsersApi.stubGetRolesIncludingAdminRoles,
     stubManageUserGetOauthAdminRoles: manageUsersApi.stubGetRolesIncludingOAUTHAdminRoles,
     stubManageUserGetRoles: manageUsersApi.stubGetRoles,
+    ...manageUsersAllowList,
   })
 }
