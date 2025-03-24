@@ -10,9 +10,17 @@ const stubAddAllowlistUser = () =>
     },
     response: {
       status: 201,
-      headers: {
-        'Content-Type': 'application/json;charset=UTF-8',
-      },
+    },
+  })
+
+const stubUpdateAllowlistUser = () =>
+  stubFor({
+    request: {
+      method: 'PATCH',
+      urlPattern: `/users/allowlist/a073bfc1-2f81-4b6d-9b9c-fd7c367fe4c7`,
+    },
+    response: {
+      status: 200,
     },
   })
 
@@ -109,4 +117,4 @@ const stubSearchAllowlistUser = () =>
     },
   })
 
-export default { stubAddAllowlistUser, stubGetAllowlistUser, stubSearchAllowlistUser }
+export default { stubAddAllowlistUser, stubGetAllowlistUser, stubUpdateAllowlistUser, stubSearchAllowlistUser }

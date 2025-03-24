@@ -3,6 +3,7 @@ import paths from '../paths'
 import AllowListService from '../../services/userAllowListService'
 import { UserAllowlistPatchRequest } from '../../@types/manageUsersApi'
 import { trimObjValues } from '../../utils/utils'
+import getAllowlistStatus from './utils'
 
 export default class EditUserRoutes {
   private readonly allowListService: AllowListService
@@ -28,6 +29,7 @@ export default class EditUserRoutes {
       ...allowListUser,
       accessPeriod,
       searchUrl: paths.userAllowList.search({}),
+      status: getAllowlistStatus(allowListUser),
       errors: req.flash('editAllowListUserErrors'),
     })
   }

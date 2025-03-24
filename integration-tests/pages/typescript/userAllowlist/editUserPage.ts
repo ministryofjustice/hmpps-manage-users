@@ -1,5 +1,10 @@
 import Page from '../page'
 import { UserAllowlistAddRequest } from '../../../../backend/@types/manageUsersApi'
+import { getFormField, getRadio, isChecked, typeOrClear } from '../../../support/utils'
+
+interface OptionalForm {
+  reason?: string
+}
 
 export default class EditUserPage extends Page {
   constructor(firstName: string, lastName: string) {
@@ -17,4 +22,23 @@ export default class EditUserPage extends Page {
   public static create = (user: UserAllowlistAddRequest) => {
     return new EditUserPage(user.firstName, user.lastName)
   }
+
+  verifyAccessPeriod = (label: string): EditUserPage => {
+    isChecked(getRadio(label))
+    return this
+  }
+
+  selectAccessPeriod = (label: string): EditUserPage => {
+    getRadio(label).click()
+    return this
+  }
+
+  fillForm = (optionalForm: OptionalForm): EditUserPage => {
+    typeOrClear(getFormField('reason'), optionalForm.reason)
+    return this
+  }
+
+  submit = () => cy.get('[data-qa=submit-button]').click()
+
+  cancel = () => cy.get('[data-qa=cancel-button]').click()
 }

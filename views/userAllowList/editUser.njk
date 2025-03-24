@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
@@ -38,6 +39,15 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-l">{{ title }}</h1>
+      <div class="govuk-!-padding-bottom-5">
+        <span class="govuk-visually-hidden">Status</span>
+        {% set statusClass = "govuk-tag--pink" if status == 'EXPIRED' else "govuk-tag--green" %}
+        {{ govukTag({
+          text: status | toStatus,
+          classes: statusClass,
+          attributes: { "data-qa": "status-tag" }
+        }) }}
+      </div>
       {{ govukTable({
         rows: [
           [
@@ -45,7 +55,7 @@
               text: "Username"
             },
             {
-              text: username
+              text: username, attributes: {"data-qa": "username"}
             }
           ],
           [
@@ -53,7 +63,7 @@
               text: "Email address"
             },
             {
-              text: email
+              text: email, attributes: {"data-qa": "email"}
             }
           ],
           [
@@ -61,7 +71,7 @@
               text: "First name"
             },
             {
-              text: firstName
+              text: firstName, attributes: {"data-qa": "firstName"}
             }
           ],
           [
@@ -69,7 +79,7 @@
               text: "Last name"
             },
             {
-              text: lastName
+              text: lastName, attributes: {"data-qa": "lastName"}
             }
           ]
         ]
@@ -159,7 +169,7 @@
         }) }}
 
         {% set reasonHtml %}
-          <div class="preformatted">{{ reason }}</div>
+          <div class="preformatted" data-qa="reason">{{ reason }}</div>
         {% endset %}
         {{ govukDetails({
           summaryText: "Existing reason",
@@ -170,14 +180,15 @@
           text: "Update",
           type: "submit",
           classes: "govuk-!-margin-right-1",
-          attributes: { "data-qa": "create-button" }
+          attributes: { "data-qa": "submit-button" }
         }) }}
 
         {{ govukButton({
           text: "Cancel",
           element: 'a',
           href: username | allowListUserView,
-          classes: "govuk-button--secondary"
+          classes: "govuk-button--secondary",
+          attributes: { "data-qa": "cancel-button" }
         }) }}
       </form>
     </div>
