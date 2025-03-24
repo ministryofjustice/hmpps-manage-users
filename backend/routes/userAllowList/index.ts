@@ -32,6 +32,7 @@ export default function Index(): Router {
 
   const searchHandler = new SearchRoutes(allowListService)
   get(paths.userAllowList.search, searchHandler.GET)
+  get(paths.userAllowList.download, searchHandler.DOWNLOAD)
 
   return router
 }

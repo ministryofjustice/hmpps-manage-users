@@ -102,6 +102,7 @@ export default {
       enabled: Boolean(get('MANAGE_USER_ALLOW_LIST_ENABLED', true)),
       environmentLabel: get('MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL', 'localhost'),
       pageSize: Number(get('MANAGE_USER_ALLOW_LIST_PAGE_SIZE', 20)),
+      downloadLimit: Number(get('MANAGE_USER_ALLOW_LIST_DOWNLOAD_LIMIT', 20000)),
     },
   },
   phaseName: get('SYSTEM_PHASE', ''),

@@ -142,7 +142,7 @@
                 rows: rows
               }) }}
               {{ mojPagination(pagination) }}
-              {% if downloadUrl and not hideDownloadLink %}
+              {% if downloadUrl and showDownloadLink %}
                 <div id="downloadInProgress" class='govuk-!-display-none'>
                   <div class="loading-spinner-wrapper">
                     <div class="loading-spinner"></div>
@@ -156,11 +156,7 @@
                 }) }}
               {% endif %}
               {% if downloadUrl %}
-                {% if hideDownloadLink %}
-                  <p class="govuk-body" data-qa="exceed-download-limit"><b>More
-                      than {{ downloadRecordLimit }} results returned, please refine your search
-                      if you want to download the results</b></p>
-                {% else %}
+                {% if showDownloadLink %}
                   <div class="pull-right">
                     <form id="downloadAllowListForm" method="GET" action="{{ downloadUrl }}">
                       {{ govukButton({
@@ -174,6 +170,10 @@
                       }) }}
                     </form>
                   </div>
+                {% else %}
+                  <p class="govuk-body" data-qa="exceed-download-limit"><b>More
+                      than {{ downloadLimit }} results returned, please refine your search
+                      if you want to download the results</b></p>
                 {% endif %}
               {% endif %}
             {% else %}
