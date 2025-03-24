@@ -1,3 +1,4 @@
+import moment from 'moment/moment'
 import { PageElement } from '../pages/typescript/page'
 
 const getRadio = (label: string): PageElement => cy.contains('label', label).prev()
@@ -16,8 +17,40 @@ const verifyFormError = (fieldName: string) => {
   cy.get(selector).should('be.visible')
 }
 
-const verifyFormValue = (fieldName: string, value: string) => {
-  getFormField(fieldName).should('have.value', value)
+const verifyFormValue = (fieldName: string, value: string) => getFormField(fieldName).should('have.value', value)
+
+const verifyDataQaText = (dataQa: string, text: string) => {
+  const selector = `[data-qa=${dataQa}]`
+  cy.get(selector).should(($el) => expect($el.text().trim()).to.equal(text))
 }
 
-export { getFormField, getRadio, isChecked, typeOrClear, verifyFormError, verifyFormValue }
+const getEndDate = (
+  accessPeriod: 'EXPIRE' | 'ONE_MONTH' | 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS' | 'NO_RESTRICTION',
+): Date => {
+  switch (accessPeriod) {
+    case 'ONE_MONTH':
+      return moment().endOf('day').add(1, 'months').toDate()
+    case 'THREE_MONTHS':
+      return moment().endOf('day').add(3, 'months').toDate()
+    case 'SIX_MONTHS':
+      return moment().endOf('day').add(6, 'months').toDate()
+    case 'TWELVE_MONTHS':
+      return moment().endOf('day').add(12, 'months').toDate()
+    case 'NO_RESTRICTION':
+      return moment().endOf('day').add(1000, 'years').toDate()
+    case 'EXPIRE':
+    default:
+      return moment().endOf('day').subtract(1, 'day').toDate()
+  }
+}
+
+export {
+  getEndDate,
+  getFormField,
+  getRadio,
+  isChecked,
+  typeOrClear,
+  verifyDataQaText,
+  verifyFormError,
+  verifyFormValue,
+}

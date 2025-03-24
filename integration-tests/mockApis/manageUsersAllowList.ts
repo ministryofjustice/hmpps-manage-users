@@ -1,4 +1,6 @@
 import { stubFor } from './wiremock'
+import { UserAllowlistAddRequest } from '../../backend/@types/manageUsersApi'
+import { getEndDate } from '../support/utils'
 
 const stubAddAllowlistUser = () =>
   stubFor({
@@ -10,6 +12,32 @@ const stubAddAllowlistUser = () =>
       status: 201,
       headers: {
         'Content-Type': 'application/json;charset=UTF-8',
+      },
+    },
+  })
+
+const stubGetAllowlistUser = (user: UserAllowlistAddRequest) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPath: `/users/allowlist/${user.username}`,
+    },
+    response: {
+      status: 200,
+      headers: {
+        'Content-Type': 'application/json;charset=UTF-8',
+      },
+      jsonBody: {
+        id: 'a073bfc1-2f81-4b6d-9b9c-fd7c367fe4c7',
+        username: `${user.username}`,
+        email: `${user.email}`,
+        firstName: `${user.firstName}`,
+        lastName: `${user.lastName}`,
+        reason: `${user.reason}`,
+        createdOn: `${new Date('2024-03-19T04:39:08')}`,
+        allowlistEndDate: `${getEndDate(user.accessPeriod)}`,
+        lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
+        lastUpdatedBy: 'LAQUINAQNW',
       },
     },
   })
@@ -81,4 +109,4 @@ const stubSearchAllowlistUser = () =>
     },
   })
 
-export default { stubAddAllowlistUser, stubSearchAllowlistUser }
+export default { stubAddAllowlistUser, stubGetAllowlistUser, stubSearchAllowlistUser }
