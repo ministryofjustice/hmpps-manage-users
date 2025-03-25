@@ -50,7 +50,7 @@
     fieldset: {
       legend: {
         text: 'Status',
-        classes: 'govuk-label--s'
+        classes: 'govuk-fieldset__legend--s govuk-padding-0'
       }
     },
     hint: {
@@ -101,16 +101,16 @@
                     <div class="govuk-grid-row govuk-!-margin-bottom-2">
                       <div class="govuk-grid-column-three-quarters">
                         <a href="{{ viewUserUrl }}" class="govuk-link"
-                           data-qa="edit-button-{{ u.username }}">{{ u.firstName }} {{ u.lastName }}</a><span> - {{ u.username }}</span>
+                           data-qa="edit-button-{{ u.username }}">{{ u.firstName }} {{ u.lastName }}</a><span data-qa="username-{{ u.username }}"> - {{ u.username }}</span>
                       </div>
                       <div class="govuk-grid-column-one-quarter pull-right">
-                        <a href="{{ viewUserUrl }}" class="govuk-link">View details</a>
+                        <a href="{{ viewUserUrl }}" class="govuk-link" data-qa="view-details-{{ u.username }}">View details</a>
                         <span class="govuk-visually-hidden">for {{ u.firstName }} {{ u.lastName }}</span>
                       </div>
                     </div>
                     <div class="govuk-grid-row govuk-!-margin-bottom-2">
                       <div class="govuk-grid-column-full"><span
-                            class="govuk-visually-hidden">Email</span><span>{{ u.email }}</span>
+                            class="govuk-visually-hidden">Email</span><span data-qa="email-{{ u.username }}">{{ u.email }}</span>
                       </div>
                     </div>
                     <div class="govuk-grid-row">
@@ -119,12 +119,14 @@
                           <div class="govuk-grid-column-full">
                             <span class="govuk-visually-hidden">Expiry Date</span>
                             <span class="govuk-!-font-weight-bold govuk-!-padding-right-1">Expiry Date:</span>
-                            <span class="govuk-!-padding-right-1">{{ u.expiry | toAllowListExpiry }}</span>
+                            <span class="govuk-!-padding-right-1" data-qa="expiry-{{ u.username }}">{{ u.allowlistEndDate | toAllowListExpiry }}</span>
                             <span class="govuk-visually-hidden">Status</span>
                             {% set statusClass = "govuk-tag--pink" if u.status == 'EXPIRED' else "govuk-tag--green" %}
+                            {% set statusDataQa %}status-{{ u.username }}{% endset %}
                             {{ govukTag({
                               text: u.status | toStatus,
-                              classes: statusClass
+                              classes: statusClass,
+                              attributes: {"data-qa": statusDataQa }
                             }) }}
                           </div>
                         </div>
@@ -142,7 +144,7 @@
                 rows: rows
               }) }}
               {{ mojPagination(pagination) }}
-              {% if downloadUrl and not hideDownloadLink %}
+              {% if downloadUrl and showDownloadLink %}
                 <div id="downloadInProgress" class='govuk-!-display-none'>
                   <div class="loading-spinner-wrapper">
                     <div class="loading-spinner"></div>
@@ -156,11 +158,7 @@
                 }) }}
               {% endif %}
               {% if downloadUrl %}
-                {% if hideDownloadLink %}
-                  <p class="govuk-body" data-qa="exceed-download-limit"><b>More
-                      than {{ downloadRecordLimit }} results returned, please refine your search
-                      if you want to download the results</b></p>
-                {% else %}
+                {% if showDownloadLink %}
                   <div class="pull-right">
                     <form id="downloadAllowListForm" method="GET" action="{{ downloadUrl }}">
                       {{ govukButton({
@@ -174,6 +172,10 @@
                       }) }}
                     </form>
                   </div>
+                {% else %}
+                  <p class="govuk-body" data-qa="exceed-download-limit"><b>More
+                      than {{ downloadLimit }} results returned, please refine your search
+                      if you want to download the results</b></p>
                 {% endif %}
               {% endif %}
             {% else %}

@@ -295,6 +295,9 @@ module.exports = (app, path) => {
         },
         categories: categories.filter((category) => category.items),
       },
+      submit: {
+        attributes: { 'data-qa': 'apply-filter-button' },
+      },
       optionsHtml: filterOptionsHtml,
     }
   })

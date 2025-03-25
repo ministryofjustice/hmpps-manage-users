@@ -355,6 +355,7 @@ describe('manageUsersApiImport tests', () => {
 
   describe('contextUserRoles', () => {
     const roleDetail: RoleDetail = {
+      type: 'APP',
       code: 'RC1',
       name: 'hello there',
       sequence: 1,

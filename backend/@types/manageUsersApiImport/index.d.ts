@@ -5,41 +5,112 @@
 
 export interface paths {
   '/roles/{roleCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Amend role name
      * @description Amend the role name, role required is ROLE_ROLES_ADMIN
      */
     put: operations['amendRoleName']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles/{roleCode}/description': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Amend role description
      * @description Amend the role description, role required is ROLE_ROLES_ADMIN
      */
     put: operations['amendRoleDescription']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles/{roleCode}/admintype': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Amend role admin type
      * @description Amend the role admin type, role required is ROLE_ROLES_ADMIN
      */
     put: operations['amendRoleAdminType']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/enable-user': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Unlock user account
      * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
      */
     put: operations['enableUser']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/disable-user': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Lock user account
      * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
      */
     put: operations['disableUser']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/groups/{group}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Group detail.
      * @description return Group Details
@@ -50,13 +121,24 @@ export interface paths {
      * @description Amend group name.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     put: operations['amendGroupName']
+    post?: never
     /**
      * Delete group.
      * @description Delete a Group.<br.>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     delete: operations['deleteGroup']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/groups/child/{group}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Child Group detail.
      * @description Fetches child group details.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
@@ -67,406 +149,1121 @@ export interface paths {
      * @description Amend a Child Group Name.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     put: operations['amendChildGroupName']
+    post?: never
     /**
      * Delete child group.
      * @description Delete a child group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     delete: operations['deleteChildGroup']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/roles/{role}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Add role to user.
      * @description Add role to user. Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
      */
     put: operations['addRoleByUserId']
+    post?: never
     /**
      * Remove role from user.
      * @description Remove role from user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS , ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
      */
     delete: operations['removeRoleByUserId']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/groups/{group}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Add group to user.
      * @description Add group to user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     put: operations['addGroupByUserId']
+    post?: never
     /**
      * Remove group from user.
      * @description Remove group from user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     delete: operations['removeGroupByUserId']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/enable': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Enable a user.
      * @description Enable a user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     put: operations['enableUserByUserId']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/disable': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
     /**
      * Disable a user.
      * @description Disable a user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     put: operations['disableUserByUserId']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/users/allowlist': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all allow list users.
+     * @description Get all allow list users, optionally filtering on name and status
+     */
+    get: operations['getAllAllowlistUsers']
+    put?: never
+    /**
+     * Add a user to the allow list.
+     * @description Add a user to the allow list
+     */
+    post: operations['addUser']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all roles
      * @description Get all roles, role required is ROLE_ROLES_ADMIN (to find external roles), ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
      */
     get: operations['getRoles']
+    put?: never
     /**
      * Create role
      * @description Create a new role, role required is ROLE_ROLES_ADMIN
      */
     post: operations['createRole']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Find prison users by first and last name.
      * @description Find prison users by first and last name. Requires role ROLE_USE_OF_FORCE or ROLE_STAFF_SEARCH
      */
     get: operations['findUsersByFirstAndLastName']
+    put?: never
     /**
      * Create a DPS user
      * @description Creates a specific DPS user. Requires role ROLE_CREATE_USER
      */
     post: operations['createUser']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of roles associated with the users account
      * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
      */
     get: operations['getUserRoles']
+    put?: never
     /**
      * Add a role to the specified user account, all roles will be added to DPS caseload unless specified
      * @description Adds a role to a user, user must have caseload (if specified). Default caseload is DPS caseload (NWEB).  Cannot add an existing role to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
      */
     post: operations['addRoles']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/email': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Amend a prison user email address.
      * @description Amend a prison user email address. Requires role MAINTAIN_ACCESS_ROLES_ADMIN
      */
     post: operations['amendUserEmail']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/email/sync': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Sync Nomis user email back into Auth
      * @description Run process to check for differences in email address between Auth and NOMIS and updates Auth if required.<br/> Requires role ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
      */
     post: operations['syncUserEmail']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/caseloads': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of caseloads associated with the users account
-     * @description Caseloads for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES"
+     * @description Caseloads for a specific user. Requires role ROLE_USER_PERMISSIONS__RO or ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
      */
     get: operations['getUserCaseloads']
+    put?: never
     /**
      * Add multiple caseloads to the specified user account
      * @description Adds caseloads to a user, caseloads must exist. Cannot add an existing caseload to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
      */
     post: operations['addCaseloads']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/linkedprisonusers/lsa': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Link a Local Admin User to an existing General Account
      * @description Link a Local Admin User to an existing General Account. Requires role ROLE_CREATE_USER
      */
     post: operations['createLinkedLocalAdminUser']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/linkedprisonusers/general': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Link a New General User to an existing Admin Account
      * @description Link a New General User to an existing Admin Account. Requires role ROLE_CREATE_USER
      */
     post: operations['createLinkedGeneralUser']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/linkedprisonusers/admin': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Link an Admin User to an existing General Account
      * @description Link an Admin User to an existing General Account. Requires role ROLE_CREATE_USER
      */
     post: operations['createLinkedCentralAdminUser']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all groups
      * @description Get all groups, role required is ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     get: operations['getGroups']
+    put?: never
     /**
      * Create group.
      * @description Create a group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     post: operations['createGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/groups/child': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create child group.
      * @description Create a Child Group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
      */
     post: operations['createChildGroup']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of roles associated with the users account
      * @description Roles for a specific user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
      */
     get: operations['getUserRoles_1']
+    put?: never
     /**
      * Add roles to user.
      * @description Add role to user, post version taking multiple roles<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
      */
     post: operations['addRolesByUserId']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/email': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Amend a user email address.
      * @description Amend a user email address. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     post: operations['alterUserEmail']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/create': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
     /**
      * Create user
      * @description Create user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     post: operations['createUserByEmail']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/email-domains': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all email domains
      * @description Get all email domains, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     get: operations['domainList']
+    put?: never
     /**
      * Create email domain
      * @description Create a new email domain, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     post: operations['addEmailDomain']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/users/allowlist/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Update a user's access on the allow list.
+     * @description Update a user's access on the allow list
+     */
+    patch: operations['updateUserAccess']
+    trace?: never
   }
   '/users/{username}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * User detail.
      * @description Find user detail by username.
      */
     get: operations['findUser']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/{username}/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * List of roles for user
-     * @description List of roles for user. Currently restricted to service specific roles: ROLE_INTEL_ADMIN or ROLE_PF_USER_ADMIN or ROLE_PCMS_USER_ADMIN.<br/><br/>**Change to old endpoint in Auth** <br/> 1)  Nomis / Prison user doesn't return additional role in the list:  PRISON <br/>                                         2)  Delius user doesn't return additional role in the list:  PROBATION
+     * @description List of roles for user. Currently restricted to service specific roles: ROLE_USER_PERMISSIONS__RO or ROLE_INTEL_ADMIN or ROLE_PF_USER_ADMIN or ROLE_PCMS_USER_ADMIN.<br/><br/>**Change to old endpoint in Auth** <br/> 1)  Nomis / Prison user doesn't return additional role in the list:  PRISON <br/>                                         2)  Delius user doesn't return additional role in the list:  PROBATION
      */
     get: operations['userRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/{username}/email': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Email address for user
      * @description Verified email address for user
      */
     get: operations['getUserEmail']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Search for users
      * @description
-     *       Search for users in the Auth DB only who match on partial first name, surname, username or email and return a pageable result set.
-     *       Optionally choose the authentication sources from any combination of auth, delius, nomis and azuread sources.
-     *       Provide the authSources as a list of values with the same name. e.g. ?authSources=nomis&authSources=delius&authSources=auth
-     *       It will return users with the requested auth sources where they have authenticated against the auth service at least once.
-     *       Note: User information held in the auth service may be out of date with the user information held in the source systems as
-     *       their details will be as they were the last time that they authenticated.<br/><br/>
+     *           Search for users in the Auth DB only who match on partial first name, surname, username or email and return a pageable result set.
+     *           Optionally choose the authentication sources from any combination of auth, delius, nomis and azuread sources.
+     *           Provide the authSources as a list of values with the same name. e.g. ?authSources=nomis&authSources=delius&authSources=auth
+     *           It will return users with the requested auth sources where they have authenticated against the auth service at least once.
+     *           Note: User information held in the auth service may be out of date with the user information held in the source systems as
+     *           their details will be as they were the last time that they authenticated.<br/><br/>
      *
-     *        Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
+     *            Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
+     *
      */
     get: operations['searchForUsersInMultipleSourceSystems']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * My User details.
      * @description Find my user details.
      */
     get: operations['myDetails']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me/roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * List of roles for current user.
      * @description List of roles for current user.
      */
     get: operations['myRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me/groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * My Group details.
      * @description Find my location/group details. This should be accessed with user token.
      */
     get: operations['myGroupDetails']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me/email': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Email address for current user
      * @description Verified email address for current user
      */
     get: operations['myEmail']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/users/me/caseloads': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of caseloads associated with the current user
      * @description Caseloads for the current user
      */
     get: operations['getMyCaseloads']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/users/allowlist/{username}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get a user on the allow list.
+     * @description Get a user on the allow list
+     */
+    get: operations['getAllowlistUser']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles/{role}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get role details
      * @description Get role details, role required is ROLE_ROLES_ADMIN
      */
     get: operations['getRoleDetail']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles/paged': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all paged roles
      * @description Get all paged roles, role required is ROLE_ROLES_ADMIN
      */
     get: operations['getPagedRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/roles/delius': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * List of mapped delius roles
      * @description List of mapped  delius roles. Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
      */
     get: operations['findMappedDeliusRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get specified user details
      * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
      */
     get: operations['findUserByUsername']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/details': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get specified user details
      * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
      */
     get: operations['getUserDetails']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get all users filtered as specified
      * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
      */
     get: operations['getUsers']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/reference-data/caseloads': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Retrieves all caseloads
      * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
      */
     get: operations['getCaseload']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/prisonusers/find-by-caseload-and-role': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get all users filtered by active caseload and role
+     * @description Requires role USERS__PRISON_USERS__FIND_BY_CASELOAD_AND_ROLE__RO<br/>Get all users with active caseload and nomis role.<br/> This search does not limit by user token.
+     */
+    get: operations['getUsersByCaseloadAndRole']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/download': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['downloadUsersByFilters']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/download/admins': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     get: operations['downloadPrisonAdminsByFilter']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/notification/banner/{page}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Gets Notification message
      * @description Message string to be displayed in the notification banner.
      */
     get: operations['getNotificationBannerMessage']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Search for a user.
      * @description Search for a user.
      */
     get: operations['searchForUser']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{username}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * User detail.
      * @description User detail.
      */
     get: operations['user']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get groups for userId.
      * @description Get groups for userId. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER or ROLE_VIEW_USER_GROUPS
      */
     get: operations['getGroups_1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/{userId}/assignable-roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of roles associated with the users account
      * @description Roles for a specific user. Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER, ROLE_MAINTAIN_IMS_USERS
      */
     get: operations['getAssignableRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/search': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /** Search for an external user. */
     get: operations['searchForUser_1']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/me/searchable-roles': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of searchable roles.
      * @description Get list of roles that can be search for by the current user.
      */
     get: operations['searchableRoles']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/me/assignable-groups': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get list of assignable groups.
      * @description Get list of groups that can be assigned by the current user.
      */
     get: operations['assignableGroups']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/externalusers/id/{userId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Retrieve user details by user id.
      * @description Retrieve detail by user id. Note that when accessing with Group Manager role the accessor must have a group in common with the user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
      */
     get: operations['userById']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/email-domains/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     /**
      * Get email domain details
      * @description Get email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     get: operations['domain']
+    put?: never
+    post?: never
     /**
      * Delete email domain details
      * @description Delete email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     delete: operations['deleteEmailDomain']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/roles/{roleCode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
     /**
      * Remove a role from a user
      * @description The user must already have the role to be removed. Default role caseload is a DPS role unless specified. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
      */
     delete: operations['removeRoleFromUser']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
   '/prisonusers/{username}/caseloads/{caseloadId}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    post?: never
     /**
      * Remove a caseload from a user
      * @description The user must already have the caseload to be removed. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
      */
     delete: operations['removeCaseload']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
   }
 }
-
 export type webhooks = Record<string, never>
-
 export interface components {
   schemas: {
     /** @description Update Role Name */
@@ -499,8 +1296,8 @@ export interface components {
       /**
        * @description Role Admin Type
        * @example [
-       *   "DPS_ADM"
-       * ]
+       *       "DPS_ADM"
+       *     ]
        */
       adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
     }
@@ -519,6 +1316,62 @@ export interface components {
        * @example User has left
        */
       reason: string
+    }
+    /** @description The add user request */
+    UserAllowlistAddRequest: {
+      /** @description NOMIS, nDelius or auth username (can also be an email) */
+      username: string
+      /**
+       * @description Email
+       * @example kellianne.granados@justice.gov.uk
+       */
+      email: string
+      /**
+       * @description First name
+       * @example Kellianne
+       */
+      firstName: string
+      /**
+       * @description Last name
+       * @example Granados
+       */
+      lastName: string
+      /**
+       * @description A valid business reason for granting access to the environment
+       * @example Access is required to allow updating roles on clients as part of the support team
+       */
+      reason: string
+      /**
+       * @description The access period required, this can also be used to expire the access if needed
+       * @enum {string}
+       */
+      accessPeriod: 'EXPIRE' | 'ONE_MONTH' | 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS' | 'NO_RESTRICTION'
+    }
+    /** @description Details of the role to be created. */
+    CreateRoleDto: {
+      /**
+       * @description Role Code
+       * @example AUTH_GROUP_MANAGER
+       */
+      roleCode: string
+      /**
+       * @description roleName
+       * @example Auth Group Manager
+       */
+      roleName: string
+      /**
+       * @description roleDescription
+       * @example Allow Group Manager to administer the account within their groups
+       */
+      roleDescription?: string
+      /**
+       * @description adminType, can be used if multiple admin types required
+       * @example [
+       *       "EXT_ADM",
+       *       "DPS_ADM"
+       *     ]
+       */
+      adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
     }
     /** @description DPS User creation */
     CreateUserRequest: {
@@ -579,11 +1432,11 @@ export interface components {
     }
     /** @description Roles in caseload information */
     CaseloadRoleDetail: {
+      /** @description Caseload for the listed roles */
       caseload: components['schemas']['PrisonCaseload']
       /** @description NOMIS Roles assigned to this user */
       roles: components['schemas']['RoleDetail'][]
     }
-    /** @description Caseload for the listed roles */
     PrisonCaseload: {
       /**
        * @description identify for caseload
@@ -614,20 +1467,24 @@ export interface components {
        * @default 1
        * @example 1
        */
-      sequence?: number
+      sequence: number
       /**
        * @description Role Type
        * @default APP
        * @example APP
        * @enum {string}
        */
-      type?: 'APP' | 'INST' | 'COMM'
+      type: 'APP' | 'INST' | 'COMM' | 'SHG'
       /**
        * @description Admin only role
        * @default false
        * @example true
        */
-      adminRoleOnly?: boolean
+      adminRoleOnly: boolean
+      /**
+       * @description Parent Role Code
+       * @example GLOBAL_SEARCH
+       */
       parentRole?: components['schemas']['RoleDetail']
     }
     /** @description User & Role Information */
@@ -648,6 +1505,10 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
+      /**
+       * @description Active Caseload of the user
+       * @example BXI
+       */
       activeCaseload?: components['schemas']['PrisonCaseload']
       /** @description DPS Roles assigned to this user */
       dpsRoles: components['schemas']['RoleDetail'][]
@@ -679,6 +1540,10 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
+      /**
+       * @description Active Caseload of the user
+       * @example BXI
+       */
       activeCaseload?: components['schemas']['PrisonCaseload']
       /** @description Caseloads available for this user */
       caseloads: components['schemas']['PrisonCaseload'][]
@@ -701,7 +1566,6 @@ export interface components {
        */
       localAdminGroup: string
     }
-    /** @description Caseloads available for this user */
     PrisonCaseloadDto: {
       /**
        * @description ID for the caseload
@@ -742,7 +1606,9 @@ export interface components {
        * @example test@test.com
        */
       primaryEmail?: string
+      /** @description General user account for this staff member */
       generalAccount?: components['schemas']['UserCaseloadDto']
+      /** @description Admin user account for this staff member */
       adminAccount?: components['schemas']['UserCaseloadDto']
     }
     /** @description User & Caseload Information */
@@ -763,6 +1629,10 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
+      /**
+       * @description Active Caseload of the user
+       * @example BXI
+       */
       activeCaseload?: components['schemas']['PrisonCaseloadDto']
       /** @description Caseloads available for this user */
       caseloads?: components['schemas']['PrisonCaseloadDto'][]
@@ -854,9 +1724,9 @@ export interface components {
       /**
        * @description Initial groups, can be used for one or more initial groups
        * @example [
-       *   "SITE_1_GROUP_1",
-       *   "SITE_1_GROUP_2"
-       * ]
+       *       "SITE_1_GROUP_1",
+       *       "SITE_1_GROUP_2"
+       *     ]
        */
       groupCodes?: string[]
     }
@@ -886,6 +1756,19 @@ export interface components {
        */
       description: string
     }
+    /** @description The update user request */
+    UserAllowlistPatchRequest: {
+      /**
+       * @description A valid business reason for granting access to the environment
+       * @example Access is required to allow updating roles on clients as part of the support team
+       */
+      reason: string
+      /**
+       * @description The access period required, this can also be used to expire the access if needed
+       * @enum {string}
+       */
+      accessPeriod: 'EXPIRE' | 'ONE_MONTH' | 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS' | 'NO_RESTRICTION'
+    }
     /** @description User Details */
     UserDetailsDto: {
       /**
@@ -913,12 +1796,14 @@ export interface components {
       /**
        * Staff Id
        * Format: int64
+       * @deprecated
        * @description Deprecated, use userId instead
        * @example 231232
        */
       staffId?: number
       /**
        * Current Active Caseload
+       * @deprecated
        * @description Deprecated, retrieve from prison API rather than manage users
        * @example MDI
        */
@@ -944,6 +1829,24 @@ export interface components {
        * @example GLOBAL_SEARCH
        */
       roleCode: string
+    }
+    /** @description User email details */
+    EmailAddressDto: {
+      /**
+       * @description Username
+       * @example DEMO_USER1
+       */
+      username: string
+      /**
+       * @description Email
+       * @example john.smith@digital.justice.gov.uk
+       */
+      email?: string
+      /**
+       * @description Verified email
+       * @example true
+       */
+      verified: boolean
     }
     ErrorDetail: {
       /**
@@ -1006,6 +1909,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Last time user logged in
+       * @example 01/01/2001
        */
       lastLoggedIn: string
       /**
@@ -1072,7 +1976,85 @@ export interface components {
        */
       groupName: string
     }
-    /** @description Administration Type */
+    Pageable: {
+      /** Format: int32 */
+      page?: number
+      /** Format: int32 */
+      size?: number
+      sort?: string[]
+    }
+    PagedResponseUserAllowlistDetail: {
+      content: components['schemas']['UserAllowlistDetail'][]
+      pageable: components['schemas']['PageDetails']
+      last: boolean
+      /** Format: int32 */
+      totalPages: number
+      /** Format: int64 */
+      totalElements: number
+      /** Format: int32 */
+      size: number
+      /** Format: int32 */
+      number: number
+      sort: components['schemas']['PageSort']
+      /** Format: int32 */
+      numberOfElements: number
+      first: boolean
+      empty: boolean
+    }
+    /** @description Allow list user details */
+    UserAllowlistDetail: {
+      /**
+       * Format: uuid
+       * @description The UUID of the allow list user
+       * @example e287a472-700a-4523-8565-578147667966
+       */
+      id: string
+      /** @description NOMIS, nDelius or auth username (can also be an email) */
+      username: string
+      /**
+       * @description First name
+       * @example Kellianne
+       */
+      firstName: string
+      /**
+       * @description Last name
+       * @example Granados
+       */
+      lastName: string
+      /**
+       * @description Email
+       * @example kellianne.granados@justice.gov.uk
+       */
+      email: string
+      /**
+       * @description A valid business reason for granting access to the environment
+       * @example Access is required to allow updating roles on clients as part of the support team
+       */
+      reason: string
+      /**
+       * Format: date-time
+       * @description The timestamp the user was added to the allow list
+       * @example 04/08/2013T15:53:38.506
+       */
+      createdOn: string
+      /**
+       * Format: date
+       * @description The date the user's access will expire'
+       * @example 04/08/2013
+       */
+      allowlistEndDate: string
+      /**
+       * Format: date-time
+       * @description The timestamp the allow list user was last updated
+       * @example 04/08/2013T15:53:38.506
+       */
+      lastUpdated: string
+      /**
+       * @description The logged in username to last update this allow list user
+       * @example SYNDYRBP1
+       */
+      lastUpdatedBy: string
+    }
     AdminTypeReturn: {
       adminTypeCode: string
       adminTypeName: string
@@ -1212,6 +2194,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Last logon date
+       * @example 2023-01-01T12:13:14.123
        */
       lastLogonDate?: string
       /** Format: int64 */
@@ -1224,13 +2207,6 @@ export interface components {
     PrisonUserGroupDetail: {
       id: string
       name: string
-    }
-    Pageable: {
-      /** Format: int32 */
-      page?: number
-      /** Format: int32 */
-      size?: number
-      sort?: string[]
     }
     PagedResponsePrisonUserSearchSummary: {
       content: components['schemas']['PrisonUserSearchSummary'][]
@@ -1257,7 +2233,7 @@ export interface components {
       firstName: string
       lastName: string
       active: boolean
-      status: string
+      status?: string
       locked: boolean
       expired: boolean
       activeCaseload?: components['schemas']['PrisonCaseload']
@@ -1342,7 +2318,7 @@ export interface components {
       roleName: string
       /**
        * @description automatic
-       * @example true
+       * @example TRUE
        */
       automatic: boolean
     }
@@ -1375,12 +2351,11 @@ export interface components {
       /** @enum {string} */
       authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
     }
-    UserRoleList: components['schemas']['UserRole'][]
     ExternalUserDetailsDto: {
       /**
        * Format: uuid
        * @description User ID
-       * @example 91229a16-b5f4-4784-942e-a484a97ac865
+       * @example 91229A16-B5F4-4784-942E-A484A97AC865
        */
       userId: string
       /**
@@ -1421,6 +2396,7 @@ export interface components {
       /**
        * Format: date-time
        * @description Last time user logged in
+       * @example 01/01/2001
        */
       lastLoggedIn: string
       /**
@@ -1458,18 +2434,12 @@ export interface components {
   headers: never
   pathItems: never
 }
-
 export type $defs = Record<string, never>
-
-export type external = Record<string, never>
-
 export interface operations {
-  /**
-   * Amend role name
-   * @description Amend the role name, role required is ROLE_ROLES_ADMIN
-   */
   amendRoleName: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description The Role code of the role.
@@ -1477,6 +2447,7 @@ export interface operations {
          */
         roleCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1486,40 +2457,53 @@ export interface operations {
     responses: {
       /** @description Role name updated */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The role trying to update does not exist */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend role description
-   * @description Amend the role description, role required is ROLE_ROLES_ADMIN
-   */
   amendRoleDescription: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description The Role code of the role.
@@ -1527,6 +2511,7 @@ export interface operations {
          */
         roleCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1536,40 +2521,53 @@ export interface operations {
     responses: {
       /** @description Role description updated */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The role trying to update does not exist */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend role admin type
-   * @description Amend the role admin type, role required is ROLE_ROLES_ADMIN
-   */
   amendRoleAdminType: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description The Role code of the role.
@@ -1577,6 +2575,7 @@ export interface operations {
          */
         roleCode: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1586,40 +2585,53 @@ export interface operations {
     responses: {
       /** @description Role admin type updated */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description The role trying to update does not exist */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Unlock user account
-   * @description Unlocks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
-   */
   enableUser: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username
@@ -1627,38 +2639,50 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User account unlocked */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Incorrect request to unlock user */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to unlock a user */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Lock user account
-   * @description Locks the user account. Requires role ROLE_MANAGE_NOMIS_USER_ACCOUNT
-   */
   disableUser: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username
@@ -1666,86 +2690,114 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User account locked */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Incorrect request to lock user */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to lock a user */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Group detail.
-   * @description return Group Details
-   */
   getGroupDetail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the group. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['GroupDetailsDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend group name.
-   * @description Amend group name.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   amendGroupName: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the group. */
         group: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1755,130 +2807,174 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete group.
-   * @description Delete a Group.<br.>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   deleteGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the group. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Child Group detail.
-   * @description Fetches child group details.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   getChildGroupDetail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the child group. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['ChildGroupDetailsDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Child Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend child group name.
-   * @description Amend a Child Group Name.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   amendChildGroupName: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the child group. */
         group: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -1888,320 +2984,430 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Child Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete child group.
-   * @description Delete a child group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   deleteChildGroup: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The group code of the child group. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Child Group not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add role to user.
-   * @description Add role to user. Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
-   */
   addRoleByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
         /** @description The role to be added to the user. */
         role: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Added. */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Unable to maintain user, the user is not within one of your groups. */
+      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Role for user already exists. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Remove role from user.
-   * @description Remove role from user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS , ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
-   */
   removeRoleByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
         /** @description The role code of the role to be deleted from the user. */
         role: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Deleted */
       204: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': unknown
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add group to user.
-   * @description Add group to user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   addGroupByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
         /** @description The group code of the group to be added to the user. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Added */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Group for user already exists. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Remove group from user.
-   * @description Remove group from user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   removeGroupByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
         /** @description The group code of the group to be deleted from the user. */
         group: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Deleted */
       204: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': unknown
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Enable a user.
-   * @description Enable a user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   enableUserByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK. */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Disable a user.
-   * @description Disable a user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   disableUserByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2211,112 +3417,260 @@ export interface operations {
     responses: {
       /** @description OK. */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Unable to enable user, the user is not within one of your groups. */
+      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all roles
-   * @description Get all roles, role required is ROLE_ROLES_ADMIN (to find external roles), ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
-   */
+  getAllAllowlistUsers: {
+    parameters: {
+      query: {
+        /** @description username, email, first name or last name filter */
+        name?: string
+        /** @description Expired or Active filter */
+        status?: 'ACTIVE' | 'EXPIRED' | 'ALL'
+        pageable: components['schemas']['Pageable']
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PagedResponseUserAllowlistDetail']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description The allow list user does not exist */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  addUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserAllowlistAddRequest']
+      }
+    }
+    responses: {
+      /** @description Created */
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getRoles: {
     parameters: {
       query?: {
         adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['RoleDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create role
-   * @description Create a new role, role required is ROLE_ROLES_ADMIN
-   */
   createRole: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
-        'application/json': string
+        'application/json': components['schemas']['CreateRoleDto']
       }
     }
     responses: {
       /** @description Role Created */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': unknown
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Find prison users by first and last name.
-   * @description Find prison users by first and last name. Requires role ROLE_USE_OF_FORCE or ROLE_STAFF_SEARCH
-   */
   findUsersByFirstAndLastName: {
     parameters: {
       query: {
@@ -2325,39 +3679,57 @@ export interface operations {
         /** @description The last name to match. Case insensitive */
         lastName: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonUserDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create a DPS user
-   * @description Creates a specific DPS user. Requires role ROLE_CREATE_USER
-   */
   createUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateUserRequest']
@@ -2366,42 +3738,55 @@ export interface operations {
     responses: {
       /** @description Create a DPS user */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NewPrisonUserDto']
         }
       }
       /** @description Created */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NewPrisonUserDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of roles associated with the users account
-   * @description Roles for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
-   */
   getUserRoles: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username
@@ -2409,38 +3794,48 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserRoleDetail']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add a role to the specified user account, all roles will be added to DPS caseload unless specified
-   * @description Adds a role to a user, user must have caseload (if specified). Default caseload is DPS caseload (NWEB).  Cannot add an existing role to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
-   */
   addRoles: {
     parameters: {
       query?: {
@@ -2450,6 +3845,7 @@ export interface operations {
          */
         caseloadId?: string
       }
+      header?: never
       path: {
         /**
          * @description Username of the account to add roles
@@ -2457,49 +3853,61 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
-        'application/json': string
+        'application/json': string[]
       }
     }
     responses: {
       /** @description User information with role details */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserRoleDetail']
         }
       }
       /** @description Incorrect request to add a role to a user account */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to add a role to this account */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend a prison user email address.
-   * @description Amend a prison user email address. Requires role MAINTAIN_ACCESS_ROLES_ADMIN
-   */
   amendUserEmail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The username of the user. */
         username: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2509,84 +3917,112 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': string
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Sync Nomis user email back into Auth
-   * @description Run process to check for differences in email address between Auth and NOMIS and updates Auth if required.<br/> Requires role ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
-   */
   syncUserEmail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The username of the user. */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of caseloads associated with the users account
-   * @description Caseloads for a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES"
-   */
   getUserCaseloads: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username
@@ -2594,40 +4030,52 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User caseload list */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserCaseloadDetail']
         }
       }
       /** @description Incorrect request to get caseloads for a user */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get a caseload for a user */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add multiple caseloads to the specified user account
-   * @description Adds caseloads to a user, caseloads must exist. Cannot add an existing caseload to the same user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
-   */
   addCaseloads: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username of the account to add caseloads
@@ -2635,6 +4083,7 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2644,35 +4093,49 @@ export interface operations {
     responses: {
       /** @description User information with caseload details */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserCaseloadDetail']
         }
       }
       /** @description Incorrect request to add caseloads to a user account */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to add caseloads to account */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Link a Local Admin User to an existing General Account
-   * @description Link a Local Admin User to an existing General Account. Requires role ROLE_CREATE_USER
-   */
   createLinkedLocalAdminUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateLinkedLocalAdminUserRequest']
@@ -2681,35 +4144,49 @@ export interface operations {
     responses: {
       /** @description Local Admin User linked to an existing General Account */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonStaffUserDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Link a New General User to an existing Admin Account
-   * @description Link a New General User to an existing Admin Account. Requires role ROLE_CREATE_USER
-   */
   createLinkedGeneralUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateLinkedGeneralUserRequest']
@@ -2718,35 +4195,49 @@ export interface operations {
     responses: {
       /** @description General User linked to an existing Admin Account */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonStaffUserDto']
         }
       }
       /** @description Incorrect request to link a general user to an admin user */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint, requires a valid OAuth2 token */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to link a general user to an existing admin user */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Link an Admin User to an existing General Account
-   * @description Link an Admin User to an existing General Account. Requires role ROLE_CREATE_USER
-   */
   createLinkedCentralAdminUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateLinkedCentralAdminUserRequest']
@@ -2755,67 +4246,96 @@ export interface operations {
     responses: {
       /** @description Admin User linked to an existing General Account */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonStaffUserDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all groups
-   * @description Get all groups, role required is ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   getGroups: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description All Groups Returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserGroupDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create group.
-   * @description Create a group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   createGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateGroupDto']
@@ -2824,39 +4344,56 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Group already exists. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create child group.
-   * @description Create a Child Group.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS
-   */
   createChildGroup: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateChildGroupDto']
@@ -2865,82 +4402,108 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Child Group already exists. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of roles associated with the users account
-   * @description Roles for a specific user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
-   */
   getUserRoles_1: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserRole'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Add roles to user.
-   * @description Add role to user, post version taking multiple roles<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER or ROLE_MAINTAIN_IMS_USERS
-   */
   addRolesByUserId: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The user Id of the user. */
         userId: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -2950,54 +4513,74 @@ export interface operations {
     responses: {
       /** @description Created */
       201: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description No Content */
       204: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Role(s) for user already exists.. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Amend a user email address.
-   * @description Amend a user email address. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   alterUserEmail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The ID of the user. */
         userId: string
       }
+      cookie?: never
     }
     requestBody: {
       content: {
@@ -3007,41 +4590,58 @@ export interface operations {
     responses: {
       /** @description OK. */
       204: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': string
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create user
-   * @description Create user. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   createUserByEmail: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['NewUser']
@@ -3050,73 +4650,105 @@ export interface operations {
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': Record<string, never>
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User or email already exists. */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all email domains
-   * @description Get all email domains, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
-   */
   domainList: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['EmailDomainDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Create email domain
-   * @description Create a new email domain, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
-   */
   addEmailDomain: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
     requestBody: {
       content: {
         'application/json': components['schemas']['CreateEmailDomainDto']
@@ -3125,178 +4757,283 @@ export interface operations {
     responses: {
       /** @description Created */
       201: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['EmailDomainDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Email domain already exists */
       409: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * User detail.
-   * @description Find user detail by username.
-   */
-  findUser: {
+  updateUserAccess: {
     parameters: {
+      query?: never
+      header?: never
       path: {
-        /** @description The username of the user. */
-        username: string
+        /** @description The ID of the allow list user. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserAllowlistPatchRequest']
       }
     }
     responses: {
       /** @description OK */
       200: {
-        content: {
-          '*/*': components['schemas']['UserDetailsDto']
+        headers: {
+          [name: string]: unknown
         }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
+        headers: {
+          [name: string]: unknown
         }
-      }
-      /** @description User not found. */
-      404: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  /**
-   * List of roles for user
-   * @description List of roles for user. Currently restricted to service specific roles: ROLE_INTEL_ADMIN or ROLE_PF_USER_ADMIN or ROLE_PCMS_USER_ADMIN.<br/><br/>**Change to old endpoint in Auth** <br/> 1)  Nomis / Prison user doesn't return additional role in the list:  PRISON <br/>                                         2)  Delius user doesn't return additional role in the list:  PROBATION
-   */
-  userRoles: {
-    parameters: {
-      path: {
-        /** @description The username of the user. */
-        username: string
-      }
-    }
-    responses: {
-      /** @description OK */
-      200: {
-        content: {
-          '*/*': components['schemas']['UserRole'][]
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description User not found. */
+      /** @description The allow list user does not exist */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Email address for user
-   * @description Verified email address for user
-   */
-  getUserEmail: {
+  findUser: {
     parameters: {
-      query?: {
-        /** @description Return unverified email addresses. */
-        unverified?: boolean
-      }
+      query?: never
+      header?: never
       path: {
         /** @description The username of the user. */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
-        content: {
-          '*/*': Record<string, never>
+        headers: {
+          [name: string]: unknown
         }
-      }
-      /** @description No content.  No verified email address found for user */
-      204: {
         content: {
-          '*/*': Record<string, never>
+          '*/*': components['schemas']['UserDetailsDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description User not found. */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  userRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The username of the user. */
+        username: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['UserRole'][]
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description User not found. */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getUserEmail: {
+    parameters: {
+      query?: {
+        /** @description Return unverified email addresses. */
+        unverified?: boolean
+      }
+      header?: never
+      path: {
+        /** @description The username of the user. */
+        username: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': Record<string, never>
+        }
+      }
+      /** @description The user's email address */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['EmailAddressDto']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. The user doesn't exist so could have never logged in */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorDetail']
         }
       }
     }
   }
-  /**
-   * Search for users
-   * @description
-   *       Search for users in the Auth DB only who match on partial first name, surname, username or email and return a pageable result set.
-   *       Optionally choose the authentication sources from any combination of auth, delius, nomis and azuread sources.
-   *       Provide the authSources as a list of values with the same name. e.g. ?authSources=nomis&authSources=delius&authSources=auth
-   *       It will return users with the requested auth sources where they have authenticated against the auth service at least once.
-   *       Note: User information held in the auth service may be out of date with the user information held in the source systems as
-   *       their details will be as they were the last time that they authenticated.<br/><br/>
-   *
-   *        Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
-   */
   searchForUsersInMultipleSourceSystems: {
     parameters: {
       query?: {
@@ -3313,170 +5050,297 @@ export interface operations {
         size?: number
         sort?: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PagedResponseAuthUserDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * My User details.
-   * @description Find my user details.
-   */
   myDetails: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['User']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * List of roles for current user.
-   * @description List of roles for current user.
-   */
   myRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['ExternalUserRole'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * My Group details.
-   * @description Find my location/group details. This should be accessed with user token.
-   */
   myGroupDetails: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['UserGroupDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Email address for current user
-   * @description Verified email address for current user
-   */
   myEmail: {
     parameters: {
       query?: {
         /** @description Return unverified email addresses. */
         unverified?: boolean
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': Record<string, never>
         }
       }
       /** @description No content.  No verified email address found for user */
       204: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': Record<string, never>
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of caseloads associated with the current user
-   * @description Caseloads for the current user
-   */
   getMyCaseloads: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['UserCaseloadDetail']
         }
       }
     }
   }
-  /**
-   * Get role details
-   * @description Get role details, role required is ROLE_ROLES_ADMIN
-   */
+  getAllowlistUser: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description The username of the allow list user. */
+        username: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserAllowlistDetail']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description The allow list user does not exist */
+      404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   getRoleDetail: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description The Role code of the role.
@@ -3484,38 +5348,48 @@ export interface operations {
          */
         role: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['RoleDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all paged roles
-   * @description Get all paged roles, role required is ROLE_ROLES_ADMIN
-   */
   getPagedRoles: {
     parameters: {
       query?: {
@@ -3526,42 +5400,64 @@ export interface operations {
         roleCode?: string
         adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PagedResponseRoleDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * List of mapped delius roles
-   * @description List of mapped  delius roles. Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
-   */
   findMappedDeliusRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': {
             [key: string]: string[]
@@ -3570,62 +5466,78 @@ export interface operations {
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get specified user details
-   * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
-   */
   findUserByUsername: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The username of the user. */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NewPrisonUserDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get specified user details
-   * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
-   */
   getUserDetails: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username
@@ -3633,38 +5545,48 @@ export interface operations {
          */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User Information Returned */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['PrisonUserDetails']
         }
       }
       /** @description Incorrect request to get user information */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to get a user */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get all users filtered as specified
-   * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
-   */
   getUsers: {
     parameters: {
       query: {
@@ -3710,30 +5632,94 @@ export interface operations {
          */
         showOnlyLSAs?: boolean
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Pageable list of user summaries */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PagedResponsePrisonUserSearchSummary']
         }
       }
       /** @description Incorrect filter supplied */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Retrieves all caseloads
-   * @description Retrieves all the current active general caseloads, these are effectively prisons that staff can be associated with.
-   */
   getCaseload: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getUsersByCaseloadAndRole: {
+    parameters: {
+      query: {
+        pageRequest: components['schemas']['Pageable']
+        /**
+         * @description Filter results by user's currently active caseload i.e. the one they have currently selected
+         * @example MDI
+         */
+        activeCaseload: string
+        /**
+         * @description Filter will match users that have the DPS role specified
+         * @example ADD_SENSITIVE_CASE_NOTES
+         */
+        roleCode: string
+        /**
+         * @description Limit to active / inactive / show all users
+         * @example INACTIVE
+         */
+        status?: 'ALL' | 'ACTIVE' | 'INACTIVE'
+        /** @description If 'activeCaseloadOnly' is provided and True search for users with the target caseloadId irrespective of whether it is currently active or not. The default behaviour is to search for users where the target caseloadId is currently active. */
+        activeCaseloadOnly?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description Pageable list of user summaries */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PagedResponsePrisonUserSearchSummary']
+        }
+      }
+      /** @description Incorrect filter supplied */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
@@ -3784,10 +5770,17 @@ export interface operations {
          */
         showOnlyLSAs?: boolean
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PrisonUserSummary'][]
         }
@@ -3838,214 +5831,279 @@ export interface operations {
          */
         showOnlyLSAs?: boolean
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PrisonAdminUserSummary'][]
         }
       }
     }
   }
-  /**
-   * Gets Notification message
-   * @description Message string to be displayed in the notification banner.
-   */
   getNotificationBannerMessage: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description The notification page
          * @example roles
          */
-        page: string
+        page: 'ROLES' | 'EMPTY' | 'DPSMENU'
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['NotificationMessage']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Search for a user.
-   * @description Search for a user.
-   */
   searchForUser: {
     parameters: {
       query: {
         /** @description The email address of the user. */
         email: string
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': Record<string, never>
         }
       }
       /** @description No users found. */
       204: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * User detail.
-   * @description User detail.
-   */
   user: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The username of the user. */
         username: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['ExternalUser']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get groups for userId.
-   * @description Get groups for userId. Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER or ROLE_VIEW_USER_GROUPS
-   */
   getGroups_1: {
     parameters: {
       query?: {
         /** @description Whether groups are expanded into their children. */
         children?: boolean
       }
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['UserGroupDto'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of roles associated with the users account
-   * @description Roles for a specific user. Requires role ROLE_MAINTAIN_OAUTH_USERS, ROLE_AUTH_GROUP_MANAGER, ROLE_MAINTAIN_IMS_USERS
-   */
   getAssignableRoles: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The userId of the user. */
         userId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          'application/json': components['schemas']['UserRoleList']
+          'application/json': components['schemas']['UserRole'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /** Search for an external user. */
   searchForUser_1: {
     parameters: {
       query?: {
@@ -4063,200 +6121,272 @@ export interface operations {
         page?: number
         size?: number
       }
+      header?: never
+      path?: never
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['PagedResponseExternalUserDetailsDto']
         }
       }
       /** @description Unauthorized. */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of searchable roles.
-   * @description Get list of roles that can be search for by the current user.
-   */
   searchableRoles: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
-          'application/json': components['schemas']['UserRoleList']
+          'application/json': components['schemas']['UserRole'][]
         }
       }
       /** @description Unauthorized. */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get list of assignable groups.
-   * @description Get list of groups that can be assigned by the current user.
-   */
   assignableGroups: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['UserGroup'][]
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Retrieve user details by user id.
-   * @description Retrieve detail by user id. Note that when accessing with Group Manager role the accessor must have a group in common with the user.<br/>Requires role ROLE_MAINTAIN_OAUTH_USERS or ROLE_AUTH_GROUP_MANAGER
-   */
   userById: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /** @description The id of the user. */
         userId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['ExternalUserDetailsDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
-      /** @description Unable to view user, either you do not have authority or the user is not within one of your groups. */
+      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description User not found. */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Get email domain details
-   * @description Get email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
-   */
   domain: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description OK */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           '*/*': components['schemas']['EmailDomainDto']
         }
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Email domain not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Delete email domain details
-   * @description Delete email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
-   */
   deleteEmailDomain: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         id: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description Email domain details deleted */
       200: {
-        content: never
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
       }
       /** @description Bad Request */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Forbidden. Requires authorisation with correct role. */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Email domain not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Remove a role from a user
-   * @description The user must already have the role to be removed. Default role caseload is a DPS role unless specified. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES
-   */
   removeRoleFromUser: {
     parameters: {
       query?: {
@@ -4266,6 +6396,7 @@ export interface operations {
          */
         caseloadId?: string
       }
+      header?: never
       path: {
         /**
          * @description Username of the account to remove role
@@ -4278,40 +6409,52 @@ export interface operations {
          */
         roleCode: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User information with role details */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserRoleDetail']
         }
       }
       /** @description Incorrect request to remove a role from a user account */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to remove a role this user account */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
     }
   }
-  /**
-   * Remove a caseload from a user
-   * @description The user must already have the caseload to be removed. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN
-   */
   removeCaseload: {
     parameters: {
+      query?: never
+      header?: never
       path: {
         /**
          * @description Username to remove caseload from
@@ -4324,28 +6467,42 @@ export interface operations {
          */
         caseloadId: string
       }
+      cookie?: never
     }
+    requestBody?: never
     responses: {
       /** @description User information with caseload details */
       200: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['UserCaseloadDetail']
         }
       }
       /** @description Incorrect request to remove a caseload from a user account */
       400: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Unauthorized to access this endpoint */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }
       }
       /** @description Incorrect permissions to remove a caseload this user account */
       403: {
+        headers: {
+          [name: string]: unknown
+        }
         content: {
           'application/json': components['schemas']['ErrorResponse']
         }

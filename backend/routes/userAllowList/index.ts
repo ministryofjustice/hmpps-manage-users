@@ -7,10 +7,11 @@ import SearchRoutes from './search'
 import ViewUserRoutes from './viewUser'
 import EditUserRoutes from './editUser'
 import AllowListService from '../../services/userAllowListService'
+import { manageUsersApiBuilder } from '../../data'
 
 export default function Index(): Router {
   const router = Router()
-  const allowListService = new AllowListService()
+  const allowListService = new AllowListService(manageUsersApiBuilder)
 
   const get = <T extends string>(routerPath: Path<T>, handler: RequestHandler) =>
     router.get(routerPath.pattern, asyncMiddleware(handler))
@@ -31,6 +32,7 @@ export default function Index(): Router {
 
   const searchHandler = new SearchRoutes(allowListService)
   get(paths.userAllowList.search, searchHandler.GET)
+  get(paths.userAllowList.download, searchHandler.DOWNLOAD)
 
   return router
 }

@@ -1,10 +1,10 @@
-import { ManageUsersApi, RoleDetails } from '../data/manageUsersApi'
+import { ManageUsersApiClient, RoleDetails } from '../data/manageUsersApiClient'
 
 export default class RoleService {
-  private readonly manageUsersApi: ManageUsersApi
+  private readonly manageUsersApi: ManageUsersApiClient
 
   constructor(systemToken: string) {
-    this.manageUsersApi = new ManageUsersApi(systemToken)
+    this.manageUsersApi = new ManageUsersApiClient(systemToken)
   }
 
   getRoleDetails(roleCode: string): Promise<RoleDetails> {
