@@ -4,6 +4,7 @@ import AllowListService from '../../services/userAllowListService'
 import { UserAllowlistPatchRequest } from '../../@types/manageUsersApi'
 import { trimObjValues } from '../../utils/utils'
 import getAllowlistStatus from './utils'
+import { audit, ManageUsersEvent } from '../../audit'
 
 export default class EditUserRoutes {
   private readonly allowListService: AllowListService
@@ -43,8 +44,16 @@ export default class EditUserRoutes {
       res.redirect(paths.userAllowList.editUser({ username: req.params.username }))
     } else {
       const updateRequest: UserAllowlistPatchRequest = { ...req.body }
-      await this.allowListService.updateAllowListUser(res.locals.access_token, req.body.id, updateRequest)
-      res.redirect(paths.userAllowList.viewUser({ username: req.params.username }))
+      const { username } = req.session.userDetails
+      const sendAudit = audit(username, { updateRequest, id: req.body.id })
+      await sendAudit(ManageUsersEvent.UPDATE_ALLOW_LIST_USER_ATTEMPT)
+      try {
+        await this.allowListService.updateAllowListUser(res.locals.access_token, req.body.id, updateRequest)
+        res.redirect(paths.userAllowList.viewUser({ username: req.params.username }))
+      } catch (err) {
+        await sendAudit(ManageUsersEvent.UPDATE_ALLOW_LIST_USER_FAILURE)
+        throw err
+      }
     }
   }
 }

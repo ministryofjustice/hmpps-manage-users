@@ -8,6 +8,7 @@ import config from '../../config'
 import getAllowlistStatus from './utils'
 import logger from '../../log'
 import paths from '../paths'
+import { audit, ManageUsersEvent } from '../../audit'
 
 type QueryParams = {
   user: string
@@ -32,27 +33,37 @@ export default class SearchRoutes {
       page: currentFilter.page,
       size: config.featureSwitches.manageUserAllowList.pageSize,
     }
-    const { content, totalElements, number } = await this.allowListService.getAllAllowListUsers(
-      res.locals.access_token,
-      query,
-    )
-    const displayUsers = content.map((user) => ({
-      ...user,
-      status: getAllowlistStatus(user),
-    }))
-    const downloadUrl = `${paths.userAllowList.download({})}?${querystring.stringify(currentFilter)}`
 
-    res.render('userAllowList/search', {
-      currentFilter,
-      results: displayUsers,
-      pagination: paginationService.getPagination(
-        { totalElements, page: number, size: query.size },
-        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
-      ),
-      downloadUrl,
-      showDownloadLink: totalElements <= this.downloadLimit ? true : undefined,
-      downloadLimit: this.downloadLimit,
-    })
+    const { username } = req.session.userDetails
+    const sendAudit = audit(username, { filter: query })
+    await sendAudit(ManageUsersEvent.SEARCH_USER_ALLOW_LIST_ATTEMPT)
+
+    try {
+      const { content, totalElements, number } = await this.allowListService.getAllAllowListUsers(
+        res.locals.access_token,
+        query,
+      )
+      const displayUsers = content.map((user) => ({
+        ...user,
+        status: getAllowlistStatus(user),
+      }))
+      const downloadUrl = `${paths.userAllowList.download({})}?${querystring.stringify(currentFilter)}`
+
+      res.render('userAllowList/search', {
+        currentFilter,
+        results: displayUsers,
+        pagination: paginationService.getPagination(
+          { totalElements, page: number, size: query.size },
+          new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
+        ),
+        downloadUrl,
+        showDownloadLink: totalElements <= this.downloadLimit ? true : undefined,
+        downloadLimit: this.downloadLimit,
+      })
+    } catch (err) {
+      await sendAudit(ManageUsersEvent.SEARCH_USER_ALLOW_LIST_FAILURE)
+      throw err
+    }
   }
 
   DOWNLOAD: RequestHandler = async (req: Request, res: Response): Promise<void> => {
@@ -63,6 +74,10 @@ export default class SearchRoutes {
       page: currentFilter.page,
       size: this.downloadLimit,
     }
+
+    const { username } = req.session.userDetails
+    const sendAudit = audit(username, { filter: query })
+    await sendAudit(ManageUsersEvent.DOWNLOAD_USER_ALLOW_LIST_ATTEMPT)
 
     try {
       const { content } = await this.allowListService.getAllAllowListUsers(res.locals.access_token, query)
@@ -78,6 +93,7 @@ export default class SearchRoutes {
 
       res.send(csv)
     } catch (err) {
+      await sendAudit(ManageUsersEvent.DOWNLOAD_USER_ALLOW_LIST_FAILURE)
       logger.error(err)
       res.writeHead(500, { 'Content-Type': 'text/plain' })
       res.end('An error occurred while generating the download')

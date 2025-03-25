@@ -4,6 +4,7 @@ import AllowListService from '../../services/userAllowListService'
 import { validateEmailFormat } from '../../controllers/userValidation'
 import { trimObjValues } from '../../utils/utils'
 import { UserAllowlistAddRequest } from '../../@types/manageUsersApi'
+import { audit, ManageUsersEvent } from '../../audit'
 
 export default class AddUserRoutes {
   allowListService: AllowListService
@@ -56,8 +57,17 @@ export default class AddUserRoutes {
       req.flash('form', form)
       res.redirect(paths.userAllowList.addUser({}))
     } else {
-      await this.allowListService.addAllowListUser(res.locals.access_token, allowListUserRequest)
-      res.redirect(paths.userAllowList.search({}))
+      const { username } = req.session.userDetails
+      const sendAudit = audit(username, { allowListUserRequest })
+      await sendAudit(ManageUsersEvent.ADD_ALLOW_LIST_USER_ATTEMPT)
+
+      try {
+        await this.allowListService.addAllowListUser(res.locals.access_token, allowListUserRequest)
+        res.redirect(paths.userAllowList.search({}))
+      } catch (err) {
+        await sendAudit(ManageUsersEvent.ADD_ALLOW_LIST_USER_FAILURE)
+        throw err
+      }
     }
   }
 }
