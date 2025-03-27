@@ -3,6 +3,7 @@ import Page from '../../pages/typescript/page'
 import SearchPage from '../../pages/typescript/userAllowlist/searchPage'
 import { verifyFormError, verifyFormValue } from '../../support/utils'
 import MenuPage from '../../pages/typescript/menuPage'
+import { UserAllowlistAddRequest } from '../../../backend/@types/manageUsersApi'
 
 context('Add allow list user', () => {
   beforeEach(() => {
@@ -18,6 +19,7 @@ context('Add allow list user', () => {
   it('submit is successful if all fields are filled in', () => {
     cy.task('stubAddAllowlistUser')
     cy.task('stubSearchAllowlistUser')
+    cy.task('stubGetAllowlistUserNotFound', 'fasha6v')
     const form = {
       username: 'fasha6v',
       email: 'jameisha_mullings2s@employee.zg',
@@ -36,6 +38,28 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
       reason: 'for test purposes',
+    }
+    AddUserPage.goto().fillForm(form).submit()
+    Page.verifyOnPage(AddUserPage)
+    verifyFormError('username')
+  })
+
+  it('submit shows error for username if already exists', () => {
+    const user: UserAllowlistAddRequest = {
+      username: 'AICIAD',
+      email: 'anastazia.armistead@justice.gov.uk',
+      firstName: 'Anastazia',
+      lastName: 'Armistead',
+      reason: 'For testing',
+      accessPeriod: 'THREE_MONTHS',
+    }
+    cy.task('stubGetAllowlistUser', user)
+    const form = {
+      username: 'AICIAD',
+      email: 'anastazia.armistead@justice.gov.uk',
+      firstName: 'Anastazia',
+      lastName: 'Armistead',
+      reason: 'different reason',
     }
     AddUserPage.goto().fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)

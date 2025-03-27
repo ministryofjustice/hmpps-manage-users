@@ -20,6 +20,15 @@ export default class AllowListService {
     return manageUsersApi.getAllowlistUser(username)
   }
 
+  public async usernameExists(token: string, username: string): Promise<boolean> {
+    try {
+      await this.getAllowListUser(token, username)
+      return true
+    } catch (e) {
+      return false
+    }
+  }
+
   public async addAllowListUser(token: string, user: UserAllowlistAddRequest): Promise<void> {
     const manageUsersApi = this.manageUsersApiClientBuilder(token)
     await manageUsersApi.addAllowlistUser(user)
