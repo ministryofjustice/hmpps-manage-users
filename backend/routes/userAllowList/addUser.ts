@@ -13,10 +13,12 @@ export default class AddUserRoutes {
     this.allowListService = allowListService
   }
 
-  private static validate(allowListUserRequest: UserAllowlistAddRequest) {
+  private static validate(allowListUserRequest: UserAllowlistAddRequest, usernameExists: boolean) {
     const errors = []
     if (!allowListUserRequest.username) {
       errors.push({ href: '#username', text: 'Enter a valid username' })
+    } else if (usernameExists) {
+      errors.push({ href: '#username', text: 'Username already exists, please update their access instead' })
     }
     if (!allowListUserRequest.email) {
       errors.push({ href: '#email', text: 'Enter a valid email' })
@@ -51,7 +53,11 @@ export default class AddUserRoutes {
     const allowListUserRequest: UserAllowlistAddRequest = {
       ...form,
     }
-    const errors = AddUserRoutes.validate(allowListUserRequest)
+    const usernameExists = await this.allowListService.usernameExists(
+      res.locals.access_token,
+      allowListUserRequest.username,
+    )
+    const errors = AddUserRoutes.validate(allowListUserRequest, usernameExists)
     if (errors.length > 0) {
       req.flash('addAllowListUserErrors', errors)
       req.flash('form', form)

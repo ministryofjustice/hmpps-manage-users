@@ -54,6 +54,17 @@ const stubGetAllowlistUser = (user: UserAllowlistAddRequest) =>
     },
   })
 
+const stubGetAllowlistUserNotFound = (username: string) =>
+  stubFor({
+    request: {
+      method: 'GET',
+      urlPath: `/users/allowlist/${username}`,
+    },
+    response: {
+      status: 404,
+    },
+  })
+
 export interface SearchAllowlistUserParams {
   expiredUser?: UserAllowlistAddRequest
   activeUser?: UserAllowlistAddRequest
@@ -124,4 +135,10 @@ const stubSearchAllowlistUser = (params: SearchAllowlistUserParams) => {
   })
 }
 
-export default { stubAddAllowlistUser, stubGetAllowlistUser, stubUpdateAllowlistUser, stubSearchAllowlistUser }
+export default {
+  stubAddAllowlistUser,
+  stubGetAllowlistUser,
+  stubGetAllowlistUserNotFound,
+  stubSearchAllowlistUser,
+  stubUpdateAllowlistUser,
+}
