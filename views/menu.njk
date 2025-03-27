@@ -23,7 +23,6 @@
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
 {% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
 {% set hasManageEmailDomains = user and (user.manageEmailDomains) %}
-{% set hasManageUserAllowList = user and (user.manageUserAllowList) and featureSwitches and featureSwitches.manageUserAllowList.enabled %}
 
 {% block content %}
   {% if message.length > 0 and hasMaintainNomisRolesAccess%}
