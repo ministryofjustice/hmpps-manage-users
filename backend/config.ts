@@ -99,7 +99,7 @@ export default {
   },
   featureSwitches: {
     manageUserAllowList: {
-      enabled: Boolean(get('MANAGE_USER_ALLOW_LIST_ENABLED', false)),
+      enabled: get('MANAGE_USER_ALLOW_LIST_ENABLED', 'false') === 'true',
       environmentLabel: get('MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL', 'localhost'),
       pageSize: Number(get('MANAGE_USER_ALLOW_LIST_PAGE_SIZE', 20)),
       downloadLimit: Number(get('MANAGE_USER_ALLOW_LIST_DOWNLOAD_LIMIT', 20000)),
