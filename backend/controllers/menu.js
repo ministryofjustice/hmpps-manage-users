@@ -8,6 +8,8 @@ const menuFactory = (getNotificationMessage) => {
 
     res.render('menu.njk', {
       message: bannerMessage,
+      hasManageUserAllowList:
+        res.locals.featureSwitches.manageUserAllowList.enabled && res.locals.user.manageUserAllowList,
     })
   }
   return { index }
