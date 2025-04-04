@@ -6,6 +6,7 @@ generic-service:
   ingress:
     host: manage-users-stage.hmpps.service.justice.gov.uk
     modsecurity_audit_enabled: true
+    className: modsec-non-prod
 
   env:
     MANAGE_USERS_API_ENDPOINT_URL: https://manage-users-api-stage.hmpps.service.justice.gov.uk
