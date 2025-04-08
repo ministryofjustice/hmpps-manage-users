@@ -24,7 +24,7 @@ context('View allow list user', () => {
     }
     ViewUserPage.goto(user)
     verifyDataQaText('status-tag', 'Active')
-    verifyDataQaText('expiry', `${moment(getEndDate('THREE_MONTHS')).format('DD MMMM YYYY')}`)
+    verifyDataQaText('expiry', `${moment(getEndDate('THREE_MONTHS')).format('D MMMM YYYY')}`)
     verifyDataQaText('created-date', '19 March 2024')
     verifyDataQaText('last-updated-date', '19 March 2024')
     verifyDataQaText('last-updated-by', 'LAQUINAQNW')
@@ -58,7 +58,7 @@ context('View allow list user', () => {
     }
     ViewUserPage.goto(user)
     verifyDataQaText('status-tag', 'EXPIRED')
-    verifyDataQaText('expiry', `${moment(getEndDate('EXPIRE')).format('DD MMMM YYYY')}`)
+    verifyDataQaText('expiry', `${moment(getEndDate('EXPIRE')).format('D MMMM YYYY')}`)
     verifyDataQaText('created-date', '19 March 2024')
     verifyDataQaText('last-updated-date', '19 March 2024')
     verifyDataQaText('last-updated-by', 'LAQUINAQNW')
