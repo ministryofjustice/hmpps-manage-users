@@ -2,7 +2,7 @@ version: '3'
 services:
 
   auth-db:
-    image: postgres:14.12
+    image: postgres:14.18
     networks:
       - hmpps
     container_name: auth-db
