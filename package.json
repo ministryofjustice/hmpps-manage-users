@@ -42,7 +42,7 @@
     "redis": "^4.7.1",
     "static-path": "^0.0.4",
     "superagent": "^10.2.1",
-    "uuid": "^10.0.0",
+    "uuid": "^11.1.0",
     "validatorjs": "^3.22.1"
   },
   "devDependencies": {
