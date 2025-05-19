@@ -1,7 +1,6 @@
 const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createExternalUserFactory } = require('./createExternalUser')
 const { ManageUsersEvent } = require('../audit')
-const config = require('../config')
 const { auditAction } = require('../utils/testUtils')
 
 describe('create user factory', () => {

@@ -24,7 +24,7 @@ export default class AllowListService {
     try {
       await this.getAllowListUser(token, username)
       return true
-    } catch (e) {
+    } catch {
       return false
     }
   }

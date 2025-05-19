@@ -21,7 +21,7 @@ function hostIsNotEqualToIngressHost(url: string): boolean {
   try {
     const urlHost = new URL(url.startsWith('http') ? url : `https://${url}`).host
     return urlHost !== ingressHost
-  } catch (error) {
+  } catch {
     return false
   }
 }

@@ -1,10 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface PagedListItem {
-  // Extended by:
-  // Role
-}
-
-export interface PagedList<TPagedListItem extends PagedListItem> {
+export interface PagedList<TPagedListItem> {
   content: TPagedListItem[]
   pageable?: {
     sort: {
