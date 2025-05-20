@@ -1,5 +1,4 @@
 import { components } from './manageUsersApiImport'
-import { PagedListItem } from '../interfaces/pagedList'
 
 export type Role = components['schemas']['RoleDto']
 export type RoleDetail = components['schemas']['RoleDetail']
@@ -21,7 +20,7 @@ export type EmailAddress = {
 export type EmailDomain = components['schemas']['EmailDomainDto']
 export type CreateEmailDomainRequest = components['schemas']['CreateEmailDomainDto']
 
-export type ExternalUser = components['schemas']['ExternalUserDetailsDto'] & PagedListItem
+export type ExternalUser = components['schemas']['ExternalUserDetailsDto']
 export type ExternalUserRole = components['schemas']['ExternalUserRole']
 export type CreateExternalUserRequest = components['schemas']['NewUser']
 export type UpdateUserEmailRequest = components['schemas']['AmendUser']

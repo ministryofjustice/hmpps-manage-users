@@ -1,8 +1,7 @@
-version: '3'
 services:
 
   auth-db:
-    image: postgres:14.12
+    image: postgres:14.18
     networks:
       - hmpps
     container_name: auth-db
@@ -15,7 +14,7 @@ services:
       - POSTGRES_DB=auth-db
 
   redis:
-    image: 'redis:7.2'
+    image: 'redis:7.4'
     networks:
       - hmpps
     ports:
@@ -116,7 +115,7 @@ services:
       - POSTGRES_DB=audit-db
 
   localstack:
-    image: localstack/localstack:2.3
+    image: localstack/localstack:4.4
     networks:
       - hmpps
     container_name: localstack
