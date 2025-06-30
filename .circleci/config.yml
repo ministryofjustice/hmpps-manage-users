@@ -1,23 +1,18 @@
 version: 2.1
-
 orbs:
   hmpps: ministryofjustice/hmpps@10
   browser-tools: circleci/browser-tools@1.4
   slack: circleci/slack@4.12
-
 parameters:
   alerts-slack-channel:
     type: string
     default: hmpps_tech_alerts_security
-
   releases-slack-channel:
     type: string
     default: dps-releases
-
   node-version:
     type: string
     default: 22.12-browsers
-
 jobs:
   build:
     executor:
@@ -50,7 +45,6 @@ jobs:
             - build
             - dist
             - .cache/Cypress
-
   integration_tests:
     working_directory: ~/app
     executor:
@@ -86,7 +80,6 @@ jobs:
           path: integration-tests/videos
       - store_artifacts:
           path: integration-tests/screenshots
-
 workflows:
   version: 2
   build-test-and-deploy:
@@ -164,40 +157,3 @@ workflows:
           slack_channel_name: << pipeline.parameters.releases-slack-channel >>
           requires:
             - request-prod-approval
-
-  security:
-    triggers:
-      - schedule:
-          cron: "7 6 * * 1-5"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/npm_security_audit:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/trivy_latest_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - hmpps-common-vars
-      - hmpps/veracode_pipeline_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
-  security-weekly:
-    triggers:
-      - schedule:
-          cron: "59 5 * * 1"
-          filters:
-            branches:
-              only:
-                - main
-    jobs:
-      - hmpps/veracode_policy_scan:
-          slack_channel: << pipeline.parameters.alerts-slack-channel >>
-          context:
-            - veracode-credentials
-            - hmpps-common-vars
