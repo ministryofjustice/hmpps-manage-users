@@ -41,7 +41,7 @@
     "passport-oauth2": "^1.8.0",
     "redis": "^5.0.1",
     "static-path": "^0.0.4",
-    "superagent": "^10.2.1",
+    "superagent": "^10.2.2",
     "uuid": "^11.1.0",
     "validatorjs": "^3.22.1"
   },
