@@ -21,9 +21,9 @@ describe('Manage DPS user router', () => {
   }
   const router = manageDpsUserRouter(apis)
   // @ts-ignore
-  const getUserRolesAndCaseloadsApi = router.get.mock.calls[2][1]
+  const getUserRolesAndCaseloadsApi = router.get.mock.calls[3][1]
   // @ts-ignore
-  const getUserApi = router.get.mock.calls[3][1]
+  const getUserApi = router.get.mock.calls[4][1]
 
   beforeEach(() => {
     jest.clearAllMocks()
