@@ -82,6 +82,7 @@ describe('user detail factory', () => {
     groups: [{ groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true }],
     caseloads: undefined,
     hasMaintainDpsUsersAdmin: false,
+    restrictedRoles: [],
     showEnableDisable: true,
     showExtraUserDetails: true,
     displayEmailChangeInProgress: false,

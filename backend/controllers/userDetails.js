@@ -34,6 +34,7 @@ const userDetailsFactory = (
       const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
       const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
       const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
+      const restrictedRoles = res.locals?.restrictedRoles ? res.locals.restrictedRoles : []
 
       const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
         res.locals,
@@ -58,6 +59,7 @@ const userDetailsFactory = (
         showExtraUserDetails,
         showUsername: user.email !== user.username.toLowerCase(),
         displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
+        restrictedRoles,
       })
     } catch (error) {
       await audit(ManageUsersEvent.VIEW_USER_FAILURE)
