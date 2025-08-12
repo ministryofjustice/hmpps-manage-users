@@ -1,5 +1,11 @@
 import nock from 'nock'
-import { UserAllowlistAddRequest, UserAllowlistDetail, UserAllowlistPatchRequest } from '../@types/manageUsersApi'
+import {
+  PrisonUserDetails,
+  Role,
+  UserAllowlistAddRequest,
+  UserAllowlistDetail,
+  UserAllowlistPatchRequest,
+} from '../@types/manageUsersApi'
 import { ManageUsersApiClient } from './manageUsersApiClient'
 import config from '../config'
 
@@ -156,6 +162,76 @@ describe('manageUsersApiClient', () => {
       const actual = await manageUsersApiClient.getAllowlistUser(username)
       expect(fakeManageUsersApi.isDone()).toBe(true)
       expect(actual).toEqual(allowlistUserResponse)
+    })
+  })
+
+  describe('getRoles', () => {
+    const rolesResponse: Role[] = [
+      {
+        roleCode: 'TEST_ROLE_MULTI_ADMIN',
+        roleName: 'Test Role Multi Admin',
+        roleDescription: 'Multiple admin role for tests',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+          {
+            adminTypeCode: 'DPS_LSA',
+            adminTypeName: 'Local Administrator',
+          },
+        ],
+      },
+      {
+        roleCode: 'TEST_ROLE_SINGLE_ADMIN',
+        roleName: 'Test Role Single Admin',
+        roleDescription: 'Single admin role for tests',
+        adminType: [
+          {
+            adminTypeCode: 'DPS_ADM',
+            adminTypeName: 'DPS Central Administrator',
+          },
+        ],
+      },
+    ]
+    it('should call get roles endpoint', async () => {
+      fakeManageUsersApi
+        .get(`/roles?adminTypes=DPS_ADM`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, rolesResponse)
+      const actual = await manageUsersApiClient.getRoles('DPS_ADM')
+      expect(fakeManageUsersApi.isDone()).toBe(true)
+      expect(actual).toEqual(rolesResponse)
+    })
+  })
+
+  describe('getDpsUser', () => {
+    const dpsUserResponse: PrisonUserDetails = {
+      accountType: 'ADMIN',
+      active: false,
+      authSource: 'nomis',
+      enabled: false,
+      firstName: 'Test',
+      lastName: 'LSA Admin',
+      name: 'Test LSA Admin',
+      staffId: 12345,
+      userId: 67890,
+      username: 'TADMIN_LSA',
+      administratorOfUserGroups: [
+        {
+          id: 'DMI',
+          name: 'DURHAM (HMP) LAA',
+        },
+      ],
+    }
+    it('should call get prison user details endpoint', async () => {
+      fakeManageUsersApi
+        .get(`/prisonusers/${dpsUserResponse.username}/details`)
+        .matchHeader('authorization', `Bearer ${token}`)
+        .reply(200, dpsUserResponse)
+      const actual = await manageUsersApiClient.getDpsUser('TADMIN_LSA')
+      expect(fakeManageUsersApi.isDone()).toBe(true)
+      expect(actual).toEqual(dpsUserResponse)
     })
   })
 })
