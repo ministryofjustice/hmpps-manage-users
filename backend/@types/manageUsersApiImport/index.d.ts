@@ -1485,7 +1485,7 @@ export interface components {
        * @description Parent Role Code
        * @example GLOBAL_SEARCH
        */
-      parentRole?: components['schemas']['RoleDetail']
+      parentRole?: unknown
     }
     /** @description User & Role Information */
     UserRoleDetail: {
@@ -1954,6 +1954,8 @@ export interface components {
     }
     User: {
       username: string
+      /** @enum {string} */
+      authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
     }
     /** @description User Role */
     ExternalUserRole: {
@@ -2318,7 +2320,7 @@ export interface components {
       roleName: string
       /**
        * @description automatic
-       * @example TRUE
+       * @example true
        */
       automatic: boolean
     }
