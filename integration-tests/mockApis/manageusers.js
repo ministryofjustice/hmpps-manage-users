@@ -1,4 +1,11 @@
 const { getFor, stubJson, getMatchingRequests, stubFor } = require('./wiremock')
+const { stubUserDetails } = require('./manageusersdps')
+
+const stubDpsRoles = ({ adminTypes, content }) =>
+  getFor({
+    urlPattern: `/roles\\?adminTypes=${adminTypes}`,
+    body: content,
+  })
 
 module.exports = {
   stubError: () =>
@@ -144,6 +151,146 @@ module.exports = {
       method: 'POST',
       urlPattern: '/prisonusers/[^/]*/email/sync',
     }),
+
+  stubNomisUserDetailsMiddleware: (username, isLocalAdmin) => {
+    return Promise.all([
+      stubDpsRoles({
+        adminTypes: 'IMS_HIDDEN',
+        content: [
+          {
+            roleCode: 'IMS_USER',
+            roleName: 'IMS user',
+            roleDescription: 'IMS user',
+            adminType: [
+              {
+                adminTypeCode: 'IMS_HIDDEN',
+                adminTypeName: 'IMS Administrator',
+              },
+            ],
+          },
+        ],
+      }),
+      stubDpsRoles({
+        adminTypes: 'DPS_ADM',
+        content: [
+          {
+            roleCode: 'MAINTAIN_ACCESS_ROLES',
+            roleName: 'Maintain Roles',
+            roleDescription: 'Maintaining roles for everyone',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'DPS_LSA',
+                adminTypeName: 'DPS Local System Administrator',
+              },
+            ],
+          },
+          {
+            roleCode: 'USER_ADMIN',
+            roleName: 'User Admin',
+            roleDescription: 'Administering users',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'DPS_LSA',
+                adminTypeName: 'DPS Local System Administrator',
+              },
+            ],
+          },
+          {
+            roleCode: 'ANOTHER_ADMIN_ROLE',
+            roleName: 'Another admin role',
+            roleDescription: 'Some text for another Admin Role',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+            ],
+          },
+          {
+            roleCode: 'ANOTHER_GENERAL_ROLE',
+            roleName: 'Another general role',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'EXT_ADM',
+                adminTypeName: 'External Administrator',
+              },
+            ],
+          },
+          {
+            roleCode: 'OAUTH_ADMIN',
+            roleName: 'Oauth Admin',
+            roleDescription: 'Some text for oauth admin',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'EXT_ADM',
+                adminTypeName: 'External Administrator',
+              },
+            ],
+          },
+        ],
+      }),
+      stubDpsRoles({
+        adminTypes: 'DPS_LSA',
+        content: [
+          {
+            roleCode: 'MAINTAIN_ACCESS_ROLES',
+            roleName: 'Maintain Roles',
+            roleDescription: 'Maintaining roles for everyone',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'DPS_LSA',
+                adminTypeName: 'DPS Local System Administrator',
+              },
+            ],
+          },
+          {
+            roleCode: 'USER_ADMIN',
+            roleName: 'User Admin',
+            roleDescription: 'Administering users',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'DPS_LSA',
+                adminTypeName: 'DPS Local System Administrator',
+              },
+            ],
+          },
+        ],
+      }),
+      stubUserDetails({
+        username,
+        administratorOfUserGroups: isLocalAdmin
+          ? [
+              { id: 'BLM', name: 'Belmarsh (HMP)' },
+              { id: 'BXI', name: 'Brixton (HMP)' },
+            ]
+          : [],
+      }),
+    ])
+  },
 
   stubDpsUserChangeEmail: () =>
     stubJson({
@@ -317,6 +464,8 @@ module.exports = {
       ],
     }),
 
+  stubDpsRoles,
+
   stubGetRoles: ({
     content = [
       {
@@ -350,11 +499,7 @@ module.exports = {
         ],
       },
     ],
-  }) =>
-    getFor({
-      urlPattern: '/roles\\?adminTypes=DPS_LSA',
-      body: content,
-    }),
+  }) => stubDpsRoles({ adminTypes: 'DPS_LSA', content }),
 
   stubGetRolesIncludingAdminRoles: ({
     content = [
@@ -414,11 +559,7 @@ module.exports = {
         ],
       },
     ],
-  }) =>
-    getFor({
-      urlPattern: '/roles\\?adminTypes=DPS_ADM',
-      body: content,
-    }),
+  }) => stubDpsRoles({ adminTypes: 'DPS_ADM', content }),
   stubGetRolesIncludingOAUTHAdminRoles: ({
     content = [
       {
@@ -492,11 +633,7 @@ module.exports = {
         ],
       },
     ],
-  }) =>
-    getFor({
-      urlPattern: '/roles\\?adminTypes=DPS_ADM',
-      body: content,
-    }),
+  }) => stubDpsRoles({ adminTypes: 'DPS_ADM', content }),
 
   stubHealth: (status = 200) =>
     stubFor({
@@ -592,7 +729,21 @@ module.exports = {
       body: content,
     }),
 
-  stubDpsUserGetRoles: (activeCaseload = true) =>
+  stubDpsUserGetRoles: ({
+    activeCaseload = true,
+    dpsRoles = [
+      {
+        code: 'MAINTAIN_ACCESS_ROLES',
+        name: 'Maintain Roles',
+        adminRoleOnly: false,
+      },
+      {
+        code: 'ANOTHER_GENERAL_ROLE',
+        name: 'Another general role',
+        adminRoleOnly: false,
+      },
+    ],
+  }) =>
     getFor({
       urlPattern: '/prisonusers/.*/roles',
       body: {
@@ -602,18 +753,7 @@ module.exports = {
             name: 'Moorland',
           },
         }),
-        dpsRoles: [
-          {
-            code: 'MAINTAIN_ACCESS_ROLES',
-            name: 'Maintain Roles',
-            adminRoleOnly: false,
-          },
-          {
-            code: 'ANOTHER_GENERAL_ROLE',
-            name: 'Another general role',
-            adminRoleOnly: false,
-          },
-        ],
+        dpsRoles,
       },
     }),
 

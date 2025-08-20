@@ -9,15 +9,16 @@
         <h3 class="govuk-notification-banner__heading">
           You are not authorised to remove this role.
         </h3>
-        <p class="govuk-body">{{ removalMessage }}</p>
+        <p data-qa="removal-message">{{ removalMessage }}</p>
         <p>Select Continue to return to the user details page</p>
       {% endset %}
-
+      <h1 class="govuk-heading-l">Request role removal</h1>
       {{ govukNotificationBanner({
         html: bannerHtml
       }) }}
       {{ govukButton({
         text: "Continue",
+        attributes: { 'data-qa': 'continue-button' },
         href: staffDetailsUrl
       }) }}
     </div>
