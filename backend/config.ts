@@ -53,6 +53,7 @@ export default {
     production: process.env.NODE_ENV === 'production',
     dpsEndpointUrl: process.env.DPS_ENDPOINT_URL || 'http://localhost:3000',
     supportUrl: process.env.SUPPORT_URL || 'http://localhost:3003',
+    roleRemovalServiceNowLink: get('ROLE_REMOVAL_SERVICE_NOW_LINK', '#'),
     tokenRefreshThresholdSeconds: toInt(process.env.TOKEN_REFRESH_THRESHOLD_SECONDS, 60),
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
     url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}`,
