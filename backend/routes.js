@@ -18,12 +18,14 @@ const deleteEmailDomainsRouter = require('./routes/deleteEmailDomainRouter')
 const userAllowListRouter = require('./routes/userAllowList').default
 const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
+const nomisUserDetails = require('./middleware/nomisUserDetails').default
 const config = require('./config').default
 
 const configureRoutes = ({ manageUsersApi }) => {
   const router = express.Router()
 
   router.use(currentUser({ manageUsersApi }))
+  router.use(nomisUserDetails())
   router.use(featureSwitches(config))
 
   router.use('/', menuRouter({ manageUsersApi }))

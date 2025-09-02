@@ -92,6 +92,7 @@ const controller = ({ manageUsersApi }) => {
   const {
     index: userDetails,
     removeRole,
+    requestRoleRemoval,
     removeUserCaseload,
     enableUser,
     disableUser,
@@ -118,6 +119,7 @@ const controller = ({ manageUsersApi }) => {
   router.get('/select-roles', selectRoles)
   router.post('/select-roles', postRoles)
   router.post('/roles/:role/remove', removeRole)
+  router.get('/roles/:role/request-removal', requestRoleRemoval)
   router.get('/select-caseloads', selectUserCaseloads)
   router.post('/select-caseloads', postUserCaseloads)
   router.post('/caseloads/:caseload/remove', removeUserCaseload)

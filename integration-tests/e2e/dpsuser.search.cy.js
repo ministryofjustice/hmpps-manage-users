@@ -145,8 +145,8 @@ context('DPS search with filter user functionality', () => {
     search.userFilterInput().should('have.value', 'Andy')
   })
   it('will have a link to maintain the user', () => {
-    cy.task('stubDpsUserDetails', {})
-    cy.task('stubDpsUserGetRoles')
+    cy.task('stubDpsUserDetails', { username: 'ITAG_USER0' })
+    cy.task('stubDpsUserGetRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
     const search = goToSearchPage({ totalElements: 5 })
     search.manageLinkForUser('ITAG_USER0').click()
