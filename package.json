@@ -103,6 +103,7 @@
     "build": "npm run copy-assets && tsc &&  npm run compile-sass && npm run copy-views",
     "test": "jest",
     "test-watch": "jest --watch",
+    "test:ci": "jest --runInBand",
     "record-build-info": "node scripts/record-build-info",
     "lint": "eslint backend integration-tests",
     "typecheck": "tsc",
