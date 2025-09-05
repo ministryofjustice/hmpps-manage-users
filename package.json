@@ -110,7 +110,7 @@
     "lint": "eslint backend integration-tests",
     "typecheck": "tsc",
     "security_audit": "npx audit-ci --config audit-ci.json",
-    "int-test": "cypress run",
+    "int-test": "cypress run --config video=false",
     "int-test-no-artefacts": "cypress run --config video=false,screenshotOnRunFailure=false",
     "int-test-ui": "cypress open",
     "compile-sass": "sass --load-path=. ./sass:./build/stylesheets --style compressed",
