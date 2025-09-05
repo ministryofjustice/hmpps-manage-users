@@ -89,3 +89,4 @@ test-results
 cypress/downloads/
 helm_deploy/*/Chart.lock
 helm_deploy/*/charts/
+test_results/

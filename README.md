@@ -1,5 +1,5 @@
-[![CircleCI](https://circleci.com/gh/ministryofjustice/hmpps-manage-users/tree/main.svg?style=svg)](https://circleci.com/gh/ministryofjustice/hmpps-manage-users)
-[![Known Vulnerabilities](https://snyk.io/test/github/ministryofjustice/hmpps-manage-users/badge.svg)](https://snyk.io/test/github/ministryofjustice/hmpps-manage-users)
+[![repo standards badge](https://img.shields.io/badge/endpoint.svg?&style=flat&logo=github&url=https%3A%2F%2Foperations-engineering-reports.cloud-platform.service.justice.gov.uk%2Fapi%2Fv1%2Fcompliant_public_repositories%2Fhmpps-manage-users)](https://operations-engineering-reports.cloud-platform.service.justice.gov.uk/public-report/hmpps-manage-users "Link to report")
+[![Docker Repository on ghcr](https://img.shields.io/badge/ghcr.io-repository-2496ED.svg?logo=docker)](https://ghcr.io/ministryofjustice/hmpps-manage-users)
 
 # Manage HMPPS Auth Accounts
 

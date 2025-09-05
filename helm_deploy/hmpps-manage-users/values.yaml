@@ -7,7 +7,7 @@ generic-service:
   productId: DPS017
 
   image:
-    repository: quay.io/hmpps/hmpps-manage-users
+    repository: ghcr.io/ministryofjustice/hmpps-manage-users
     tag: app_version    # override at deployment time
     port: 3000
 
