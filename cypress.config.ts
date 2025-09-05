@@ -8,7 +8,7 @@ export default defineConfig({
   videosFolder: 'integration-tests/videos',
   reporter: 'cypress-multi-reporters',
   reporterOptions: {
-    configFile: 'cypress-reporter-config.json',
+    configFile: 'reporter-config.json',
   },
   taskTimeout: 60000,
   e2e: {
