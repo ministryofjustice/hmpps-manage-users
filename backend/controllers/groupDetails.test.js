@@ -29,7 +29,7 @@ describe('Group details factory', () => {
 
       const render = jest.fn()
       await groupDetails.index(req, { render })
-      expect(render).toBeCalledWith('groupDetails.njk', {
+      expect(render).toHaveBeenCalledWith('groupDetails.njk', {
         groupDetails: [
           {
             groupName: 'name',
@@ -65,8 +65,8 @@ describe('Group details factory', () => {
       getGroupDetailsApi.mockRejectedValue(error)
 
       await groupDetails.index(req, { redirect })
-      expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
-      expect(redirect).toBeCalledWith('/manage-groups')
+      expect(req.flash).toHaveBeenCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
+      expect(redirect).toHaveBeenCalledWith('/manage-groups')
     })
 
     it('should publish attempt and failure audit messages when groupDetails render fails', async () => {
@@ -98,8 +98,8 @@ describe('Group details factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await groupDetails.deleteChildGroup(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-groups/JOE')
-      expect(deleteChildGroupApi).toBeCalledWith(locals, 'GROUP1')
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/JOE')
+      expect(deleteChildGroupApi).toHaveBeenCalledWith(locals, 'GROUP1')
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_ATTEMPT))
     })
   })

@@ -24,9 +24,9 @@ describe('select groups factory', () => {
 
       const render = jest.fn()
       await addGroup.index(req, { render })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.VIEW_USER_GROUPS_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.VIEW_USER_GROUPS_ATTEMPT))
 
-      expect(render).toBeCalledWith('addGroup.njk', {
+      expect(render).toHaveBeenCalledWith('addGroup.njk', {
         errors: undefined,
         groupDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -47,7 +47,7 @@ describe('select groups factory', () => {
 
       const render = jest.fn()
       await addGroup.index(req, { render })
-      expect(render).toBeCalledWith('addGroup.njk', {
+      expect(render).toHaveBeenCalledWith('addGroup.njk', {
         errors: undefined,
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -64,7 +64,7 @@ describe('select groups factory', () => {
 
       const render = jest.fn()
       await addGroup.index(req, { render })
-      expect(render).toBeCalledWith('addGroup.njk', {
+      expect(render).toHaveBeenCalledWith('addGroup.njk', {
         errors: { error: 'some error' },
         groupDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -86,10 +86,10 @@ describe('select groups factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveGroup).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(saveGroup).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'GLOBAL_SEARCH')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
     })
 
     it('should stash the errors and redirect if no group selected', async () => {
@@ -103,8 +103,8 @@ describe('select groups factory', () => {
 
       const redirect = jest.fn()
       await addGroup.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('addGroupErrors', [{ href: '#group', text: 'Select a group' }])
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('addGroupErrors', [{ href: '#group', text: 'Select a group' }])
     })
 
     it('should fail gracefully if group already on user', async () => {
@@ -121,10 +121,10 @@ describe('select groups factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
+      expect(redirect).toHaveBeenCalledWith('/some-location')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
     })
 
     it('should fail gracefully if group manager not allowed to maintain user', async () => {
@@ -141,10 +141,10 @@ describe('select groups factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
+      expect(redirect).toHaveBeenCalledWith('/some-location')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.ADD_USER_GROUP_FAILURE))
     })
   })
 })

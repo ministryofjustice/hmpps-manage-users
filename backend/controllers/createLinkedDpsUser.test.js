@@ -39,8 +39,8 @@ describe('create linked user factory', () => {
       const redirect = jest.fn()
       await createLinkedDpsUser.index(req, { render, redirect })
 
-      expect(req.flash).toBeCalledWith('user')
-      expect(redirect).toBeCalledWith('/create-linked-dps-user')
+      expect(req.flash).toHaveBeenCalledWith('user')
+      expect(redirect).toHaveBeenCalledWith('/create-linked-dps-user')
     })
 
     it('should redirect to create-user page when no user or user type is defined in request e.g. using browser back button from create linked user page  ', async () => {
@@ -52,8 +52,8 @@ describe('create linked user factory', () => {
       const redirect = jest.fn()
       await createLinkedDpsUser.index(req, { render, redirect })
 
-      expect(req.flash).toBeCalledWith('user')
-      expect(redirect).toBeCalledWith('/create-user')
+      expect(req.flash).toHaveBeenCalledWith('user')
+      expect(redirect).toHaveBeenCalledWith('/create-user')
     })
 
     it('should display link general user page, when general user type with link option is selected on preceeding pages', async () => {
@@ -67,9 +67,9 @@ describe('create linked user factory', () => {
       const redirect = jest.fn()
       await createLinkedDpsUser.index(req, { render, redirect })
 
-      expect(req.flash).toBeCalledWith('user')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors')
-      expect(render).toBeCalledWith('createDpsLinkedGeneralUser.njk', {
+      expect(req.flash).toHaveBeenCalledWith('user')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors')
+      expect(render).toHaveBeenCalledWith('createDpsLinkedGeneralUser.njk', {
         title: 'Create a Linked DPS General user',
         userType: 'DPS_GEN',
         caseloadTitle: 'Select a default caseload',
@@ -93,7 +93,7 @@ describe('create linked user factory', () => {
       const redirect = jest.fn()
       const render = jest.fn()
       await createLinkedDpsUser.index(req, { render, redirect })
-      expect(render).toBeCalledWith('createDpsLinkedGeneralUser.njk', {
+      expect(render).toHaveBeenCalledWith('createDpsLinkedGeneralUser.njk', {
         errors: { error: 'some error' },
         title: 'Create a Linked DPS General user',
         userType: 'DPS_GEN',
@@ -128,9 +128,9 @@ describe('create linked user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
-      expect(searchUser).toBeCalledWith(locals, req.body.existingUsername)
+      expect(searchUser).toHaveBeenCalledWith(locals, req.body.existingUsername)
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
         details: JSON.stringify({ action: 'create-search', existingUsername: 'BOB_ADM' }),
         subjectId: 'BOB_ADM',
@@ -165,16 +165,16 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
 
-      expect(createLinkedGeneralUser).toBeCalledWith(locals, {
+      expect(createLinkedGeneralUser).toHaveBeenCalledWith(locals, {
         existingAdminUsername: 'BOB_ADM',
         generalUsername: 'BOB_GEN',
         defaultCaseloadId: 'smith',
       })
-      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_GEN/details',
       })
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
         details: JSON.stringify({ action: 'create-gen', existingUsername: 'BOB_ADM', generalUsername: 'BOB_GEN' }),
         subjectId: 'BOB_ADM',
@@ -206,14 +206,14 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
 
-      expect(createLinkedAdminUser).toBeCalledWith(locals, {
+      expect(createLinkedAdminUser).toHaveBeenCalledWith(locals, {
         existingUsername: 'BOB_GEN',
         adminUsername: 'BOB_ADM',
       })
-      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
         details: JSON.stringify({ action: 'create-admin', existingUsername: 'BOB_GEN', adminUsername: 'BOB_ADM' }),
         subjectId: 'BOB_GEN',
@@ -246,16 +246,16 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
 
-      expect(createLinkedLsaUser).toBeCalledWith(locals, {
+      expect(createLinkedLsaUser).toHaveBeenCalledWith(locals, {
         existingUsername: 'BOB_GEN',
         adminUsername: 'BOB_LSA',
         localAdminGroup: 'smith',
       })
-      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_LSA/details',
       })
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT,
         details: JSON.stringify({ action: 'create-lsa', existingUsername: 'BOB_GEN', adminUsername: 'BOB_LSA' }),
         subjectId: 'BOB_GEN',
@@ -287,14 +287,16 @@ describe('create linked user factory', () => {
       const locals = jest.fn()
       await createLinkedDpsUser.post(req, { render, locals })
 
-      expect(createLinkedAdminUser).toBeCalledWith(locals, {
+      expect(createLinkedAdminUser).toHaveBeenCalledWith(locals, {
         existingUsername: 'BOB_GEN',
         adminUsername: 'BOB_ADM',
       })
-      expect(render).toBeCalledWith('createLinkedDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createLinkedDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
     })
 
     it('should stash the errors and redirect if no details entered for admin to general user linking', async () => {
@@ -318,8 +320,8 @@ describe('create linked user factory', () => {
 
       await createLinkedDpsUser.post(req, { render, locals, redirect })
 
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#existingUsername',
           text: 'Enter the existing username',
@@ -338,8 +340,12 @@ describe('create linked user factory', () => {
         },
       ])
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE),
+      )
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -364,14 +370,18 @@ describe('create linked user factory', () => {
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           text: 'something went wrong',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE),
+      )
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -396,15 +406,19 @@ describe('create linked user factory', () => {
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#adminUsername',
           text: 'Username already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE),
+      )
     })
 
     it('should fail gracefully if username already linked', async () => {
@@ -431,15 +445,19 @@ describe('create linked user factory', () => {
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#existingUsername',
           text: 'Username already linked to another account',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE),
+      )
     })
 
     it('should fail gracefully if the Username was not found', async () => {
@@ -464,15 +482,19 @@ describe('create linked user factory', () => {
         originalUrl: '/some-location',
       }
       await createLinkedDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#existingUsername',
           text: 'Username not found',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.CREATE_LINKED_USER_FAILURE),
+      )
     })
   })
 })

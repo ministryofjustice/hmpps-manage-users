@@ -102,7 +102,7 @@ describe('search factory', () => {
     const render = jest.fn()
     await search(req, { render })
 
-    expect(render).toBeCalledWith('searchExternalUsers.njk', {
+    expect(render).toHaveBeenCalledWith('searchExternalUsers.njk', {
       searchTitle: 'Search for an external user',
       searchUrl: '/search-external-users',
       maintainUrl: '/manage-external-users',
@@ -141,7 +141,7 @@ describe('search factory', () => {
         locals: { pageable: { page: 5, size: 10, totalElements: 123 } },
       })
 
-      expect(render).toBeCalledWith('searchExternalUsers.njk', {
+      expect(render).toHaveBeenCalledWith('searchExternalUsers.njk', {
         searchTitle: 'Search for an external user',
         searchUrl: '/search-external-users',
         maintainUrl: '/manage-external-users',
@@ -176,7 +176,7 @@ describe('search factory', () => {
         locals,
       })
 
-      expect(searchApi).toBeCalledWith({
+      expect(searchApi).toHaveBeenCalledWith({
         locals,
         user: 'joe',
         roleCode: '',
@@ -203,7 +203,7 @@ describe('search factory', () => {
         locals,
       })
 
-      expect(searchApi).toBeCalledWith({
+      expect(searchApi).toHaveBeenCalledWith({
         locals,
         user: 'joe',
         roleCode: 'role_code',
@@ -230,7 +230,7 @@ describe('search factory', () => {
         locals,
       })
 
-      expect(searchApi).toBeCalledWith({
+      expect(searchApi).toHaveBeenCalledWith({
         locals,
         user: 'joe',
         roleCode: '',
@@ -259,7 +259,7 @@ describe('search factory', () => {
       pagingApi.mockReturnValue(pageable)
       await search(req, { render })
 
-      expect(paginationService.getPagination).toBeCalledWith(pageable, new URL('http://localhost/'))
+      expect(paginationService.getPagination).toHaveBeenCalledWith(pageable, new URL('http://localhost/'))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.SEARCH_USER_ATTEMPT))
     })
 

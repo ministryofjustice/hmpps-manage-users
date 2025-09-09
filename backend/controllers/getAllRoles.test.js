@@ -64,7 +64,7 @@ describe('view roles factory', () => {
         render,
         locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
       })
-      expect(render).toBeCalledWith('roles.njk', {
+      expect(render).toHaveBeenCalledWith('roles.njk', {
         maintainUrl: '/manage-roles',
         roles,
         currentFilter: {
@@ -75,7 +75,7 @@ describe('view roles factory', () => {
         errors: undefined,
         pagination,
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.LIST_ROLES_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.LIST_ROLES_ATTEMPT))
     })
 
     it('should set current filter with single query parameters', async () => {
@@ -91,7 +91,7 @@ describe('view roles factory', () => {
         render,
         locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
       })
-      expect(render).toBeCalledWith('roles.njk', {
+      expect(render).toHaveBeenCalledWith('roles.njk', {
         maintainUrl: '/manage-roles',
         roles,
         currentFilter: {
@@ -117,7 +117,7 @@ describe('view roles factory', () => {
         render,
         locals: { pageable: { offset: 20, size: 10, totalElements: 123 } },
       })
-      expect(render).toBeCalledWith('roles.njk', {
+      expect(render).toHaveBeenCalledWith('roles.njk', {
         maintainUrl: '/manage-roles',
         roles,
         currentFilter: {

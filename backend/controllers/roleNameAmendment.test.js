@@ -22,7 +22,7 @@ describe('role amendment factory', () => {
 
       const render = jest.fn()
       await changeRoleName.index(req, { render })
-      expect(render).toBeCalledWith('changeRoleName.njk', {
+      expect(render).toHaveBeenCalledWith('changeRoleName.njk', {
         currentRoleName: 'role name',
         title: 'Change role name for role name',
         roleUrl: '/manage-roles/role1',
@@ -38,7 +38,7 @@ describe('role amendment factory', () => {
 
       const render = jest.fn()
       await changeRoleName.index(req, { render })
-      expect(render).toBeCalledWith('changeRoleName.njk', {
+      expect(render).toHaveBeenCalledWith('changeRoleName.njk', {
         errors: { error: 'some error' },
         currentRoleName: 'role name',
         title: 'Change role name for role name',
@@ -60,9 +60,9 @@ describe('role amendment factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeRoleName.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/role1')
-      expect(changeRoleNameApi).toBeCalledWith(locals, 'role1', 'RoleA')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/role1')
+      expect(changeRoleNameApi).toHaveBeenCalledWith(locals, 'role1', 'RoleA')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.UPDATE_ROLE_ATTEMPT,
         details: JSON.stringify({ role: 'role1', newRoleName: 'RoleA' }),
         subjectId: 'role1',
@@ -84,8 +84,8 @@ describe('role amendment factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await changeRoleName.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/role1')
-      expect(changeRoleNameApi).toBeCalledWith(locals, 'role1', 'RoleA')
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/role1')
+      expect(changeRoleNameApi).toHaveBeenCalledWith(locals, 'role1', 'RoleA')
     })
 
     it('should stash the errors and redirect if no role name entered', async () => {
@@ -99,8 +99,8 @@ describe('role amendment factory', () => {
 
       const redirect = jest.fn()
       await changeRoleName.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('changeRoleErrors', [{ href: '#roleName', text: 'Enter a role name' }])
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('changeRoleErrors', [{ href: '#roleName', text: 'Enter a role name' }])
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
@@ -116,8 +116,8 @@ describe('role amendment factory', () => {
 
       const redirect = jest.fn()
       await changeRoleName.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('changeRoleName', [undefined])
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('changeRoleName', [undefined])
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
@@ -135,8 +135,8 @@ describe('role amendment factory', () => {
         session,
       }
       await changeRoleName.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('changeRoleName', ['RoleA'])
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })
@@ -154,8 +154,8 @@ describe('role amendment factory', () => {
         session,
       }
       await changeRoleName.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('changeRoleName', ['RoleA'])
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('changeRoleName', ['RoleA'])
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.UPDATE_ROLE_FAILURE))
     })

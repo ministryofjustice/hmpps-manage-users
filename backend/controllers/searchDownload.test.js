@@ -88,7 +88,7 @@ describe('download factory', () => {
         end: jest.fn(),
       })
 
-      expect(searchApi).toBeCalledWith({
+      expect(searchApi).toHaveBeenCalledWith({
         locals,
         user: 'joe',
         roleCode: '',
@@ -129,7 +129,7 @@ describe('download factory', () => {
         end: jest.fn(),
       })
 
-      expect(searchApi).toBeCalledWith({
+      expect(searchApi).toHaveBeenCalledWith({
         locals,
         whatever: 'what',
         something: 'some',
@@ -165,9 +165,9 @@ describe('download factory', () => {
       allowDownload.mockReturnValue(true)
       await download.downloadResults(req, res)
 
-      expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
-      expect(res.attachment).toBeCalledWith('user-search.csv')
-      expect(res.send).toBeCalledWith(expect.any(String))
+      expect(res.header).toHaveBeenCalledWith('Content-Type', 'text/csv')
+      expect(res.attachment).toHaveBeenCalledWith('user-search.csv')
+      expect(res.send).toHaveBeenCalledWith(expect.any(String))
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })
@@ -195,8 +195,8 @@ describe('download factory', () => {
 
       await download.downloadResults(req, res)
 
-      expect(res.writeHead).toBeCalledWith(403, { 'Content-Type': 'text/plain' })
-      expect(res.end).toBeCalledWith(expect.any(String))
+      expect(res.writeHead).toHaveBeenCalledWith(403, { 'Content-Type': 'text/plain' })
+      expect(res.end).toHaveBeenCalledWith(expect.any(String))
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_FAILURE))
@@ -224,8 +224,8 @@ describe('download factory', () => {
       allowDownload.mockReturnValue(true)
       await download.downloadResults(req, res)
 
-      expect(res.writeHead).toBeCalledWith(500, { 'Content-Type': 'text/plain' })
-      expect(res.end).toBeCalledWith(expect.any(String))
+      expect(res.writeHead).toHaveBeenCalledWith(500, { 'Content-Type': 'text/plain' })
+      expect(res.end).toHaveBeenCalledWith(expect.any(String))
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_FAILURE))
@@ -347,7 +347,7 @@ describe('download beta search factory', () => {
         end: jest.fn(),
       })
 
-      expect(findUsersApi).toBeCalledWith({
+      expect(findUsersApi).toHaveBeenCalledWith({
         locals,
         user: 'Andy',
         accessRoles: ['ACCESS_ROLE_ADMIN'],
@@ -379,9 +379,9 @@ describe('download beta search factory', () => {
       allowDownload.mockReturnValue(true)
       await download.downloadBetaResults(req, res)
 
-      expect(res.header).toBeCalledWith('Content-Type', 'text/csv')
-      expect(res.attachment).toBeCalledWith('user-search.csv')
-      expect(res.send).toBeCalledWith(expect.any(String))
+      expect(res.header).toHaveBeenCalledWith('Content-Type', 'text/csv')
+      expect(res.attachment).toHaveBeenCalledWith('user-search.csv')
+      expect(res.send).toHaveBeenCalledWith(expect.any(String))
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DOWNLOAD_REPORT_ATTEMPT))
     })

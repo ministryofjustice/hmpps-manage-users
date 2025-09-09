@@ -18,7 +18,7 @@ describe('create group factory', () => {
 
       const render = jest.fn()
       await createGroup.index(req, { render })
-      expect(render).toBeCalledWith('createGroup.njk', {
+      expect(render).toHaveBeenCalledWith('createGroup.njk', {
         groupUrl: '/manage-groups',
         errors: undefined,
       })
@@ -29,7 +29,7 @@ describe('create group factory', () => {
 
       const render = jest.fn()
       await createGroup.index(req, { render })
-      expect(render).toBeCalledWith('createGroup.njk', {
+      expect(render).toHaveBeenCalledWith('createGroup.njk', {
         groupUrl: '/manage-groups',
         errors: { error: 'some error' },
       })
@@ -48,13 +48,13 @@ describe('create group factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-groups/BOB1')
-      expect(createGroupApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/BOB1')
+      expect(createGroupApi).toHaveBeenCalledWith(locals, {
         groupCode: 'BOB1',
         groupName: 'group name',
         _csrf: 'csrf',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_GROUP_ATTEMPT,
         details: '{"group":{"groupCode":"BOB1","groupName":"group name"}}',
         subjectId: null,
@@ -76,8 +76,8 @@ describe('create group factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-groups/BOB1')
-      expect(createGroupApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/BOB1')
+      expect(createGroupApi).toHaveBeenCalledWith(locals, {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
@@ -94,8 +94,8 @@ describe('create group factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createGroup.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-groups/BOB1')
-      expect(createGroupApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/BOB1')
+      expect(createGroupApi).toHaveBeenCalledWith(locals, {
         groupCode: 'BOB1',
         groupName: 'group name',
       })
@@ -112,13 +112,13 @@ describe('create group factory', () => {
 
       const redirect = jest.fn()
       await createGroup.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createGroupErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createGroupErrors', [
         { href: '#groupCode', text: 'Enter a group code' },
         { href: '#groupName', text: 'Enter a group name' },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
 
     it('should stash the group and redirect if no code or name entered', async () => {
@@ -132,10 +132,10 @@ describe('create group factory', () => {
 
       const redirect = jest.fn()
       await createGroup.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('group', [{ groupCode: '', groupName: '' }])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('group', [{ groupCode: '', groupName: '' }])
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
 
     it('should fail gracefully if group already exists', async () => {
@@ -155,15 +155,15 @@ describe('create group factory', () => {
         params: { userId: 'userId' },
       }
       await createGroup.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createGroupErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createGroupErrors', [
         {
           href: '#groupCode',
           text: 'Group code already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_GROUP_FAILURE))
     })
   })
 })

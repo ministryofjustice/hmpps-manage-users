@@ -27,7 +27,7 @@ describe('create user factory', () => {
 
       const render = jest.fn()
       await createExternalUser.index(req, { render })
-      expect(render).toBeCalledWith('createExternalUser.njk', {
+      expect(render).toHaveBeenCalledWith('createExternalUser.njk', {
         maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
         groupDropdownValues: [{ selected: false, text: 'name', value: 'code' }],
@@ -41,7 +41,7 @@ describe('create user factory', () => {
 
       const render = jest.fn()
       await createExternalUser.index(req, { render })
-      expect(render).toBeCalledWith('createExternalUser.njk', {
+      expect(render).toHaveBeenCalledWith('createExternalUser.njk', {
         errors: { error: 'some error' },
         maintainTitle: 'Search for an external user',
         maintainUrl: '/create-external-users',
@@ -69,11 +69,11 @@ describe('create user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createExternalUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createExternalUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createExternalUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createExternalUserApi).toBeCalledWith(locals, {
+      expect(createExternalUserApi).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -108,11 +108,11 @@ describe('create user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createExternalUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createExternalUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createExternalUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createExternalUserApi).toBeCalledWith(locals, {
+      expect(createExternalUserApi).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -138,11 +138,11 @@ describe('create user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createExternalUser.post(req, { render, locals })
-      expect(render).toBeCalledWith('createExternalUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createExternalUserSuccess.njk', {
         detailsLink: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(createExternalUserApi).toBeCalledWith(locals, {
+      expect(createExternalUserApi).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         firstName: 'bob',
         lastName: 'smith',
@@ -178,8 +178,8 @@ describe('create user factory', () => {
 
       const redirect = jest.fn()
       await createExternalUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createExternalUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createExternalUserErrors', [
         {
           href: '#email',
           text: 'Enter an email address',
@@ -209,8 +209,8 @@ describe('create user factory', () => {
         session,
       }
       await createExternalUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createExternalUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createExternalUserErrors', [
         {
           href: '#firstName',
           text: 'Enter a first name',
@@ -246,8 +246,8 @@ describe('create user factory', () => {
         session,
       }
       await createExternalUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createExternalUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createExternalUserErrors', [
         {
           href: '#email',
           text: 'Email already exists',

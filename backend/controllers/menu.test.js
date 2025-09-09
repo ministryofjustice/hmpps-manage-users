@@ -15,7 +15,7 @@ describe('menu factory', () => {
       })
       const render = jest.fn()
       await index({}, { locals, render })
-      expect(render).toBeCalledWith('menu.njk', { message: 'The Message' })
+      expect(render).toHaveBeenCalledWith('menu.njk', { message: 'The Message' })
     })
   })
 
@@ -29,7 +29,7 @@ describe('menu factory', () => {
     })
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: 'The Message' })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: 'The Message' })
   })
 
   it('should call menu render for Auth Admin - no message', async () => {
@@ -37,7 +37,7 @@ describe('menu factory', () => {
 
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: '' })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: '' })
   })
 
   it('should call menu render with hasManageUserAllowList as true if feature enabled and correct role', async () => {
@@ -48,7 +48,7 @@ describe('menu factory', () => {
 
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: '', hasManageUserAllowList: true })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: '', hasManageUserAllowList: true })
   })
 
   it('should call menu render with hasManageUserAllowList as false if feature disabled and correct role', async () => {
@@ -59,7 +59,7 @@ describe('menu factory', () => {
 
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
   })
 
   it('should call menu render with hasManageUserAllowList as false if feature enabled and incorrect role', async () => {
@@ -70,7 +70,7 @@ describe('menu factory', () => {
 
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
   })
 
   it('should call menu render with hasManageUserAllowList as false if feature disabled and incorrect role', async () => {
@@ -81,6 +81,6 @@ describe('menu factory', () => {
 
     const render = jest.fn()
     await index({}, { locals, render })
-    expect(render).toBeCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
+    expect(render).toHaveBeenCalledWith('menu.njk', { message: '', hasManageUserAllowList: false })
   })
 })

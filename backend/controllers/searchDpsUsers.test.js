@@ -60,7 +60,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render })
-        expect(render).toBeCalledWith('searchDpsUsers.njk', {
+        expect(render).toHaveBeenCalledWith('searchDpsUsers.njk', {
           searchTitle: 'Search for a DPS user',
           searchUrl: '/search-with-filter-dps-users',
           prisonDropdownValues: [{ text: 'Moorland HMP', value: 'MDI' }],
@@ -113,7 +113,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render })
-        expect(render).toBeCalledWith(
+        expect(render).toHaveBeenCalledWith(
           'searchDpsUsers.njk',
           expect.objectContaining({
             downloadUrl:
@@ -133,7 +133,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render })
-        expect(render).toBeCalledWith(
+        expect(render).toHaveBeenCalledWith(
           'searchDpsUsers.njk',
           expect.not.objectContaining({
             downloadUrl:
@@ -159,7 +159,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
-        expect(render).toBeCalledWith(
+        expect(render).toHaveBeenCalledWith(
           'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
@@ -194,7 +194,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
-        expect(render).toBeCalledWith(
+        expect(render).toHaveBeenCalledWith(
           'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
@@ -230,7 +230,7 @@ describe('search factory', () => {
 
         const render = jest.fn()
         await search(req, { render, locals: { user: { maintainAccessAdmin: true } } })
-        expect(render).toBeCalledWith(
+        expect(render).toHaveBeenCalledWith(
           'searchDpsUsers.njk',
           expect.objectContaining({
             currentFilter: {
@@ -277,7 +277,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -297,7 +297,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: 'jane',
           accessRoles: undefined,
@@ -317,7 +317,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: 'jane',
           accessRoles: undefined,
@@ -338,7 +338,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: 'jane',
           accessRoles: undefined,
@@ -358,7 +358,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -378,7 +378,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -398,7 +398,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -418,7 +418,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: ['OMIC_ADMIN'],
@@ -438,7 +438,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -458,7 +458,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: undefined,
           accessRoles: undefined,
@@ -478,7 +478,7 @@ describe('search factory', () => {
 
         await search(req, { render, locals })
 
-        expect(findUsersApi).toBeCalledWith({
+        expect(findUsersApi).toHaveBeenCalledWith({
           locals,
           user: 'jane',
           accessRoles: ['OMIC_ADMIN'],

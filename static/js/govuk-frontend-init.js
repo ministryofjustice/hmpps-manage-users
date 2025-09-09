@@ -1,2 +1,2 @@
-import { initAll } from '/assets/govuk/govuk-frontend.min.js'
-initAll()
+import * as GOVUKFrontend from './govuk-frontend.min.js'
+GOVUKFrontend.initAll()

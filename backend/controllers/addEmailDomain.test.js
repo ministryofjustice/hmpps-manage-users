@@ -26,7 +26,7 @@ describe('create email domain factory', () => {
       const domain = flashDomain != null && flashDomain.length > 0 ? flashDomain[0] : ''
       const render = jest.fn()
       await emailDomainFactory.index(standardReq, { render })
-      expect(render).toBeCalledWith('createEmailDomain.njk', {
+      expect(render).toHaveBeenCalledWith('createEmailDomain.njk', {
         createEmailDomainUrl: '/create-email-domain',
         listEmailDomainUrl: '/email-domains',
         ...domain,
@@ -42,7 +42,7 @@ describe('create email domain factory', () => {
       const domain = flashDomain != null && flashDomain.length > 0 ? flashDomain[0] : ''
       const render = jest.fn()
       await emailDomainFactory.index(req, { render })
-      expect(render).toBeCalledWith('createEmailDomain.njk', {
+      expect(render).toHaveBeenCalledWith('createEmailDomain.njk', {
         createEmailDomainUrl: '/create-email-domain',
         listEmailDomainUrl: '/email-domains',
         ...domain,
@@ -72,8 +72,8 @@ describe('create email domain factory', () => {
 
     it('should create email domain and redirect', async () => {
       await emailDomainFactory.createEmailDomain(createEmailDomainRequest, { locals, redirect })
-      expect(createEmailDomainApi).toBeCalledWith(locals, { name: 'DOMAIN1', description: 'DOMAINDESCRIPTION1' })
-      expect(redirect).toBeCalledWith('/email-domains')
+      expect(createEmailDomainApi).toHaveBeenCalledWith(locals, { name: 'DOMAIN1', description: 'DOMAINDESCRIPTION1' })
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
 
       // Check audit message
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
@@ -97,7 +97,7 @@ describe('create email domain factory', () => {
         session,
       }
       await emailDomainFactory.createEmailDomain(createEmailDomainRequestNoInput, { redirect, locals })
-      expect(createEmailDomainRequestNoInput.flash).toBeCalledWith('createEmailDomainErrors', [
+      expect(createEmailDomainRequestNoInput.flash).toHaveBeenCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Enter a domain name' },
         { href: '#domainDescription', text: 'Enter a domain description' },
       ])
@@ -122,8 +122,8 @@ describe('create email domain factory', () => {
         session,
       }
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
+      expect(req.flash).toHaveBeenCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Email domain EXISTINGDOMAIN is already present in the allowed list' },
       ])
 
@@ -150,8 +150,8 @@ describe('create email domain factory', () => {
         session,
       }
       await emailDomainFactory.createEmailDomain(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('createEmailDomainErrors', [
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
+      expect(req.flash).toHaveBeenCalledWith('createEmailDomainErrors', [
         { href: '#domainName', text: 'Email domain EXCLUDEDDOMAIN is present in the excluded list' },
       ])
 

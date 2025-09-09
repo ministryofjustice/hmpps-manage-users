@@ -25,7 +25,7 @@ describe('Role details factory', () => {
 
       const render = jest.fn()
       await roleDetails.index(req, { render })
-      expect(render).toBeCalledWith('roleDetails.njk', {
+      expect(render).toHaveBeenCalledWith('roleDetails.njk', {
         roleDetails: [
           {
             roleName: 'name',
@@ -36,7 +36,7 @@ describe('Role details factory', () => {
         maintainUrl: '/manage-roles',
       })
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.VIEW_ROLE_DETAILS_ATTEMPT,
         details: null,
         subjectId: 'code',
@@ -59,8 +59,8 @@ describe('Role details factory', () => {
       getRoleDetailsApi.mockRejectedValue(error)
 
       await roleDetails.index(req, { redirect })
-      expect(req.flash).toBeCalledWith('roleError', [{ href: '#roleCode', text: 'Role does not exist' }])
-      expect(redirect).toBeCalledWith('/manage-roles')
+      expect(req.flash).toHaveBeenCalledWith('roleError', [{ href: '#roleCode', text: 'Role does not exist' }])
+      expect(redirect).toHaveBeenCalledWith('/manage-roles')
     })
   })
 })
