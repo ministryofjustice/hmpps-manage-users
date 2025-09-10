@@ -24,8 +24,8 @@ describe('group delete factory', () => {
       const render = jest.fn()
 
       await groupDelete.index(req, { render, locals })
-      expect(getGroupDetailsApi).toBeCalledWith(locals, 'group1')
-      expect(render).toBeCalledWith('groupDelete.njk', {
+      expect(getGroupDetailsApi).toHaveBeenCalledWith(locals, 'group1')
+      expect(render).toHaveBeenCalledWith('groupDelete.njk', {
         group: 'group1',
         groupDetails: {
           groupName: 'group name',
@@ -50,9 +50,9 @@ describe('group delete factory', () => {
       getGroupDetailsApi.mockRejectedValue(error)
 
       await groupDelete.index(req, { redirect, locals })
-      expect(getGroupDetailsApi).toBeCalledWith(locals, 'DOES_NOT_EXIST')
-      expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
-      expect(redirect).toBeCalledWith('/manage-groups')
+      expect(getGroupDetailsApi).toHaveBeenCalledWith(locals, 'DOES_NOT_EXIST')
+      expect(req.flash).toHaveBeenCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
+      expect(redirect).toHaveBeenCalledWith('/manage-groups')
     })
   })
 
@@ -68,10 +68,10 @@ describe('group delete factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await groupDelete.deleteGroup(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-groups')
-      expect(deleteGroupApi).toBeCalledWith(locals, 'group1')
+      expect(redirect).toHaveBeenCalledWith('/manage-groups')
+      expect(deleteGroupApi).toHaveBeenCalledWith(locals, 'group1')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.DELETE_GROUP_ATTEMPT,
         correlationId: expect.any(String),
         subjectId: 'group1',
@@ -99,12 +99,12 @@ describe('group delete factory', () => {
       deleteGroupApi.mockRejectedValue(error)
 
       await groupDelete.deleteGroup(req, { redirect, locals })
-      expect(deleteGroupApi).toBeCalledWith(locals, 'DOES_NOT_EXIST')
-      expect(req.flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
-      expect(redirect).toBeCalledWith('/manage-groups')
+      expect(deleteGroupApi).toHaveBeenCalledWith(locals, 'DOES_NOT_EXIST')
+      expect(req.flash).toHaveBeenCalledWith('groupError', [{ href: '#groupCode', text: 'Group does not exist' }])
+      expect(redirect).toHaveBeenCalledWith('/manage-groups')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DELETE_GROUP_FAILURE))
     })
   })
 })

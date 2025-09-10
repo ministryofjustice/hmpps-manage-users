@@ -44,7 +44,7 @@ describe('Search API Factory', () => {
         page: 2,
       })
 
-      expect(manageUsersApi.dpsUserSearch).toBeCalledWith(
+      expect(manageUsersApi.dpsUserSearch).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
@@ -71,7 +71,7 @@ describe('Search API Factory', () => {
         page: 2,
       })
 
-      expect(manageUsersApi.dpsUserSearch).toBeCalledWith(
+      expect(manageUsersApi.dpsUserSearch).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },
@@ -121,7 +121,7 @@ describe('Search API Factory', () => {
 
       const roles = await searchableRoles({ user: { maintainAccessAdmin: false } })
 
-      expect(manageUsersApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },
@@ -205,7 +205,7 @@ describe('Search API Factory', () => {
 
       const roles = await searchableRoles({ user: { maintainAccessAdmin: true } })
 
-      expect(manageUsersApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
@@ -260,7 +260,7 @@ describe('Search API Factory', () => {
 
       await searchableRoles({ user: { maintainAccessAdmin: true } })
 
-      expect(manageUsersApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: true },
         },
@@ -273,7 +273,7 @@ describe('Search API Factory', () => {
 
       await searchableRoles({ user: { maintainAccessAdmin: false } })
 
-      expect(manageUsersApi.getRoles).toBeCalledWith(
+      expect(manageUsersApi.getRoles).toHaveBeenCalledWith(
         {
           user: { maintainAccessAdmin: false },
         },
@@ -291,7 +291,7 @@ describe('Search API Factory', () => {
 
       const caseloadOptions = await caseloads({ user: { maintainAccessAdmin: true } })
 
-      expect(manageUsersApi.getCaseloads).toBeCalledWith({
+      expect(manageUsersApi.getCaseloads).toHaveBeenCalledWith({
         user: { maintainAccessAdmin: true },
       })
 

@@ -38,7 +38,7 @@ describe('cleanUpRedirect', () => {
       function shouldThrowErrorIfHostIsMalicious(url: string) {
         expect(() => {
           cleanUpRedirect(url)
-        }).toThrowError(MALICIOUS_URL_ERROR_MESSAGE)
+        }).toThrow(MALICIOUS_URL_ERROR_MESSAGE)
       }
     })
 
@@ -55,7 +55,7 @@ describe('cleanUpRedirect', () => {
     it('throws an error for URLs without a protocol but with a different host', () => {
       expect(() => {
         cleanUpRedirect('malicious-host.com/path')
-      }).toThrowError(MALICIOUS_URL_ERROR_MESSAGE)
+      }).toThrow(MALICIOUS_URL_ERROR_MESSAGE)
     })
   })
 
@@ -67,7 +67,7 @@ describe('cleanUpRedirect', () => {
       config.app.host = ''
       expect(() => {
         cleanUpRedirect('https://expected-host.com/path')
-      }).toThrowError('Ingress host is not defined in the environment variables')
+      }).toThrow('Ingress host is not defined in the environment variables')
     })
 
     it('handles invalid URLs gracefully', () => {
@@ -84,7 +84,7 @@ describe('cleanUpRedirect', () => {
     it('throws an error for URLs without a protocol but with a different host', () => {
       expect(() => {
         cleanUpRedirect('malicious-host.com/path')
-      }).toThrowError(MALICIOUS_URL_ERROR_MESSAGE)
+      }).toThrow(MALICIOUS_URL_ERROR_MESSAGE)
     })
   })
 })

@@ -32,7 +32,7 @@ describe('select roles factory', () => {
 
       const render = jest.fn()
       await addRole.index(req, { render })
-      expect(render).toBeCalledWith('addRole.njk', {
+      expect(render).toHaveBeenCalledWith('addRole.njk', {
         errors: undefined,
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -40,7 +40,7 @@ describe('select roles factory', () => {
         message: 'roles message',
       })
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.VIEW_USER_ROLES_ATTEMPT))
     })
 
     it('should call addRole render  exclude oauth admin', async () => {
@@ -61,7 +61,7 @@ describe('select roles factory', () => {
 
       const render = jest.fn()
       await addRole.index(req, { render })
-      expect(render).toBeCalledWith('addRole.njk', {
+      expect(render).toHaveBeenCalledWith('addRole.njk', {
         errors: undefined,
         roleDropdownValues: [{ text: 'name', value: 'code' }],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -85,7 +85,7 @@ describe('select roles factory', () => {
 
       const render = jest.fn()
       await addRole.index(req, { render })
-      expect(render).toBeCalledWith('addRole.njk', {
+      expect(render).toHaveBeenCalledWith('addRole.njk', {
         errors: { error: 'some error' },
         roleDropdownValues: [],
         staff: { name: 'Billy Bob', username: 'BOB' },
@@ -107,7 +107,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.ADD_USER_ROLES_ATTEMPT,
         details: '{"roles":["GLOBAL_SEARCH","BOB"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -116,8 +116,8 @@ describe('select roles factory', () => {
         service: expect.any(String),
         correlationId: expect.any(String),
       })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(saveRoles).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH', 'BOB'])
     })
 
     it('should cope with single role being added', async () => {
@@ -131,7 +131,7 @@ describe('select roles factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addRole.post(req, { redirect, locals })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.ADD_USER_ROLES_ATTEMPT,
         details: '{"roles":["GLOBAL_SEARCH"]}',
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -140,8 +140,8 @@ describe('select roles factory', () => {
         service: expect.any(String),
         correlationId: expect.any(String),
       })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(saveRoles).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(saveRoles).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', ['GLOBAL_SEARCH'])
     })
 
     it('should stash the errors and redirect if no roles selected', async () => {
@@ -155,8 +155,8 @@ describe('select roles factory', () => {
 
       const redirect = jest.fn()
       await addRole.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('addRoleErrors', [{ href: '#roles', text: 'Select at least one role' }])
 
       expect(auditService.sendAuditMessage).not.toHaveBeenCalled()
     })

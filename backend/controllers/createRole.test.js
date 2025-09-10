@@ -18,7 +18,7 @@ describe('create role factory', () => {
 
       const render = jest.fn()
       await createRole.index(req, { render })
-      expect(render).toBeCalledWith('createRole.njk', {
+      expect(render).toHaveBeenCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
         errors: undefined,
         adminTypeValues: [
@@ -35,7 +35,7 @@ describe('create role factory', () => {
 
       const render = jest.fn()
       await createRole.index(req, { render })
-      expect(render).toBeCalledWith('createRole.njk', {
+      expect(render).toHaveBeenCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
         adminTypeValues: [
           { text: 'External Administrators', value: 'EXT_ADM' },
@@ -57,7 +57,7 @@ describe('create role factory', () => {
 
       const render = jest.fn()
       await createRole.index(req, { render })
-      expect(render).toBeCalledWith('createRole.njk', {
+      expect(render).toHaveBeenCalledWith('createRole.njk', {
         roleUrl: '/manage-roles',
         adminTypeValues: [
           { text: 'External Administrators', value: 'EXT_ADM' },
@@ -84,13 +84,13 @@ describe('create role factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
-      expect(createRoleApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toHaveBeenCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
         adminType: ['EXT_ADM', 'DPS_ADM'],
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_ROLE_ATTEMPT,
         details: JSON.stringify({
           role: { roleCode: 'BOB1', roleName: 'role name', adminType: ['EXT_ADM', 'DPS_ADM'] },
@@ -113,8 +113,8 @@ describe('create role factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
-      expect(createRoleApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toHaveBeenCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
         adminType: ['EXT_ADM', 'DPS_ADM'],
@@ -131,8 +131,8 @@ describe('create role factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
-      expect(createRoleApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toHaveBeenCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
         adminType: ['EXT_ADM'],
@@ -149,8 +149,8 @@ describe('create role factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
-      expect(createRoleApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toHaveBeenCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
         adminType: ['EXT_ADM', 'DPS_ADM'],
@@ -167,8 +167,8 @@ describe('create role factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createRole.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-roles/BOB1')
-      expect(createRoleApi).toBeCalledWith(locals, {
+      expect(redirect).toHaveBeenCalledWith('/manage-roles/BOB1')
+      expect(createRoleApi).toHaveBeenCalledWith(locals, {
         roleCode: 'BOB1',
         roleName: 'role name',
         adminType: ['EXT_ADM', 'DPS_ADM'],
@@ -185,14 +185,14 @@ describe('create role factory', () => {
 
       const redirect = jest.fn()
       await createRole.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createRoleErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createRoleErrors', [
         { href: '#roleCode', text: 'Enter a role code' },
         { href: '#roleName', text: 'Enter a role name' },
         { href: '#adminType', text: 'Select an admin type' },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
 
     it('should stash the role and redirect if no code or name entered', async () => {
@@ -205,11 +205,11 @@ describe('create role factory', () => {
 
       const redirect = jest.fn()
       await createRole.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('role', [{ roleCode: '', roleName: '', adminType: [] }])
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('role', [{ roleCode: '', roleName: '', adminType: [] }])
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
 
     it('should fail gracefully if role already exists', async () => {
@@ -228,15 +228,15 @@ describe('create role factory', () => {
         session,
       }
       await createRole.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createRoleErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createRoleErrors', [
         {
           href: '#roleCode',
           text: 'Role code already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_ROLE_FAILURE))
     })
   })
 })

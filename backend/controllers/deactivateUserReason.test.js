@@ -21,7 +21,7 @@ describe('deactivate user reason factory', () => {
       const req = { params: { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' }, flash: jest.fn() }
       const render = jest.fn()
       await deactivateUser.index(req, { render })
-      expect(render).toBeCalledWith('userDeactivate.njk', {
+      expect(render).toHaveBeenCalledWith('userDeactivate.njk', {
         title: 'Deactivate user reason',
         staffUrl: '/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details',
         reason: null,
@@ -35,7 +35,7 @@ describe('deactivate user reason factory', () => {
       }
       const render = jest.fn()
       await deactivateUser.index(req, { render })
-      expect(render).toBeCalledWith('userDeactivate.njk', {
+      expect(render).toHaveBeenCalledWith('userDeactivate.njk', {
         errors: { error: 'some error' },
         title: 'Deactivate user reason',
         reason: null,
@@ -56,10 +56,10 @@ describe('deactivate user reason factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await deactivateUser.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(deactivateUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'Left')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(deactivateUserApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'Left')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.DEACTIVATE_USER_ATTEMPT,
         details: null,
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
@@ -85,8 +85,8 @@ describe('deactivate user reason factory', () => {
       },
       { redirect },
     )
-    expect(redirect).toBeCalledWith('/some-location')
-    expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_ATTEMPT))
-    expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_FAILURE))
+    expect(redirect).toHaveBeenCalledWith('/some-location')
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_ATTEMPT))
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.DEACTIVATE_USER_FAILURE))
   })
 })

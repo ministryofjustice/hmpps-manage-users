@@ -58,11 +58,13 @@ describe('view email domains listing', () => {
       mockEmailDomainListingCall()
       const render = jest.fn()
       await getEmailDomainListing.index(reqHappyPath, { render })
-      expect(render).toBeCalledWith('emailDomainListing.njk', {
+      expect(render).toHaveBeenCalledWith('emailDomainListing.njk', {
         domains: allEmailDomains,
         errors: undefined,
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.LIST_EMAIL_DOMAINS_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.LIST_EMAIL_DOMAINS_ATTEMPT),
+      )
     })
   })
 
@@ -78,7 +80,7 @@ describe('view email domains listing', () => {
       mockNoResultEmailDomainListingCall()
       const render = jest.fn()
       await getEmailDomainListing.index(reqWithError, { render })
-      expect(render).toBeCalledWith('emailDomainListing.njk', {
+      expect(render).toHaveBeenCalledWith('emailDomainListing.njk', {
         domains: noEmailDomains,
         errors: { error: 'No email domains returned' },
       })

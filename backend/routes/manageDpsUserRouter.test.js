@@ -70,7 +70,7 @@ describe('Manage DPS user router', () => {
           { id: 'PVI', name: 'Pentonville' },
         ],
       ])
-      expect(apis.manageUsersApi.syncDpsEmail).toBeCalledWith({ locals: context }, 'joe')
+      expect(apis.manageUsersApi.syncDpsEmail).toHaveBeenCalledWith({ locals: context }, 'joe')
     })
   })
 

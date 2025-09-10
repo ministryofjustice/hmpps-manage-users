@@ -21,7 +21,7 @@ describe('delete email domain factory', () => {
       req.flash('domain')
       const render = jest.fn()
       await emailDomainFactory.index(standardReq, { render })
-      expect(render).toBeCalledWith('deleteEmailDomain.njk', {
+      expect(render).toHaveBeenCalledWith('deleteEmailDomain.njk', {
         domainId: '1234',
         domainName: 'domain1',
         listEmailDomainsUrl: '/email-domains',
@@ -44,8 +44,8 @@ describe('delete email domain factory', () => {
         session,
       }
       await emailDomainFactory.deleteEmailDomain(deleteEmailDomainRequest, { locals, redirect })
-      expect(deleteEmailDomainApi).toBeCalledWith(locals, '1234')
-      expect(redirect).toBeCalledWith('/email-domains')
+      expect(deleteEmailDomainApi).toHaveBeenCalledWith(locals, '1234')
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT,
         details: null,
@@ -80,8 +80,8 @@ describe('delete email domain factory', () => {
         session,
       }
       await emailDomainFactory.deleteEmailDomain(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
+      expect(req.flash).toHaveBeenCalledWith('deleteEmailDomainErrors', [
         { href: '#domainName', text: 'Unauthorized to use the delete email domain functionality' },
       ])
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
@@ -115,8 +115,8 @@ describe('delete email domain factory', () => {
         session,
       }
       await emailDomainFactory.deleteEmailDomain(req, { locals, redirect })
-      expect(redirect).toBeCalledWith('/email-domains')
-      expect(req.flash).toBeCalledWith('deleteEmailDomainErrors', [
+      expect(redirect).toHaveBeenCalledWith('/email-domains')
+      expect(req.flash).toHaveBeenCalledWith('deleteEmailDomainErrors', [
         {
           href: '#domainName',
           text: 'Email domain not found',

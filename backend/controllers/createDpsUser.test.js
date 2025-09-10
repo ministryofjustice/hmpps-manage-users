@@ -25,9 +25,9 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       await createDpsUser.index(req, { render, redirect })
 
-      expect(req.flash).toBeCalledWith('user')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors')
-      expect(render).toBeCalledWith('createDpsUser.njk', {
+      expect(req.flash).toHaveBeenCalledWith('user')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors')
+      expect(render).toHaveBeenCalledWith('createDpsUser.njk', {
         title: 'Create a DPS General user',
         userType: 'DPS_GEN',
         caseloadTitle: 'Select a default caseload',
@@ -50,7 +50,7 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const render = jest.fn()
       await createDpsUser.index(req, { render, redirect })
-      expect(render).toBeCalledWith('createDpsUser.njk', {
+      expect(render).toHaveBeenCalledWith('createDpsUser.njk', {
         errors: { error: 'some error' },
         title: 'Create a DPS General user',
         userType: 'DPS_GEN',
@@ -87,7 +87,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
 
-      expect(createUser).toBeCalledWith(locals, {
+      expect(createUser).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_ADM',
         firstName: 'bob',
@@ -95,11 +95,11 @@ describe('create user factory', () => {
         defaultCaseloadId: 'MDI',
         userType: 'DPS_GEN',
       })
-      expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.CREATE_USER_ATTEMPT,
         details:
           '{"authSource":"nomis","user":{"email":"bob@digital.justice.gov.uk","username":"BOB_ADM","firstName":"bob","lastName":"smith","userType":"DPS_GEN","defaultCaseloadId":"MDI"}}',
@@ -133,7 +133,7 @@ describe('create user factory', () => {
       const render = jest.fn()
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
-      expect(createUser).toBeCalledWith(locals, {
+      expect(createUser).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_OSHEA',
         firstName: "O'Shea",
@@ -141,11 +141,11 @@ describe('create user factory', () => {
         defaultCaseloadId: 'MDI',
         userType: 'DPS_GEN',
       })
-      expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_OSHEA/details',
         email: 'bob@digital.justice.gov.uk',
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
     })
 
     it('should trim fields, create user and redirect', async () => {
@@ -169,7 +169,7 @@ describe('create user factory', () => {
       const locals = jest.fn()
       await createDpsUser.post(req, { render, locals })
 
-      expect(createUser).toBeCalledWith(locals, {
+      expect(createUser).toHaveBeenCalledWith(locals, {
         email: 'bob@digital.justice.gov.uk',
         username: 'BOB_ADM',
         firstName: 'bob',
@@ -177,7 +177,7 @@ describe('create user factory', () => {
         defaultCaseloadId: 'MDI',
         userType: 'DPS_GEN',
       })
-      expect(render).toBeCalledWith('createDpsUserSuccess.njk', {
+      expect(render).toHaveBeenCalledWith('createDpsUserSuccess.njk', {
         detailsLink: '/manage-dps-users/BOB_ADM/details',
         email: 'bob@digital.justice.gov.uk',
       })
@@ -188,8 +188,8 @@ describe('create user factory', () => {
 
       const redirect = jest.fn()
       await createDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#username',
           text: 'Enter a username',
@@ -211,8 +211,8 @@ describe('create user factory', () => {
           text: 'Select a default caseload',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should show error if an email is invalid', async () => {
@@ -233,15 +233,15 @@ describe('create user factory', () => {
 
       const redirect = jest.fn()
       await createDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#email',
           text: 'Enter an email address in the correct format, like first.last@justice.gov.uk',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if a general error occurs', async () => {
@@ -267,14 +267,14 @@ describe('create user factory', () => {
         session,
       }
       await createDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           text: 'something went wrong',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if username already exists', async () => {
@@ -301,15 +301,15 @@ describe('create user factory', () => {
         session,
       }
       await createDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#username',
           text: 'Username already exists',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
 
     it('should fail gracefully if email domain is invalid', async () => {
@@ -336,15 +336,15 @@ describe('create user factory', () => {
         session,
       }
       await createDpsUser.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(req.flash).toBeCalledWith('createDpsUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(req.flash).toHaveBeenCalledWith('createDpsUserErrors', [
         {
           href: '#email',
           text: 'Invalid Email domain',
         },
       ])
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.CREATE_USER_FAILURE))
     })
   })
 })

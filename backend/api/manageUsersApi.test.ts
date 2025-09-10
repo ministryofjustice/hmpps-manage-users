@@ -53,7 +53,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.currentUser(context)
-      expect(client.get).toBeCalledWith(context, '/users/me')
+      expect(client.get).toHaveBeenCalledWith(context, '/users/me')
     })
   })
 
@@ -72,7 +72,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call external user endpoint', async () => {
       await manageUsersApi.getUser(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
-      expect(client.get).toBeCalledWith(context, '/externalusers/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      expect(client.get).toHaveBeenCalledWith(context, '/externalusers/id/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
     })
   })
 
@@ -91,7 +91,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user email endpoint', () => {
       manageUsersApi.getUserEmail(context, { username: 'joe' })
-      expect(client.get).toBeCalledWith(context, '/users/joe/email?unverified=true')
+      expect(client.get).toHaveBeenCalledWith(context, '/users/joe/email?unverified=true')
     })
     it('should cope with not found from endpoint', async () => {
       const error = { ...new Error('User not found'), status: 404 }
@@ -119,7 +119,7 @@ describe('manageUsersApiImport tests', () => {
 
     it('should call create manage user endpoint', async () => {
       await manageUsersApi.amendUserEmail(context, userId, request)
-      expect(client.post).toBeCalledWith(context, '/externalusers/1234/email', request)
+      expect(client.post).toHaveBeenCalledWith(context, '/externalusers/1234/email', request)
     })
   })
 
@@ -137,7 +137,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.createUser(context, request)
     })
     it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/prisonusers', request)
+      expect(client.post).toHaveBeenCalledWith(context, '/prisonusers', request)
     })
   })
 
@@ -147,7 +147,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.getDpsUser(context, 'JOE_GEN')
     })
     it('should call create manage user endpoint', () => {
-      expect(client.get).toBeCalledWith(context, '/prisonusers/JOE_GEN/details')
+      expect(client.get).toHaveBeenCalledWith(context, '/prisonusers/JOE_GEN/details')
     })
   })
 
@@ -161,7 +161,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.createLinkedCentralAdminUser(context, user)
     })
     it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/admin', user)
+      expect(client.post).toHaveBeenCalledWith(context, '/linkedprisonusers/admin', user)
     })
   })
 
@@ -176,7 +176,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.createLinkedLsaUser(context, request)
     })
     it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/lsa', request)
+      expect(client.post).toHaveBeenCalledWith(context, '/linkedprisonusers/lsa', request)
     })
   })
 
@@ -191,7 +191,7 @@ describe('manageUsersApiImport tests', () => {
       manageUsersApi.createLinkedGeneralUser(context, user)
     })
     it('should call create manage user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/linkedprisonusers/general', user)
+      expect(client.post).toHaveBeenCalledWith(context, '/linkedprisonusers/general', user)
     })
   })
 
@@ -202,7 +202,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call create role endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/roles', 'role_code')
+      expect(client.post).toHaveBeenCalledWith(context, '/roles', 'role_code')
     })
   })
 
@@ -231,7 +231,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.getRoleDetails(context, 'role1')
-      expect(client.get).toBeCalledWith(context, '/roles/role1')
+      expect(client.get).toHaveBeenCalledWith(context, '/roles/role1')
     })
   })
 
@@ -249,7 +249,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.getRoles(context, { adminTypes: '' })
-      expect(client.get).toBeCalledWith(context, '/roles?adminTypes=')
+      expect(client.get).toHaveBeenCalledWith(context, '/roles?adminTypes=')
     })
   })
 
@@ -268,7 +268,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.getRoles(context, { adminTypes: 'DPS_ADM' })
-      expect(client.get).toBeCalledWith(context, '/roles?adminTypes=DPS_ADM')
+      expect(client.get).toHaveBeenCalledWith(context, '/roles?adminTypes=DPS_ADM')
     })
   })
 
@@ -287,7 +287,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.getPagedRoles(context, 1, 20, '', '', 'ALL')
-      expect(client.get).toBeCalledWith(context, '/roles/paged?page=1&size=20&roleName=&roleCode=&adminTypes=')
+      expect(client.get).toHaveBeenCalledWith(context, '/roles/paged?page=1&size=20&roleName=&roleCode=&adminTypes=')
     })
   })
 
@@ -306,7 +306,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.getPagedRoles(context, 0, 20, '', '', 'ALL')
-      expect(client.get).toBeCalledWith(context, '/roles/paged?page=0&size=20&roleName=&roleCode=&adminTypes=')
+      expect(client.get).toHaveBeenCalledWith(context, '/roles/paged?page=0&size=20&roleName=&roleCode=&adminTypes=')
     })
   })
 
@@ -320,7 +320,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/roles/role1', request)
+      expect(client.put).toHaveBeenCalledWith(context, '/roles/role1', request)
     })
   })
 
@@ -334,7 +334,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/roles/role1/description', request)
+      expect(client.put).toHaveBeenCalledWith(context, '/roles/role1/description', request)
     })
   })
 
@@ -349,7 +349,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call external user endpoint', () => {
-      expect(client.put).toBeCalledWith(context, '/roles/role1/admintype', request)
+      expect(client.put).toHaveBeenCalledWith(context, '/roles/role1/admintype', request)
     })
   })
 
@@ -380,7 +380,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call nomis user roles endpoint', async () => {
       await manageUsersApi.contextUserRoles(context, 'joe')
-      expect(client.get).toBeCalledWith(context, '/prisonusers/joe/roles')
+      expect(client.get).toHaveBeenCalledWith(context, '/prisonusers/joe/roles')
     })
   })
 
@@ -404,7 +404,7 @@ describe('manageUsersApiImport tests', () => {
         userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
         roles: ['maintain'],
       })
-      expect(client.post).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles', [
+      expect(client.post).toHaveBeenCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles', [
         'maintain',
       ])
     })
@@ -425,7 +425,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call external user roles endpoint', async () => {
       await manageUsersApi.externalUserRoles(context, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
-      expect(client.get).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles')
+      expect(client.get).toHaveBeenCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles')
     })
   })
 
@@ -448,7 +448,10 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.deleteExternalUserRole(context, request)
-      expect(client.del).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles/maintain')
+      expect(client.del).toHaveBeenCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/roles/maintain',
+      )
     })
   })
 
@@ -468,7 +471,10 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.assignableRoles(context, request)
-      expect(client.get).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/assignable-roles')
+      expect(client.get).toHaveBeenCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/assignable-roles',
+      )
     })
   })
 
@@ -487,7 +493,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.groupDetails(context, { group: 'group1' })
-      expect(client.get).toBeCalledWith(context, '/groups/group1')
+      expect(client.get).toHaveBeenCalledWith(context, '/groups/group1')
     })
   })
 
@@ -506,7 +512,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.childGroupDetails(context, { group: 'childgroup1' })
-      expect(client.get).toBeCalledWith(context, '/groups/child/childgroup1')
+      expect(client.get).toHaveBeenCalledWith(context, '/groups/child/childgroup1')
     })
   })
 
@@ -525,7 +531,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call group delete endpoint', async () => {
       await manageUsersApi.deleteGroup(context, 'DEL_1')
-      expect(client.del).toBeCalledWith(context, '/groups/DEL_1')
+      expect(client.del).toHaveBeenCalledWith(context, '/groups/DEL_1')
     })
   })
 
@@ -544,7 +550,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call child group delete endpoint', async () => {
       await manageUsersApi.deleteChildGroup(context, 'DEL_CHILD_GRP')
-      expect(client.del).toBeCalledWith(context, '/groups/child/DEL_CHILD_GRP')
+      expect(client.del).toHaveBeenCalledWith(context, '/groups/child/DEL_CHILD_GRP')
     })
   })
 
@@ -568,7 +574,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.assignableGroups(context)
-      expect(client.get).toBeCalledWith(context, '/externalusers/me/assignable-groups')
+      expect(client.get).toHaveBeenCalledWith(context, '/externalusers/me/assignable-groups')
     })
   })
 
@@ -581,7 +587,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call manger user endpoint and change group name', () => {
-      expect(client.put).toBeCalledWith(context, '/groups/GRP_1', groupName)
+      expect(client.put).toHaveBeenCalledWith(context, '/groups/GRP_1', groupName)
     })
   })
 
@@ -594,7 +600,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('should call manger user endpoint and change child group name', () => {
-      expect(client.put).toBeCalledWith(context, '/groups/child/CHILD_GRP_1', groupName)
+      expect(client.put).toHaveBeenCalledWith(context, '/groups/child/CHILD_GRP_1', groupName)
     })
   })
 
@@ -617,7 +623,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call mange users api endpoint', async () => {
       await manageUsersApi.addUserGroup(context, request)
-      expect(client.put).toBeCalledWith(
+      expect(client.put).toHaveBeenCalledWith(
         context,
         '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
         undefined,
@@ -639,7 +645,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call manage user api groups endpoint', async () => {
       await manageUsersApi.userGroups(context, { userId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a' })
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups?children=false',
       )
@@ -663,7 +669,10 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call mange users api endpoint', async () => {
       await manageUsersApi.removeUserGroup(context, request)
-      expect(client.del).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain')
+      expect(client.del).toHaveBeenCalledWith(
+        context,
+        '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/groups/maintain',
+      )
     })
   })
 
@@ -683,7 +692,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.enableExternalUser(context, request)
-      expect(client.put).toBeCalledWith(
+      expect(client.put).toHaveBeenCalledWith(
         context,
         '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/enable',
         undefined,
@@ -706,7 +715,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.disableExternalUser(context, request)
-      expect(client.put).toBeCalledWith(
+      expect(client.put).toHaveBeenCalledWith(
         context,
         '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable',
         undefined,
@@ -733,7 +742,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.deactivateExternalUser(context, request)
-      expect(client.put).toBeCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable', {
+      expect(client.put).toHaveBeenCalledWith(context, '/externalusers/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/disable', {
         reason: 'user suspended',
       })
     })
@@ -758,7 +767,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.userSearch(context, userSearch)
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         "/externalusers/search?name=joe'fred%40bananas%25.com&groups=&roles=&status=ALL&page=&size=",
       )
@@ -780,7 +789,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.currentRoles(context)
-      expect(client.get).toBeCalledWith(context, '/users/me/roles')
+      expect(client.get).toHaveBeenCalledWith(context, '/users/me/roles')
     })
   })
 
@@ -791,7 +800,7 @@ describe('manageUsersApiImport tests', () => {
 
     it('should call user endpoint', async () => {
       await manageUsersApi.changeDpsEmail(context, 'joe', 'joe@digital.justice.gov.uk')
-      expect(client.post).toBeCalledWith(context, '/prisonusers/joe/email', 'joe@digital.justice.gov.uk')
+      expect(client.post).toHaveBeenCalledWith(context, '/prisonusers/joe/email', 'joe@digital.justice.gov.uk')
     })
   })
 
@@ -809,7 +818,7 @@ describe('manageUsersApiImport tests', () => {
 
     it('should call external user endpoint', async () => {
       await manageUsersApi.createExternalUser(context, request)
-      expect(client.post).toBeCalledWith(context, '/externalusers/create', request)
+      expect(client.post).toHaveBeenCalledWith(context, '/externalusers/create', request)
     })
   })
 
@@ -829,7 +838,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.enablePrisonUser(context, username)
-      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/enable-user`, undefined)
+      expect(client.put).toHaveBeenCalledWith(context, `/prisonusers/${username}/enable-user`, undefined)
     })
   })
 
@@ -849,7 +858,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call user endpoint', async () => {
       await manageUsersApi.disablePrisonUser(context, username)
-      expect(client.put).toBeCalledWith(context, `/prisonusers/${username}/disable-user`, undefined)
+      expect(client.put).toHaveBeenCalledWith(context, `/prisonusers/${username}/disable-user`, undefined)
     })
   })
 
@@ -865,7 +874,7 @@ describe('manageUsersApiImport tests', () => {
     it('will call /prisonusers/reference-data/caseloads endpoint', () => {
       manageUsersApi.getCaseloads(context)
 
-      expect(client.get).toBeCalledWith(context, '/prisonusers/reference-data/caseloads')
+      expect(client.get).toHaveBeenCalledWith(context, '/prisonusers/reference-data/caseloads')
     })
     it('will return the caseloads', () => {
       const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
@@ -887,7 +896,7 @@ describe('manageUsersApiImport tests', () => {
     it('will call /prisonusers/{username}/caseloads endpoint', () => {
       manageUsersApi.getUserCaseloads(context, username)
 
-      expect(client.get).toBeCalledWith(context, `/prisonusers/${username}/caseloads`)
+      expect(client.get).toHaveBeenCalledWith(context, `/prisonusers/${username}/caseloads`)
     })
 
     it('will return the caseloads', () => {
@@ -912,7 +921,7 @@ describe('manageUsersApiImport tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call user endpoint', () => {
-      expect(client.post).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads', ['TEST_CASELOAD'])
+      expect(client.post).toHaveBeenCalledWith(context, '/prisonusers/TEST_USER/caseloads', ['TEST_CASELOAD'])
     })
   })
 
@@ -931,7 +940,7 @@ describe('manageUsersApiImport tests', () => {
       expect(actual).toEqual(errorResponse)
     })
     it('should call remove user caseload endpoint', () => {
-      expect(client.del).toBeCalledWith(context, '/prisonusers/TEST_USER/caseloads/TEST_CASELOAD')
+      expect(client.del).toHaveBeenCalledWith(context, '/prisonusers/TEST_USER/caseloads/TEST_CASELOAD')
     })
   })
 
@@ -1005,7 +1014,7 @@ describe('manageUsersApiImport tests', () => {
         inclusiveRoles: true,
         showOnlyLSAs: true,
       })
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/search?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true&page=3&size=30',
       )
@@ -1013,7 +1022,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call get users endpoint with default parameters', () => {
       const actual = manageUsersApi.dpsUserSearch(context, {})
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/search?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=&page=0&size=20',
       )
@@ -1062,7 +1071,7 @@ describe('manageUsersApiImport tests', () => {
         inclusiveRoles: true,
         showOnlyLSAs: true,
       })
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/download?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
       )
@@ -1070,7 +1079,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call get users endpoint with default parameters', () => {
       const actual = manageUsersApi.downloadUserSearch(context, {})
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/download?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
       )
@@ -1119,7 +1128,7 @@ describe('manageUsersApiImport tests', () => {
         inclusiveRoles: true,
         showOnlyLSAs: true,
       })
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/download/admins?nameFilter=RAJ&accessRoles=OMIC_ADMIN&accessRoles=OMIC_USER&status=ACTIVE&caseload=MDI&activeCaseload=BXI&inclusiveRoles=true&showOnlyLSAs=true',
       )
@@ -1127,7 +1136,7 @@ describe('manageUsersApiImport tests', () => {
     })
     it('should call get users endpoint with default parameters', () => {
       const actual = manageUsersApi.downloadLsaSearch(context, {})
-      expect(client.get).toBeCalledWith(
+      expect(client.get).toHaveBeenCalledWith(
         context,
         '/prisonusers/download/admins?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
       )

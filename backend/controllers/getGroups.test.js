@@ -19,13 +19,13 @@ describe('select groups factory', () => {
       const req = { flash: jest.fn(), session: { userDetails: { username: 'username' } } }
       const render = jest.fn()
       await groups.index(req, { render })
-      expect(req.flash).toBeCalledWith('groupError')
-      expect(render).toBeCalledWith('groups.njk', {
+      expect(req.flash).toHaveBeenCalledWith('groupError')
+      expect(render).toHaveBeenCalledWith('groups.njk', {
         groupValues: [{ text: 'name', value: 'code' }],
         maintainUrl: '/manage-groups',
         errors: undefined,
       })
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.LIST_GROUPS_ATTEMPT))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(auditAction(ManageUsersEvent.LIST_GROUPS_ATTEMPT))
     })
 
     it('should call groups render and show error', async () => {
@@ -37,8 +37,8 @@ describe('select groups factory', () => {
       }
       const render = jest.fn()
       await groups.index(req, { render })
-      expect(req.flash).toBeCalledWith('groupError')
-      expect(render).toBeCalledWith('groups.njk', {
+      expect(req.flash).toHaveBeenCalledWith('groupError')
+      expect(render).toHaveBeenCalledWith('groups.njk', {
         groupValues: [{ text: 'name', value: 'code' }],
         maintainUrl: '/manage-groups',
         errors: { error: 'some error' },
@@ -50,14 +50,14 @@ describe('select groups factory', () => {
     it('should redirect if group code valid', async () => {
       const redirect = jest.fn()
       await groups.search({ body: { groupCode: 'abcde' } }, { redirect })
-      expect(redirect).toBeCalledWith('/manage-groups/abcde')
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/abcde')
     })
     it('should flash and redirect if group code invalid', async () => {
       const redirect = jest.fn()
       const flash = jest.fn()
       await groups.search({ body: { groupCode: '' }, flash }, { redirect })
-      expect(flash).toBeCalledWith('groupError', [{ href: '#groupCode', text: 'Enter a group code' }])
-      expect(redirect).toBeCalledWith('/manage-groups/')
+      expect(flash).toHaveBeenCalledWith('groupError', [{ href: '#groupCode', text: 'Enter a group code' }])
+      expect(redirect).toHaveBeenCalledWith('/manage-groups/')
     })
   })
 })

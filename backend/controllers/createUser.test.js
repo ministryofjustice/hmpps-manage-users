@@ -13,7 +13,7 @@ describe('create user factory', () => {
       const req = { params: {}, flash: jest.fn() }
       const render = jest.fn()
       await createUserOptions.index(req, { render })
-      expect(render).toBeCalledWith('createUser.njk', {
+      expect(render).toHaveBeenCalledWith('createUser.njk', {
         userTypeValues,
         errors: undefined,
       })
@@ -23,7 +23,7 @@ describe('create user factory', () => {
       const req = { params: {}, flash: jest.fn().mockReturnValue({ error: 'some error' }) }
       const render = jest.fn()
       await createUserOptions.index(req, { render })
-      expect(render).toBeCalledWith('createUser.njk', {
+      expect(render).toHaveBeenCalledWith('createUser.njk', {
         errors: { error: 'some error' },
         userTypeValues,
       })
@@ -43,16 +43,16 @@ describe('create user factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await createUserOptions.post(req, { render, locals, redirect })
-      expect(req.flash).toBeCalledWith('user', [{ userType: 'DPS_GEN' }])
-      expect(redirect).toBeCalledWith('/create-user-options')
+      expect(req.flash).toHaveBeenCalledWith('user', [{ userType: 'DPS_GEN' }])
+      expect(redirect).toHaveBeenCalledWith('/create-user-options')
     })
 
     it('should stash the error and redirect if no usertype selected', async () => {
       const req = { params: {}, body: {}, flash: jest.fn(), originalUrl: '/original' }
       const redirect = jest.fn()
       await createUserOptions.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('createUserErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('createUserErrors', [
         {
           href: '#userType',
           text: 'Select a user type',

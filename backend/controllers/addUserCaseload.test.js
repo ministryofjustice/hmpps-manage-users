@@ -29,7 +29,7 @@ describe('select caseloads factory', () => {
 
       const render = jest.fn()
       await addUserCaseload.index(req, { render })
-      expect(render).toBeCalledWith('addUserCaseload.njk', {
+      expect(render).toHaveBeenCalledWith('addUserCaseload.njk', {
         errors: undefined,
         caseloadDropdownValues: [
           { text: 'Moorland (HMP)', value: 'MDI' },
@@ -52,7 +52,7 @@ describe('select caseloads factory', () => {
 
       const render = jest.fn()
       await addUserCaseload.index(req, { render })
-      expect(render).toBeCalledWith('addUserCaseload.njk', {
+      expect(render).toHaveBeenCalledWith('addUserCaseload.njk', {
         errors: { error: 'some error' },
         caseloadDropdownValues: [],
         staff: { username: 'BOB', firstName: 'Billy', lastName: 'Bob', name: 'Billy Bob' },
@@ -76,11 +76,11 @@ describe('select caseloads factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addUserCaseload.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
-      expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI', 'PVI'])
+      expect(redirect).toHaveBeenCalledWith('/manage-dps-users/TEST_USER/details')
+      expect(saveCaseloads).toHaveBeenCalledWith(locals, 'TEST_USER', ['LEI', 'PVI'])
 
       // audit check
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.ADD_USER_CASELOAD_ATTEMPT,
         correlationId: expect.any(String),
         subjectId: 'TEST_USER',
@@ -102,11 +102,11 @@ describe('select caseloads factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await addUserCaseload.post(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
-      expect(saveCaseloads).toBeCalledWith(locals, 'TEST_USER', ['LEI'])
+      expect(redirect).toHaveBeenCalledWith('/manage-dps-users/TEST_USER/details')
+      expect(saveCaseloads).toHaveBeenCalledWith(locals, 'TEST_USER', ['LEI'])
 
       // audit check
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.ADD_USER_CASELOAD_ATTEMPT,
         correlationId: expect.any(String),
         subjectId: 'TEST_USER',
@@ -128,8 +128,8 @@ describe('select caseloads factory', () => {
 
       const redirect = jest.fn()
       await addUserCaseload.post(req, { redirect })
-      expect(redirect).toBeCalledWith('/original')
-      expect(req.flash).toBeCalledWith('addCaseloadErrors', [
+      expect(redirect).toHaveBeenCalledWith('/original')
+      expect(req.flash).toHaveBeenCalledWith('addCaseloadErrors', [
         { href: '#caseloads', text: 'Select at least one caseload' },
       ])
       expect(auditService.sendAuditMessage).not.toHaveBeenCalled()

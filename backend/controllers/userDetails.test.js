@@ -107,7 +107,7 @@ describe('user detail factory', () => {
     it('should call userDetail render', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', expectedUserDetails)
+      expect(render).toHaveBeenCalledWith('userDetails.njk', expectedUserDetails)
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
@@ -118,7 +118,7 @@ describe('user detail factory', () => {
         groupsStub,
       ])
       await userDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         staff: { ...expectedUserDetails.staff, username: 'BOB@DIGITAL.JUSTICE.GOV.UK' },
         showUsername: false,
@@ -129,7 +129,7 @@ describe('user detail factory', () => {
     it('should order and set caseloads, if returned', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub, caseloadsStub])
       await userDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         caseloads: [
           {
@@ -152,7 +152,7 @@ describe('user detail factory', () => {
         groupsStub,
       ])
       await userDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         staff: { ...expectedUserDetails.staff, emailToVerify: 'new.bob@digital.justice.gov.uk', verified: false },
         displayEmailChangeInProgress: true,
@@ -170,7 +170,7 @@ describe('user detail factory', () => {
         ],
       ])
       await userDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         groups: [
           { groupName: 'groupName2', groupCode: 'groupCode2', showRemove: true },
@@ -183,7 +183,7 @@ describe('user detail factory', () => {
     it('should pass through hasMaintainDpsUsersAdmin to userDetail render', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(req, { render, locals: { user: { maintainAccessAdmin: true } } })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         hasMaintainDpsUsersAdmin: true,
       })
@@ -193,7 +193,7 @@ describe('user detail factory', () => {
     it('should pass through show fields if not set', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await dpsUserDetails.index(req, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         searchTitle: 'Search for a DPS user',
         searchUrl: '/search-with-filter-dps-users',
@@ -214,7 +214,7 @@ describe('user detail factory', () => {
       }
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(searchResultsReq, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         searchResultsUrl: '/some-url',
       })
@@ -225,7 +225,7 @@ describe('user detail factory', () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       const locals = { user: { maintainAuthUsers: true } }
       await userDetails.index(req, { render: jest.fn(), locals })
-      expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
+      expect(getUserRolesAndGroupsApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', false, true)
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
@@ -233,14 +233,14 @@ describe('user detail factory', () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       const locals = { user: { maintainAccessAdmin: true } }
       await userDetails.index(req, { render: jest.fn(), locals })
-      expect(getUserRolesAndGroupsApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
+      expect(getUserRolesAndGroupsApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', true, false)
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(expectedViewUserAttemptAuditMessage)
     })
 
     it('uses default search results url when nothing provided through session', async () => {
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index({ ...req, session: { userDetails: { username: 'username' } } }, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         searchResultsUrl: defaultSearchUrl,
       })
@@ -285,8 +285,8 @@ describe('user detail factory', () => {
       const locals = jest.fn()
       await userDetails.removeRole(reqWithRoles, { redirect, locals })
 
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(removeUserRoleApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(removeUserRoleApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'role1')
 
       // Check audit message
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
@@ -312,7 +312,7 @@ describe('user detail factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
+      expect(redirect).toHaveBeenCalledWith('/some-location')
 
       // Check audit message
       expect(auditService.sendAuditMessage).toHaveBeenLastCalledWith({
@@ -337,8 +337,8 @@ describe('user detail factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.removeGroup(reqWithGroup, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(removeGroupApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(removeGroupApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a', 'group1')
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.REMOVE_USER_GROUP_ATTEMPT,
@@ -363,7 +363,7 @@ describe('user detail factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
+      expect(redirect).toHaveBeenCalledWith('/some-location')
     })
 
     it('should fail gracefully if group Manager tries to delete users last group', async () => {
@@ -379,7 +379,7 @@ describe('user detail factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith(expect.stringMatching(/\/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a\/details$/))
+      expect(redirect).toHaveBeenCalledWith(expect.stringMatching(/\/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a\/details$/))
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
         auditAction(ManageUsersEvent.REMOVE_USER_GROUP_ATTEMPT),
@@ -396,7 +396,7 @@ describe('user detail factory', () => {
       }
       getUserRolesAndGroupsApi.mockResolvedValue([userStub, rolesStub, groupsStub])
       await userDetails.index(reqWithError, { render })
-      expect(render).toBeCalledWith('userDetails.njk', {
+      expect(render).toHaveBeenCalledWith('userDetails.njk', {
         ...expectedUserDetails,
         errors: { error: 'some error' },
       })
@@ -412,9 +412,9 @@ describe('user detail factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await dpsUserDetails.removeUserCaseload(reqWithCaseload, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-dps-users/TEST_USER/details')
-      expect(removeUserCaseloadApi).toBeCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(redirect).toHaveBeenCalledWith('/manage-dps-users/TEST_USER/details')
+      expect(removeUserCaseloadApi).toHaveBeenCalledWith(locals, 'TEST_USER', 'TEST_CASELOAD')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT,
         correlationId: expect.stringMatching(UUID_REGEX),
         details: '{"caseload":"TEST_CASELOAD"}',
@@ -437,9 +437,13 @@ describe('user detail factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/some-location')
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE))
+      expect(redirect).toHaveBeenCalledWith('/some-location')
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE),
+      )
     })
 
     it('should refresh user details if user does not have caseload', async () => {
@@ -453,10 +457,14 @@ describe('user detail factory', () => {
         },
         { redirect },
       )
-      expect(redirect).toBeCalledWith('/manage-external-users/TEST_USER/details')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/TEST_USER/details')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT))
-      expect(auditService.sendAuditMessage).toBeCalledWith(auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE))
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.REMOVE_USER_CASELOAD_FAILURE),
+      )
     })
   })
 
@@ -465,8 +473,8 @@ describe('user detail factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.enableUser(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(enableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(enableUserApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.ENABLE_USER_ATTEMPT,
@@ -485,10 +493,10 @@ describe('user detail factory', () => {
       const redirect = jest.fn()
       const locals = jest.fn()
       await userDetails.disableUser(req, { redirect, locals })
-      expect(redirect).toBeCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
-      expect(disableUserApi).toBeCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
+      expect(redirect).toHaveBeenCalledWith('/manage-external-users/00000000-aaaa-0000-aaaa-0a0a0a0a0a0a/details')
+      expect(disableUserApi).toHaveBeenCalledWith(locals, '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a')
 
-      expect(auditService.sendAuditMessage).toBeCalledWith({
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.DISABLE_USER_ATTEMPT,
         correlationId: expect.stringMatching(UUID_REGEX),
         subjectId: '00000000-aaaa-0000-aaaa-0a0a0a0a0a0a',
