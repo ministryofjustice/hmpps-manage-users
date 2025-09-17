@@ -1,0 +1,26 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {% set bannerHtml %}
+        <h3 class="govuk-notification-banner__heading">
+          You are not authorised to remove this role.
+        </h3>
+        <p data-qa="removal-message">{{ removalMessage | safe }}</p>
+        <p>Select Continue to return to the user details page</p>
+      {% endset %}
+      <h1 class="govuk-heading-l">Request role removal</h1>
+      {{ govukNotificationBanner({
+        html: bannerHtml
+      }) }}
+      {{ govukButton({
+        text: "Continue",
+        attributes: { 'data-qa': 'continue-button' },
+        href: staffDetailsUrl
+      }) }}
+    </div>
+  </div>
+{% endblock %}

@@ -4,8 +4,10 @@ const ChangeEmailSuccessPage = require('../pages/changeEmailSuccessPage')
 const UserAddRolePage = require('../pages/userAddRolePage')
 const UserAddCaseloadPage = require('../pages/userAddCaseloadPage')
 const AuthErrorPage = require('../pages/authErrorPage')
+const RequestRoleRemovalPage = require('../pages/typescript/requestRoleRemovalPage').default
 
 const { editUser, goToSearchPage } = require('../support/dpsuser.helpers')
+const Page = require('../pages/typescript/page').default
 
 context('DPS user manage functionality', () => {
   before(() => {
@@ -81,7 +83,7 @@ context('DPS user manage functionality', () => {
     const results = goToSearchPage({})
 
     cy.task('stubDpsUserDetailsWithOutEmail')
-    cy.task('stubDpsUserGetRoles')
+    cy.task('stubDpsUserGetRoles', {})
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { verified: false })
 
@@ -118,7 +120,7 @@ context('DPS user manage functionality', () => {
     const results = goToSearchPage({})
 
     cy.task('stubDpsUserDetails', {})
-    cy.task('stubDpsUserGetRoles')
+    cy.task('stubDpsUserGetRoles', {})
     cy.task('stubManageUserGetRoles', {})
     cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: false })
 
@@ -260,7 +262,7 @@ context('DPS user manage functionality', () => {
       const results = goToSearchPage({})
 
       cy.task('stubDpsUserDetails', {})
-      cy.task('stubDpsUserGetRoles')
+      cy.task('stubDpsUserGetRoles', {})
       cy.task('stubBannerNoMessage')
       cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
@@ -301,7 +303,7 @@ context('DPS user manage functionality', () => {
       const results = goToSearchPage({})
 
       cy.task('stubDpsUserDetails', {})
-      cy.task('stubDpsUserGetRoles')
+      cy.task('stubDpsUserGetRoles', {})
       cy.task('stubBannerNoMessage')
       cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
@@ -324,7 +326,7 @@ context('DPS user manage functionality', () => {
       const results = goToSearchPage({ isOauthAdmin: true })
 
       cy.task('stubDpsUserDetails', {})
-      cy.task('stubDpsUserGetRoles')
+      cy.task('stubDpsUserGetRoles', {})
       cy.task('stubBannerNoMessage')
       cy.task('stubEmail', { email: 'ITAG_USER@gov.uk', verified: true })
 
@@ -363,6 +365,103 @@ context('DPS user manage functionality', () => {
         failOnStatusCode: false,
       }).then((response) => {
         expect(response.status).to.be.equal(500)
+      })
+    })
+  })
+  describe('Managing a user with roles that are restricted to be removed', () => {
+    describe('As a Local Admin', () => {
+      it('Should show request removal link for Central Admin managed role', () => {
+        const userPage = editUser({ isAdmin: false, loggedInUserIsLocalAdmin: true })
+        userPage.requestRoleRemoval('ANOTHER_GENERAL_ROLE').should('exist')
+        userPage.removeRole('ANOTHER_GENERAL_ROLE').should('not.exist')
+      })
+      it('Should show request removal link for IMS managed role', () => {
+        const userPage = editUser({
+          isAdmin: false,
+          userRoles: [
+            {
+              code: 'IMS_USER',
+              name: 'IMS User',
+              adminRoleOnly: false,
+            },
+          ],
+          loggedInUserIsLocalAdmin: true,
+        })
+        userPage.requestRoleRemoval('IMS_USER').should('exist')
+        userPage.removeRole('IMS_USER').should('not.exist')
+      })
+      it('Clicking request removal link for Central Admin managed role shows Central Admin removal message', () => {
+        const userPage = editUser({ isAdmin: false, loggedInUserIsLocalAdmin: true })
+        userPage.requestRoleRemoval('ANOTHER_GENERAL_ROLE').click()
+        const requestRemovalPage = Page.verifyOnPage(RequestRoleRemovalPage)
+        requestRemovalPage
+          .verifyRemovalMessage(
+            'This role is centrally managed, please raise a Service Now ticket to get this role removed.',
+          )
+          .clickContinue()
+        UserPage.verifyOnPage('Itag User')
+      })
+      it('Clicking request removal link for IMS managed role shows IMS removal message', () => {
+        const userPage = editUser({
+          isAdmin: false,
+          userRoles: [
+            {
+              code: 'IMS_USER',
+              name: 'IMS User',
+              adminRoleOnly: false,
+            },
+          ],
+          loggedInUserIsLocalAdmin: true,
+        })
+        userPage.requestRoleRemoval('IMS_USER').click()
+        const requestRemovalPage = Page.verifyOnPage(RequestRoleRemovalPage)
+        requestRemovalPage
+          .verifyRemovalMessage(
+            'If you require a users access to be removed from the Intelligence Management Service (IMS), the Head of Security (Prison roles) or Head of Unit (HQ roles) must contact nisst@justice.gov.uk directly.',
+          )
+          .clickContinue()
+        UserPage.verifyOnPage('Itag User')
+      })
+    })
+    describe('As a Central Admin', () => {
+      it('Should not show request removal link for Central Admin managed role', () => {
+        const userPage = editUser({ isAdmin: true })
+        userPage.requestRoleRemoval('ANOTHER_GENERAL_ROLE').should('not.exist')
+        userPage.removeRole('ANOTHER_GENERAL_ROLE').should('exist')
+      })
+      it('Should show request removal link for IMS managed role', () => {
+        const userPage = editUser({
+          isAdmin: false,
+          userRoles: [
+            {
+              code: 'IMS_USER',
+              name: 'IMS User',
+              adminRoleOnly: false,
+            },
+          ],
+        })
+        userPage.requestRoleRemoval('IMS_USER').should('exist')
+        userPage.removeRole('IMS_USER').should('not.exist')
+      })
+      it('Clicking request removal link for IMS managed role shows IMS removal message', () => {
+        const userPage = editUser({
+          isAdmin: false,
+          userRoles: [
+            {
+              code: 'IMS_USER',
+              name: 'IMS User',
+              adminRoleOnly: false,
+            },
+          ],
+        })
+        userPage.requestRoleRemoval('IMS_USER').click()
+        const requestRemovalPage = Page.verifyOnPage(RequestRoleRemovalPage)
+        requestRemovalPage
+          .verifyRemovalMessage(
+            'If you require a users access to be removed from the Intelligence Management Service (IMS), the Head of Security (Prison roles) or Head of Unit (HQ roles) must contact nisst@justice.gov.uk directly.',
+          )
+          .clickContinue()
+        UserPage.verifyOnPage('Itag User')
       })
     })
   })

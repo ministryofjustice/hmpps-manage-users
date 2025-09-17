@@ -9,6 +9,7 @@ export const goToSearchPage = ({
   size = 10,
   roleCodes = null,
   userCaseloads = null,
+  isLocalAdmin = false,
 }) => {
   const basicRoleCode = isAdmin
     ? [{ roleCode: 'MAINTAIN_ACCESS_ROLES_ADMIN' }]
@@ -21,7 +22,7 @@ export const goToSearchPage = ({
     userRoleCodes = roleCodes == null ? basicRoleCode : roleCodes
   }
   cy.task('stubBannerNoMessage')
-  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads })
+  cy.task('stubSignIn', { roles: userRoleCodes, userCaseloads, isLocalAdmin })
   cy.signIn()
   const stubRoles = isAdmin ? 'stubManageUserGetAdminRoles' : 'stubManageUserGetRoles'
 
@@ -88,13 +89,29 @@ export const editUser = ({
   userCaseloads = null,
   accountStatus,
   administratorOfUserGroups = null,
+  loggedInUserIsLocalAdmin = false,
+  userRoles = [
+    {
+      code: 'MAINTAIN_ACCESS_ROLES',
+      name: 'Maintain Roles',
+      adminRoleOnly: false,
+    },
+    {
+      code: 'ANOTHER_GENERAL_ROLE',
+      name: 'Another general role',
+      adminRoleOnly: false,
+    },
+  ],
 }) => {
   cy.task('stubDpsUserDetails', { accountStatus, active, enabled, administratorOfUserGroups })
 
-  cy.task('stubDpsUserGetRoles', activeCaseload)
+  cy.task('stubDpsUserGetRoles', { activeCaseload, dpsRoles: userRoles })
   cy.task('stubBannerNoMessage')
   cy.task('stubEmail', { email: 'ITAG_USER@gov.uk' })
 
-  goToSearchPage({ isAdmin, roleCodes, userCaseloads }).filterUser('ITAG_USER5').manageLinkForUser('ITAG_USER5').click()
+  goToSearchPage({ isAdmin, roleCodes, userCaseloads, isLocalAdmin: loggedInUserIsLocalAdmin })
+    .filterUser('ITAG_USER5')
+    .manageLinkForUser('ITAG_USER5')
+    .click()
   return UserPage.verifyOnPage('Itag User')
 }
