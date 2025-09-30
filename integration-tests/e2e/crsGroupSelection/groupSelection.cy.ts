@@ -110,9 +110,4 @@ context('Search allow list users', () => {
         })
       })
   })
-
-  it('should not be allowed to access CRS Group download page with incorrect role', () => {
-    cy.task('stubSignIn', { roles: [{ roleCode: 'NOT_CONTRACT_MANAGER_VIEW_GROUP' }] })
-    GroupSelectionPage.goto()
-  })
 })

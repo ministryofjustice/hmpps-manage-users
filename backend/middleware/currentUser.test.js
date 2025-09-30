@@ -283,6 +283,28 @@ describe('Current user', () => {
     })
   })
 
+  it('should set role CRS Group users download', async () => {
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }])
+    const controller = currentUser({ manageUsersApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainOAuthAdmin: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: false,
+      manageUserAllowList: false,
+      viewAdministrableUserRoles: false,
+      crsGroupUsersDownload: true,
+    })
+  })
+
   it('should set all roles', async () => {
     manageUsersApi.currentRoles.mockReturnValue([
       { roleCode: 'FRED' },
