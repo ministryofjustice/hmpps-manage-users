@@ -1,6 +1,12 @@
 import config from '../config'
 import RestClient from './restClient'
-import { UserAllowlistAddRequest, UserAllowlistDetail, UserAllowlistPatchRequest } from '../@types/manageUsersApi'
+import {
+  ExternalUser,
+  UserAllowlistAddRequest,
+  UserAllowlistDetail,
+  UserAllowlistPatchRequest,
+  UserGroup,
+} from '../@types/manageUsersApi'
 import { PagedList } from '../interfaces/pagedList'
 
 interface AdminType {
@@ -21,6 +27,15 @@ export interface UserAllowlistQuery {
   page: number
 }
 
+export interface ExternalUsersSearchQuery {
+  name?: string
+  role?: string[]
+  group?: string[]
+  status?: string
+  size: number
+  page: number
+}
+
 class ManageUsersApiClient extends RestClient {
   constructor(token: string) {
     super('Manage Users API', config.apis.manageUsers, token)
@@ -30,6 +45,19 @@ class ManageUsersApiClient extends RestClient {
     return this.get({
       path: `/roles/${roleCode}`,
     }) as Promise<RoleDetails>
+  }
+
+  async getAssignableGroups(): Promise<UserGroup[]> {
+    return this.get<UserGroup[]>({
+      path: '/externalusers/me/assignable-groups',
+    })
+  }
+
+  async externalUsersSearch(query: ExternalUsersSearchQuery): Promise<PagedList<ExternalUser>> {
+    return this.get<PagedList<ExternalUser>>({
+      path: '/externalusers/search',
+      query,
+    })
   }
 
   async addAllowlistUser(request: UserAllowlistAddRequest): Promise<Response> {

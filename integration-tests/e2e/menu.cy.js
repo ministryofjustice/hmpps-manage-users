@@ -40,4 +40,19 @@ context('Menu tiles', () => {
     cy.signIn()
     MenuPage.verifyOnPage().addUserToAllowListTile().should('not.exist')
   })
+  it('Shows CRS Group member download tile for authorised user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.viewCRSGroupUserDownload().should('exist')
+    menuPage.viewCRSGroupUserDownloadLink().should('contain.text', 'Download CRS Group members')
+    menuPage
+      .viewCRSGroupUserDownloadDescription()
+      .should('contain.text', 'Select CRS Group and download list of members')
+  })
+  it('Does not show CRS Group member download tile for unauthorised user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+    MenuPage.verifyOnPage().viewCRSGroupUserDownload().should('not.exist')
+  })
 })

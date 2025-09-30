@@ -24,6 +24,7 @@ module.exports =
         manageDPSUserAccount: hasRole(roles, 'MANAGE_NOMIS_USER_ACCOUNT'),
         manageEmailDomains: hasRole(roles, 'MAINTAIN_EMAIL_DOMAINS'),
         manageUserAllowList: hasRole(roles, 'MANAGE_USER_ALLOW_LIST'),
+        crsGroupUsersDownload: hasRole(roles, 'CONTRACT_MANAGER_VIEW_GROUP'),
       }
     }
 

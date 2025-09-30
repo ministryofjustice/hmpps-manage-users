@@ -16,6 +16,7 @@ const manageEmailDomainsRouter = require('./routes/manageEmailDomainsRouter')
 const createEmailDomainsRouter = require('./routes/createEmailDomainRouter')
 const deleteEmailDomainsRouter = require('./routes/deleteEmailDomainRouter')
 const userAllowListRouter = require('./routes/userAllowList').default
+const crsGroupSelectionRouter = require('./routes/crsGroupSelection').default
 const currentUser = require('./middleware/currentUser')
 const featureSwitches = require('./middleware/featureSwitches')
 const config = require('./config').default
@@ -43,6 +44,7 @@ const configureRoutes = ({ manageUsersApi }) => {
   router.use('/delete-email-domain?id=:domainId&name=:domainName', deleteEmailDomainsRouter({ manageUsersApi }))
   router.use('/delete-email-domain', deleteEmailDomainsRouter({ manageUsersApi }))
   router.use(userAllowListRouter())
+  router.use(crsGroupSelectionRouter())
 
   return router
 }
