@@ -1,0 +1,82 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+
+{% set title = "CRS Group Selection" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: "/" },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { "data-qa-errors": true }
+    }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">{{ title }}</h1>
+
+  {% if group %}
+    <h2 class="govuk-heading-m" data-qa="selected-group-header">Group Selected</h2>
+    <p class="govuk-body" data-qa="selected-group-value">{{ group }}</p>
+
+    <div id="downloadInProgress" class='govuk-!-display-none'>
+      <div class="loading-spinner-wrapper">
+        <div class="loading-spinner"></div>
+        Download in progress...
+      </div>
+    </div>
+    {{ govukErrorMessage({
+      id: "downloadError",
+      classes: "govuk-!-display-none",
+      text: "There was a problem downloading"
+    }) }}
+    <form id='downloadCRSGroups' method='GET' action='{{ downloadUrl }}'>
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Download",
+          type: "submit",
+          preventDoubleClick: true,
+          classes: "govuk-button downloadButton",
+          attributes: { "data-qa": "download-button" }
+        }) }}
+        <a class="govuk-link" data-qa="change-group-link" href="{{ selfUrl }}">Change group</a>
+      </div>
+    </form>
+
+  {% else %}
+
+    <form method="GET" action="{{ selfUrl }}">
+
+      {{ govukSelect({
+        name: "group",
+        attributes: { "data-qa": "crs-group-selector" },
+        label: {
+          text: "CRS Group"
+        },
+        items: crsGroups
+      }) }}
+
+      {{ govukButton({
+        text: "Continue",
+        type: "submit",
+        attributes: { "data-qa": "continue-button" }
+      }) }}
+    </form>
+  {% endif %}
+{% endblock %}
+
+{% block pageScripts %}
+  <script type="module" src="/js/download.js"></script>
+{% endblock %}

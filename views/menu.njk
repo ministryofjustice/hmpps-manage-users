@@ -23,9 +23,10 @@
 {% set hasMaintainRoles = user and (user.maintainRoles) %}
 {% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
 {% set hasManageEmailDomains = user and (user.manageEmailDomains) %}
+{% set hasCRSGroupUsersDownload = user and (user.crsGroupUsersDownload) %}
 
 {% block content %}
-  {% if message.length > 0 and hasMaintainNomisRolesAccess%}
+  {% if message.length > 0 and hasMaintainNomisRolesAccess %}
     {{ govukNotificationBanner({
       html: message,
       attributes: { "data-qa": "banner-message" }
@@ -37,12 +38,13 @@
       <h1 class="govuk-heading-l">{{ title }}</h1>
       <div class="homepage-content">
         <div class="govuk-grid-row card-group">
-          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains or hasManageUserAllowList %}
+          {% if hasMaintainNomisRolesAccess or hasMaintainAuthUsers or hasMaintainRoles or hasCreateDPSUsers or hasManageEmailDomains or hasManageUserAllowList or hasCRSGroupUsersDownload %}
           {% if hasManageUserAllowList %}
             <div class="govuk-grid-column-one-third">
               <div class="card card--clickable" data-qa="search_user_allow_list">
                 <h1 class="govuk-heading-m card__heading">
-                  <a class="govuk-link card__link" href="/user-allow-list">{{ allowListSearchTitle }}</a>
+                  <a class="govuk-link card__link"
+                     href="/user-allow-list">{{ allowListSearchTitle }}</a>
                 </h1>
                 <p class="govuk-body card__description">Search for a user and update their access to {{ allowListEnvironment }}</p>
               </div>
@@ -83,6 +85,16 @@
                   <a class="govuk-link card__link" href="/email-domains">Manage Email Domains</a>
                 </h1>
                 <p class="govuk-body card__description">Create, Delete and View email domain listing</p>
+              </div>
+            </div>
+          {% endif %}
+          {% if hasCRSGroupUsersDownload %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="view_crs_group_users_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/crs-group-selection">Download CRS Group members</a>
+                </h1>
+                <p class="govuk-body card__description">Select CRS Group and download list of members</p>
               </div>
             </div>
           {% endif %}

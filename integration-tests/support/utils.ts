@@ -20,6 +20,8 @@ const typeOrClear = (element: PageElement, text?: string) => {
   else element.clear()
 }
 
+const selectDropdownItem = (selectDataQa: string, itemCode: string) => getDataQa(selectDataQa).select(itemCode)
+
 const verifyFormError = (fieldName: string) => {
   const selector = `#${fieldName}-error`
   cy.get(selector).should('be.visible')
@@ -67,4 +69,5 @@ export {
   verifyFilterTag,
   verifyFormError,
   verifyFormValue,
+  selectDropdownItem,
 }

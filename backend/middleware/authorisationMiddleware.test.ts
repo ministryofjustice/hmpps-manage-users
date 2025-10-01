@@ -142,6 +142,27 @@ describe('authorisationMiddleware', () => {
     })
   })
 
+  describe('crs-group-selection', () => {
+    it('should show correct page when user with correct role tries to access crs-group-selection endpoint', () => {
+      const reqCRSGroupSelection = { originalUrl: '/crs-group-selection' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_CONTRACT_MANAGER_VIEW_GROUP'] })
+
+      authorisationMiddleware([])(reqCRSGroupSelection, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access crs-group-selection endpoint', () => {
+      const reqCRSGroupSelection = { originalUrl: '/crs-group-selection' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqCRSGroupSelection, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
+
   describe('delete-email-domain', () => {
     it('should show correct page when user with correct role tries to access delete-email-domain endpoint', () => {
       const reqDeleteEmailDomain = { originalUrl: '/delete-email-domain' } as Request

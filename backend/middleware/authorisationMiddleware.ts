@@ -9,6 +9,7 @@ enum AuthRole {
   GROUP_MANAGER = 'ROLE_AUTH_GROUP_MANAGER',
   ROLES_ADMIN = 'ROLE_ROLES_ADMIN',
   MAINTAIN_EMAIL_DOMAINS = 'ROLE_MAINTAIN_EMAIL_DOMAINS',
+  CONTRACT_MANAGER_VIEW_GROUP = 'ROLE_CONTRACT_MANAGER_VIEW_GROUP',
 }
 
 const authorisationMap = {
@@ -24,6 +25,7 @@ const authorisationMap = {
   '/email-domains': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
   '/create-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
   '/delete-email-domain': [AuthRole.MAINTAIN_EMAIL_DOMAINS],
+  '/crs-group-selection': [AuthRole.CONTRACT_MANAGER_VIEW_GROUP],
 }
 
 export default function authorisationMiddleware(authorisedRoles: string[] = []): RequestHandler {

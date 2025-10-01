@@ -1,0 +1,113 @@
+import { parse } from 'csv-parse'
+import GroupSelectionPage from '../../pages/typescript/crsGroupSelection/groupSelectionPage'
+import paths from '../../../backend/routes/paths'
+
+context('Search allow list users', () => {
+  beforeEach(() => {
+    cy.task('reset')
+    cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
+    cy.task('stubAssignableGroups', {
+      content: [
+        { groupCode: 'CRC_C01', groupName: 'CPA Northumbria' },
+        { groupCode: 'CRC_C09', groupName: 'CPA South Yorkshire' },
+        { groupCode: 'CRC_C05', groupName: 'CPA West Yorkshire' },
+        { groupCode: 'INT_CR_PRJ_6166', groupName: 'CRS Accommodation for South Wales' },
+        { groupCode: 'INT_CR_PRJ_6158', groupName: 'CRS Accommodation Services - Dyfed-Powys' },
+        { groupCode: 'INT_CR_PRJ_5549', groupName: 'CRS Accommodation Services - East Midlands' },
+      ],
+    })
+    cy.signIn()
+  })
+
+  it('shows a CRS group drop down list when no CRS group query parameter present', () => {
+    GroupSelectionPage.goto().verifyCRSGroupSelectorDisplayed()
+  })
+
+  it('shows continue button when no CRS group query parameter present', () => {
+    GroupSelectionPage.goto().verifyCRSGroupContinueButtonDisplayed()
+  })
+
+  it('should not show selected group when no CRS group query parameter present', () => {
+    GroupSelectionPage.goto().verifySelectedGroupNotVisible()
+  })
+
+  it('should not show download button when no CRS group query parameter present', () => {
+    GroupSelectionPage.goto().verifyDownloadButtonNotVisible()
+  })
+
+  it('should not show CRS group selector when CRS group query parameter present', () => {
+    GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyCRSGroupSelectorNotVisible()
+  })
+
+  it('should not show continue button when CRS group query parameter present', () => {
+    GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyContinueButtonNotVisible()
+  })
+
+  it('should show selected group when CRS group query parameter present', () => {
+    GroupSelectionPage.goto('INT_CR_PRJ_5549').verifySelectedGroupVisible()
+  })
+
+  it('should show download button when CRS group query parameter present', () => {
+    GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyDownloadButtonVisible()
+  })
+
+  it('should display selected group download page on continue after group selection', () => {
+    GroupSelectionPage.goto()
+      .selectGroup('INT_CR_PRJ_6158')
+      .clickContinue()
+      .verifySelectedGroupValueDisplayed('CRS Accommodation Services - Dyfed-Powys')
+  })
+
+  it('should go back to group selection on change group after continue', () => {
+    GroupSelectionPage.goto()
+      .selectGroup('INT_CR_PRJ_6158')
+      .clickContinue()
+      .clickChangeGroup()
+      .verifyCRSGroupSelectorDisplayed()
+  })
+
+  it('should display CRS group drop down containing only CRS groups', () => {
+    GroupSelectionPage.goto().verifyDropDownContainsOnlyCRSGroups()
+  })
+
+  it('should download the csv with the correct records', () => {
+    cy.task('stubExternalUserSearch', {})
+    cy.intercept({
+      pathname: `${paths.crsGroupSelection.download({})}`,
+      query: {
+        group: 'INT_CR_PRJ_6166',
+      },
+    }).as('csvDownload')
+    GroupSelectionPage.goto().selectGroup('INT_CR_PRJ_6166').clickContinue().clickDownload()
+    cy.wait('@csvDownload')
+      .its('request')
+      .then((req) => {
+        cy.request(req).then(({ body, headers }) => {
+          expect(headers).to.have.property('content-type', 'text/csv; charset=utf-8')
+          parse(body, {}, (err, output) => {
+            expect(output, 'number of records').to.have.length(2)
+            expect(output[0], 'header row').to.deep.equal([
+              'userId',
+              'username',
+              'email',
+              'enabled',
+              'locked',
+              'verified',
+              'firstName',
+              'lastName',
+            ])
+            expect(output[1], 'first row').to.deep.equal([
+              '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+              `AUTH_ADM`,
+              `auth_test2@digital.justice.gov.uk`,
+              `TRUE`,
+              `FALSE`,
+              `FALSE`,
+              `Auth`,
+              `Adm`,
+            ])
+          })
+        })
+      })
+  })
+})

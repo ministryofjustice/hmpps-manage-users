@@ -72,6 +72,10 @@ $(() => {
   $downloadUsersForm.on('submit', (event) => handleFormSubmit(event, $downloadUsersForm, 'user-search.csv'))
   const $downloadLsaForm = $('#downloadLsaForm')
   $downloadLsaForm.on('submit', (event) => handleFormSubmit(event, $downloadLsaForm, 'lsa-report.csv'))
+  const $downloadCRSGroupsForm = $('#downloadCRSGroups')
+  $downloadCRSGroupsForm.on('submit', (event) =>
+    handleFormSubmit(event, $downloadCRSGroupsForm, 'crs-group-members.csv'),
+  )
   const $downloadAllowListForm = $('#downloadAllowListForm')
   $downloadAllowListForm.on('submit', (event) =>
     handleFormSubmit(event, $downloadAllowListForm, 'user-allowlist-search.csv'),
