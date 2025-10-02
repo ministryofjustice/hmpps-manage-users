@@ -15,9 +15,9 @@ export default class GroupSelectionRoutes {
 
   GET: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
-    const assignableGroups = await manageUsersApi.getAssignableGroups()
+    const allGroups = await manageUsersApi.getAllGroups()
 
-    const crsGroups = assignableGroups
+    const crsGroups = allGroups
       .filter((group) => group.groupCode.startsWith('INT_CR_PRJ_'))
       .map((g) => ({
         text: g.groupName,

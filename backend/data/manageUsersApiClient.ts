@@ -47,9 +47,9 @@ class ManageUsersApiClient extends RestClient {
     }) as Promise<RoleDetails>
   }
 
-  async getAssignableGroups(): Promise<UserGroup[]> {
+  async getAllGroups(): Promise<UserGroup[]> {
     return this.get<UserGroup[]>({
-      path: '/externalusers/me/assignable-groups',
+      path: '/groups',
     })
   }
 
