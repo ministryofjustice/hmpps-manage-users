@@ -861,6 +861,22 @@ module.exports = {
       body: content,
     }),
 
+  stubAllGroups: ({
+    content = [
+      { groupCode: 'CRC_C01', groupName: 'CPA Northumbria' },
+      { groupCode: 'CRC_C09', groupName: 'CPA South Yorkshire' },
+      { groupCode: 'CRC_C05', groupName: 'CPA West Yorkshire' },
+      { groupCode: 'INT_CR_PRJ_6166', groupName: 'CRS Accommodation for South Wales' },
+      { groupCode: 'INT_CR_PRJ_6158', groupName: 'CRS Accommodation Services - Dyfed-Powys' },
+      { groupCode: 'INT_CR_PRJ_5549', groupName: 'CRS Accommodation Services - East Midlands' },
+    ],
+  }) => {
+    return getFor({
+      urlPattern: '/groups',
+      body: content,
+    })
+  },
+
   stubChangeChildGroupName: () =>
     stubFor({
       request: {

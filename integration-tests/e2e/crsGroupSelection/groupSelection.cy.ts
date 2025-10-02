@@ -2,20 +2,11 @@ import { parse } from 'csv-parse'
 import GroupSelectionPage from '../../pages/typescript/crsGroupSelection/groupSelectionPage'
 import paths from '../../../backend/routes/paths'
 
-context('Search allow list users', () => {
+context('Download CRS Group members', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
-    cy.task('stubAssignableGroups', {
-      content: [
-        { groupCode: 'CRC_C01', groupName: 'CPA Northumbria' },
-        { groupCode: 'CRC_C09', groupName: 'CPA South Yorkshire' },
-        { groupCode: 'CRC_C05', groupName: 'CPA West Yorkshire' },
-        { groupCode: 'INT_CR_PRJ_6166', groupName: 'CRS Accommodation for South Wales' },
-        { groupCode: 'INT_CR_PRJ_6158', groupName: 'CRS Accommodation Services - Dyfed-Powys' },
-        { groupCode: 'INT_CR_PRJ_5549', groupName: 'CRS Accommodation Services - East Midlands' },
-      ],
-    })
+    cy.task('stubAllGroups', {})
     cy.signIn()
   })
 
