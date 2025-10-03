@@ -16,5 +16,5 @@ export default abstract class Page {
 
   signOut = (): PageElement => cy.get('[data-qa=signOut]')
   
-  headerUsername = (): PageElement => cy.get('[data-test="logged-in-name"]')
+  manageDetails = (): PageElement => cy.get('[data-qa=manageDetails]')
 }

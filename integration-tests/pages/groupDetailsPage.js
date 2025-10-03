@@ -21,7 +21,6 @@ const groupDetailsPage = (groupName) =>
     deleteGroupNoChildLink: () => deleteGroupNoChild().click(),
     deleteGroupChildLink: () => deleteGroupChild().click(),
     childGroupNotThere: () => cy.get('Child - Site 1 - Group 2').should('not.exist'),
-    manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     errorSummary: () => cy.get('[data-qa-errors]'),
     searchUsers: () => searchUsers().click(),
   })

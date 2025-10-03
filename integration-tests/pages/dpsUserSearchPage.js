@@ -72,7 +72,6 @@ const dpsUserSearchPage = () =>
     download: () => cy.get('button[data-qa="download"]'),
     lsaDownload: () => cy.get('button[data-qa="lsa-download"]'),
     manageLinkForUser: (user) => cy.get(`a[data-qa="edit-button-${user}"]`),
-    manageYourDetails: () => cy.get('[data-qa="manage-account-link"]'),
     caseload,
     paginationLink: (pageNumber) => cy.get('a').contains(pageNumber).first(),
     searchForRole: (text) => {
