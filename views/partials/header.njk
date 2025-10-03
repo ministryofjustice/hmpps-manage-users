@@ -49,10 +49,10 @@
       <nav class="moj-header__navigation" aria-label="Account navigation">
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" aria-current="page" data-qa="manage-account-link">{{ user.displayName | initialiseName }}</a>
+            <a class="moj-header__navigation-link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" aria-current="page" data-qa="manageDetails">{{ user.displayName | initialiseName }}</a>
           </li>
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="/auth/sign-out">Sign out</a>
+            <a class="moj-header__navigation-link" data-qa="signOut" href="/auth/sign-out">Sign out</a>
           </li>
         </ul>
       </nav>
