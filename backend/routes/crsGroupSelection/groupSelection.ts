@@ -15,14 +15,12 @@ export default class GroupSelectionRoutes {
 
   GET: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
-    const allGroups = await manageUsersApi.getAllGroups()
+    const allCRSGroups = await manageUsersApi.getAllCRSGroups()
 
-    const crsGroups = allGroups
-      .filter((group) => group.groupCode.startsWith('INT_CR_PRJ_'))
-      .map((g) => ({
-        text: g.groupName,
-        value: g.groupCode,
-      }))
+    const crsGroups = allCRSGroups.map((g) => ({
+      text: g.groupName,
+      value: g.groupCode,
+    }))
 
     const selectedGroup = req.query.group
     const selectedGroupName = selectedGroup ? crsGroups.find((group) => group.value === selectedGroup).text : ''
