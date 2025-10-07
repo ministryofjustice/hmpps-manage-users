@@ -6,7 +6,7 @@ context('Download CRS Group members', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
-    cy.task('stubAllGroups', {})
+    cy.task('stubCRSGroups', {})
     cy.signIn()
   })
 
