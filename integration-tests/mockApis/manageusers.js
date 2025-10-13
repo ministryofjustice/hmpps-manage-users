@@ -109,6 +109,32 @@ module.exports = {
       body: content,
     }),
 
+  stubCRSGroupMembersSearch: () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/externalusers/crsgroup/.*',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: [
+          {
+            userId: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+            username: 'AUTH_ADM',
+            email: 'auth_test2@digital.justice.gov.uk',
+            enabled: true,
+            locked: false,
+            verified: false,
+            firstName: 'Auth',
+            lastName: 'Adm',
+          },
+        ],
+      },
+    }),
+
   stubExternalUserSearch: ({
     content = [
       {

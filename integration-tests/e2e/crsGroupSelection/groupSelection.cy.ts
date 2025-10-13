@@ -62,7 +62,7 @@ context('Download CRS Group members', () => {
   })
 
   it('should download the csv with the correct records', () => {
-    cy.task('stubExternalUserSearch', {})
+    cy.task('stubCRSGroupMembersSearch', {})
     cy.intercept({
       pathname: `${paths.crsGroupSelection.download({})}`,
       query: {

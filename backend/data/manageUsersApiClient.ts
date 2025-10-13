@@ -53,10 +53,9 @@ class ManageUsersApiClient extends RestClient {
     })
   }
 
-  async externalUsersSearch(query: ExternalUsersSearchQuery): Promise<PagedList<ExternalUser>> {
-    return this.get<PagedList<ExternalUser>>({
-      path: '/externalusers/search',
-      query,
+  async getUsersInCRSGroup(groupCode: string): Promise<ExternalUser[]> {
+    return this.get<ExternalUser[]>({
+      path: `/externalusers/crsgroup/${groupCode}`,
     })
   }
 
