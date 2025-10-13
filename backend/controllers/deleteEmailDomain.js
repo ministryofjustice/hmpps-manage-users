@@ -8,7 +8,6 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
   }
   const index = async (req, res) => {
     const { id, name } = req.query
-
     res.render('deleteEmailDomain.njk', {
       domainId: id,
       domainName: name,
@@ -18,11 +17,13 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
   }
 
   const deleteEmailDomain = async (req, res) => {
-    const { domainId } = req.body
+    const { domainId, name } = req.body
+    const deletedDomain = { name }
     const sendAudit = auditWithSubject(
       req.session.userDetails.username,
       domainId,
       ManageUsersSubjectType.EMAIL_DOMAIN_ID,
+      deletedDomain,
     )
     await sendAudit(ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT)
 
