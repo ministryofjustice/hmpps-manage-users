@@ -2,7 +2,6 @@ import { Request, RequestHandler, Response } from 'express'
 import { parse } from 'json2csv'
 import paths from '../paths'
 import { manageUsersApiBuilder, ManageUsersApiClient, RestClientBuilder } from '../../data'
-import { ExternalUsersSearchQuery } from '../../data/manageUsersApiClient'
 import { audit, ManageUsersEvent } from '../../audit'
 import logger from '../../../logger'
 
@@ -41,13 +40,7 @@ export default class GroupSelectionRoutes {
 
     try {
       const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
-      const query: ExternalUsersSearchQuery = {
-        group: [req.query.group as string],
-        page: 0,
-        size: 20000,
-      }
-
-      const { content } = await manageUsersApi.externalUsersSearch(query)
+      const content = await manageUsersApi.getUsersInCRSGroup(req.query.group as string)
 
       const csv = parse(content)
 
