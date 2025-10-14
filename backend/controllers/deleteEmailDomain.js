@@ -17,8 +17,8 @@ const deleteEmailDomainFactory = (deleteEmailDomainApi, listEmailDomainsUrl) => 
   }
 
   const deleteEmailDomain = async (req, res) => {
-    const { domainId, name } = req.body
-    const deletedDomain = { name }
+    const { domainId, domainName } = req.body
+    const deletedDomain = { name: domainName }
     const sendAudit = auditWithSubject(
       req.session.userDetails.username,
       domainId,

@@ -38,7 +38,7 @@ describe('delete email domain factory', () => {
       const deleteEmailDomainRequest = {
         body: {
           domainId: '1234',
-          name: 'test.com',
+          domainName: 'test.com',
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
