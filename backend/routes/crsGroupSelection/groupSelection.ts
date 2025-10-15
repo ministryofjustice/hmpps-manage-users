@@ -4,7 +4,6 @@ import paths from '../paths'
 import { manageUsersApiBuilder, ManageUsersApiClient, RestClientBuilder } from '../../data'
 import { audit, ManageUsersEvent } from '../../audit'
 import logger from '../../../logger'
-import { ExternalUser } from '../../@types/manageUsersApi'
 
 export default class GroupSelectionRoutes {
   manageUsersApiClientBuilder: RestClientBuilder<ManageUsersApiClient>
