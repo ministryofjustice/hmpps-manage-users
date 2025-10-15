@@ -27,22 +27,27 @@ context('Download CRS Group members', () => {
   })
 
   it('should not show CRS group selector when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyCRSGroupSelectorNotVisible()
   })
 
   it('should not show continue button when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyContinueButtonNotVisible()
   })
 
   it('should show selected group when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifySelectedGroupVisible()
   })
 
   it('should show download button when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyDownloadButtonVisible()
   })
 
   it('should display selected group download page on continue after group selection', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto()
       .selectGroup('INT_CR_PRJ_6158')
       .clickContinue()
@@ -50,6 +55,7 @@ context('Download CRS Group members', () => {
   })
 
   it('should go back to group selection on change group after continue', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto()
       .selectGroup('INT_CR_PRJ_6158')
       .clickContinue()
@@ -59,6 +65,15 @@ context('Download CRS Group members', () => {
 
   it('should display CRS group drop down containing only CRS groups', () => {
     GroupSelectionPage.goto().verifyDropDownContainsOnlyCRSGroups()
+  })
+
+  it('should display message and suppress download button when selected group contains no users on continue after group selection', () => {
+    cy.task('stubEmptyCRSGroupSelected', {})
+    GroupSelectionPage.goto()
+      .selectGroup('INT_CR_PRJ_6158')
+      .clickContinue()
+      .verifyDownloadButtonNotVisible()
+      .verifyEmptyGroupMessageVisible()
   })
 
   it('should download the csv with the correct records', () => {

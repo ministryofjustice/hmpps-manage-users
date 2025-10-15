@@ -58,6 +58,11 @@ export default class GroupSelectionPage extends Page {
     return this
   }
 
+  verifyEmptyGroupMessageVisible = (): GroupSelectionPage => {
+    getDataQa('empty-group-selected-message').should('be.visible')
+    return this
+  }
+
   selectGroup = (itemCode: string): GroupSelectionPage => {
     selectDropdownItem('crs-group-selector', itemCode)
     return this

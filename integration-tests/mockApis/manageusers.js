@@ -135,6 +135,21 @@ module.exports = {
       },
     }),
 
+  stubEmptyCRSGroupSelected: () =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/externalusers/crsgroup/.*',
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json;charset=UTF-8',
+        },
+        jsonBody: [],
+      },
+    }),
+
   stubExternalUserSearch: ({
     content = [
       {

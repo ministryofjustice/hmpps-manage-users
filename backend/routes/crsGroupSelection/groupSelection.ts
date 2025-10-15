@@ -4,6 +4,7 @@ import paths from '../paths'
 import { manageUsersApiBuilder, ManageUsersApiClient, RestClientBuilder } from '../../data'
 import { audit, ManageUsersEvent } from '../../audit'
 import logger from '../../../logger'
+import { ExternalUser } from '../../@types/manageUsersApi'
 
 export default class GroupSelectionRoutes {
   manageUsersApiClientBuilder: RestClientBuilder<ManageUsersApiClient>
@@ -24,10 +25,15 @@ export default class GroupSelectionRoutes {
     const selectedGroup = req.query.group
     const selectedGroupName = selectedGroup ? crsGroups.find((group) => group.value === selectedGroup).text : ''
     const downloadUrl = `${paths.crsGroupSelection.download({})}?group=${selectedGroup}`
-
+    let groupSize = 0
+    if (selectedGroup) {
+      const usersInGroup = await manageUsersApi.getUsersInCRSGroup(req.query.group as string)
+      groupSize = usersInGroup.length
+    }
     res.render('crsGroupSelection/groupSelection', {
       group: selectedGroupName,
       selfUrl: `${paths.crsGroupSelection.groupsSelection({})}`,
+      showDownloadButton: groupSize > 0,
       downloadUrl,
       crsGroups,
     })
