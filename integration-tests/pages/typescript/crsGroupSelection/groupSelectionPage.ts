@@ -16,6 +16,15 @@ export default class GroupSelectionPage extends Page {
     return Page.verifyOnPage(GroupSelectionPage)
   }
 
+  verifyInvalidGroupErrorMessageVisible = (): GroupSelectionPage => {
+    cy.get('[data-qa-errors]').should('be.visible')
+    cy.get('[data-qa-errors]').should(
+      'contain.text',
+      "The group you have tried to access either doesn't exist or you don't have permission to view it - please select one from the dropdown",
+    )
+    return this
+  }
+
   verifyCRSGroupSelectorDisplayed = (): GroupSelectionPage => {
     getDataQa('crs-group-selector').should('be.visible')
     return this

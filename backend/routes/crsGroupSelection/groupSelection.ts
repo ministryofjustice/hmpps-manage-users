@@ -21,18 +21,29 @@ export default class GroupSelectionRoutes {
       value: g.groupCode,
     }))
 
-    const selectedGroup = req.query.group
-    const selectedGroupName = selectedGroup ? crsGroups.find((group) => group.value === selectedGroup).text : ''
+    const selectedGroup = req.query.group as string
+    const matchedCrsGroup = crsGroups.find((group) => group.value === selectedGroup)
+    const selectedGroupName = matchedCrsGroup ? matchedCrsGroup.text : ''
     const downloadUrl = `${paths.crsGroupSelection.download({})}?group=${selectedGroup}`
     let groupSize = 0
+    let errors: { text: string }[] = []
     if (selectedGroup) {
-      const usersInGroup = await manageUsersApi.getUsersInCRSGroup(req.query.group as string)
-      groupSize = usersInGroup.length
+      if (!selectedGroupName) {
+        errors = [
+          {
+            text: "The group you have tried to access either doesn't exist or you don't have permission to view it - please select one from the dropdown",
+          },
+        ]
+      } else {
+        const usersInGroup = await manageUsersApi.getUsersInCRSGroup(selectedGroup)
+        groupSize = usersInGroup.length
+      }
     }
     res.render('crsGroupSelection/groupSelection', {
       group: selectedGroupName,
       selfUrl: `${paths.crsGroupSelection.groupsSelection({})}`,
       showDownloadButton: groupSize > 0,
+      errors,
       downloadUrl,
       crsGroups,
     })

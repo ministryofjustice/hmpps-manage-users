@@ -63,6 +63,14 @@ context('Download CRS Group members', () => {
       .verifyCRSGroupSelectorDisplayed()
   })
 
+  it('should go back to group selection on attempt to access with non CRS group', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
+    GroupSelectionPage.goto('INVALID_GROUP')
+      .verifyCRSGroupSelectorDisplayed()
+      .verifyCRSGroupContinueButtonDisplayed()
+      .verifyInvalidGroupErrorMessageVisible()
+  })
+
   it('should display CRS group drop down containing only CRS groups', () => {
     GroupSelectionPage.goto().verifyDropDownContainsOnlyCRSGroups()
   })
