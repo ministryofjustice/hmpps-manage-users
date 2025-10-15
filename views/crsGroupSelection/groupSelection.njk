@@ -57,11 +57,6 @@
         </div>
       </form>
     {% else %}
-      {{ govukErrorMessage({
-        id: "emptyGroupError",
-        classes: "govuk-!-display-none",
-        text: "The selected group is empty, please select another"
-      }) }}
       <p class="govuk-body" data-qa="empty-group-selected-message">Your selected group is empty</p>
       <a class="govuk-link" data-qa="change-group-link" href="{{ selfUrl }}">Change group</a>
     {% endif %}
