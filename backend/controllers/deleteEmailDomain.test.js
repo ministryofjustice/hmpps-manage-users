@@ -38,6 +38,7 @@ describe('delete email domain factory', () => {
       const deleteEmailDomainRequest = {
         body: {
           domainId: '1234',
+          domainName: 'test.com',
         },
         flash: jest.fn(),
         originalUrl: '/email-domains',
@@ -48,7 +49,7 @@ describe('delete email domain factory', () => {
       expect(redirect).toHaveBeenCalledWith('/email-domains')
       expect(auditService.sendAuditMessage).toHaveBeenCalledWith({
         action: ManageUsersEvent.DELETE_EMAIL_DOMAIN_ATTEMPT,
-        details: null,
+        details: '{"name":"test.com"}',
         subjectId: '1234',
         subjectType: ManageUsersSubjectType.EMAIL_DOMAIN_ID,
         who: 'username',

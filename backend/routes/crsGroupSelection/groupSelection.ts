@@ -2,7 +2,6 @@ import { Request, RequestHandler, Response } from 'express'
 import { parse } from 'json2csv'
 import paths from '../paths'
 import { manageUsersApiBuilder, ManageUsersApiClient, RestClientBuilder } from '../../data'
-import { ExternalUsersSearchQuery } from '../../data/manageUsersApiClient'
 import { audit, ManageUsersEvent } from '../../audit'
 import logger from '../../../logger'
 
@@ -15,22 +14,36 @@ export default class GroupSelectionRoutes {
 
   GET: RequestHandler = async (req: Request, res: Response): Promise<void> => {
     const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
-    const allGroups = await manageUsersApi.getAllGroups()
+    const allCRSGroups = await manageUsersApi.getAllCRSGroups()
 
-    const crsGroups = allGroups
-      .filter((group) => group.groupCode.startsWith('INT_CR_PRJ_'))
-      .map((g) => ({
-        text: g.groupName,
-        value: g.groupCode,
-      }))
+    const crsGroups = allCRSGroups.map((g) => ({
+      text: g.groupName,
+      value: g.groupCode,
+    }))
 
-    const selectedGroup = req.query.group
-    const selectedGroupName = selectedGroup ? crsGroups.find((group) => group.value === selectedGroup).text : ''
+    const selectedGroup = req.query.group as string
+    const matchedCrsGroup = crsGroups.find((group) => group.value === selectedGroup)
+    const selectedGroupName = matchedCrsGroup ? matchedCrsGroup.text : ''
     const downloadUrl = `${paths.crsGroupSelection.download({})}?group=${selectedGroup}`
-
+    let groupSize = 0
+    let errors: { text: string }[] = []
+    if (selectedGroup) {
+      if (!selectedGroupName) {
+        errors = [
+          {
+            text: "The group you have tried to access either doesn't exist or you don't have permission to view it - please select one from the dropdown",
+          },
+        ]
+      } else {
+        const usersInGroup = await manageUsersApi.getUsersInCRSGroup(selectedGroup)
+        groupSize = usersInGroup.length
+      }
+    }
     res.render('crsGroupSelection/groupSelection', {
       group: selectedGroupName,
       selfUrl: `${paths.crsGroupSelection.groupsSelection({})}`,
+      showDownloadButton: groupSize > 0,
+      errors,
       downloadUrl,
       crsGroups,
     })
@@ -43,13 +56,7 @@ export default class GroupSelectionRoutes {
 
     try {
       const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
-      const query: ExternalUsersSearchQuery = {
-        group: [req.query.group as string],
-        page: 0,
-        size: 20000,
-      }
-
-      const { content } = await manageUsersApi.externalUsersSearch(query)
+      const content = await manageUsersApi.getUsersInCRSGroup(req.query.group as string)
 
       const csv = parse(content)
 

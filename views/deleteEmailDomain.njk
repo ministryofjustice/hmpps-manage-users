@@ -29,6 +29,7 @@
       <form action="/delete-email-domain"  method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
         <input type="hidden" name="domainId" value="{{ domainId }}">
+        <input type="hidden" name="domainName" value="{{ domainName }}">
 
         {% set hasManageEmailDomains = user and(user.manageEmailDomains) %}
 

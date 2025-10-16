@@ -2,6 +2,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set title = "CRS Group Selection" %}
 
@@ -42,21 +43,25 @@
       classes: "govuk-!-display-none",
       text: "There was a problem downloading"
     }) }}
-    <form id='downloadCRSGroups' method='GET' action='{{ downloadUrl }}'>
-      <div class="govuk-button-group">
-        {{ govukButton({
-          text: "Download",
-          type: "submit",
-          preventDoubleClick: true,
-          classes: "govuk-button downloadButton",
-          attributes: { "data-qa": "download-button" }
-        }) }}
-        <a class="govuk-link" data-qa="change-group-link" href="{{ selfUrl }}">Change group</a>
-      </div>
-    </form>
 
+    {% if showDownloadButton %}
+      <form id='downloadCRSGroups' method='GET' action='{{ downloadUrl }}'>
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Download",
+            type: "submit",
+            preventDoubleClick: true,
+            classes: "govuk-button downloadButton",
+            attributes: { "data-qa": "download-button" }
+          }) }}
+          <a class="govuk-link" data-qa="change-group-link" href="{{ selfUrl }}">Change group</a>
+        </div>
+      </form>
+    {% else %}
+      <p class="govuk-body" data-qa="empty-group-selected-message">Your selected group is empty</p>
+      <a class="govuk-link" data-qa="change-group-link" href="{{ selfUrl }}">Change group</a>
+    {% endif %}
   {% else %}
-
     <form method="GET" action="{{ selfUrl }}">
 
       {{ govukSelect({

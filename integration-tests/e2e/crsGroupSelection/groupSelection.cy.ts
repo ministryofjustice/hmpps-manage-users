@@ -6,7 +6,7 @@ context('Download CRS Group members', () => {
   beforeEach(() => {
     cy.task('reset')
     cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
-    cy.task('stubAllGroups', {})
+    cy.task('stubCRSGroups', {})
     cy.signIn()
   })
 
@@ -27,22 +27,27 @@ context('Download CRS Group members', () => {
   })
 
   it('should not show CRS group selector when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyCRSGroupSelectorNotVisible()
   })
 
   it('should not show continue button when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyContinueButtonNotVisible()
   })
 
   it('should show selected group when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifySelectedGroupVisible()
   })
 
   it('should show download button when CRS group query parameter present', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto('INT_CR_PRJ_5549').verifyDownloadButtonVisible()
   })
 
   it('should display selected group download page on continue after group selection', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto()
       .selectGroup('INT_CR_PRJ_6158')
       .clickContinue()
@@ -50,6 +55,7 @@ context('Download CRS Group members', () => {
   })
 
   it('should go back to group selection on change group after continue', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
     GroupSelectionPage.goto()
       .selectGroup('INT_CR_PRJ_6158')
       .clickContinue()
@@ -57,12 +63,29 @@ context('Download CRS Group members', () => {
       .verifyCRSGroupSelectorDisplayed()
   })
 
+  it('should go back to group selection on attempt to access with non CRS group', () => {
+    cy.task('stubCRSGroupMembersSearch', {})
+    GroupSelectionPage.goto('INVALID_GROUP')
+      .verifyCRSGroupSelectorDisplayed()
+      .verifyCRSGroupContinueButtonDisplayed()
+      .verifyInvalidGroupErrorMessageVisible()
+  })
+
   it('should display CRS group drop down containing only CRS groups', () => {
     GroupSelectionPage.goto().verifyDropDownContainsOnlyCRSGroups()
   })
 
+  it('should display message and suppress download button when selected group contains no users on continue after group selection', () => {
+    cy.task('stubEmptyCRSGroupSelected', {})
+    GroupSelectionPage.goto()
+      .selectGroup('INT_CR_PRJ_6158')
+      .clickContinue()
+      .verifyDownloadButtonNotVisible()
+      .verifyEmptyGroupMessageVisible()
+  })
+
   it('should download the csv with the correct records', () => {
-    cy.task('stubExternalUserSearch', {})
+    cy.task('stubCRSGroupMembersSearch', {})
     cy.intercept({
       pathname: `${paths.crsGroupSelection.download({})}`,
       query: {
