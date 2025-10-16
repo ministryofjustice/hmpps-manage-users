@@ -100,26 +100,8 @@ context('Download CRS Group members', () => {
           expect(headers).to.have.property('content-type', 'text/csv; charset=utf-8')
           parse(body, {}, (err, output) => {
             expect(output, 'number of records').to.have.length(2)
-            expect(output[0], 'header row').to.deep.equal([
-              'userId',
-              'username',
-              'email',
-              'enabled',
-              'locked',
-              'verified',
-              'firstName',
-              'lastName',
-            ])
-            expect(output[1], 'first row').to.deep.equal([
-              '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-              `AUTH_ADM`,
-              `auth_test2@digital.justice.gov.uk`,
-              `TRUE`,
-              `FALSE`,
-              `FALSE`,
-              `Auth`,
-              `Adm`,
-            ])
+            expect(output[0], 'header row').to.deep.equal(['email', 'enabled', 'firstName', 'lastName'])
+            expect(output[1], 'first row').to.deep.equal([`auth_test2@digital.justice.gov.uk`, `true`, `Auth`, `Adm`])
           })
         })
       })

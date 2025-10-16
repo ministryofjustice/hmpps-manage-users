@@ -50,15 +50,14 @@ export default class GroupSelectionRoutes {
   }
 
   DOWNLOAD: RequestHandler = async (req: Request, res: Response): Promise<void> => {
-    const { username } = req.session.userDetails
-    const sendAudit = audit(username, { crsGroup: req.query.group })
+    const sendAudit = audit(req.session.userDetails.username, { crsGroup: req.query.group })
     await sendAudit(ManageUsersEvent.DOWNLOAD_CRS_GROUP_USER_REPORT_ATTEMPT)
 
     try {
       const manageUsersApi = manageUsersApiBuilder(res.locals.access_token)
       const content = await manageUsersApi.getUsersInCRSGroup(req.query.group as string)
-
-      const csv = parse(content)
+      const secureContent = content.map(({ userId, username, locked, verified, ...exposedFields }) => exposedFields)
+      const csv = parse(secureContent)
 
       res.header('Content-Type', 'text/csv')
       res.attachment('crs-group-members.csv')
