@@ -101,24 +101,20 @@ context('Download CRS Group members', () => {
           parse(body, {}, (err, output) => {
             expect(output, 'number of records').to.have.length(2)
             expect(output[0], 'header row').to.deep.equal([
-              'userId',
-              'username',
               'email',
               'enabled',
-              'locked',
-              'verified',
               'firstName',
               'lastName',
+              'lastLoggedIn',
+              'inactiveReason',
             ])
             expect(output[1], 'first row').to.deep.equal([
-              '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
-              `AUTH_ADM`,
               `auth_test2@digital.justice.gov.uk`,
-              `TRUE`,
-              `FALSE`,
-              `FALSE`,
+              `true`,
               `Auth`,
               `Adm`,
+              '2025-10-15T10:01:58.614221',
+              'Retired',
             ])
           })
         })
