@@ -130,6 +130,8 @@ module.exports = {
             verified: false,
             firstName: 'Auth',
             lastName: 'Adm',
+            lastLoggedIn: '2025-10-15T10:01:58.614221',
+            inactiveReason: 'Retired',
           },
         ],
       },
