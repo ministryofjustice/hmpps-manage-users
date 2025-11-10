@@ -20,7 +20,6 @@ generic-service:
       nginx.ingress.kubernetes.io/server-snippet: |
         add_header X-Robots-Tag "noindex, nofollow";
         limit_req_status 429;
-        more_set_headers "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload";
     tlsSecretName: hmpps-manage-users-cert
     modsecurity_enabled: true
     modsecurity_snippet: |
