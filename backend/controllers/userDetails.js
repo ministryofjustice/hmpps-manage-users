@@ -1,4 +1,7 @@
 const { auditWithSubject, ManageUsersEvent, ManageUsersSubjectType } = require('../audit')
+const { RestrictedRolesService } = require('../services/restrictedRolesService')
+const { Event } = require('../utils/appInsightsEvents')
+const { appInsightsEvent } = require('../utils/azureAppInsights')
 const cleanUpRedirect = require('../utils/urlUtils').default
 
 const userDetailsFactory = (
@@ -34,6 +37,7 @@ const userDetailsFactory = (
       const searchTitle = req.session.searchTitle ? req.session.searchTitle : defaultSearchTitle
       const searchUrl = req.session.searchUrl ? req.session.searchUrl : defaultSearchUrl
       const searchResultsUrl = req.session.searchResultsUrl ? req.session.searchResultsUrl : searchUrl
+      const restrictedRoles = res.locals?.restrictedRoles ? res.locals.restrictedRoles : []
 
       const [user, roles, groups, caseloads] = await getUserRolesAndGroupsApi(
         res.locals,
@@ -58,6 +62,7 @@ const userDetailsFactory = (
         showExtraUserDetails,
         showUsername: user.email !== user.username.toLowerCase(),
         displayEmailChangeInProgress: !user.verified && user.emailToVerify && user.emailToVerify !== user.email,
+        restrictedRoles,
       })
     } catch (error) {
       await audit(ManageUsersEvent.VIEW_USER_FAILURE)
@@ -85,6 +90,21 @@ const userDetailsFactory = (
         throw error
       }
     }
+  }
+
+  const requestRoleRemoval = async (req, res) => {
+    const { userId, role } = req.params
+    const { username } = req.session.userDetails
+    const staffDetailsUrl = `${manageUrl}/${userId}/details`
+
+    appInsightsEvent(Event.REQUEST_REMOVE_USER_ROLE_ATTEMPT, username, { userId, roleCode: role })
+    const restrictedRolesService = new RestrictedRolesService(res.locals.restrictedRoles)
+    const removalMessage = restrictedRolesService.getRemovalMessage(role)
+
+    res.render('requestUserRoleRemoval.njk', {
+      staffDetailsUrl,
+      removalMessage,
+    })
   }
 
   const removeGroup = async (req, res) => {
@@ -175,7 +195,7 @@ const userDetailsFactory = (
     res.redirect(`${staffUrl}/details`)
   }
 
-  return { index, removeRole, removeGroup, removeUserCaseload, enableUser, disableUser }
+  return { index, removeRole, requestRoleRemoval, removeGroup, removeUserCaseload, enableUser, disableUser }
 }
 
 function sortAlphabetically(caseload1, caseload2) {

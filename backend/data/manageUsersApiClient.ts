@@ -2,6 +2,8 @@ import config from '../config'
 import RestClient from './restClient'
 import {
   ExternalUser,
+  PrisonUserDetails,
+  Role,
   UserAllowlistAddRequest,
   UserAllowlistDetail,
   UserAllowlistPatchRequest,
@@ -45,6 +47,18 @@ class ManageUsersApiClient extends RestClient {
     return this.get({
       path: `/roles/${roleCode}`,
     }) as Promise<RoleDetails>
+  }
+
+  async getRoles(adminType: string): Promise<Role[]> {
+    return this.get<Role[]>({
+      path: `/roles?adminTypes=${adminType}`,
+    })
+  }
+
+  async getDpsUser(username: string): Promise<PrisonUserDetails> {
+    return this.get<PrisonUserDetails>({
+      path: `/prisonusers/${username}/details`,
+    })
   }
 
   async getAllCRSGroups(): Promise<UserGroup[]> {

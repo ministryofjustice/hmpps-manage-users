@@ -60,12 +60,18 @@ module.exports = {
         },
       ],
     }),
-  stubUserDetails: ({ accountStatus = 'OPEN', active = true, enabled = true, administratorOfUserGroups = null }) =>
+  stubUserDetails: ({
+    username = 'ITAG_USER5',
+    accountStatus = 'OPEN',
+    active = true,
+    enabled = true,
+    administratorOfUserGroups = null,
+  }) =>
     getFor({
-      urlPattern: '/prisonusers/.*/details',
+      urlPattern: `/prisonusers/${username}/details`,
       body: {
         staffId: '12345',
-        username: 'ITAG_USER',
+        username,
         firstName: 'Itag',
         lastName: 'User',
         primaryEmail: `ITAG_USER@gov.uk`,

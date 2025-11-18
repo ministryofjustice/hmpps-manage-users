@@ -14,6 +14,7 @@ generic-service:
     MANAGE_HMPPS_USERS_URL: https://manage-users.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     SUPPORT_URL: https://support.hmpps.service.justice.gov.uk
+    ROLE_REMOVAL_SERVICE_NOW_LINK: https://mojprod.service-now.com/moj_sp?id=sc_cat_item&sys_id=0768a0d71b81fe103393a797b04bcb8b&table=sc_cat_item&searchTerm=dps%20-%20role
     MANAGE_USER_ALLOW_LIST_ENABLED: false
 
 # CloudPlatform AlertManager receiver to route prometheus alerts to slack

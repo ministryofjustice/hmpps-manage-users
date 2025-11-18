@@ -235,11 +235,15 @@
       {% set rows = [] %}
       {% for userRole in roles %}
         {% set roleLink %}
-          {{ linkButton(csrfToken, {
-            text: "Remove role",
-            action: staffUrl + "/roles/" + userRole.roleCode + "/remove",
-            id: "remove-button-" + userRole.roleCode
-          })}}
+          {% if userRole.roleCode | isRestrictedRoleCode(restrictedRoles) %}
+            <a href="{{ staffUrl + "/roles/" + userRole.roleCode + "/request-removal" }}" class="govuk-link" data-qa="request-removal-{{ userRole.roleCode }}">Request removal</a>
+          {% else %}
+            {{ linkButton(csrfToken, {
+              text: "Remove role",
+              action: staffUrl + "/roles/" + userRole.roleCode + "/remove",
+              id: "remove-button-" + userRole.roleCode
+            })}}
+          {% endif %}
         {% endset %}
         {% set rows = (rows.push([
           { text: userRole.roleName },

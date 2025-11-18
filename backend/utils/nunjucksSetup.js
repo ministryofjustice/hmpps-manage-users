@@ -5,6 +5,7 @@ const paths = require('../routes/paths').default
 
 const config = require('../config').default
 const { getDate, getTime, pascalToString, capitalize, hyphenatedStringToCamel } = require('./utils')
+const { RestrictedRolesService } = require('../services/restrictedRolesService')
 
 module.exports = (app, path) => {
   const njkEnv = nunjucks.configure(
@@ -188,6 +189,10 @@ module.exports = (app, path) => {
     moment(expiry).diff(moment(), 'months') > 12 ? 'No restriction' : moment(expiry).format('D MMMM YYYY'),
   )
   njkEnv.addFilter('toStatus', (status) => toStatusDescription(status))
+  njkEnv.addFilter('isRestrictedRoleCode', (roleCode, restrictedRoles) => {
+    const service = new RestrictedRolesService(restrictedRoles)
+    return service.isRestrictedRoleCode(roleCode)
+  })
 
   njkEnv.addFilter(
     'toUserSearchFilter',

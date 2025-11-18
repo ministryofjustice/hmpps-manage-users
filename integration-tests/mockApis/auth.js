@@ -2,12 +2,12 @@ const jwt = require('jsonwebtoken')
 const { stubFor, getFor, getMatchingRequests } = require('./wiremock')
 const { stubUserMe, stubUserMeRoles } = require('./manageusers')
 
-const createToken = (tokenRoles) => {
+const createToken = (tokenRoles, authSource) => {
   const authorities = tokenRoles || ['ROLE_GLOBAL_SEARCH']
   const payload = {
     user_name: 'ITAG_USER',
     scope: ['read', 'write'],
-    auth_source: 'nomis',
+    auth_source: authSource,
     authorities,
     jti: '83b50a10-cca6-41db-985f-e87efb303ddb',
     client_id: 'dev',
@@ -59,7 +59,7 @@ const signOut = () =>
     },
   })
 
-const token = (tokenRoles) =>
+const token = (tokenRoles, authSource) =>
   stubFor({
     request: {
       method: 'POST',
@@ -72,9 +72,10 @@ const token = (tokenRoles) =>
         Location: 'http://localhost:3008/sign-in/callback?code=codexxxx&state=stateyyyy',
       },
       jsonBody: {
-        access_token: createToken(tokenRoles),
+        access_token: createToken(tokenRoles, authSource),
         token_type: 'bearer',
         refresh_token: 'refresh',
+        auth_source: authSource,
         user_name: 'TEST_USER',
         expires_in: 600,
         scope: 'read write',
@@ -83,7 +84,7 @@ const token = (tokenRoles) =>
     },
   })
 
-const stubUser = (username) => {
+const stubUser = (username, authSource) => {
   const user = username || 'ITAG_USER'
   return getFor({
     urlPattern: `/auth/api/user/${encodeURI(user)}`,
@@ -93,7 +94,7 @@ const stubUser = (username) => {
       username: user,
       active: true,
       name: `${user} name`,
-      authSource: 'nomis',
+      authSource,
     },
   })
 }
@@ -147,21 +148,21 @@ const stubHealth = (status = 200) =>
 
 module.exports = {
   getSignInUrl,
-  stubSignIn: (username, roles) => {
+  stubSignIn: (username, roles, authSource) => {
     let tokenRoles = []
     roles.forEach((role) => tokenRoles.push(`ROLE_${role.roleCode}`))
     if (!Array.isArray(tokenRoles)) {
       tokenRoles = [tokenRoles]
     }
 
-    Promise.all([
+    return Promise.all([
       favicon(),
       redirect(),
       signOut(),
-      token(tokenRoles),
-      stubUserMe({}),
+      token(tokenRoles, authSource),
+      stubUserMe({ username }),
       stubUserMeRoles(roles),
-      stubUser(username),
+      stubUser(username, authSource),
     ])
   },
   redirect,
