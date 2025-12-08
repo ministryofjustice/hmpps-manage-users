@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
+    "@ministryofjustice/hmpps-npm-script-allowlist": "0.0.3",
     "@types/bunyan": "^1.8.11",
     "@types/bunyan-format": "^0.2.9",
     "@types/connect-flash": "0.0.40",
@@ -115,7 +116,8 @@
     "int-test-ui": "cypress open",
     "compile-sass": "sass --load-path=. ./sass:./build/stylesheets --style compressed",
     "watch-compile-sass": "npm run compile-sass && sass --load-path=. ./sass:./build/stylesheets --watch --style compressed",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "setup": "npm ci && hmpps-npm-script-run-allowlist"
   },
   "jest": {
     "preset": "ts-jest",
