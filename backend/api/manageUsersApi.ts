@@ -226,7 +226,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
   const getUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> =>
     get(context, `/prisonusers/${username}/caseloads`)
   const currentUserCaseloads = (context: Context, username: string): Promise<UserCaseloadDetail> | [] =>
-    context.authSource !== 'auth' ? getUserCaseloads(context, username) : []
+    context.authSource === 'nomis' ? getUserCaseloads(context, username) : []
   const addUserCaseloads = (context: Context, username: string, caseloads: string[]): Promise<UserCaseloadDetail> =>
     post(context, `/prisonusers/${username}/caseloads`, caseloads)
   const removeUserCaseload = (context: Context, username: string, caseloadId: string): Promise<UserCaseloadDetail> =>
