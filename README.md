@@ -98,7 +98,7 @@ node-env mode=PRODUCTION npm start
 docker run -p 3001:3000 -d \
      --name hmpps-manage-users \
      -e USE_API_GATEWAY_AUTH=no \
-     quay.io/hmpps/hmpps-manage-users:latest
+     ghcr.io/ministryofjustice/hmpps-manage-users:latest
 ```
 
 # Running locally in intelliJ
