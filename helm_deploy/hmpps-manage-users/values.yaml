@@ -24,6 +24,8 @@ generic-service:
     modsecurity_enabled: true
     modsecurity_snippet: |
       SecRuleEngine On
+      # Block Detectify scanner with 418
+      SecRule REQUEST_HEADERS:User-Agent "@pm detectify Detectify DETECTIFY" "id:800003,phase:1,deny,status:418,log,tag:github_team=haha,tag:namespace={{ .Release.Namespace }}"
       SecDefaultAction "phase:2,pass,log,tag:github_team=haha"
       SecDefaultAction "phase:4,pass,log,tag:github_team=haha"
       {{ if .Values.ingress.modsecurity_audit_enabled -}}
