@@ -12,7 +12,7 @@
     "@ministryofjustice/hmpps-audit-client": "^1.1.1",
     "accessible-autocomplete": "^3.0.1",
     "agentkeepalive": "^4.6.0",
-    "applicationinsights": "^2.9.8",
+    "applicationinsights": "^3.13.0",
     "axios": "^1.13.5",
     "babel-jest": "^30.2.0",
     "body-parser": "^2.2.2",
