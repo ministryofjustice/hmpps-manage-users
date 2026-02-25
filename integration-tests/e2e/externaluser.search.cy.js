@@ -203,7 +203,7 @@ context('External user search functionality', () => {
       })
 
       search.rows().should('have.length', 20)
-      search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
+      search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 total results')
 
       search.paginationLink('5').click()
       search.filterWithTag('Andy').should('exist')
@@ -242,7 +242,7 @@ context('External user search functionality', () => {
       const search = ExternalUserSearchPage.verifyOnPage()
       search.rows().should('have.length', 5)
 
-      search.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
+      search.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 total results')
       search.nextPage()
       search.previousPage()
       cy.task('verifyExternalUserSearch').should((requests) => {

@@ -88,12 +88,12 @@ context('Roles', () => {
           expect(role[4].role).to.eq('Role Name 4 rolecode4 DPS ADMIN DPS LSA')
         })
     })
-    rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
+    rolesWithFilter.getPaginationResults().should('contain.text', '5 total results')
 
     cy.task('stubAllRolesPaged', { totalElements: 3 })
     rolesWithFilter.filterAdminType('DPS ADMIN')
     rolesWithFilter.rows().should('have.length', 3)
-    rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
+    rolesWithFilter.getPaginationResults().should('contain.text', '3 total results')
   })
 
   it('will have a link to maintain the role', () => {
@@ -137,7 +137,7 @@ context('Roles', () => {
     })
 
     rolesWithFilter.rows().should('have.length', 5)
-    rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 101 results')
+    rolesWithFilter.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 101 total results')
 
     rolesWithFilter.paginationLink('5').click()
     rolesWithFilter.filterWithTag('General').should('exist')

@@ -48,7 +48,7 @@ context('Roles', () => {
 
     roles.rows().should('have.length', 5)
 
-    roles.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 results')
+    roles.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 21 total results')
   })
 
   it('Should move between paged result when next page and previous page selected', () => {
@@ -66,7 +66,7 @@ context('Roles', () => {
     const roles = RolesPage.verifyOnPage()
     roles.rows().should('have.length', 5)
 
-    roles.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 results')
+    roles.getPaginationResults().should('contain.text', 'Showing 6 to 10 of 21 total results')
     roles.nextPage()
     roles.previousPage()
     cy.task('verifyAllRoles').should((requests) => {
