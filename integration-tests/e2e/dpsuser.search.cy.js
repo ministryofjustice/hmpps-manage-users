@@ -119,12 +119,12 @@ context('DPS search with filter user functionality', () => {
     search.rows().should('have.length', 5)
     search.rows().eq(0).should('include.text', 'Itag\u00a0User0')
     search.rows().eq(1).should('include.text', 'Itag\u00a0User1')
-    search.getPaginationResults().should('contain.text', 'Showing 1 to 5 of 5 results')
+    search.getPaginationResults().should('contain.text', '5 total results')
 
     cy.task('stubDpsFindUsers', { totalElements: 3 })
     search.filterCaseload('Moorland')
     search.rows().should('have.length', 3)
-    search.getPaginationResults().should('contain.text', 'Showing 1 to 3 of 3 results')
+    search.getPaginationResults().should('contain.text', '3 total results')
   })
   it('will show user details in the results', () => {
     const search = goToSearchPage({ totalElements: 3 })
@@ -247,7 +247,7 @@ context('DPS search with filter user functionality', () => {
     })
 
     search.rows().should('have.length', 20)
-    search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 results')
+    search.getPaginationResults().should('contain.text', 'Showing 1 to 20 of 101 total results')
 
     search.paginationLink('5').click()
     search.filterWithTag('Andy').should('exist')
