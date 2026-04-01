@@ -30,6 +30,7 @@ jobs:
   node_build:
     name: node build
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
+    needs: [check_slsa]
     secrets: inherit
     with:
       install_command: 'npm run setup'
