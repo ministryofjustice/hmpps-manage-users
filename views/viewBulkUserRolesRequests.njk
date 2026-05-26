@@ -1,0 +1,70 @@
+{% extends "./partials/layout.njk" %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "moj/components/search/macro.njk" import mojSearch -%}
+
+{% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
+
+{% set title =  "View bulk role changes" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+  {{ mojSearch({
+    action: '#',
+    method: 'get',
+    input: {
+      id: 'keyword',
+      name: 'keyword'
+    },
+    label: {
+      text: 'Find a report',
+      classes: 'govuk-!-font-weight-bold'
+    },
+    hint: {
+      text: 'You can search by Reference'
+    },
+    button: {
+      text: 'Search'
+    }
+  }) }}
+
+  <br />
+  <br />
+
+  <h1 class="govuk-heading-l">{{ title }}</h1>
+
+  <table class="govuk-table" data-module="moj-sortable-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header" aria-sort="descending">Date of request</th>
+        <th scope="col" class="govuk-table__header">Reference</th>
+        <th scope="col" class="govuk-table__header">Requested By</th>
+        <th scope="col" class="govuk-table__header">Status</th>
+        <th scope="col" class="govuk-table__header">Request Details</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for r in bulkUserRolesRequests %}
+        <tr class="govuk-table__row">
+          <td class="govuk-table__cell "data-sort-value="{{ r.requestDateTime }}">{{ r.requestDateTime | formatBulkUserRolesDate }}</td>
+          <td class="govuk-table__cell"><a href="https://dsdmoj.atlassian.net/browse/{{ r.reference }}" class="govuk-body govuk-link noDoubleClick">{{ r.reference }}</td>
+          <td class="govuk-table__cell">{{ r.requestedBy }}</td>
+          <td class="govuk-table__cell">{{ r.status }}</td>
+          <td class="govuk-table__cell"><a href="/change-roles-in-bulk/requests/{{r.id}}" class="govuk-body govuk-link noDoubleClick">View details</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

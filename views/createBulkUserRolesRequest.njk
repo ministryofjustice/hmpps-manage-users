@@ -1,0 +1,62 @@
+{% extends "./partials/layout.njk" %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
+
+{% set title =  "Change user roles in bulk" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+  {% if referenceError %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem!",
+      errorList: [
+        {
+          text: referenceError,
+          href: "#input-reference"
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
+  </legend>
+
+  <form action="/change-roles-in-bulk/reference" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {{ govukInput({
+      label: {
+        text: "Reference",
+        classes: "govuk-label--m"
+      },
+      id: "input-reference",
+      name: "reference",
+      classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
+      value: "",
+      errorMessage: caseReferenceErrorMessage
+    }) }}
+
+    {{ govukButton({
+      text: "Continue",
+      id: "input-continue",
+      preventDoubleClick: true
+    }) }}
+
+  </form>
+
+{% endblock %}

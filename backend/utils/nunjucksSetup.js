@@ -20,6 +20,10 @@ module.exports = (app, path) => {
     },
   )
 
+  njkEnv.addFilter('formatBulkUserRolesDate', (dateString) =>
+    dateString ? moment(new Date(dateString)).format('DD/MM/YYYY HH:mm') : null,
+  )
+
   njkEnv.addFilter('findError', (array, formFieldId) => {
     if (!array) return null
     const item = array.find((error) => error.href === `#${formFieldId}`)

@@ -1,0 +1,94 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "./components/bulkUserRolesReport/macro.njk" import bulkUserRolesReport %}
+
+{% set title =  "Bulk user roles requests" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "View bulk roles changes", href: '/change-roles-in-bulk/requests' },
+       { text: details.reference }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">{{ details.reference }}</h1>
+
+  {% set jiraLink %}
+    <a href="https://dsdmoj.atlassian.net/browse/{{ details.reference }} class="govuk-body govuk-link noDoubleClick">{{ details.reference }}</a>
+  {% endset %}
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "ID"
+        },
+        value: {
+          text: details.id
+        }
+      },
+      {
+        key: {
+          text: "Reference"
+        },
+        value: {
+          html: jiraLink | safe
+        }
+      },
+      {
+        key: {
+          text: "Date requested"
+        },
+        value: {
+          text: details.requestDateTime | formatBulkUserRolesDate
+        }
+      },
+      {
+        key: {
+          text: "Requested by"
+        },
+        value: {
+          text: details.requestedBy
+        }
+      },
+      {
+        key: {
+          text: "Status"
+        },
+        value: {
+          html: details.status
+        }
+      },
+      {
+        key: {
+          text: "Total requests"
+        },
+        value: {
+          html: details.totalCount
+        }
+      },
+      {
+        key: {
+          text: "Unsuccessful requests"
+        },
+        value: {
+          html: details.unsuccessfulCount
+        }
+      },
+      {
+        key: {
+          text: "Results"
+        },
+        value: {
+          html: bulkUserRolesReport({ details: details })
+        }
+      }
+    ]
+  }) }}
+
+
+{% endblock %}

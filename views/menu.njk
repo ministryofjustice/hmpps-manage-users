@@ -24,6 +24,7 @@
 {% set hasCreateDPSUsers = user and (user.createDPSUsers) %}
 {% set hasManageEmailDomains = user and (user.manageEmailDomains) %}
 {% set hasCRSGroupUsersDownload = user and (user.crsGroupUsersDownload) %}
+{% set hasBulkUserRolesAdmin = user and (user.bulkUserRolesAdmin) %}
 
 {% block content %}
   {% if message.length > 0 and hasMaintainNomisRolesAccess %}
@@ -154,6 +155,28 @@
                   <a class="govuk-link card__link" href="/manage-roles/create-role">Create a role</a>
                 </h1>
                 <p class="govuk-body card__description">Create a new role that can later be assigned to users</p>
+              </div>
+            </div>
+          {% endif %}
+          {% if hasBulkUserRolesAdmin %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="create_roles_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/change-roles-in-bulk">Change roles in bulk</a>
+                </h1>
+
+                <p class="govuk-body card__description">Apply bulk user roles changes</p>
+              </div>
+            </div>
+          {% endif %}
+          {% if hasBulkUserRolesAdmin %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="create_roles_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/change-roles-in-bulk/requests">View bulk role changes</a>
+                </h1>
+
+                <p class="govuk-body card__description">View existing bulk user roles changes</p>
               </div>
             </div>
           {% endif %}
