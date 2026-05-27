@@ -10,19 +10,22 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const getCreateNew = async (req, res) => {
-    req.session.bulkUserRoles = {}
+    if (req.session.bulkUserRoles === undefined) {
+      req.session.bulkUserRoles = {}
+    }
     res.render('createBulkUserRolesRequest.njk')
   }
 
-  const postReference = async (req, res) => {
-    const { reference } = req.body || {}
-    if (!reference) {
+  const postJiraReference = async (req, res) => {
+    const { jiraReference } = req.body || {}
+    if (!jiraReference) {
       res.render('createBulkUserRolesRequest.njk', {
-        referenceError: 'reference is required and cannot be empty',
+        jiraReferenceError: 'jira reference is required and cannot be empty',
       })
       return
     }
-    req.session.bulkUserRoles.reference = reference
+
+    req.session.bulkUserRoles.jiraReference = jiraReference
     req.session.bulkUserRoles.dateRequested = Date()
     req.session.bulkUserRoles.requestedBy = req.session.userDetails.username
     res.redirect('/change-roles-in-bulk/select-roles')
@@ -50,6 +53,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     }
 
     req.session.bulkUserRoles.roles = selectedRoles
+    console.log(req.session.bulkUserRoles)
     res.redirect('/change-roles-in-bulk/upload-users')
   }
 
@@ -118,10 +122,10 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const postBulkRequestSubmit = async (req, res) => {
-    console.log(`request ${req.session.bulkUserRoles.reference} has been submitted`)
+    console.log(`request ${req.session.bulkUserRoles.jiraReference} has been submitted`)
     const bulkRequest = req.session.bulkUserRoles
     delete req.session.bulkUserRoles
-    res.render('createBulkUserRolesConfirmation.njk', { reference: bulkRequest.reference })
+    res.render('createBulkUserRolesConfirmation.njk', { jiraReference: bulkRequest.jiraReference })
   }
 
   const getRoles = async (res) => {
@@ -134,7 +138,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
 
   return {
     getCreateNew,
-    postReference,
+    postJiraReference,
     getSelectRoles,
     postSelectRoles,
     getUserCsvUpload,

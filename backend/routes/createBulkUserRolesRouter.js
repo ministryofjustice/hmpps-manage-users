@@ -10,7 +10,7 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
   const { searchableRoles } = searchApiFactory(manageUsersApi)
   const {
     getCreateNew,
-    postReference,
+    postJiraReference,
     getSelectRoles,
     postSelectRoles,
     getUserCsvUpload,
@@ -20,7 +20,7 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
   } = createBulkUserRolesRequestsFactory(searchableRoles)
 
   router.get('/', getCreateNew)
-  router.post('/reference', postReference)
+  router.post('/jira-reference', postJiraReference)
   router.get('/select-roles', getSelectRoles)
   router.post('/select-roles', postSelectRoles)
   router.get('/upload-users', getUserCsvUpload)

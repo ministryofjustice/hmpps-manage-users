@@ -36,7 +36,7 @@
       classes: 'govuk-!-font-weight-bold'
     },
     hint: {
-      text: 'You can search by Jira or Requested By'
+      text: 'You can search by Jira reference or Requested By'
     },
     button: {
       text: 'Search'
@@ -50,7 +50,7 @@
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header" aria-sort="descending">Date of request</th>
-        <th scope="col" class="govuk-table__header">Jira</th>
+        <th scope="col" class="govuk-table__header">Jira reference</th>
         <th scope="col" class="govuk-table__header">Requested By</th>
         <th scope="col" class="govuk-table__header">Status</th>
         <th scope="col" class="govuk-table__header">Request Details</th>
@@ -60,7 +60,7 @@
       {% for r in bulkUserRolesRequests %}
         <tr class="govuk-table__row">
           <td class="govuk-table__cell "data-sort-value="{{ r.requestDateTime }}">{{ r.requestDateTime | formatBulkUserRolesDate }}</td>
-          <td class="govuk-table__cell"><a href="https://dsdmoj.atlassian.net/browse/{{ r.jira }}" class="govuk-body govuk-link noDoubleClick">{{ r.jira }}</td>
+          <td class="govuk-table__cell"><a href="https://dsdmoj.atlassian.net/browse/{{ r.jiraReference }}" class="govuk-body govuk-link noDoubleClick">{{ r.jiraReference }}</td>
           <td class="govuk-table__cell">{{ r.requestedBy }}</td>
           <td class="govuk-table__cell">{{ r.status }}</td>
           <td class="govuk-table__cell"><a href="/view-bulk-role-changes/requests/{{r.id}}" class="govuk-body govuk-link noDoubleClick">View details</a></td>

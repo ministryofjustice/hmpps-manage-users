@@ -20,13 +20,13 @@
 
 {% block content %}
 
-  {% if referenceError %}
+  {% if jiraReferenceError %}
     {{ govukErrorSummary({
       titleText: "There is a problem!",
       errorList: [
         {
-          text: referenceError,
-          href: "#input-reference"
+          text: jiraReferenceError,
+          href: "#input-jira-reference"
         }
       ]
     }) }}
@@ -36,19 +36,18 @@
     <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
   </legend>
 
-  <form action="/change-roles-in-bulk/reference" method="post">
+  <form action="/change-roles-in-bulk/jira-reference" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
     {{ govukInput({
       label: {
-        text: "Reference",
+        text: "Jira reference",
         classes: "govuk-label--m"
       },
       id: "input-reference",
-      name: "reference",
+      name: "jiraReference",
       classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
-      value: "",
-      errorMessage: caseReferenceErrorMessage
+      value: ""
     }) }}
 
     {{ govukButton({

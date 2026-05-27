@@ -49,12 +49,12 @@
   {% endset %}
 
   {% set jiraLink %}
-    <a href="https://dsdmoj.atlassian.net/browse/{{ summary.reference }} class="govuk-body govuk-link noDoubleClick">{{ summary.reference }}</a>
+    <a href="https://dsdmoj.atlassian.net/browse/{{ summary.jiraReference }} class="govuk-body govuk-link noDoubleClick">{{ summary.jiraReference }}</a>
   {% endset %}
 
   <form action="/change-roles-in-bulk/submit" method="post">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-      <h1 class="govuk-fieldset__heading">Please confirm request details</h1>
+      <h1 class="govuk-fieldset__heading">Please confirm change details</h1>
     </legend>
 
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
@@ -63,7 +63,7 @@
       rows: [
         {
           key: {
-            text: "Reference"
+            text: "Jira reference"
           },
           value: {
             html: jiraLink | safe

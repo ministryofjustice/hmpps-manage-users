@@ -16,10 +16,10 @@
  {% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">{{ details.jira }}</h1>
+  <h1 class="govuk-heading-l">{{ details.jiraReference }}</h1>
 
   {% set jiraLink %}
-    <a href="https://dsdmoj.atlassian.net/browse/{{ details.jira }} class="govuk-body govuk-link noDoubleClick">{{ details.jira }}</a>
+    <a href="https://dsdmoj.atlassian.net/browse/{{ details.jiraReference }} class="govuk-body govuk-link noDoubleClick">{{ details.jiraReference }}</a>
   {% endset %}
 
   {{ govukSummaryList({
@@ -34,7 +34,7 @@
       },
       {
         key: {
-          text: "Jira"
+          text: "Jira reference"
         },
         value: {
           html: jiraLink | safe
