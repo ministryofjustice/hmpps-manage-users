@@ -1,6 +1,6 @@
 const express = require('express')
 const multer = require('multer')
-const { bulkUserRolesRequestsFactory } = require('../controllers/bulkUserRolesRequests').default
+const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests').default
 const searchApiFactory = require('./searchApiFactory')
 
 const router = express.Router({ mergeParams: true })
@@ -17,9 +17,7 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
     postUserCsvUpload,
     getBulkRequestSummary,
     postBulkRequestSubmit,
-    viewBulkUserRolesRequests,
-    viewBulkUserRolesRequest,
-  } = bulkUserRolesRequestsFactory(searchableRoles)
+  } = createBulkUserRolesRequestsFactory(searchableRoles)
 
   router.get('/', getCreateNew)
   router.post('/reference', postReference)
@@ -29,10 +27,6 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
   router.post('/upload-users', upload.single('file'), csrfProtection, postUserCsvUpload)
   router.get('/summary', getBulkRequestSummary)
   router.post('/submit', postBulkRequestSubmit)
-
-  router.get('/requests', viewBulkUserRolesRequests)
-  router.get('/requests/:id', viewBulkUserRolesRequest)
-
   return router
 }
 

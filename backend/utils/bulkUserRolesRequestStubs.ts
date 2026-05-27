@@ -5,7 +5,7 @@ const requestThreeId = '676b39b7-a022-4c31-a072-a0efffc79a98'
 const bulkUserRolesRequestsList = [
   {
     id: requestOneId,
-    reference: 'HAAR-5398',
+    jira: 'HAAR-5398',
     requestedBy: 'A Aaronson',
     requestDateTime: new Date(2026, 0, 1, 12, 0, 0, 0),
     status: 'PENDING',
@@ -18,7 +18,7 @@ const bulkUserRolesRequestsList = [
   },
   {
     id: requestTwoId,
-    reference: 'HAAR-5391',
+    jira: 'HAAR-5391',
     requestedBy: 'B Bieber',
     requestDateTime: new Date(2025, 1, 1, 13, 1, 0, 0),
     status: 'COMPLETE',
@@ -35,7 +35,7 @@ const bulkUserRolesRequestsList = [
   },
   {
     id: requestThreeId,
-    reference: 'HAAR-5388',
+    jira: 'HAAR-5388',
     requestedBy: 'C Caesar',
     requestDateTime: new Date(2024, 2, 2, 14, 2, 0, 0),
     status: 'PENDING',

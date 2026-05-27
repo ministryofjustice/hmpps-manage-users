@@ -1,9 +1,7 @@
-import { bulkUserRolesReportsMap, bulkUserRolesRequestsList } from '../utils/bulkUserRolesRequestStubs'
-
 const fs = require('fs')
 const fsAsync = require('fs/promises')
 
-const bulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
+const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   class ValidationError extends Error {
     constructor(message) {
       super(message)
@@ -126,42 +124,6 @@ const bulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.render('createBulkUserRolesConfirmation.njk', { reference: bulkRequest.reference })
   }
 
-  // TODO split this into separate router
-
-  const viewBulkUserRolesRequests = async (req, res) => {
-    const searchTerm = req.query.keyword || ''
-
-    let bulkUserRolesRequests
-    if (searchTerm) {
-      bulkUserRolesRequests = bulkUserRolesRequestsList.filter((r) =>
-        r.reference.toLowerCase().includes(searchTerm.toLowerCase()),
-      )
-    } else {
-      bulkUserRolesRequests = bulkUserRolesRequestsList
-    }
-
-    res.render('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests })
-  }
-
-  const viewBulkUserRolesRequest = async (req, res) => {
-    const id = req.params.id || ''
-    const requestDetails = bulkUserRolesRequestsList.find((r) => r.id === id)
-
-    const { roles, ...rest } = requestDetails
-
-    const report = bulkUserRolesReportsMap().get(id)
-
-    const details = {
-      ...rest,
-      roles: roles.map((r) => r.roleCode).join(', '),
-      report,
-      totalCount: report.length,
-      unsuccessfulCount: report.filter((r) => r.status !== 200).length,
-    }
-
-    res.render('viewBulkUserRolesRequestDetails.njk', { details })
-  }
-
   const getRoles = async (res) => {
     const roles = await getSearchableRolesApi(res.locals)
     return roles.map((r) => ({
@@ -179,9 +141,7 @@ const bulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     postUserCsvUpload,
     getBulkRequestSummary,
     postBulkRequestSubmit,
-    viewBulkUserRolesRequests,
-    viewBulkUserRolesRequest,
   }
 }
 
-export default { bulkUserRolesRequestsFactory }
+export default { createBulkUserRolesRequestsFactory }

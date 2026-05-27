@@ -1,4 +1,5 @@
 {% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "./components/bulkUserRolesReport/macro.njk" import bulkUserRolesReport %}
 
@@ -8,17 +9,17 @@
    {{ govukBreadcrumbs({
      items: [
        { text: "Home", href: homeUrl },
-       { text: "View bulk roles changes", href: '/change-roles-in-bulk/requests' },
-       { text: details.reference }
+       { text: "View bulk roles changes", href: '/view-bulk-role-changes/requests' },
+       { text: details.id }
      ]
    }) }}
  {% endblock %}
 
 {% block content %}
-  <h1 class="govuk-heading-l">{{ details.reference }}</h1>
+  <h1 class="govuk-heading-l">{{ details.jira }}</h1>
 
   {% set jiraLink %}
-    <a href="https://dsdmoj.atlassian.net/browse/{{ details.reference }} class="govuk-body govuk-link noDoubleClick">{{ details.reference }}</a>
+    <a href="https://dsdmoj.atlassian.net/browse/{{ details.jira }} class="govuk-body govuk-link noDoubleClick">{{ details.jira }}</a>
   {% endset %}
 
   {{ govukSummaryList({
@@ -33,7 +34,7 @@
       },
       {
         key: {
-          text: "Reference"
+          text: "Jira"
         },
         value: {
           html: jiraLink | safe
@@ -89,6 +90,20 @@
       }
     ]
   }) }}
+
+  <div class="pull-right">
+    <form id="downloadResultsForm" method="GET" action="/view-bulk-role-changes/requests/{{details.id}}/download">
+      {{ govukButton({
+        id: "downloadResultsButton",
+        text: "Download results",
+        element: "button",
+        type: "submit",
+        preventDoubleClick: true,
+        classes: "govuk-button downloadButton",
+        attributes: { "data-qa": "download" }
+      }) }}
+    </form>
+  </div>
 
 
 {% endblock %}

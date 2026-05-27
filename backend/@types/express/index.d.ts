@@ -9,7 +9,7 @@ declare module 'express-session' {
       username: string
     }
     bulkUserRolesRequest: {
-      reference: string
+      jira: string
       dateRequested: Date
       requestedBy: string
       users: string[]
