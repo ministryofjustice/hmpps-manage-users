@@ -1,0 +1,17 @@
+{% extends "./partials/layout.njk" %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+{% block content %}
+
+  <div class="govuk-panel govuk-panel--confirmation" id="confirmation-panel">
+    <h1 class="govuk-panel__title">Change user roles in bulk request for {{ reference }} has been submitted</h1>
+  </div>
+
+  <section id="next-steps">
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">You can check on the progress of this request and view it after completion on the view requests page.</p>
+  </section>
+  <a href="/change-roles-in-bulk/requests" class="govuk-body govuk-link" id="view-requests">View all requests.</a>
+
+{% endblock %}

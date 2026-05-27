@@ -17,6 +17,11 @@
 
 {% block content %}
 
+  {% if fileError %}
+      {% set uploadErrorMessage = { text: fileError } %}
+      {% set showErrors = true %}
+  {% endif %}
+
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-xl">Upload files</h1>
@@ -26,7 +31,7 @@
 
         {{ govukFileUpload({
           id: "file-upload-1",
-          name: "file-upload-1",
+          name: "file",
           isPageHeading: true,
           label: {
             text: "Upload users csv",
@@ -34,7 +39,8 @@
           },
           hint: {
             text: "Upload a .csv file of user IDs to assign roles to"
-          }
+          },
+          errorMessage: uploadErrorMessage
         }) }}
 
         {{ govukButton({ text: "Upload" }) }}

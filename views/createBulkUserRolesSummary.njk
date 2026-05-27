@@ -2,6 +2,7 @@
 {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 
 {% set title =  "Change user roles in bulk" %}
@@ -17,11 +18,106 @@
 
 {% block content %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Summary</h1>
-        details here
-    </div>
-  </div>
+  {% set assignments %}
+    <table class="govuk-table">
+      <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+          <th scope="col" class="govuk-table__header">User ID</th>
+          <th scope="col" class="govuk-table__header">Role Code</th>
+          <th scope="col" class="govuk-table__header">Role Name</th>
+        </tr>
+      </thead>
+      <tbody class="govuk-table__body">
+      {% for user in summary.users %}
+        {% for role in summary.roles %}
+          <tr>
+            <td class="{{ cellClass }}">{{ user }}</td>
+            <td class="{{ cellClass }}">{{ role }}</td>
+          </tr>
+        {% endfor %}
+      {% endfor %}
+      </tbody>
+    </table>
+  {% endset %}
+
+  {% set roleList %}
+    <ul>
+      {% for r in summary.roles %}
+      <li>{{r}}</li>
+      {% endfor %}
+    </ul>
+  {% endset %}
+
+  {% set jiraLink %}
+    <a href="https://dsdmoj.atlassian.net/browse/{{ summary.reference }} class="govuk-body govuk-link noDoubleClick">{{ summary.reference }}</a>
+  {% endset %}
+
+  <form action="/change-roles-in-bulk/submit" method="post">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h1 class="govuk-fieldset__heading">Please confirm request details</h1>
+    </legend>
+
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Reference"
+          },
+          value: {
+            html: jiraLink | safe
+          }
+        },
+        {
+          key: {
+            text: "Date requested"
+          },
+          value: {
+            text: summary.dateRequested | formatBulkUserRolesDate
+          }
+        },
+        {
+          key: {
+            text: "Requested by"
+          },
+          value: {
+            text: summary.requestedBy
+          }
+        },
+        {
+          key: {
+            text: "Roles"
+          },
+          value: {
+            html: roleList | safe
+          }
+        },
+       {
+         key: {
+           text: "Number of users"
+         },
+         value: {
+           text: summary.users.length
+         }
+       },
+        {
+          key: {
+            text: "Total assignments"
+          },
+          value: {
+            text: summary.users.length * summary.roles.length
+          }
+        }
+      ]
+    }) }}
+
+    {{ govukButton({
+      text: "Accept and submit request",
+      id: "accept-confirm",
+      preventDoubleClick: true
+    }) }}
+
+  </form>
 
 {% endblock %}

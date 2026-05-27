@@ -45,6 +45,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -81,6 +82,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -105,6 +107,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -127,6 +130,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -149,6 +153,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -171,6 +176,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -193,6 +199,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
   it('should set maintain dps user', async () => {
@@ -214,6 +221,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -236,6 +244,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -258,6 +267,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -280,6 +290,7 @@ describe('Current user', () => {
       manageUserAllowList: true,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -302,6 +313,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: true,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -334,6 +346,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -356,6 +369,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -383,6 +397,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
     expect(next).toHaveBeenCalled()
   })

@@ -8,6 +8,13 @@ declare module 'express-session' {
     userDetails: {
       username: string
     }
+    bulkUserRolesRequest: {
+      reference: string
+      dateRequested: Date
+      requestedBy: string
+      users: string[]
+      roles: string[]
+    }
   }
 }
 

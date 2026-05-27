@@ -24,7 +24,7 @@ const featureSwitches = require('./middleware/featureSwitches')
 const nomisUserDetails = require('./middleware/nomisUserDetails').default
 const config = require('./config').default
 
-const configureRoutes = ({ manageUsersApi }) => {
+const configureRoutes = ({ manageUsersApi, csrfProtection }) => {
   const router = express.Router()
 
   router.use(currentUser({ manageUsersApi }))
@@ -47,8 +47,8 @@ const configureRoutes = ({ manageUsersApi }) => {
   router.use('/create-email-domain', createEmailDomainsRouter({ manageUsersApi }))
   router.use('/delete-email-domain?id=:domainId&name=:domainName', deleteEmailDomainsRouter({ manageUsersApi }))
   router.use('/delete-email-domain', deleteEmailDomainsRouter({ manageUsersApi }))
-  router.use('/change-roles-in-bulk', bulkUserRolesRouter({ manageUsersApi }))
-  router.use('/view-bulk-role-changes', bulkUserRolesRouter({ manageUsersApi }))
+  router.use('/change-roles-in-bulk', bulkUserRolesRouter({ manageUsersApi, csrfProtection }))
+  router.use('/view-bulk-role-changes', bulkUserRolesRouter({ manageUsersApi, csrfProtection }))
   router.use(userAllowListRouter())
   router.use(crsGroupSelectionRouter())
 
