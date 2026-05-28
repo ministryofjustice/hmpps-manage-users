@@ -2,6 +2,15 @@
 
 {% from "govuk/components/panel/macro.njk" import govukPanel %}
 
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl }
+     ]
+   }) }}
+
+ {% endblock %}
+
 {% block content %}
 
   <div class="govuk-panel govuk-panel--confirmation" id="confirmation-panel">

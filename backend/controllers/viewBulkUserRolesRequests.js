@@ -8,7 +8,7 @@ const viewBulkUserRolesRequestsFactory = () => {
     if (searchTerm) {
       bulkUserRolesRequests = bulkUserRolesRequestsList.filter((r) => {
         const target = searchTerm.toLowerCase()
-        return r.jira.toLowerCase().includes(target) || r.requestedBy.toLowerCase().includes(target)
+        return r.jiraReference.toLowerCase().includes(target) || r.requestedBy.toLowerCase().includes(target)
       })
     } else {
       bulkUserRolesRequests = bulkUserRolesRequestsList

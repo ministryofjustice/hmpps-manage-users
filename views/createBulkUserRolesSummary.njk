@@ -63,14 +63,6 @@
       rows: [
         {
           key: {
-            text: "Jira reference"
-          },
-          value: {
-            html: jiraLink | safe
-          }
-        },
-        {
-          key: {
             text: "Date requested"
           },
           value: {
@@ -87,12 +79,55 @@
         },
         {
           key: {
+            text: "Jira reference"
+          },
+          value: {
+            html: jiraLink | safe
+          },
+          actions: {
+            items: [
+              {
+                href: "/change-roles-in-bulk",
+                text: "Change",
+                visuallyHiddenText: "name"
+              }
+            ]
+          }
+        },
+        {
+          key: {
             text: "Roles"
           },
           value: {
             html: roleList | safe
+          },
+          actions: {
+            items: [
+              {
+                href: "/change-roles-in-bulk/select-roles",
+                text: "Change",
+                visuallyHiddenText: "name"
+              }
+            ]
           }
         },
+       {
+         key: {
+           text: "Uploaded file"
+         },
+         value: {
+           text: summary.uploadFile
+         },
+         actions: {
+           items: [
+             {
+               href: "/change-roles-in-bulk/upload-users",
+               text: "Change",
+               visuallyHiddenText: "name"
+             }
+           ]
+         }
+       },
        {
          key: {
            text: "Number of users"

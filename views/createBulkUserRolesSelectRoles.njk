@@ -4,7 +4,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
 {% set title =  "Change user roles in bulk" %}
@@ -16,6 +16,11 @@
        { text: title }
      ]
    }) }}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: "/change-roles-in-bulk"
+  }) }}
  {% endblock %}
 
 {% block content %}
@@ -44,7 +49,7 @@
         <table class="govuk-table" data-module="moj-multi-select">
           <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-              <th class="govuk-table__header" scope="col" id="mountains-select-all"></th>
+              <th class="govuk-table__header" scope="col" id="roles-select-all"></th>
               <th class="govuk-table__header" scope="col">Role name</th>
               <th class="govuk-table__header" scope="col">Role code</th>
             </tr>
@@ -56,7 +61,7 @@
             <tr class="govuk-table__row govuk-table__row--selected">
               <td class="govuk-table__cell">
                 <div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
-                  <input type="checkbox" class="govuk-checkboxes__input" id="{{r.text }}" name="selectedRoles" value="{{r.value}}">
+                  <input type="checkbox" class="govuk-checkboxes__input" id="{{r.text }}" name="selectedRoles" value="{{r.value}}" {% if r.value in selectedRoles %} checked {% endif %}>
                   <label class="govuk-label govuk-checkboxes__label" for="{{r.text }}">
                     <span class="govuk-visually-hidden">Select {{r.text }}</span>
                   </label>

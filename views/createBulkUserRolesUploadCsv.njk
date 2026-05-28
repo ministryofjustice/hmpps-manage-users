@@ -2,7 +2,7 @@
 {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
-
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 
 {% set title =  "Change user roles in bulk" %}
 
@@ -13,6 +13,12 @@
        { text: title }
      ]
    }) }}
+
+   {{ govukBackLink({
+     text: "Back",
+     href: "/change-roles-in-bulk/select-roles"
+   }) }}
+
  {% endblock %}
 
 {% block content %}

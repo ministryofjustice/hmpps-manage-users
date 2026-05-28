@@ -14,6 +14,7 @@ declare module 'express-session' {
       requestedBy: string
       users: string[]
       roles: string[]
+      uploadFile: string
     }
   }
 }

@@ -13,7 +13,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     if (req.session.bulkUserRoles === undefined) {
       req.session.bulkUserRoles = {}
     }
-    res.render('createBulkUserRolesRequest.njk')
+    res.render('createBulkUserRolesRequest.njk', { jiraReference: req.session.bulkUserRoles.jiraReference })
   }
 
   const postJiraReference = async (req, res) => {
@@ -24,8 +24,13 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       })
       return
     }
-
     req.session.bulkUserRoles.jiraReference = jiraReference
+
+    if (hasAllInputs(req)) {
+      res.redirect('/change-roles-in-bulk/summary')
+      return
+    }
+
     req.session.bulkUserRoles.dateRequested = Date()
     req.session.bulkUserRoles.requestedBy = req.session.userDetails.username
     res.redirect('/change-roles-in-bulk/select-roles')
@@ -33,27 +38,36 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
 
   const getSelectRoles = async (req, res) => {
     const rolesList = await getRoles(res)
-    const selectedRoles = []
+    const selectedRoles = req.session.bulkUserRoles.roles ?? []
 
     res.render('createBulkUserRolesSelectRoles.njk', { rolesList, selectedRoles })
   }
 
   const postSelectRoles = async (req, res) => {
-    const { selectedRoles } = req.body || {}
-    console.log(selectedRoles)
+    const { selectedRoles } = req?.body || {}
 
     if (!selectedRoles || !selectedRoles.length) {
       const rolesList = await getRoles(res)
 
       res.render('createBulkUserRolesSelectRoles.njk', {
         rolesList,
+        selectedRoles: [],
         selectRolesError: 'at least one role must be selected',
       })
       return
     }
 
-    req.session.bulkUserRoles.roles = selectedRoles
-    console.log(req.session.bulkUserRoles)
+    if (Array.isArray(selectedRoles)) {
+      req.session.bulkUserRoles.roles = selectedRoles
+    } else {
+      req.session.bulkUserRoles.roles = [selectedRoles]
+    }
+
+    if (hasAllInputs(req)) {
+      res.redirect('/change-roles-in-bulk/summary')
+      return
+    }
+
     res.redirect('/change-roles-in-bulk/upload-users')
   }
 
@@ -76,6 +90,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     }
 
     req.session.bulkUserRoles.users = userIds
+    req.session.bulkUserRoles.uploadFile = file.originalname
     res.redirect('/change-roles-in-bulk/summary')
   }
 
@@ -134,6 +149,18 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       text: r.roleName,
       value: r.roleCode,
     }))
+  }
+
+  const hasAllInputs = (req) => {
+    const details = req.session.bulkUserRoles
+    return (
+      details?.dateRequested !== undefined &&
+      details?.jiraReference?.length > 0 &&
+      details?.requestedBy?.length > 0 &&
+      details?.users?.length > 0 &&
+      details?.roles?.length > 0 &&
+      details?.uploadFile?.length > 0
+    )
   }
 
   return {

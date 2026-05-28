@@ -4,7 +4,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
 {% set title =  "Change user roles in bulk" %}
@@ -16,6 +16,12 @@
        { text: title }
      ]
    }) }}
+
+   {{ govukBackLink({
+     text: "Back",
+     href: homeUrl
+   }) }}
+
  {% endblock %}
 
 {% block content %}
@@ -47,7 +53,7 @@
       id: "input-reference",
       name: "jiraReference",
       classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
-      value: ""
+      value: jiraReference
     }) }}
 
     {{ govukButton({
