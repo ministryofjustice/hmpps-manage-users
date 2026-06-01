@@ -8,6 +8,14 @@ declare module 'express-session' {
     userDetails: {
       username: string
     }
+    bulkUserRolesRequest: {
+      jiraReference: string
+      dateRequested: Date
+      requestedBy: string
+      users: string[]
+      roles: string[]
+      uploadFile: string
+    }
   }
 }
 
