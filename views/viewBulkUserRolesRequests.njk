@@ -3,7 +3,8 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{%- from "moj/components/search/macro.njk" import mojSearch -%}
+{% from "moj/components/search/macro.njk" import mojSearch %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
 
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
@@ -52,17 +53,28 @@
         <th scope="col" class="govuk-table__header" aria-sort="descending">Date of request</th>
         <th scope="col" class="govuk-table__header">Jira reference</th>
         <th scope="col" class="govuk-table__header">Requested By</th>
-        <th scope="col" class="govuk-table__header">Status</th>
+        <th scope="col" class="govuk-table__header">Processing Status</th>
+        <th scope="col" class="govuk-table__header">Error Status</th>
         <th scope="col" class="govuk-table__header">Request Details</th>
       </tr>
     </thead>
     <tbody class="govuk-table__body">
       {% for r in bulkUserRolesRequests %}
+
+        {% if r.errorStatus == 'Errors' %}
+            {% set statusClass = "moj-badge--red" %}
+        {% elseif r.errorStatus == 'N/A' %}
+            {% set statusClass = "moj-badge--grey" %}
+        {% else %}
+            {% set statusClass = "moj-badge--green" %}
+        {% endif %}
+
         <tr class="govuk-table__row">
           <td class="govuk-table__cell "data-sort-value="{{ r.requestDateTime }}">{{ r.requestDateTime | formatBulkUserRolesDate }}</td>
           <td class="govuk-table__cell"><a href="https://dsdmoj.atlassian.net/browse/{{ r.jiraReference }}" class="govuk-body govuk-link noDoubleClick">{{ r.jiraReference }}</td>
           <td class="govuk-table__cell">{{ r.requestedBy }}</td>
           <td class="govuk-table__cell">{{ r.status }}</td>
+          <td class="govuk-table__cell">{{ mojBadge({ text: r.errorStatus, classes: statusClass }) }}</td>
           <td class="govuk-table__cell"><a href="/view-bulk-role-changes/requests/{{r.id}}" class="govuk-body govuk-link noDoubleClick">View details</a></td>
         </tr>
       {% endfor %}

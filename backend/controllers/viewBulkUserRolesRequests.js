@@ -1,4 +1,8 @@
-import { bulkUserRolesReportsMap, bulkUserRolesRequestsList } from '../utils/bulkUserRolesRequestStubs'
+import {
+  bulkUserRolesReportsMap,
+  bulkUserRolesRequestsList,
+  getAggregatedResults,
+} from '../utils/bulkUserRolesRequestStubs'
 
 const viewBulkUserRolesRequestsFactory = () => {
   const viewBulkUserRolesRequests = async (req, res) => {
@@ -29,6 +33,7 @@ const viewBulkUserRolesRequestsFactory = () => {
       ...rest,
       roles: roles.map((r) => r.roleCode).join(', '),
       report,
+      aggregation: getAggregatedResults(),
       totalCount: report.length,
       unsuccessfulCount: report.filter((r) => r.status !== 200).length,
     }

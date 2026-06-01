@@ -8,7 +8,8 @@ const bulkUserRolesRequestsList = [
     jiraReference: 'HAAR-5398',
     requestedBy: 'A Aaronson',
     requestDateTime: new Date(2026, 0, 1, 12, 0, 0, 0),
-    status: 'PENDING',
+    status: 'In Progress',
+    errorStatus: 'N/A',
     roles: [
       {
         roleName: 'Role One',
@@ -21,7 +22,8 @@ const bulkUserRolesRequestsList = [
     jiraReference: 'HAAR-5391',
     requestedBy: 'B Bieber',
     requestDateTime: new Date(2025, 1, 1, 13, 1, 0, 0),
-    status: 'COMPLETE',
+    status: 'Complete',
+    errorStatus: 'No Errors',
     roles: [
       {
         roleName: 'Role One',
@@ -38,7 +40,8 @@ const bulkUserRolesRequestsList = [
     jiraReference: 'HAAR-5388',
     requestedBy: 'C Caesar',
     requestDateTime: new Date(2024, 2, 2, 14, 2, 0, 0),
-    status: 'PENDING',
+    status: 'Complete',
+    errorStatus: 'Errors',
     roles: [
       {
         roleName: 'Role One',
@@ -54,6 +57,21 @@ const bulkUserRolesRequestsList = [
       },
     ],
   },
+]
+
+const resultsList = [
+  { user: 'AAA111', roleCode: 'ROLE_ONE', status: 200 },
+  { user: 'AAA111', roleCode: 'ROLE_TWO', status: 200 },
+  { user: 'AAA111', roleCode: 'ROLE_THREE', status: 200 },
+  { user: 'BBB222', roleCode: 'ROLE_ONE', status: 200 },
+  { user: 'BBB222', roleCode: 'ROLE_TWO', status: 404 },
+  { user: 'BBB222', roleCode: 'ROLE_THREE', status: 409 },
+  { user: 'CCC333', roleCode: 'ROLE_ONE', status: 404 },
+  { user: 'CCC333', roleCode: 'ROLE_TWO', status: 404 },
+  { user: 'CCC333', roleCode: 'ROLE_THREE', status: 404 },
+  { user: 'DDD4444', roleCode: 'ROLE_ONE', status: 200 },
+  { user: 'DDD4444', roleCode: 'ROLE_TWO', status: 409 },
+  { user: 'DDD4444', roleCode: 'ROLE_THREE', status: 409 },
 ]
 
 const bulkUserRolesReportsMap = () => {
@@ -112,4 +130,52 @@ const bulkUserRolesReportsMap = () => {
   return m
 }
 
-module.exports = { bulkUserRolesRequestsList, bulkUserRolesReportsMap }
+const getAggregatedResults = () => {
+  const roleAssignmentResults = new Map()
+  resultsList.forEach((assignment) => {
+    if (roleAssignmentResults.has(assignment.roleCode)) {
+      const aggregate = roleAssignmentResults.get(assignment.roleCode) as Aggregate
+      aggregate.update(assignment.status)
+      roleAssignmentResults.set(assignment.roleCode, aggregate)
+    } else {
+      roleAssignmentResults.set(assignment.roleCode, new Aggregate(assignment.status))
+    }
+  })
+  return roleAssignmentResults
+}
+
+class Aggregate {
+  private success: number
+
+  private userNotFound: number
+
+  private alreadyAssignedRole: number
+
+  private error: number
+
+  constructor(status: number) {
+    this.success = 0
+    this.userNotFound = 0
+    this.alreadyAssignedRole = 0
+    this.error = 0
+    this.update(status)
+  }
+
+  update = (status: number) => {
+    switch (status) {
+      case 200:
+        this.success += 1
+        break
+      case 404:
+        this.userNotFound += 1
+        break
+      case 409:
+        this.alreadyAssignedRole += 1
+        break
+      default:
+        this.error += 1
+    }
+  }
+}
+
+module.exports = { bulkUserRolesRequestsList, bulkUserRolesReportsMap, getAggregatedResults }
