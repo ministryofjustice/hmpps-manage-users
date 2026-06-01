@@ -1,0 +1,43 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{%- from "moj/components/badge/macro.njk" import mojBadge -%}
+
+<table class="govuk-table">
+  <thead class="govuk-table__head">
+    <tr class="govuk-table__row">
+      <th scope="col" class="govuk-table__header">Role</th>
+      <th scope="col" class="govuk-table__header">Success</th>
+      <th scope="col" class="govuk-table__header">User not found</th>
+      <th scope="col" class="govuk-table__header">Already assigned</th>
+      <th scope="col" class="govuk-table__header">Error</th>
+    </tr>
+  </thead>
+  <tbody class="govuk-table__body">
+
+  {% for role, aggregation in params.details.aggregation %}
+
+    {% set cellClass = "govuk-table__cell" if not loop.last else "govuk-table__cell-no-border" %}
+    {% if row.status == 200 %}
+      {% set statusClass = "moj-badge--green" %}
+      {% set statusText = "Success" %}
+    {% elseif row.status == 409 %}
+      {% set statusClass = "moj-badge--purple" %}
+      {% set statusText = "Role already assigned" %}
+    {% elseif row.status == 404 %}
+      {% set statusClass = "moj-badge--grey" %}
+      {% set statusText = "User not found" %}
+    {% else %}
+      {% set statusClass = "moj-badge--red" %}
+      {% set statusText = "Error" %}
+    {% endif %}
+
+    <tr>
+      <td class="{{ cellClass }}">{{ role }}</td>
+      <td class="{{ cellClass }}"> {{ aggregation.success }}</td>
+      <td class="{{ cellClass }}"> {{ aggregation.userNotFound }}</td>
+      <td class="{{ cellClass }}"> {{ aggregation.alreadyAssignedRole }}</td>
+      <td class="{{ cellClass }}"> {{ aggregation.error }}</td>
+    </tr>
+
+  {% endfor %}
+  </tbody>
+</table>

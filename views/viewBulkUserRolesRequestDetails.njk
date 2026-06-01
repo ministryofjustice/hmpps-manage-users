@@ -1,0 +1,126 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "./components/bulkUserRolesReport/macro.njk" import bulkUserRolesReport %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
+
+{% set title =  "Bulk user roles requests" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "View bulk roles changes", href: '/view-bulk-role-changes/requests' },
+       { text: details.id }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+  <h1 class="govuk-heading-l">{{ details.jiraReference }}</h1>
+
+  {% set jiraLink %}
+    <a href="https://dsdmoj.atlassian.net/browse/{{ details.jiraReference }} class="govuk-body govuk-link noDoubleClick">{{ details.jiraReference }}</a>
+  {% endset %}
+
+  {% if details.errorStatus == 'Errors' %}
+      {% set statusClass = "moj-badge--red" %}
+  {% elseif details.errorStatus == 'N/A' %}
+      {% set statusClass = "moj-badge--grey" %}
+  {% else %}
+      {% set statusClass = "moj-badge--green" %}
+  {% endif %}
+
+  {{ govukSummaryList({
+    rows: [
+      {
+        key: {
+          text: "ID"
+        },
+        value: {
+          text: details.id
+        }
+      },
+      {
+        key: {
+          text: "Jira reference"
+        },
+        value: {
+          html: jiraLink | safe
+        }
+      },
+      {
+        key: {
+          text: "Date requested"
+        },
+        value: {
+          text: details.requestDateTime | formatBulkUserRolesDate
+        }
+      },
+      {
+        key: {
+          text: "Requested by"
+        },
+        value: {
+          text: details.requestedBy
+        }
+      },
+      {
+        key: {
+          text: "Processing Status"
+        },
+        value: {
+          html: details.status
+        }
+      },
+      {
+        key: {
+          text: "Error Status"
+        },
+        value: {
+          text: mojBadge({ text: details.errorStatus, classes: statusClass })
+        }
+      },
+      {
+        key: {
+          text: "Total requests"
+        },
+        value: {
+          html: details.totalCount
+        }
+      },
+      {
+        key: {
+          text: "Unsuccessful requests"
+        },
+        value: {
+          html: details.unsuccessfulCount
+        }
+      },
+      {
+        key: {
+          text: "Results"
+        },
+        value: {
+          html: bulkUserRolesReport({ details: details })
+        }
+      }
+    ]
+  }) }}
+
+  <div class="pull-right">
+    <form id="downloadResultsForm" method="GET" action="/view-bulk-role-changes/requests/{{details.id}}/download">
+      {{ govukButton({
+        id: "downloadResultsButton",
+        text: "Download results",
+        element: "button",
+        type: "submit",
+        preventDoubleClick: true,
+        classes: "govuk-button downloadButton",
+        attributes: { "data-qa": "download" }
+      }) }}
+    </form>
+  </div>
+
+
+{% endblock %}
