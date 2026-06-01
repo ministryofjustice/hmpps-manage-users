@@ -60,7 +60,10 @@ context('Menu tiles', () => {
   it('Shows Change user roles in bulk tile for Bulk user admin user', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'BULK_USER_ROLES_ADMIN' }] })
     cy.signIn()
-    MenuPage.verifyOnPage().createBulkUserRoles().should('exist')
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.createBulkUserRoles().should('exist')
+    menuPage.createBulkUserRolesCardLink().should('contain.text', 'Change roles in bulk')
+    menuPage.createBulkUserRolesCardDescription().should('contain.text', 'Apply bulk user role changes')
   })
 
   it('Does not show Change user roles in bulk tile for unauthorised user', () => {

@@ -41,6 +41,8 @@ const menuPage = () =>
     viewEmailDomainListing: () => viewEmailDomainListing().click(),
     viewCRSGroupUserDownload: () => viewCRSGroupUserDownload(),
     createBulkUserRoles: () => createBulkUserRoles(),
+    createBulkUserRolesCardLink: () => createBulkUserRoles().find('.card__link'),
+    createBulkUserRolesCardDescription: () => createBulkUserRoles().find('.card__description'),
     viewCRSGroupUserDownloadLink: () => viewCRSGroupUserDownload().find('.card__link'),
     viewCRSGroupUserDownloadDescription: () => viewCRSGroupUserDownload().find('.card__description'),
     searchDpsUsers,
