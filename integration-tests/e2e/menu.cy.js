@@ -40,6 +40,7 @@ context('Menu tiles', () => {
     cy.signIn()
     MenuPage.verifyOnPage().addUserToAllowListTile().should('not.exist')
   })
+
   it('Shows CRS Group member download tile for authorised user', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'CONTRACT_MANAGER_VIEW_GROUP' }] })
     cy.signIn()
@@ -54,5 +55,17 @@ context('Menu tiles', () => {
     cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
     cy.signIn()
     MenuPage.verifyOnPage().viewCRSGroupUserDownload().should('not.exist')
+  })
+
+  it('Shows Change user roles in bulk tile for Bulk user admin user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'BULK_USER_ROLES_ADMIN' }] })
+    cy.signIn()
+    MenuPage.verifyOnPage().createBulkUserRoles().should('exist')
+  })
+
+  it('Does not show Change user roles in bulk tile for unauthorised user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+    MenuPage.verifyOnPage().createBulkUserRoles().should('not.exist')
   })
 })

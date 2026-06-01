@@ -13,6 +13,7 @@ const createGroup = () => cy.get('[data-qa="create_groups_link"]')
 const createRole = () => cy.get('[data-qa="create_roles_link"]')
 const viewEmailDomainListing = () => cy.get('[data-qa="view_email_domains_link"]')
 const viewCRSGroupUserDownload = () => cy.get('[data-qa="view_crs_group_users_link"]')
+const createBulkUserRoles = () => cy.get('[data-qa="change_roles_in_bulk_link"]')
 
 const menuPage = () =>
   page('Manage user accounts', {
@@ -39,6 +40,7 @@ const menuPage = () =>
     manageRoles: () => manageRoles().click(),
     viewEmailDomainListing: () => viewEmailDomainListing().click(),
     viewCRSGroupUserDownload: () => viewCRSGroupUserDownload(),
+    createBulkUserRoles: () => createBulkUserRoles(),
     viewCRSGroupUserDownloadLink: () => viewCRSGroupUserDownload().find('.card__link'),
     viewCRSGroupUserDownloadDescription: () => viewCRSGroupUserDownload().find('.card__description'),
     searchDpsUsers,
