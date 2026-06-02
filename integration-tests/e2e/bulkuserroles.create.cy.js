@@ -25,4 +25,15 @@ context('Change user roles in bulk', () => {
     newBulkUserRolesRequestPage.jiraReferenceInput().should('be.empty')
     newBulkUserRolesRequestPage.submitJiraReference().should('exist')
   })
+
+  it('Should show error if empty jira reference is submitted', () => {
+    let newBulkUserRolesRequestPage = goToChangeUserRolesInBulk()
+    newBulkUserRolesRequestPage.jiraReferenceInput().should('exist')
+    newBulkUserRolesRequestPage.jiraReferenceInput().should('be.empty')
+    newBulkUserRolesRequestPage.submitJiraReference().should('exist')
+
+    newBulkUserRolesRequestPage.submitJiraReference().click()
+    newBulkUserRolesRequestPage = CreateBulkUserRolesRequestPage.verifyOnPage()
+    newBulkUserRolesRequestPage.errorSummary().should('contain.text', 'jira reference is required and cannot be empty')
+  })
 })
