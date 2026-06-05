@@ -1,7 +1,9 @@
 const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesRequests')
 
 describe('change user roles in bulk', () => {
-  const bulkUserRolesController = createBulkUserRolesRequestsFactory({})
+  const getSearchableRolesApi = jest.fn()
+  const manageUsersApi = { getSearchableRolesApi }
+  const bulkUserRolesController = createBulkUserRolesRequestsFactory(getSearchableRolesApi)
   const render = jest.fn()
   const redirect = jest.fn()
 
@@ -147,5 +149,27 @@ describe('change user roles in bulk', () => {
         expect(req.session.bulkUserRoles.uploadFile).toEqual(sessionValue.uploadFile)
       },
     )
+  })
+
+  describe('Get select roles', () => {
+    it('get select roles returns the expected page with the list of roles', async () => {
+      getSearchableRolesApi.mockResolvedValue([
+        { roleName: 'r1', roleCode: 'ROLE_ONE' },
+        { roleName: 'r2', roleCode: 'ROLE_TWO' },
+        { roleName: 'r3', roleCode: 'ROLE_THREE' },
+      ])
+
+      await bulkUserRolesController.getSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
+        rolesList: [
+          { text: 'r1', value: 'ROLE_ONE' },
+          { text: 'r2', value: 'ROLE_TWO' },
+          { text: 'r3', value: 'ROLE_THREE' },
+        ],
+        selectedRoles: [],
+      })
+    })
   })
 })

@@ -26,6 +26,13 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.redirect('/change-roles-in-bulk/select-roles')
   }
 
+  const getSelectRoles = async (req, res) => {
+    const rolesList = await getRoles(res)
+    const selectedRoles = req.session.bulkUserRoles.roles ?? []
+
+    res.render('createBulkUserRolesSelectRoles.njk', { rolesList, selectedRoles })
+  }
+
   const hasAllInputs = (req) => {
     const details = req.session.bulkUserRoles
     return (
@@ -38,9 +45,18 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     )
   }
 
+  const getRoles = async (res) => {
+    const roles = await getSearchableRolesApi(res.locals)
+    return roles.map((r) => ({
+      text: r.roleName,
+      value: r.roleCode,
+    }))
+  }
+
   return {
     getCreateNew,
     postJiraReference,
+    getSelectRoles,
   }
 }
 

@@ -1,0 +1,89 @@
+{% extends "./partials/layout.njk" %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
+
+{% set title =  "Change user roles in bulk" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+
+  {{ govukBackLink({
+    text: "Back",
+    href: "/change-roles-in-bulk"
+  }) }}
+ {% endblock %}
+
+{% block content %}
+
+  {% if selectRolesError %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem!",
+      errorList: [
+        {
+          text: selectRolesError,
+          href: "#"
+        }
+      ]
+    }) }}
+  {% endif %}
+
+  <form action="/change-roles-in-bulk/select-roles" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    <div class="govuk-form-group">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">Select Roles</h1>
+        </legend>
+        <div id="select-roles-hint" class="govuk-hint">Choose one or more roles to assign. You can select up to 5.</div>
+
+        <table id="select-roles-table" class="govuk-table" data-module="moj-multi-select">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th class="govuk-table__header" scope="col" id="roles-select-all"></th>
+              <th class="govuk-table__header" scope="col">Role name</th>
+              <th class="govuk-table__header" scope="col">Role code</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+
+          {% for r in rolesList %}
+
+            <tr class="govuk-table__row govuk-table__row--selected">
+              <td class="govuk-table__cell">
+                <div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
+                  <input type="checkbox" class="govuk-checkboxes__input" id="{{r.text }}" name="selectedRoles" value="{{r.value}}" {% if r.value in selectedRoles %} checked {% endif %}>
+                  <label class="govuk-label govuk-checkboxes__label" for="{{r.text }}">
+                    <span class="govuk-visually-hidden">Select {{r.text }}</span>
+                  </label>
+                </div>
+              </td>
+              <td class="govuk-table__cell">{{ r.text }}</td>
+              <td class="govuk-table__cell">{{ r.value }}</td>
+            </tr>
+
+          {% endfor %}
+
+          </tbody>
+        </table>
+
+    </div>
+
+    {{ govukButton({
+        text: "Select Roles",
+        id: "select-roles-submit",
+        type: "submit",
+        preventDoubleClick: true
+    }) }}
+
+  </form>
+{% endblock %}
