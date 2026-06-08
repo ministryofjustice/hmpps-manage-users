@@ -309,4 +309,11 @@ describe('change user roles in bulk', () => {
       expect(req.session.bulkUserRoles.uploadFile).toEqual('file1')
     })
   })
+
+  describe('Get UsersCsvUpload', () => {
+    it('renders upload users csv page', async () => {
+      await bulkUserRolesController.getUsersCsvUpload(req, resp)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesUploadCsv.njk')
+    })
+  })
 })

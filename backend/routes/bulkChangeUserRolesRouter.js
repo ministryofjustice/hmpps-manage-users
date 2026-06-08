@@ -8,14 +8,14 @@ const upload = multer({ dest: 'uploads/' })
 
 const controller = ({ manageUsersApi, csrfProtection }) => {
   const { searchableRoles } = searchApiFactory(manageUsersApi)
-  const { getCreateNew, postJiraReference, getSelectRoles, postSelectRoles } =
+  const { getCreateNew, postJiraReference, getSelectRoles, postSelectRoles, getUsersCsvUpload } =
     createBulkUserRolesRequestsFactory(searchableRoles)
 
   router.get('/', getCreateNew)
   router.post('/jira-reference', postJiraReference)
   router.get('/select-roles', getSelectRoles)
   router.post('/select-roles', postSelectRoles)
-  router.post('/select-roles', postSelectRoles)
+  router.get('/upload-users', getUsersCsvUpload)
   return router
 }
 

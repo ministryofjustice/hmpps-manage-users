@@ -1,6 +1,7 @@
 const MenuPage = require('../pages/menuPage')
 const CreateBulkUserRolesRequestPage = require('../pages/createBulkUserRolesRequestPage')
 const CreateBulkUserRolesSelectRolesPage = require('../pages/createBulkUserRolesSelectRolesPage')
+const CreateBulkUserRolesUploadUsersPage = require('../pages/createBulkUserRolesUploadUsersPage')
 
 context('Change user roles in bulk', () => {
   before(() => {
@@ -83,11 +84,12 @@ context('Change user roles in bulk', () => {
     selectRolesPage.rowIsChecked(2, true)
   })
 
-  it('should show upload user file page when valid roles selected', () => {
+  it('should show upload users page when valid roles selected', () => {
     enterJiraReference('1234567890')
-    const selectRolesPage = CreateBulkUserRolesSelectRolesPage.verifyOnPage()
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
-    selectRolesPage.submitButton().click()
+
+    const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
+    uploadUsersPage.fileUploadHint()
   })
 })
 

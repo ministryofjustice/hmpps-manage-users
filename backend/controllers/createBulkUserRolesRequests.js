@@ -81,6 +81,10 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.redirect('/change-roles-in-bulk/upload-users')
   }
 
+  const getUsersCsvUpload = async (req, res) => {
+    res.render('createBulkUserRolesUploadCsv.njk')
+  }
+
   const getSelectedRolesFromRequest = (req) => {
     const { selectedRoles } = req?.body || {}
     if (selectedRoles === undefined) {
@@ -117,6 +121,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     postJiraReference,
     getSelectRoles,
     postSelectRoles,
+    getUsersCsvUpload,
   }
 }
 

@@ -30,15 +30,16 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-xl">Upload files</h1>
+      <h1 class="govuk-heading-xl">Upload users</h1>
 
       <form action="/change-roles-in-bulk/upload-users" method="post" enctype="multipart/form-data">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
         {{ govukFileUpload({
-          id: "file-upload-1",
+          id: "upload-users-file",
           name: "file",
           isPageHeading: true,
+          attributes: { accept: ".csv" },
           label: {
             text: "Upload users csv",
             classes: "govuk-table__caption--m"
@@ -49,7 +50,7 @@
           errorMessage: uploadErrorMessage
         }) }}
 
-        {{ govukButton({ text: "Upload" }) }}
+        {{ govukButton({ text: "Upload", id: "upload-users-file-upload"}) }}
 
       </form>
 
