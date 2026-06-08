@@ -1,3 +1,5 @@
+const config = require('../config').default
+
 const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   const getCreateNew = async (req, res) => {
     if (req.session?.bulkUserRoles === undefined) {
@@ -33,6 +35,60 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.render('createBulkUserRolesSelectRoles.njk', { rolesList, selectedRoles })
   }
 
+  const postSelectRoles = async (req, res) => {
+    const rolesList = await getRoles(res)
+    const selectedRoles = getSelectedRolesFromRequest(req)
+
+    if (!selectedRoles || !selectedRoles.length) {
+      res.render('createBulkUserRolesSelectRoles.njk', {
+        rolesList,
+        selectedRoles: [],
+        selectRolesError: 'at least one role must be selected',
+      })
+      return
+    }
+
+    if (selectedRoles.length > config.app.maxBulkRolesSelection) {
+      res.render('createBulkUserRolesSelectRoles.njk', {
+        rolesList,
+        selectedRoles,
+        selectRolesError: `a maximum of ${config.app.maxBulkRolesSelection} roles can be selected`,
+      })
+      return
+    }
+
+    const invalidRoles = selectedRoles.filter((s) => !rolesList.some((r) => s.text === r.text && s.value === r.value))
+
+    if (invalidRoles.length > 0) {
+      res.render('createBulkUserRolesSelectRoles.njk', {
+        rolesList,
+        selectedRoles: selectedRoles.filter((r) => !invalidRoles.includes(r)),
+        selectRolesError: `invalid role value selected ${invalidRoles.map((r) => r.value).join(', ')}`,
+      })
+      return
+    }
+
+    req.session.bulkUserRoles.roles = selectedRoles
+
+    if (hasAllInputs(req)) {
+      res.redirect('/change-roles-in-bulk/summary')
+      return
+    }
+
+    res.redirect('/change-roles-in-bulk/upload-users')
+  }
+
+  const getSelectedRolesFromRequest = (req) => {
+    const { selectedRoles } = req?.body || {}
+    if (selectedRoles === undefined) {
+      return undefined
+    }
+    if (Array.isArray(selectedRoles)) {
+      return selectedRoles
+    }
+    return [selectedRoles]
+  }
+
   const hasAllInputs = (req) => {
     const details = req.session.bulkUserRoles
     return (
@@ -57,6 +113,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     getCreateNew,
     postJiraReference,
     getSelectRoles,
+    postSelectRoles,
   }
 }
 

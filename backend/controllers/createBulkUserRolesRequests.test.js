@@ -7,6 +7,18 @@ describe('change user roles in bulk', () => {
   const render = jest.fn()
   const redirect = jest.fn()
 
+  const rolesList = [
+    { roleName: 'r1', roleCode: 'ROLE_ONE' },
+    { roleName: 'r2', roleCode: 'ROLE_TWO' },
+    { roleName: 'r3', roleCode: 'ROLE_THREE' },
+  ]
+
+  const mappedRolesList = [
+    { text: 'r1', value: 'ROLE_ONE' },
+    { text: 'r2', value: 'ROLE_TWO' },
+    { text: 'r3', value: 'ROLE_THREE' },
+  ]
+
   const req = {
     body: {},
     session: {
@@ -23,7 +35,7 @@ describe('change user roles in bulk', () => {
     req.session.bulkUserRoles = {}
   })
 
-  describe('start new request', () => {
+  describe('Start new request', () => {
     it('start new request returns the expected page', async () => {
       await bulkUserRolesController.getCreateNew(req, resp)
       expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', { details: {} })
@@ -153,23 +165,149 @@ describe('change user roles in bulk', () => {
 
   describe('Get select roles', () => {
     it('get select roles returns the expected page with the list of roles', async () => {
-      getSearchableRolesApi.mockResolvedValue([
-        { roleName: 'r1', roleCode: 'ROLE_ONE' },
-        { roleName: 'r2', roleCode: 'ROLE_TWO' },
-        { roleName: 'r3', roleCode: 'ROLE_THREE' },
-      ])
+      getSearchableRolesApi.mockResolvedValue(rolesList)
 
       await bulkUserRolesController.getSelectRoles(req, resp)
 
       expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
-        rolesList: [
-          { text: 'r1', value: 'ROLE_ONE' },
-          { text: 'r2', value: 'ROLE_TWO' },
-          { text: 'r3', value: 'ROLE_THREE' },
-        ],
+        rolesList: mappedRolesList,
         selectedRoles: [],
       })
+    })
+
+    it('get select roles populate selectedRoles if values in session', async () => {
+      req.session.bulkUserRoles.roles = [{ roleName: 'r1', roleCode: 'ROLE_ONE' }]
+
+      getSearchableRolesApi.mockResolvedValue(rolesList)
+
+      await bulkUserRolesController.getSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
+        rolesList: mappedRolesList,
+        selectedRoles: [{ roleName: 'r1', roleCode: 'ROLE_ONE' }],
+      })
+    })
+
+    it('get select roles throws error if get roles fails', async () => {
+      getSearchableRolesApi.mockRejectedValue(Error('get roles failed with error'))
+
+      await expect(bulkUserRolesController.getSelectRoles(req, resp)).rejects.toThrow('get roles failed with error')
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+    })
+  })
+
+  describe('Post selected roles', () => {
+    it('throws error when no roles selected and get roles api request throws an error', async () => {
+      getSearchableRolesApi.mockRejectedValue(Error('get roles failed with error'))
+      req.body = []
+
+      await expect(bulkUserRolesController.postSelectRoles(req, resp)).rejects.toThrow('get roles failed with error')
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+    })
+
+    test.each([{ selectedRoles: undefined }, { selectedRoles: [] }])(
+      'renders select roles page with error when no roles are selected',
+      async ({ selectedRoles }) => {
+        getSearchableRolesApi.mockResolvedValue(rolesList)
+
+        req.body = selectedRoles
+
+        await bulkUserRolesController.postSelectRoles(req, resp)
+
+        expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+        expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
+          rolesList: mappedRolesList,
+          selectedRoles: [],
+          selectRolesError: 'at least one role must be selected',
+        })
+        expect(redirect).not.toHaveBeenCalled()
+      },
+    )
+
+    it('renders select roles page with error if more than 5 roles are selected', async () => {
+      getSearchableRolesApi.mockResolvedValue(rolesList)
+
+      const selectedRoles = [
+        { text: 'r1', value: 'ROLE_ONE' },
+        { text: 'r2', value: 'ROLE_TWO' },
+        { text: 'r3', value: 'ROLE_THREE' },
+        { text: 'r4', value: 'ROLE_FOUR' },
+        { text: 'r5', value: 'ROLE_FIVE' },
+        { text: 'r6', value: 'ROLE_SIX' },
+      ]
+      req.body = { selectedRoles }
+
+      await bulkUserRolesController.postSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
+        rolesList: mappedRolesList,
+        selectedRoles,
+        selectRolesError: 'a maximum of 5 roles can be selected',
+      })
+      expect(redirect).not.toHaveBeenCalled()
+    })
+
+    it('renders select roles page with error if unknown or invalid role value is selected', async () => {
+      getSearchableRolesApi.mockResolvedValue(rolesList)
+
+      const selectedRoles = [
+        { text: 'r1', value: 'ROLE_ONE' },
+        { text: 'r99', value: 'ROLE_NINETY_NINE' },
+      ]
+      req.body = { selectedRoles }
+
+      await bulkUserRolesController.postSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
+        rolesList: mappedRolesList,
+        selectedRoles: [{ text: 'r1', value: 'ROLE_ONE' }],
+        selectRolesError: 'invalid role value selected ROLE_NINETY_NINE',
+      })
+      expect(redirect).not.toHaveBeenCalled()
+    })
+
+    it('redirects to upload users page when valid roles selected and not all inputs have been provided', async () => {
+      getSearchableRolesApi.mockResolvedValue(rolesList)
+
+      const selectedRoles = [{ text: 'r1', value: 'ROLE_ONE' }]
+      req.body = { selectedRoles }
+
+      await bulkUserRolesController.postSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/upload-users')
+      expect(req.session.bulkUserRoles.roles).toEqual(selectedRoles)
+    })
+
+    it('redirects to summary page when valid roles selected and all inputs have been provided', async () => {
+      getSearchableRolesApi.mockResolvedValue(rolesList)
+
+      const dateRequested = new Date()
+      req.session.bulkUserRoles.jiraReference = '12345'
+      req.session.bulkUserRoles.dateRequested = dateRequested
+      req.session.bulkUserRoles.requestedBy = 'Robert Bobby'
+      req.session.bulkUserRoles.users = ['User1', 'User2', 'User3']
+      req.session.bulkUserRoles.uploadFile = 'file1'
+
+      const selectedRoles = [{ text: 'r1', value: 'ROLE_ONE' }]
+      req.body = { selectedRoles }
+
+      await bulkUserRolesController.postSelectRoles(req, resp)
+
+      expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
+      expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/summary')
+      expect(req.session.bulkUserRoles.jiraReference).toEqual('12345')
+      expect(req.session.bulkUserRoles.dateRequested).toEqual(dateRequested)
+      expect(req.session.bulkUserRoles.requestedBy).toEqual('Robert Bobby')
+      expect(req.session.bulkUserRoles.users).toEqual(['User1', 'User2', 'User3'])
+      expect(req.session.bulkUserRoles.roles).toEqual(selectedRoles)
+      expect(req.session.bulkUserRoles.uploadFile).toEqual('file1')
     })
   })
 })
