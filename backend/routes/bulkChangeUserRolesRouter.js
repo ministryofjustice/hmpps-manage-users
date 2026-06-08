@@ -15,6 +15,7 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
   router.post('/jira-reference', postJiraReference)
   router.get('/select-roles', getSelectRoles)
   router.post('/select-roles', postSelectRoles)
+  router.post('/select-roles', postSelectRoles)
   return router
 }
 

@@ -13,7 +13,18 @@ const createBulkUserRolesSelectRolesPage = () =>
     selectRolesTableRowColumnContains: (row, column, expected) => {
       selectRolesTableRows().eq(row).find('td').eq(column).should('contain.text', expected)
     },
+    selectRoles: (roles) => {
+      roles.forEach((r) => selectRolesTableRows(r).get(`#SELECT_${r}`).check({ force: true }))
+    },
+    changeSelectRoleCheckboxValueAndCheck: (target, newValue) => {
+      cy.get(`#SELECT_${target}`).invoke('attr', 'value', newValue).check({ force: true })
+    },
     errorSummary: () => cy.get('[data-qa-errors]'),
+    rowIsChecked: (rowIndex, expected) =>
+      selectRolesTableRows()
+        .eq(rowIndex)
+        .find('input[type="checkbox"]')
+        .should(expected ? 'be.checked' : 'not.be.checked'),
   })
 
 export default {

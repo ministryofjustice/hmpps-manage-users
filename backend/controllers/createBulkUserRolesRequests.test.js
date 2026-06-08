@@ -173,6 +173,7 @@ describe('change user roles in bulk', () => {
       expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
         rolesList: mappedRolesList,
         selectedRoles: [],
+        maxSelections: 5,
       })
     })
 
@@ -186,6 +187,7 @@ describe('change user roles in bulk', () => {
       expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
         rolesList: mappedRolesList,
+        maxSelections: 5,
         selectedRoles: [{ roleName: 'r1', roleCode: 'ROLE_ONE' }],
       })
     })
@@ -255,10 +257,7 @@ describe('change user roles in bulk', () => {
     it('renders select roles page with error if unknown or invalid role value is selected', async () => {
       getSearchableRolesApi.mockResolvedValue(rolesList)
 
-      const selectedRoles = [
-        { text: 'r1', value: 'ROLE_ONE' },
-        { text: 'r99', value: 'ROLE_NINETY_NINE' },
-      ]
+      const selectedRoles = ['ROLE_ONE', 'ROLE_NINETY_NINE']
       req.body = { selectedRoles }
 
       await bulkUserRolesController.postSelectRoles(req, resp)
@@ -266,7 +265,7 @@ describe('change user roles in bulk', () => {
       expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenCalledWith('createBulkUserRolesSelectRoles.njk', {
         rolesList: mappedRolesList,
-        selectedRoles: [{ text: 'r1', value: 'ROLE_ONE' }],
+        selectedRoles: ['ROLE_ONE'],
         selectRolesError: 'invalid role value selected ROLE_NINETY_NINE',
       })
       expect(redirect).not.toHaveBeenCalled()
@@ -275,7 +274,7 @@ describe('change user roles in bulk', () => {
     it('redirects to upload users page when valid roles selected and not all inputs have been provided', async () => {
       getSearchableRolesApi.mockResolvedValue(rolesList)
 
-      const selectedRoles = [{ text: 'r1', value: 'ROLE_ONE' }]
+      const selectedRoles = ['ROLE_ONE']
       req.body = { selectedRoles }
 
       await bulkUserRolesController.postSelectRoles(req, resp)
@@ -295,7 +294,7 @@ describe('change user roles in bulk', () => {
       req.session.bulkUserRoles.users = ['User1', 'User2', 'User3']
       req.session.bulkUserRoles.uploadFile = 'file1'
 
-      const selectedRoles = [{ text: 'r1', value: 'ROLE_ONE' }]
+      const selectedRoles = ['ROLE_ONE']
       req.body = { selectedRoles }
 
       await bulkUserRolesController.postSelectRoles(req, resp)

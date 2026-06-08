@@ -1,0 +1,59 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+
+{% set title =  "Change user roles in bulk" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+
+   {{ govukBackLink({
+     text: "Back",
+     href: "/change-roles-in-bulk/select-roles"
+   }) }}
+
+ {% endblock %}
+
+{% block content %}
+
+  {% if fileError %}
+      {% set uploadErrorMessage = { text: fileError } %}
+      {% set showErrors = true %}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Upload files</h1>
+
+      <form action="/change-roles-in-bulk/upload-users" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukFileUpload({
+          id: "file-upload-1",
+          name: "file",
+          isPageHeading: true,
+          label: {
+            text: "Upload users csv",
+            classes: "govuk-table__caption--m"
+          },
+          hint: {
+            text: "Upload a .csv file of user IDs to assign roles to"
+          },
+          errorMessage: uploadErrorMessage
+        }) }}
+
+        {{ govukButton({ text: "Upload" }) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

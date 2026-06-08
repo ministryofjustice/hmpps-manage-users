@@ -32,7 +32,11 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     const rolesList = await getRoles(res)
     const selectedRoles = req.session.bulkUserRoles.roles ?? []
 
-    res.render('createBulkUserRolesSelectRoles.njk', { rolesList, selectedRoles })
+    res.render('createBulkUserRolesSelectRoles.njk', {
+      rolesList,
+      selectedRoles,
+      maxSelections: config.app.maxBulkRolesSelection,
+    })
   }
 
   const postSelectRoles = async (req, res) => {
@@ -57,13 +61,12 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       return
     }
 
-    const invalidRoles = selectedRoles.filter((s) => !rolesList.some((r) => s.text === r.text && s.value === r.value))
-
+    const invalidRoles = selectedRoles.filter((s) => !rolesList.some((r) => s === r.value))
     if (invalidRoles.length > 0) {
       res.render('createBulkUserRolesSelectRoles.njk', {
         rolesList,
         selectedRoles: selectedRoles.filter((r) => !invalidRoles.includes(r)),
-        selectRolesError: `invalid role value selected ${invalidRoles.map((r) => r.value).join(', ')}`,
+        selectRolesError: `invalid role value selected ${invalidRoles.map((r) => r).join(', ')}`,
       })
       return
     }
