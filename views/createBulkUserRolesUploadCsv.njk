@@ -3,6 +3,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set title =  "Change user roles in bulk" %}
 
@@ -26,7 +27,22 @@
   {% if fileError %}
       {% set uploadErrorMessage = { text: fileError } %}
       {% set showErrors = true %}
+
+      {{ govukErrorSummary({
+        titleText: "There was a problem",
+        attributes: { 'data-qa-errors': true }
+      }) }}
+
   {% endif %}
+
+  {% set hintHtml %}
+    <p>The file must:</p>
+    <ul>
+      <li>Contain a single column - "userId"</li>
+      <li>Include a header row</li>
+      <li>Contain 1 or more rows</li>
+    </ul>
+  {% endset %}
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
@@ -44,9 +60,7 @@
             text: "Upload users csv",
             classes: "govuk-table__caption--m"
           },
-          hint: {
-            text: "Upload a .csv file of user IDs to assign roles to"
-          },
+          hint: { html: hintHtml },
           errorMessage: uploadErrorMessage
         }) }}
 

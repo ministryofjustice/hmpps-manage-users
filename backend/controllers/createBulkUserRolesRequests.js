@@ -1,6 +1,16 @@
+const fsAsync = require('fs/promises')
+const fs = require('fs')
+const csv = require('csv-parser')
 const config = require('../config').default
 
 const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
+  class ValidationError extends Error {
+    constructor(message) {
+      super(message)
+      this.name = 'ValidationError'
+    }
+  }
+
   const getCreateNew = async (req, res) => {
     if (req.session?.bulkUserRoles === undefined) {
       req.session.bulkUserRoles = {}
@@ -85,6 +95,72 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.render('createBulkUserRolesUploadCsv.njk')
   }
 
+  const postUserCsvUpload = async (req, res) => {
+    const { file } = req
+    let userIds
+
+    try {
+      userIds = await processCsvUpload(file)
+    } catch (err) {
+      res.render('createBulkUserRolesUploadCsv.njk', {
+        fileError: err.message,
+        csrfToken: req.csrfToken(),
+      })
+      return
+    } finally {
+      await cleanUpResources(file)
+    }
+
+    req.session.bulkUserRoles.users = userIds
+    req.session.bulkUserRoles.uploadFile = file.originalname
+    res.redirect('/change-roles-in-bulk/summary')
+  }
+
+  const processCsvUpload = async (file) => {
+    if (!file) {
+      throw new ValidationError('file is required but was null')
+    }
+    if (!file.originalname.endsWith('.csv')) {
+      throw new ValidationError('csv file is required')
+    }
+
+    return readCsv(file)
+  }
+
+  const cleanUpResources = async (file) => {
+    try {
+      if (file?.path !== undefined) {
+        await fsAsync.unlink(file.path)
+      }
+    } catch (cleanupErr) {
+      console.error('Cleanup failed:', cleanupErr)
+    }
+  }
+
+  const readCsv = async (file) => {
+    return new Promise((resolve, reject) => {
+      const userIds = []
+
+      fs.createReadStream(file.path)
+        .pipe(csv())
+        .on('headers', (headers) => {
+          if (headers.length > 1) {
+            reject(new ValidationError('csv file should contain single column "userId"'))
+          }
+        })
+        .on('data', (row) => userIds.push(row))
+        .on('end', () => {
+          if (userIds.length === 0) {
+            reject(new ValidationError('csv must contain at least 1 row'))
+          }
+          resolve(userIds.map((r) => r.userId))
+        })
+        .on('error', (err) => {
+          reject(new ValidationError(err))
+        })
+    })
+  }
+
   const getSelectedRolesFromRequest = (req) => {
     const { selectedRoles } = req?.body || {}
     if (selectedRoles === undefined) {
@@ -122,6 +198,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     getSelectRoles,
     postSelectRoles,
     getUsersCsvUpload,
+    postUserCsvUpload,
   }
 }
 

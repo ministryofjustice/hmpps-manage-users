@@ -1,11 +1,14 @@
+const fs = require('fs')
+const path = require('path')
 const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesRequests')
 
 describe('change user roles in bulk', () => {
   const getSearchableRolesApi = jest.fn()
-  const manageUsersApi = { getSearchableRolesApi }
   const bulkUserRolesController = createBulkUserRolesRequestsFactory(getSearchableRolesApi)
   const render = jest.fn()
   const redirect = jest.fn()
+  const getCsrfToken = jest.fn()
+  const spyUnlink = jest.spyOn(fs.promises, 'unlink').mockResolvedValue()
 
   const rolesList = [
     { roleName: 'r1', roleCode: 'ROLE_ONE' },
@@ -33,6 +36,10 @@ describe('change user roles in bulk', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     req.session.bulkUserRoles = {}
+  })
+
+  afterAll(() => {
+    spyUnlink.mockRestore()
   })
 
   describe('Start new request', () => {
@@ -316,4 +323,70 @@ describe('change user roles in bulk', () => {
       expect(render).toHaveBeenCalledWith('createBulkUserRolesUploadCsv.njk')
     })
   })
+
+  describe('Post users csv', () => {
+    it('renders upload users csv page when no file uploaded', async () => {
+      req.file = undefined
+      req.csrfToken = getCsrfToken.mockReturnValue('AAA111BBB222CCC333')
+
+      await bulkUserRolesController.postUserCsvUpload(req, resp)
+
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesUploadCsv.njk', {
+        fileError: 'file is required but was null',
+        csrfToken: 'AAA111BBB222CCC333',
+      })
+      expect(spyUnlink).toHaveBeenCalledTimes(0)
+    })
+
+    test.each([
+      {
+        desc: 'non csv',
+        file: { originalname: 'file.html', path: resolveFilePath('users-html.html') },
+        expectedError: 'csv file is required',
+      },
+      {
+        desc: 'empty csv',
+        file: { originalname: 'file.csv', path: resolveFilePath('empty-users.csv') },
+        expectedError: 'csv must contain at least 1 row',
+      },
+      {
+        desc: '1 row only',
+        file: { originalname: 'file.csv', path: resolveFilePath('users-no-header.csv') },
+        expectedError: 'csv must contain at least 1 row',
+      },
+      {
+        desc: 'csv with multiple columns',
+        file: { originalname: 'file.csv', path: resolveFilePath('users-multiple-columns.csv') },
+        expectedError: 'csv file should contain single column "userId"',
+      },
+    ])('renders upload users csv page when invalid file uploaded: $desc', async (testCase) => {
+      req.file = testCase.file
+      req.csrfToken = getCsrfToken.mockReturnValue('AAA111BBB222CCC333')
+
+      await bulkUserRolesController.postUserCsvUpload(req, resp)
+
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesUploadCsv.njk', {
+        fileError: testCase.expectedError,
+        csrfToken: 'AAA111BBB222CCC333',
+      })
+      expect(spyUnlink).toHaveBeenNthCalledWith(1, testCase.file.path)
+    })
+
+    it('renders summary page when valid file uploaded', async () => {
+      req.file = { originalname: 'file.csv', path: resolveFilePath('valid-users.csv') }
+      req.csrfToken = getCsrfToken.mockReturnValue('AAA111BBB222CCC333')
+
+      await bulkUserRolesController.postUserCsvUpload(req, resp)
+
+      expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/summary')
+      expect(spyUnlink).toHaveBeenNthCalledWith(1, resolveFilePath('valid-users.csv'))
+
+      expect(req.session.bulkUserRoles.users).toEqual(['X123456', 'Y999999'])
+      expect(req.session.bulkUserRoles.uploadFile).toEqual('file.csv')
+    })
+  })
 })
+
+function resolveFilePath(filename) {
+  return path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', filename)
+}
