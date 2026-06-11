@@ -4,6 +4,7 @@ const MenuPage = require('../pages/menuPage')
 const CreateBulkUserRolesRequestPage = require('../pages/createBulkUserRolesRequestPage')
 const CreateBulkUserRolesSelectRolesPage = require('../pages/createBulkUserRolesSelectRolesPage')
 const CreateBulkUserRolesUploadUsersPage = require('../pages/createBulkUserRolesUploadUsersPage')
+const CreateBulkUserRolesSummaryPage = require('../pages/createBulkUserRolesSummaryPage')
 
 context('Create bulk user roles request: Jira reference', () => {
   before(() => {
@@ -125,7 +126,7 @@ context('Create bulk user roles request: Upload user file', () => {
 
     const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
     uploadUsersPage.fileUploadHint()
-    selectAndUploadFile(uploadUsersPage, null)
+    uploadUserFile(undefined)
 
     uploadUsersPage.assertErrorSummary()
     uploadUsersPage.fileUploadError().should('contain.text', 'file is required but was null')
@@ -135,9 +136,7 @@ context('Create bulk user roles request: Upload user file', () => {
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
 
-    const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
-    selectAndUploadFile(uploadUsersPage, 'users-html-file.html')
-
+    const uploadUsersPage = uploadUserFile('users-html-file.html')
     uploadUsersPage.assertErrorSummary()
     uploadUsersPage.fileUploadError().should('contain.text', 'csv file is required')
   })
@@ -146,9 +145,7 @@ context('Create bulk user roles request: Upload user file', () => {
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
 
-    const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
-    selectAndUploadFile(uploadUsersPage, 'empty-users.csv')
-
+    const uploadUsersPage = uploadUserFile('empty-users.csv')
     uploadUsersPage.assertErrorSummary()
     uploadUsersPage.fileUploadError().should('contain.text', 'csv must contain at least 1 row')
   })
@@ -157,9 +154,7 @@ context('Create bulk user roles request: Upload user file', () => {
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
 
-    const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
-    selectAndUploadFile(uploadUsersPage, 'users-no-header.csv')
-
+    const uploadUsersPage = uploadUserFile('users-no-header.csv')
     uploadUsersPage.assertErrorSummary()
     uploadUsersPage.fileUploadError().should('contain.text', 'csv must contain at least 1 row')
   })
@@ -168,17 +163,61 @@ context('Create bulk user roles request: Upload user file', () => {
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
 
-    const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
-    selectAndUploadFile(uploadUsersPage, 'users-multiple-columns.csv')
-
+    const uploadUsersPage = uploadUserFile('users-multiple-columns.csv')
     uploadUsersPage.assertErrorSummary()
     uploadUsersPage.fileUploadError().should('contain.text', 'csv file should contain single column "userId"')
   })
 })
 
-function goToChangeUserRolesInBulk() {
+context('Create bulk user roles request: Summary', () => {
+  it('should show summary page with error when not all data has been submitted', () => {
+    signIn()
+    CreateBulkUserRolesSummaryPage.goTo()
+    const summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
+    summaryPage.assertErrorSummary().should('contain.text', 'Jira reference is required')
+    summaryPage.assertErrorSummary().should('contain.text', 'Users is required')
+    summaryPage.assertErrorSummary().should('contain.text', 'Roles is required')
+    summaryPage.assertErrorSummary().should('contain.text', 'Upload file is required')
+
+    summaryPage.assertSummaryListRow(0, 'Requested by', 'ITAG_USER')
+    summaryPage.assertSummaryListRow(1, 'Jira reference', 'N/A', '/change-roles-in-bulk', 'Change')
+    summaryPage.assertSummaryListRow(2, 'Roles', '', '/change-roles-in-bulk/select-roles', 'Change')
+    summaryPage.assertSummaryListRow(3, 'Uploaded file', 'N/A', '/change-roles-in-bulk/upload-users', 'Change')
+    summaryPage.assertSummaryListRow(4, 'Number of users', '0')
+    summaryPage.assertSummaryListRow(5, 'Total assignments', '0')
+
+    summaryPage.submitButton().should('be.disabled')
+  })
+
+  it('should show summary page when valid user csv uploaded', () => {
+    enterJiraReference('1234567890')
+    selectRolesAndSubmit(['SAR_DATA_ACCESS'])
+    uploadUserFile('valid-users.csv')
+
+    const summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
+    summaryPage.assertSummaryListRow(0, 'Requested by', 'ITAG_USER')
+    summaryPage.assertSummaryListRow(1, 'Jira reference', '1234567890', '/change-roles-in-bulk', 'Change')
+    summaryPage.assertSummaryListRow(2, 'Roles', 'SAR_DATA_ACCESS', '/change-roles-in-bulk/select-roles', 'Change')
+    summaryPage.assertSummaryListRow(
+      3,
+      'Uploaded file',
+      'valid-users.csv',
+      '/change-roles-in-bulk/upload-users',
+      'Change',
+    )
+    summaryPage.assertSummaryListRow(4, 'Number of users', '2')
+    summaryPage.assertSummaryListRow(5, 'Total assignments', '2')
+    summaryPage.submitButton().should('not.be.disabled')
+  })
+})
+
+function signIn() {
   cy.task('stubSignIn', { roles: [{ roleCode: 'BULK_USER_ROLES_ADMIN' }] })
   cy.signIn()
+}
+
+function goToChangeUserRolesInBulk() {
+  signIn()
   const menuPage = MenuPage.verifyOnPage()
   menuPage.createBulkUserRoles().click()
 
@@ -205,11 +244,13 @@ function selectRolesAndSubmit(roles) {
   selectRolesPage.submitButton().click()
 }
 
-function selectAndUploadFile(uploadUsersPage, filename) {
+function uploadUserFile(filename) {
+  const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
   if (filename !== undefined && filename !== null) {
     uploadUsersPage.chooseFile().selectFile(resolveResourcePath(filename))
   }
   uploadUsersPage.uploadButton().click()
+  return uploadUsersPage
 }
 
 function resolveResourcePath(filename) {

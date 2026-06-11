@@ -1,0 +1,144 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set title =  "Change user roles in bulk" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+  {% set hasErrors = errors.length > 0 %}
+  {% if errors %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  {% set roleList %}
+    <ul>
+      {% for r in summary.roles %}
+      <li>{{r}}</li>
+      {% endfor %}
+    </ul>
+  {% endset %}
+
+  {% set jiraLink %}
+    <a href="https://dsdmoj.atlassian.net/browse/{{ summary.jiraReference }} class="govuk-body govuk-link noDoubleClick">{{ summary.jiraReference }}</a>
+  {% endset %}
+
+  <form action="/change-roles-in-bulk/submit" method="post">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h1 class="govuk-fieldset__heading">Please confirm change details</h1>
+    </legend>
+
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Requested by"
+          },
+          value: {
+            text: summary.requestedBy
+          }
+        },
+        {
+          key: {
+            text: "Jira reference"
+          },
+          value: {
+            html: jiraLink | safe
+          },
+          actions: {
+            items: [
+              {
+                href: "/change-roles-in-bulk",
+                text: "Change",
+                id: "change-jira-ref",
+                visuallyHiddenText: "name"
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Roles"
+          },
+          value: {
+            html: roleList | safe
+          },
+          actions: {
+            items: [
+              {
+                href: "/change-roles-in-bulk/select-roles",
+                text: "Change",
+                visuallyHiddenText: "name",
+                id: "change-roles-ref"
+              }
+            ]
+          }
+        },
+       {
+         key: {
+           text: "Uploaded file"
+         },
+         value: {
+           text: summary.uploadFile
+         },
+         actions: {
+           items: [
+             {
+               href: "/change-roles-in-bulk/upload-users",
+               text: "Change",
+               visuallyHiddenText: "name",
+               id: "change-users-ref"
+             }
+           ]
+         }
+       },
+       {
+         key: {
+           text: "Number of users"
+         },
+         value: {
+           text: summary.numberOfUsers
+         }
+       },
+        {
+          key: {
+            text: "Total assignments"
+          },
+          value: {
+            text: summary.totalAssignments
+          }
+        }
+      ],
+      attributes: {
+        id: "bulk-user-roles-summary-list"
+      }
+    }) }}
+
+    {{ govukButton({
+      text: "Accept and submit request",
+      id: "accept-confirm",
+      preventDoubleClick: true,
+      disabled: hasErrors
+    }) }}
+
+  </form>
+
+{% endblock %}

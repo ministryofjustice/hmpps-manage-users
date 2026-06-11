@@ -12,10 +12,8 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const getCreateNew = async (req, res) => {
-    if (req.session?.bulkUserRoles === undefined) {
-      req.session.bulkUserRoles = {}
-    }
-    res.render('createBulkUserRolesRequest.njk', { details: req.session.bulkUserRoles })
+    ensureBulkUserRolesRequestExists(req)
+    res.render('createBulkUserRolesRequest.njk', { details: req.session.bulkUserRolesRequest })
   }
 
   const postJiraReference = async (req, res) => {
@@ -26,21 +24,21 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       })
       return
     }
-    req.session.bulkUserRoles.jiraReference = jiraReference
+    req.session.bulkUserRolesRequest.jiraReference = jiraReference
 
     if (hasAllInputs(req)) {
       res.redirect('/change-roles-in-bulk/summary')
       return
     }
 
-    req.session.bulkUserRoles.dateRequested = Date()
-    req.session.bulkUserRoles.requestedBy = req.session.userDetails.username
+    req.session.bulkUserRolesRequest.dateRequested = Date()
+    req.session.bulkUserRolesRequest.requestedBy = req.session.userDetails.username
     res.redirect('/change-roles-in-bulk/select-roles')
   }
 
   const getSelectRoles = async (req, res) => {
     const rolesList = await getRoles(res)
-    const selectedRoles = req.session.bulkUserRoles.roles ?? []
+    const selectedRoles = req.session.bulkUserRolesRequest.roles ?? []
 
     res.render('createBulkUserRolesSelectRoles.njk', {
       rolesList,
@@ -81,7 +79,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       return
     }
 
-    req.session.bulkUserRoles.roles = selectedRoles
+    req.session.bulkUserRolesRequest.roles = selectedRoles
 
     if (hasAllInputs(req)) {
       res.redirect('/change-roles-in-bulk/summary')
@@ -111,9 +109,46 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       await cleanUpResources(file)
     }
 
-    req.session.bulkUserRoles.users = userIds
-    req.session.bulkUserRoles.uploadFile = file.originalname
+    req.session.bulkUserRolesRequest.users = userIds
+    req.session.bulkUserRolesRequest.uploadFile = file.originalname
     res.redirect('/change-roles-in-bulk/summary')
+  }
+
+  const getBulkRequestSummary = async (req, res) => {
+    const errors = getMissingFieldsErrors(req)
+    const bulkRolesRequest = req.session.bulkUserRolesRequest
+    const totalUsers = bulkRolesRequest?.users?.length || 0
+    const totalRoles = bulkRolesRequest?.roles?.length || 0
+    const summary = {
+      requestedBy: req.session.userDetails.username,
+      jiraReference: bulkRolesRequest?.jiraReference || 'N/A',
+      roles: bulkRolesRequest?.roles || [],
+      uploadFile: bulkRolesRequest?.uploadFile || 'N/A',
+      numberOfUsers: totalUsers,
+      totalAssignments: totalUsers * totalRoles,
+    }
+    if (errors !== null) {
+      res.render('createBulkUserRolesSummary.njk', {
+        summary,
+        errors,
+      })
+      return
+    }
+
+    res.render('createBulkUserRolesSummary.njk', { summary })
+  }
+
+  const ensureBulkUserRolesRequestExists = (req) => {
+    if (req.session?.bulkUserRolesRequest === undefined) {
+      req.session.bulkUserRolesRequest = {}
+    }
+    if (req.session.bulkUserRolesRequest?.requestedBy === undefined) {
+      const requestedBy = req.session?.userDetails?.username
+      if (requestedBy === undefined || requestedBy === null) {
+        throw new ValidationError('Username required for bulkUserRolesRequest but not found in session')
+      }
+      req.session.bulkUserRolesRequest.requestedBy = requestedBy
+    }
   }
 
   const processCsvUpload = async (file) => {
@@ -172,16 +207,26 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     return [selectedRoles]
   }
 
-  const hasAllInputs = (req) => {
-    const details = req.session.bulkUserRoles
-    return (
-      details?.dateRequested !== undefined &&
-      details?.jiraReference?.length > 0 &&
-      details?.requestedBy?.length > 0 &&
-      details?.users?.length > 0 &&
-      details?.roles?.length > 0 &&
-      details?.uploadFile?.length > 0
-    )
+  const hasAllInputs = (req) => getMissingFieldsErrors(req) === null
+
+  const getMissingFieldsErrors = (req) => {
+    const errors = []
+    const details = req.session.bulkUserRolesRequest
+
+    if (details?.jiraReference === undefined || details.jiraReference.length === 0) {
+      errors.push({ text: 'Jira reference is required', href: '#change-jira-ref' })
+    }
+    if (details?.users === undefined || details.users.length === 0) {
+      errors.push({ text: 'Users is required', href: '#change-users-ref' })
+    }
+    if (details?.roles === undefined || details.roles.length === 0) {
+      errors.push({ text: 'Roles is required', href: '#change-roles-ref' })
+    }
+    if (details?.uploadFile === undefined || details.uploadFile.length === 0) {
+      errors.push({ text: 'Upload file is required', href: '#change-users-ref' })
+    }
+
+    return errors.length > 0 ? errors : null
   }
 
   const getRoles = async (res) => {
@@ -199,6 +244,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     postSelectRoles,
     getUsersCsvUpload,
     postUserCsvUpload,
+    getBulkRequestSummary,
   }
 }
 

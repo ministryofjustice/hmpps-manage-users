@@ -28,14 +28,19 @@ describe('change user roles in bulk', () => {
       userDetails: {
         username: 'Robert Bobby',
       },
-      bulkUserRoles: {},
+      bulkUserRolesRequest: {},
     },
   }
   const resp = { render, redirect }
 
   beforeEach(() => {
     jest.clearAllMocks()
-    req.session.bulkUserRoles = {}
+    req.session = {
+      userDetails: {
+        username: 'Robert Bobby',
+      },
+      bulkUserRolesRequest: {},
+    }
   })
 
   afterAll(() => {
@@ -45,19 +50,62 @@ describe('change user roles in bulk', () => {
   describe('Start new request', () => {
     it('start new request returns the expected page', async () => {
       await bulkUserRolesController.getCreateNew(req, resp)
-      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', { details: {} })
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', {
+        details: {
+          requestedBy: 'Robert Bobby',
+        },
+      })
     })
 
-    it('start new request sets session.bulkUserRoles object if not present', async () => {
-      req.session.bulkUserRoles = undefined
+    it('start new request sets session.bulkUserRolesRequest object if not present', async () => {
+      req.session.bulkUserRolesRequest = undefined
       await bulkUserRolesController.getCreateNew(req, resp)
-      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', { details: {} })
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', {
+        details: {
+          requestedBy: 'Robert Bobby',
+        },
+      })
     })
 
-    it('start new request passes existing session.bulkUserRoles object if present', async () => {
-      req.session.bulkUserRoles = { jiraReference: '12345' }
+    it('start new request passes existing session.bulkUserRolesRequest object if present', async () => {
+      req.session.bulkUserRolesRequest = { jiraReference: '12345' }
       await bulkUserRolesController.getCreateNew(req, resp)
-      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', { details: { jiraReference: '12345' } })
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', {
+        details: {
+          jiraReference: '12345',
+          requestedBy: 'Robert Bobby',
+        },
+      })
+    })
+
+    it('start new request sets session.bulkUserRolesRequest.requestedBy', async () => {
+      await bulkUserRolesController.getCreateNew(req, resp)
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesRequest.njk', {
+        details: {
+          requestedBy: 'Robert Bobby',
+        },
+      })
+    })
+
+    test.each([
+      { desc: 'userDetails undefined', userDetails: undefined },
+      { desc: 'userDetails null', userDetails: null },
+      { desc: 'userDetails.username is undefined', userDetails: { username: undefined } },
+      { desc: 'userDetails.username is null', userDetails: { username: null } },
+    ])('start new request throws error when $desc', async (testCase) => {
+      req.session.userDetails = testCase.userDetails
+
+      await expect(bulkUserRolesController.getCreateNew(req, resp)).rejects.toThrow(
+        'Username required for bulkUserRolesRequest but not found in session',
+      )
+    })
+
+    it('start new request throws error if userDetails not present in session', async () => {
+      req.session.userDetails = undefined
+
+      await expect(bulkUserRolesController.getCreateNew(req, resp)).rejects.toThrow(
+        'Username required for bulkUserRolesRequest but not found in session',
+      )
     })
   })
 
@@ -78,20 +126,21 @@ describe('change user roles in bulk', () => {
     })
 
     it('submitting valid Jira Reference redirects to select roles page', async () => {
-      req.body = { jiraReference: '12345' }
+      req.body = {
+        jiraReference: '12345',
+        requestBy: 'Robert Bobby',
+      }
       await bulkUserRolesController.postJiraReference(req, resp)
 
       expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/select-roles')
-      expect(req.session.bulkUserRoles).not.toBeNull()
-      expect(req.session.bulkUserRoles.jiraReference).toBeDefined()
-      expect(req.session.bulkUserRoles.dateRequested).toBeDefined()
-      expect(req.session.bulkUserRoles.requestedBy).toEqual('Robert Bobby')
-      expect(req.session.bulkUserRoles.jiraReference).toEqual('12345')
+      expect(req.session.bulkUserRolesRequest).not.toBeNull()
+      expect(req.session.bulkUserRolesRequest.jiraReference).toBeDefined()
+      expect(req.session.bulkUserRolesRequest.requestedBy).toEqual('Robert Bobby')
+      expect(req.session.bulkUserRolesRequest.jiraReference).toEqual('12345')
     })
 
     it('submitting valid Jira Reference when all other fields are present redirects to summary page', async () => {
-      req.session.bulkUserRoles = {
-        dateRequested: new Date(),
+      req.session.bulkUserRolesRequest = {
         jiraReference: undefined,
         requestedBy: 'Robert Bobby',
         users: ['u1', 'u2', 'u3'],
@@ -104,46 +153,34 @@ describe('change user roles in bulk', () => {
       expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/summary')
       expect(render).not.toHaveBeenCalled()
 
-      expect(req.session.bulkUserRoles).not.toBeNull()
-      expect(req.session.bulkUserRoles.dateRequested).toBeDefined()
-      expect(req.session.bulkUserRoles.jiraReference).toEqual('12345')
-      expect(req.session.bulkUserRoles.requestedBy).toEqual('Robert Bobby')
-      expect(req.session.bulkUserRoles.users).toEqual(['u1', 'u2', 'u3'])
-      expect(req.session.bulkUserRoles.roles).toEqual(['r1', 'r2', 'r3'])
-      expect(req.session.bulkUserRoles.uploadFile).toEqual('file-content-here')
+      expect(req.session.bulkUserRolesRequest).not.toBeNull()
+      expect(req.session.bulkUserRolesRequest.jiraReference).toEqual('12345')
+      expect(req.session.bulkUserRolesRequest.requestedBy).toEqual('Robert Bobby')
+      expect(req.session.bulkUserRolesRequest.users).toEqual(['u1', 'u2', 'u3'])
+      expect(req.session.bulkUserRolesRequest.roles).toEqual(['r1', 'r2', 'r3'])
+      expect(req.session.bulkUserRolesRequest.uploadFile).toEqual('file-content-here')
     })
 
     test.each([
       {
-        dateRequested: undefined,
         requestedBy: undefined,
         users: undefined,
         roles: undefined,
         uploadFile: undefined,
       },
       {
-        dateRequested: new Date(),
-        requestedBy: undefined,
-        users: undefined,
-        roles: undefined,
-        uploadFile: undefined,
-      },
-      {
-        dateRequested: new Date(),
         requestedBy: 'ME',
         users: undefined,
         roles: undefined,
         uploadFile: undefined,
       },
       {
-        dateRequested: new Date(),
         requestedBy: 'ME',
         users: ['u1'],
         roles: undefined,
         uploadFile: undefined,
       },
       {
-        dateRequested: new Date(),
         requestedBy: 'ME',
         users: ['u1'],
         roles: ['r1'],
@@ -152,20 +189,19 @@ describe('change user roles in bulk', () => {
     ])(
       'submitting valid Jira Reference redirects to select roles page when not all request fields have been set',
       async (sessionValue) => {
-        req.session.bulkUserRoles = sessionValue
+        req.session.bulkUserRolesRequest = sessionValue
         req.body = { jiraReference: '12345' }
         await bulkUserRolesController.postJiraReference(req, resp)
 
         expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/select-roles')
         expect(render).not.toHaveBeenCalled()
 
-        expect(req.session.bulkUserRoles).not.toBeNull()
-        expect(req.session.bulkUserRoles.dateRequested).toEqual(sessionValue.dateRequested)
-        expect(req.session.bulkUserRoles.jiraReference).toEqual('12345')
-        expect(req.session.bulkUserRoles.requestedBy).toEqual(sessionValue.requestedBy)
-        expect(req.session.bulkUserRoles.users).toEqual(sessionValue.users)
-        expect(req.session.bulkUserRoles.roles).toEqual(sessionValue.roles)
-        expect(req.session.bulkUserRoles.uploadFile).toEqual(sessionValue.uploadFile)
+        expect(req.session.bulkUserRolesRequest).not.toBeNull()
+        expect(req.session.bulkUserRolesRequest.jiraReference).toEqual('12345')
+        expect(req.session.bulkUserRolesRequest.requestedBy).toEqual(sessionValue.requestedBy)
+        expect(req.session.bulkUserRolesRequest.users).toEqual(sessionValue.users)
+        expect(req.session.bulkUserRolesRequest.roles).toEqual(sessionValue.roles)
+        expect(req.session.bulkUserRolesRequest.uploadFile).toEqual(sessionValue.uploadFile)
       },
     )
   })
@@ -185,7 +221,7 @@ describe('change user roles in bulk', () => {
     })
 
     it('get select roles populate selectedRoles if values in session', async () => {
-      req.session.bulkUserRoles.roles = [{ roleName: 'r1', roleCode: 'ROLE_ONE' }]
+      req.session.bulkUserRolesRequest.roles = [{ roleName: 'r1', roleCode: 'ROLE_ONE' }]
 
       getSearchableRolesApi.mockResolvedValue(rolesList)
 
@@ -288,18 +324,16 @@ describe('change user roles in bulk', () => {
 
       expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
       expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/upload-users')
-      expect(req.session.bulkUserRoles.roles).toEqual(selectedRoles)
+      expect(req.session.bulkUserRolesRequest.roles).toEqual(selectedRoles)
     })
 
     it('redirects to summary page when valid roles selected and all inputs have been provided', async () => {
       getSearchableRolesApi.mockResolvedValue(rolesList)
 
-      const dateRequested = new Date()
-      req.session.bulkUserRoles.jiraReference = '12345'
-      req.session.bulkUserRoles.dateRequested = dateRequested
-      req.session.bulkUserRoles.requestedBy = 'Robert Bobby'
-      req.session.bulkUserRoles.users = ['User1', 'User2', 'User3']
-      req.session.bulkUserRoles.uploadFile = 'file1'
+      req.session.bulkUserRolesRequest.jiraReference = '12345'
+      req.session.bulkUserRolesRequest.requestedBy = 'Robert Bobby'
+      req.session.bulkUserRolesRequest.users = ['User1', 'User2', 'User3']
+      req.session.bulkUserRolesRequest.uploadFile = 'file1'
 
       const selectedRoles = ['ROLE_ONE']
       req.body = { selectedRoles }
@@ -308,12 +342,11 @@ describe('change user roles in bulk', () => {
 
       expect(getSearchableRolesApi).toHaveBeenCalledTimes(1)
       expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/summary')
-      expect(req.session.bulkUserRoles.jiraReference).toEqual('12345')
-      expect(req.session.bulkUserRoles.dateRequested).toEqual(dateRequested)
-      expect(req.session.bulkUserRoles.requestedBy).toEqual('Robert Bobby')
-      expect(req.session.bulkUserRoles.users).toEqual(['User1', 'User2', 'User3'])
-      expect(req.session.bulkUserRoles.roles).toEqual(selectedRoles)
-      expect(req.session.bulkUserRoles.uploadFile).toEqual('file1')
+      expect(req.session.bulkUserRolesRequest.jiraReference).toEqual('12345')
+      expect(req.session.bulkUserRolesRequest.requestedBy).toEqual('Robert Bobby')
+      expect(req.session.bulkUserRolesRequest.users).toEqual(['User1', 'User2', 'User3'])
+      expect(req.session.bulkUserRolesRequest.roles).toEqual(selectedRoles)
+      expect(req.session.bulkUserRolesRequest.uploadFile).toEqual('file1')
     })
   })
 
@@ -381,8 +414,65 @@ describe('change user roles in bulk', () => {
       expect(redirect).toHaveBeenCalledWith('/change-roles-in-bulk/summary')
       expect(spyUnlink).toHaveBeenNthCalledWith(1, resolveFilePath('valid-users.csv'))
 
-      expect(req.session.bulkUserRoles.users).toEqual(['X123456', 'Y999999'])
-      expect(req.session.bulkUserRoles.uploadFile).toEqual('file.csv')
+      expect(req.session.bulkUserRolesRequest.users).toEqual(['X123456', 'Y999999'])
+      expect(req.session.bulkUserRolesRequest.uploadFile).toEqual('file.csv')
+    })
+  })
+
+  describe('Get summary', () => {
+    it('renders create bulk user roles request summary', async () => {
+      const bulkUserRoles = {
+        jiraReference: '12345',
+        requestedBy: 'Robert Bobby',
+        users: ['User1', 'User2', 'User3'],
+        roles: ['ROLE_1', 'ROLE_2'],
+        uploadFile: 'file1',
+      }
+      req.session.bulkUserRolesRequest = bulkUserRoles
+
+      await bulkUserRolesController.getBulkRequestSummary(req, resp)
+
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSummary.njk', {
+        summary: {
+          jiraReference: '12345',
+          requestedBy: 'Robert Bobby',
+          roles: ['ROLE_1', 'ROLE_2'],
+          uploadFile: 'file1',
+          totalAssignments: 6,
+          numberOfUsers: 3,
+        },
+      })
+    })
+
+    test.each([
+      {
+        jiraReference: undefined,
+        requestedBy: undefined,
+        users: undefined,
+        roles: undefined,
+        uploadFile: undefined,
+      },
+    ])('render summary page with error when not all details have been provided', async (bulkRolesRequest) => {
+      req.session.bulkUserRolesRequest = bulkRolesRequest
+
+      await bulkUserRolesController.getBulkRequestSummary(req, resp)
+
+      expect(render).toHaveBeenCalledWith('createBulkUserRolesSummary.njk', {
+        summary: {
+          jiraReference: 'N/A',
+          requestedBy: 'Robert Bobby',
+          roles: [],
+          uploadFile: 'N/A',
+          totalAssignments: 0,
+          numberOfUsers: 0,
+        },
+        errors: [
+          { text: 'Jira reference is required', href: '#change-jira-ref' },
+          { text: 'Users is required', href: '#change-users-ref' },
+          { text: 'Roles is required', href: '#change-roles-ref' },
+          { text: 'Upload file is required', href: '#change-users-ref' },
+        ],
+      })
     })
   })
 })
