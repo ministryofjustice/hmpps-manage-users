@@ -58,7 +58,7 @@ export default {
     applicationCaseload: process.env.APPLICATION_CASELOAD || 'NWEB',
     url: process.env.MANAGE_HMPPS_USERS_URL || `http://localhost:${process.env.PORT || 3001}`,
     host: process.env.host || `localhost:${process.env.PORT || 3001}`,
-    maxBulkRolesSelection: get('MAX_BULK_ROLES_SELECTION', 5),
+    maxBulkRolesSelection: toInt(process.env.MAX_BULK_ROLES_SELECTION, 5),
   },
   session: {
     secret: get('SESSION_SECRET', 'notm-insecure-session', requiredInProduction),

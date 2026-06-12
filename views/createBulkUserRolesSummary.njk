@@ -18,7 +18,7 @@
 
 {% block content %}
 
-  {% set hasErrors = errors.length > 0 %}
+  {% set hasErrors = errors and errors.length > 0 %}
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
@@ -35,9 +35,8 @@
     </ul>
   {% endset %}
 
-  {% set jiraLink %}
-    <a href="https://dsdmoj.atlassian.net/browse/{{ summary.jiraReference }} class="govuk-body govuk-link noDoubleClick">{{ summary.jiraReference }}</a>
-  {% endset %}
+  {% set jiraHref = "https://dsdmoj.atlassian.net/browse/" + (summary.jiraReference | urlencode) %}
+  {% set jiraLink = '<a class="govuk-body govuk-link noDoubleClick" href="' + jiraHref + '">' +  summary.jiraReference + '</a>' | safe %}
 
   <form action="/change-roles-in-bulk/submit" method="post">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">

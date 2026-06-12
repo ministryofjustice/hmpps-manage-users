@@ -31,7 +31,7 @@
       errorList: [
         {
           text: selectRolesError,
-          href: "#"
+          href: "#select-roles-table"
         }
       ],
       attributes: { 'data-qa-errors': true }
@@ -63,7 +63,7 @@
               <td class="govuk-table__cell">
                 <div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
                   <input type="checkbox" class="govuk-checkboxes__input" id="SELECT_{{ r.value }}" name="selectedRoles" value="{{r.value}}" {% if r.value in selectedRoles %} checked {% endif %}>
-                  <label class="govuk-label govuk-checkboxes__label" for="{{r.text }}">
+                  <label class="govuk-label govuk-checkboxes__label" for="SELECT_{{ r.value }}">
                     <span class="govuk-visually-hidden">Select {{r.text }}</span>
                   </label>
                 </div>

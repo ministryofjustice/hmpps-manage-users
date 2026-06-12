@@ -198,22 +198,32 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
   const readCsv = async (file) => {
     return new Promise((resolve, reject) => {
       const userIds = []
+      let hasValidationError = false
 
       fs.createReadStream(file.path)
         .pipe(csv())
         .on('headers', (headers) => {
+          if (hasValidationError) return
+
           if (headers.length > 1 || headers[0] !== 'userId') {
+            hasValidationError = true
             reject(new ValidationError('csv file should contain single column with header "userId"'))
           }
         })
         .on('data', (row) => {
+          if (hasValidationError) return
           const userId = row?.userId
+
           if (!userId || userId?.length === 0 || userId?.trim().length === 0) {
+            hasValidationError = true
             reject(new ValidationError('each row must contain a non null non empty userId'))
+            return
           }
           userIds.push(userId.trim())
         })
         .on('end', () => {
+          if (hasValidationError) return
+
           if (userIds.length === 0) {
             reject(new ValidationError('csv must contain at least 1 row'))
           }

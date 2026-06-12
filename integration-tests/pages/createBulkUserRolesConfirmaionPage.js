@@ -3,7 +3,7 @@ const page = require('./page')
 const whatsNext = () => cy.get('#bulk-user-roles-next-steps')
 const viewRequestLink = () => cy.get('#view-bulk-user-roles-requests')
 
-const createBulkUserRolesSummaryPage = () =>
+const createBulkUserRolesConfirmationPage = () =>
   page('Bulk user roles request 1234567890 has been submitted', {
     whatsNext,
     viewRequestLink,
@@ -11,9 +11,9 @@ const createBulkUserRolesSummaryPage = () =>
   })
 
 export default {
-  verifyOnPage: createBulkUserRolesSummaryPage,
+  verifyOnPage: createBulkUserRolesConfirmationPage,
   goTo: () => {
     cy.visit('change-roles-in-bulk/submit')
-    return createBulkUserRolesSummaryPage()
+    return createBulkUserRolesConfirmationPage()
   },
 }

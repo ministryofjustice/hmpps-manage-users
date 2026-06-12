@@ -1,10 +1,11 @@
 const express = require('express')
 const multer = require('multer')
+const os = require('os')
 const searchApiFactory = require('./searchApiFactory')
 const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests')
 
 const router = express.Router({ mergeParams: true })
-const upload = multer({ dest: 'uploads/' })
+const upload = multer({ dest: os.tmpdir() })
 
 const controller = ({ manageUsersApi, csrfProtection }) => {
   const { searchableRoles } = searchApiFactory(manageUsersApi)
