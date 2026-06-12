@@ -3,11 +3,17 @@ const fs = require('fs')
 const csv = require('csv-parser')
 const config = require('../config').default
 
-const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
+const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRolesApi) => {
   class ValidationError extends Error {
     constructor(message) {
       super(message)
       this.name = 'ValidationError'
+    }
+  }
+
+  const ensureBulkUserRolesRequestExists = (req) => {
+    if (req.session?.bulkUserRolesRequest === undefined) {
+      req.session.bulkUserRolesRequest = {}
     }
   }
 
@@ -24,6 +30,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       })
       return
     }
+    ensureBulkUserRolesRequestExists(req)
     req.session.bulkUserRolesRequest.jiraReference = jiraReference
 
     if (hasAllInputs(req)) {
@@ -31,13 +38,12 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       return
     }
 
-    req.session.bulkUserRolesRequest.dateRequested = Date()
-    req.session.bulkUserRolesRequest.requestedBy = req.session.userDetails.username
     res.redirect('/change-roles-in-bulk/select-roles')
   }
 
   const getSelectRoles = async (req, res) => {
-    const rolesList = await getRoles(res)
+    ensureBulkUserRolesRequestExists(req)
+    const rolesList = await getRoles(res.locals)
     const selectedRoles = req.session.bulkUserRolesRequest.roles ?? []
 
     res.render('createBulkUserRolesSelectRoles.njk', {
@@ -48,7 +54,8 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const postSelectRoles = async (req, res) => {
-    const rolesList = await getRoles(res)
+    ensureBulkUserRolesRequestExists(req)
+    const rolesList = await getRoles(res.locals)
     const selectedRoles = getSelectedRolesFromRequest(req)
 
     if (!selectedRoles || !selectedRoles.length) {
@@ -90,10 +97,12 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const getUsersCsvUpload = async (req, res) => {
+    ensureBulkUserRolesRequestExists(req)
     res.render('createBulkUserRolesUploadCsv.njk')
   }
 
   const postUserCsvUpload = async (req, res) => {
+    ensureBulkUserRolesRequestExists(req)
     const { file } = req
     let userIds
 
@@ -115,12 +124,14 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
   }
 
   const getBulkRequestSummary = async (req, res) => {
-    const errors = getMissingFieldsErrors(req)
+    ensureBulkUserRolesRequestExists(req)
+
+    const errors = validateAllFieldsPresent(req)
     const bulkRolesRequest = req.session.bulkUserRolesRequest
     const totalUsers = bulkRolesRequest?.users?.length || 0
     const totalRoles = bulkRolesRequest?.roles?.length || 0
     const summary = {
-      requestedBy: req.session.userDetails.username,
+      requestedBy: getRequestedBy(req),
       jiraReference: bulkRolesRequest?.jiraReference || 'N/A',
       roles: bulkRolesRequest?.roles || [],
       uploadFile: bulkRolesRequest?.uploadFile || 'N/A',
@@ -138,17 +149,29 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     res.render('createBulkUserRolesSummary.njk', { summary })
   }
 
-  const ensureBulkUserRolesRequestExists = (req) => {
-    if (req.session?.bulkUserRolesRequest === undefined) {
-      req.session.bulkUserRolesRequest = {}
+  const postSubmitBulkUserRolesRequest = async (req, res) => {
+    ensureBulkUserRolesRequestExists(req)
+
+    if (!hasAllInputs(req)) {
+      res.redirect('/change-roles-in-bulk/summary')
+      return
     }
-    if (req.session.bulkUserRolesRequest?.requestedBy === undefined) {
-      const requestedBy = req.session?.userDetails?.username
-      if (requestedBy === undefined || requestedBy === null) {
-        throw new ValidationError('Username required for bulkUserRolesRequest but not found in session')
-      }
-      req.session.bulkUserRolesRequest.requestedBy = requestedBy
+
+    req.session.bulkUserRolesRequest.requestedBy = getRequestedBy(req)
+    req.session.bulkUserRolesRequest.dateRequested = new Date()
+
+    const summary = req.session.bulkUserRolesRequest
+
+    try {
+      await bulkUserRolesApi(res.locals, summary)
+    } catch (err) {
+      console.error('submit bulk user roles request unsuccessful', err)
+      res.render('createBulkUserRolesSummary.njk', { errors: [{ text: 'failed to submit request' }] })
+      return
     }
+
+    delete req.session.bulkUserRolesRequest
+    res.render('createBulkUserRolesConfirmation.njk', { jiraReference: summary.jiraReference })
   }
 
   const processCsvUpload = async (file) => {
@@ -168,7 +191,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
         await fsAsync.unlink(file.path)
       }
     } catch (cleanupErr) {
-      console.error('Cleanup failed:', cleanupErr)
+      console.error('upload file cleanup failed:', cleanupErr)
     }
   }
 
@@ -179,16 +202,22 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
       fs.createReadStream(file.path)
         .pipe(csv())
         .on('headers', (headers) => {
-          if (headers.length > 1) {
-            reject(new ValidationError('csv file should contain single column "userId"'))
+          if (headers.length > 1 || headers[0] !== 'userId') {
+            reject(new ValidationError('csv file should contain single column with header "userId"'))
           }
         })
-        .on('data', (row) => userIds.push(row))
+        .on('data', (row) => {
+          const userId = row?.userId
+          if (!userId || userId?.length === 0 || userId?.trim().length === 0) {
+            reject(new ValidationError('each row must contain a non null non empty userId'))
+          }
+          userIds.push(userId.trim())
+        })
         .on('end', () => {
           if (userIds.length === 0) {
             reject(new ValidationError('csv must contain at least 1 row'))
           }
-          resolve(userIds.map((r) => r.userId))
+          resolve(userIds)
         })
         .on('error', (err) => {
           reject(new ValidationError(err))
@@ -207,34 +236,41 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     return [selectedRoles]
   }
 
-  const hasAllInputs = (req) => getMissingFieldsErrors(req) === null
+  const hasAllInputs = (req) => validateAllFieldsPresent(req) === null
 
-  const getMissingFieldsErrors = (req) => {
+  const validateAllFieldsPresent = (req) => {
     const errors = []
     const details = req.session.bulkUserRolesRequest
 
-    if (details?.jiraReference === undefined || details.jiraReference.length === 0) {
+    if (!details?.jiraReference || details.jiraReference?.length === 0) {
       errors.push({ text: 'Jira reference is required', href: '#change-jira-ref' })
     }
-    if (details?.users === undefined || details.users.length === 0) {
+    if (!details?.users || details?.users?.length === 0) {
       errors.push({ text: 'Users is required', href: '#change-users-ref' })
     }
-    if (details?.roles === undefined || details.roles.length === 0) {
+    if (!details?.roles || details?.roles?.length === 0) {
       errors.push({ text: 'Roles is required', href: '#change-roles-ref' })
     }
-    if (details?.uploadFile === undefined || details.uploadFile.length === 0) {
+    if (!details?.uploadFile || details?.uploadFile?.length === 0) {
       errors.push({ text: 'Upload file is required', href: '#change-users-ref' })
     }
 
     return errors.length > 0 ? errors : null
   }
 
-  const getRoles = async (res) => {
-    const roles = await getSearchableRolesApi(res.locals)
+  const getRoles = async (context) => {
+    const roles = await getSearchableRolesApi(context)
     return roles.map((r) => ({
       text: r.roleName,
       value: r.roleCode,
     }))
+  }
+
+  const getRequestedBy = (req) => {
+    if (!req?.session?.userDetails || !req?.session?.userDetails?.username) {
+      throw new Error('unable to get username from session')
+    }
+    return req.session.userDetails.username
   }
 
   return {
@@ -245,6 +281,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi) => {
     getUsersCsvUpload,
     postUserCsvUpload,
     getBulkRequestSummary,
+    postSubmitBulkUserRolesRequest,
   }
 }
 

@@ -1,0 +1,26 @@
+{% extends "./partials/layout.njk" %}
+
+{% from "govuk/components/panel/macro.njk" import govukPanel %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl }
+     ]
+   }) }}
+
+ {% endblock %}
+
+{% block content %}
+
+  <div class="govuk-panel govuk-panel--confirmation" id="confirmation-panel">
+    <h1 class="govuk-panel__title">Bulk user roles request {{ jiraReference }} has been submitted</h1>
+  </div>
+
+  <section id="bulk-user-roles-next-steps">
+    <h2 class="govuk-heading-m">What happens next</h2>
+    <p class="govuk-body">You can check on the progress of this request and view it after completion on the view requests page.</p>
+  </section>
+  <a href="/view-bulk-role-changes/requests" class="govuk-body govuk-link" id="view-bulk-user-roles-requests">View all requests</a>
+
+{% endblock %}

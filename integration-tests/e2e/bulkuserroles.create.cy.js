@@ -5,6 +5,7 @@ const CreateBulkUserRolesRequestPage = require('../pages/createBulkUserRolesRequ
 const CreateBulkUserRolesSelectRolesPage = require('../pages/createBulkUserRolesSelectRolesPage')
 const CreateBulkUserRolesUploadUsersPage = require('../pages/createBulkUserRolesUploadUsersPage')
 const CreateBulkUserRolesSummaryPage = require('../pages/createBulkUserRolesSummaryPage')
+const CreateBulkUserRolesConfirmaionPage = require('../pages/createBulkUserRolesConfirmaionPage')
 
 context('Create bulk user roles request: Jira reference', () => {
   before(() => {
@@ -156,7 +157,9 @@ context('Create bulk user roles request: Upload user file', () => {
 
     const uploadUsersPage = uploadUserFile('users-no-header.csv')
     uploadUsersPage.assertErrorSummary()
-    uploadUsersPage.fileUploadError().should('contain.text', 'csv must contain at least 1 row')
+    uploadUsersPage
+      .fileUploadError()
+      .should('contain.text', 'csv file should contain single column with header "userId"')
   })
 
   it('should show upload page with error when csv contains more than 1 column', () => {
@@ -165,7 +168,18 @@ context('Create bulk user roles request: Upload user file', () => {
 
     const uploadUsersPage = uploadUserFile('users-multiple-columns.csv')
     uploadUsersPage.assertErrorSummary()
-    uploadUsersPage.fileUploadError().should('contain.text', 'csv file should contain single column "userId"')
+    uploadUsersPage
+      .fileUploadError()
+      .should('contain.text', 'csv file should contain single column with header "userId"')
+  })
+
+  it('should show upload page with error when csv contains empty userIds', () => {
+    enterJiraReference('1234567890')
+    selectRolesAndSubmit(['SAR_DATA_ACCESS'])
+
+    const uploadUsersPage = uploadUserFile('valid-header-empty-user-value.csv')
+    uploadUsersPage.assertErrorSummary()
+    uploadUsersPage.fileUploadError().should('contain.text', 'each row must contain a non null non empty userId')
   })
 })
 
@@ -208,6 +222,30 @@ context('Create bulk user roles request: Summary', () => {
     summaryPage.assertSummaryListRow(4, 'Number of users', '2')
     summaryPage.assertSummaryListRow(5, 'Total assignments', '2')
     summaryPage.submitButton().should('not.be.disabled')
+  })
+})
+
+context('Create bulk user roles request: Submit', () => {
+  it('should show confirmation page after valid request summary submitted', () => {
+    enterJiraReference('1234567890')
+    selectRolesAndSubmit(['SAR_DATA_ACCESS'])
+    uploadUserFile('valid-users.csv')
+
+    const summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
+    summaryPage.submitButton().click()
+
+    const confirmationPage = CreateBulkUserRolesConfirmaionPage.verifyOnPage()
+    confirmationPage.whatsNext().within(() => {
+      cy.get('.govuk-heading-m').eq(0).should('contain.text', 'What happens next')
+      cy.get('.govuk-body')
+        .eq(0)
+        .should(
+          'contain.text',
+          'You can check on the progress of this request and view it after completion on the view requests page.',
+        )
+    })
+    confirmationPage.viewRequestLink().should('have.attr', 'href', '/view-bulk-role-changes/requests')
+    confirmationPage.viewRequestLink().should('contain.text', 'View all requests')
   })
 })
 
