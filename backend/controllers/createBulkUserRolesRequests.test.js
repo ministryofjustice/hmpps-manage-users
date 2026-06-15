@@ -254,6 +254,7 @@ describe('change user roles in bulk', () => {
           rolesList: mappedRolesList,
           selectedRoles: [],
           selectRolesError: 'at least one role must be selected',
+          maxSelections: 5,
         })
         expect(redirect).not.toHaveBeenCalled()
       },
@@ -279,6 +280,7 @@ describe('change user roles in bulk', () => {
         rolesList: mappedRolesList,
         selectedRoles,
         selectRolesError: 'a maximum of 5 roles can be selected',
+        maxSelections: 5,
       })
       expect(redirect).not.toHaveBeenCalled()
     })
@@ -296,6 +298,7 @@ describe('change user roles in bulk', () => {
         rolesList: mappedRolesList,
         selectedRoles: ['ROLE_ONE'],
         selectRolesError: 'invalid role value selected ROLE_NINETY_NINE',
+        maxSelections: 5,
       })
       expect(redirect).not.toHaveBeenCalled()
     })

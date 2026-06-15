@@ -64,6 +64,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
         rolesList,
         selectedRoles: [],
         selectRolesError: 'at least one role must be selected',
+        maxSelections: config.app.maxBulkRolesSelection,
       })
       return
     }
@@ -73,6 +74,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
         rolesList,
         selectedRoles,
         selectRolesError: `a maximum of ${config.app.maxBulkRolesSelection} roles can be selected`,
+        maxSelections: config.app.maxBulkRolesSelection,
       })
       return
     }
@@ -83,6 +85,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
         rolesList,
         selectedRoles: selectedRoles.filter((r) => !invalidRoles.includes(r)),
         selectRolesError: `invalid role value selected ${invalidRoles.map((r) => r).join(', ')}`,
+        maxSelections: config.app.maxBulkRolesSelection,
       })
       return
     }
