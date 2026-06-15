@@ -5,7 +5,13 @@ const searchApiFactory = require('./searchApiFactory')
 const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests')
 
 const router = express.Router({ mergeParams: true })
-const upload = multer({ dest: os.tmpdir() })
+const upload = multer({
+  dest: os.tmpdir(),
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10 MB
+    files: 1,
+  },
+})
 
 const controller = ({ manageUsersApi, csrfProtection }) => {
   const { searchableRoles } = searchApiFactory(manageUsersApi)

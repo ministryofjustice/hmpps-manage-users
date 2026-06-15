@@ -14,7 +14,7 @@ const createBulkUserRolesSelectRolesPage = () =>
       selectRolesTableRows().eq(row).find('td').eq(column).should('contain.text', expected)
     },
     selectRoles: (roles) => {
-      roles.forEach((r) => selectRolesTableRows(r).get(`#SELECT_${r}`).check({ force: true }))
+      roles.forEach((r) => cy.get(`#SELECT_${r}`).check({ force: true }))
     },
     changeSelectRoleCheckboxValueAndCheck: (target, newValue) => {
       cy.get(`#SELECT_${target}`).invoke('attr', 'value', newValue).check({ force: true })
@@ -30,7 +30,7 @@ const createBulkUserRolesSelectRolesPage = () =>
 export default {
   verifyOnPage: createBulkUserRolesSelectRolesPage,
   goTo: () => {
-    cy.visit('change-roles-in-bulk')
+    cy.visit('change-roles-in-bulk/select-roles')
     return createBulkUserRolesSelectRolesPage()
   },
 }

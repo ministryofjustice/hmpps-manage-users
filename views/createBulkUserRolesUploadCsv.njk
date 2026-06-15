@@ -1,7 +1,6 @@
 {% extends "./partials/layout.njk" %}
 {% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
@@ -30,6 +29,12 @@
 
       {{ govukErrorSummary({
         titleText: "There was a problem",
+        errorList: [
+          {
+            text: fileError,
+            href: "#upload-users-file"
+          }
+        ],
         attributes: { 'data-qa-errors': true }
       }) }}
 
@@ -54,7 +59,7 @@
         {{ govukFileUpload({
           id: "upload-users-file",
           name: "file",
-          isPageHeading: true,
+          isPageHeading: false,
           attributes: { accept: ".csv" },
           label: {
             text: "Upload users csv",

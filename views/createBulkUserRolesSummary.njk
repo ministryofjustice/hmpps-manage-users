@@ -1,7 +1,5 @@
 {% extends "./partials/layout.njk" %}
-{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "moj/components/multi-file-upload/macro.njk" import mojMultiFileUpload %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
@@ -68,7 +66,7 @@
                 href: "/change-roles-in-bulk",
                 text: "Change",
                 id: "change-jira-ref",
-                visuallyHiddenText: "name"
+                visuallyHiddenText: "Jira reference"
               }
             ]
           }
@@ -85,7 +83,7 @@
               {
                 href: "/change-roles-in-bulk/select-roles",
                 text: "Change",
-                visuallyHiddenText: "name",
+                visuallyHiddenText: "Selected roles",
                 id: "change-roles-ref"
               }
             ]
@@ -103,7 +101,7 @@
              {
                href: "/change-roles-in-bulk/upload-users",
                text: "Change",
-               visuallyHiddenText: "name",
+               visuallyHiddenText: "Uploaded file",
                id: "change-users-ref"
              }
            ]

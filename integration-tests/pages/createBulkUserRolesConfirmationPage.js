@@ -12,8 +12,4 @@ const createBulkUserRolesConfirmationPage = () =>
 
 export default {
   verifyOnPage: createBulkUserRolesConfirmationPage,
-  goTo: () => {
-    cy.visit('change-roles-in-bulk/submit')
-    return createBulkUserRolesConfirmationPage()
-  },
 }

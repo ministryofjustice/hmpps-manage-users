@@ -2,6 +2,7 @@ const fsAsync = require('fs/promises')
 const fs = require('fs')
 const csv = require('csv-parser')
 const config = require('../config').default
+const log = require('../log')
 
 const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRolesApi) => {
   class ValidationError extends Error {
@@ -165,7 +166,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     try {
       await bulkUserRolesApi(res.locals, summary)
     } catch (err) {
-      console.error('submit bulk user roles request unsuccessful', err)
+      log.error('submit bulk user roles request unsuccessful', err)
       res.render('createBulkUserRolesSummary.njk', { errors: [{ text: 'failed to submit request' }] })
       return
     }
@@ -191,7 +192,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
         await fsAsync.unlink(file.path)
       }
     } catch (cleanupErr) {
-      console.error('upload file cleanup failed:', cleanupErr)
+      log.error('upload file cleanup failed:', cleanupErr)
     }
   }
 
@@ -225,12 +226,14 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
           if (hasValidationError) return
 
           if (userIds.length === 0) {
+            hasValidationError = true
             reject(new ValidationError('csv must contain at least 1 row'))
+            return
           }
           resolve(userIds)
         })
         .on('error', (err) => {
-          reject(new ValidationError(err))
+          reject(new ValidationError(err?.message() || String(err)))
         })
     })
   }

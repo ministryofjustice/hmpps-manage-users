@@ -1,4 +1,4 @@
-const fs = require('fs')
+const fsPromises = require('fs/promises')
 const path = require('path')
 const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesRequests')
 
@@ -9,7 +9,7 @@ describe('change user roles in bulk', () => {
   const render = jest.fn()
   const redirect = jest.fn()
   const getCsrfToken = jest.fn()
-  const spyUnlink = jest.spyOn(fs.promises, 'unlink').mockResolvedValue()
+  const spyUnlink = jest.spyOn(fsPromises, 'unlink').mockResolvedValue()
 
   const rolesList = [
     { roleName: 'r1', roleCode: 'ROLE_ONE' },

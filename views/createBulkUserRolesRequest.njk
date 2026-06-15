@@ -1,11 +1,8 @@
 {% extends "./partials/layout.njk" %}
-{% from "moj/components/filter/macro.njk" import mojFilter %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
-{% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
 {% set title =  "Change user roles in bulk" %}
 
@@ -28,7 +25,7 @@
 
   {% if jiraReferenceError %}
     {{ govukErrorSummary({
-      titleText: "There is a problem!",
+      titleText: "There is a problem",
       errorList: [
         {
           text: jiraReferenceError,
@@ -39,9 +36,7 @@
     }) }}
   {% endif %}
 
-  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-    <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
-  </legend>
+  <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
 
   <form action="/change-roles-in-bulk/jira-reference" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">

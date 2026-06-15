@@ -3,6 +3,7 @@ import setupStaticContent from './middleware/setupStaticContent'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setupWebSession from './middleware/setupWebSession'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
+import log from './log'
 
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
@@ -102,12 +103,14 @@ if (!testMode) {
   const csrf = csrfSync({
     // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
     getTokenFromRequest: (req) => {
-      console.log(`get CSRF token from req originalurl=${req.originalUrl}, baseUrl=${req.baseUrl}, reqPath=${req.path}`)
+      log.info(`get CSRF token from req originalurl=${req.originalUrl}, baseUrl=${req.baseUrl}, reqPath=${req.path}`)
       // eslint-disable-next-line no-underscore-dangle
       return req.body?._csrf || req.headers['x-csrf-token']
     },
   })
   csrfSynchronisedProtection = csrf.csrfSynchronisedProtection
+} else {
+  csrfSynchronisedProtection = (req, res, next) => next()
 }
 
 app.use((req, res, next) => {

@@ -1,7 +1,4 @@
 {% extends "./partials/layout.njk" %}
-{% from "moj/components/filter/macro.njk" import mojFilter %}
-{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
@@ -27,7 +24,7 @@
 
   {% if selectRolesError %}
     {{ govukErrorSummary({
-      titleText: "There is a problem!",
+      titleText: "There is a problem",
       errorList: [
         {
           text: selectRolesError,
@@ -42,9 +39,7 @@
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
     <div class="govuk-form-group">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-          <h1 class="govuk-fieldset__heading">Select Roles</h1>
-        </legend>
+        <h1 class="govuk-fieldset__heading">Select Roles</h1>
         <div id="select-roles-hint" class="govuk-hint">Choose one or more roles to assign. You can select up to {{ maxSelections }}.</div>
 
         <table id="select-roles-table" class="govuk-table" data-module="moj-multi-select">

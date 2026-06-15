@@ -5,7 +5,7 @@ const CreateBulkUserRolesRequestPage = require('../pages/createBulkUserRolesRequ
 const CreateBulkUserRolesSelectRolesPage = require('../pages/createBulkUserRolesSelectRolesPage')
 const CreateBulkUserRolesUploadUsersPage = require('../pages/createBulkUserRolesUploadUsersPage')
 const CreateBulkUserRolesSummaryPage = require('../pages/createBulkUserRolesSummaryPage')
-const CreateBulkUserRolesConfirmaionPage = require('../pages/createBulkUserRolesConfirmaionPage')
+const CreateBulkUserRolesConfirmaionPage = require('../pages/createBulkUserRolesConfirmationPage')
 
 context('Create bulk user roles request: Jira reference', () => {
   before(() => {

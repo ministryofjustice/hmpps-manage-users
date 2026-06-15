@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import * as querystring from 'querystring'
+import log from '../log'
 
 import { Context } from '../interfaces/context'
 import { PagedList } from '../interfaces/pagedList'
@@ -364,7 +365,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
       uploadFile?: string
     },
   ): Promise<string> => {
-    console.log('executing createBulkUserRolesRequest', jiraReference, requestedBy, users, roles, uploadFile)
+    log.info('executing createBulkUserRolesRequest', jiraReference, requestedBy, users, roles, uploadFile)
     return Promise.resolve('Complete')
   }
 
