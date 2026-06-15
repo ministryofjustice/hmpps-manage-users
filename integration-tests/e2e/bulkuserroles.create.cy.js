@@ -285,7 +285,7 @@ function selectRolesAndSubmit(roles) {
 function uploadUserFile(filename) {
   const uploadUsersPage = CreateBulkUserRolesUploadUsersPage.verifyOnPage()
   if (filename !== undefined && filename !== null) {
-    uploadUsersPage.chooseFile().selectFile(resolveResourcePath(filename))
+    uploadUsersPage.chooseFile().selectFile(resolveResourcePath(filename), { force: true })
   }
   uploadUsersPage.uploadButton().click()
   return uploadUsersPage
