@@ -38,8 +38,12 @@
   <form action="/change-roles-in-bulk/select-roles" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
 
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">Select Roles</h1>
+    </legend>
+
     <div class="govuk-form-group">
-        <h1 class="govuk-fieldset__heading">Select Roles</h1>
+
         <div id="select-roles-hint" class="govuk-hint">Choose one or more roles to assign. You can select up to {{ maxSelections }}.</div>
 
         <table id="select-roles-table" class="govuk-table" data-module="moj-multi-select">

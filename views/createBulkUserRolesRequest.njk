@@ -36,10 +36,12 @@
     }) }}
   {% endif %}
 
-  <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
-
   <form action="/change-roles-in-bulk/jira-reference" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+      <h1 class="govuk-fieldset__heading">Change user roles in bulk</h1>
+    </legend>
 
     {{ govukInput({
       label: {
