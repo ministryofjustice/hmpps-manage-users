@@ -3,6 +3,7 @@ import setupStaticContent from './middleware/setupStaticContent'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setupWebSession from './middleware/setupWebSession'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
+import log from './log'
 
 require('dotenv').config()
 // Do appinsights first as it does some magic instrumentation work, i.e. it affects other 'require's
@@ -96,19 +97,30 @@ app.use((req, res, next) => {
 const testMode = process.env.NODE_ENV === 'test'
 
 // CSRF protection
+let csrfSynchronisedProtection
+
 if (!testMode) {
-  const {
-    csrfSynchronisedProtection, // This is the default CSRF protection middleware.
-  } = csrfSync({
+  const csrf = csrfSync({
     // By default, csrf-sync uses x-csrf-token header, but we use the token in forms and send it in the request body, so change getTokenFromRequest so it grabs from there
     getTokenFromRequest: (req) => {
+      log.info(`get CSRF token from req originalurl=${req.originalUrl}, baseUrl=${req.baseUrl}, reqPath=${req.path}`)
       // eslint-disable-next-line no-underscore-dangle
-      return req.body._csrf
+      return req.body?._csrf || req.headers['x-csrf-token']
     },
   })
-
-  app.use(csrfSynchronisedProtection)
+  csrfSynchronisedProtection = csrf.csrfSynchronisedProtection
+} else {
+  csrfSynchronisedProtection = (req, res, next) => next()
 }
+
+app.use((req, res, next) => {
+  const isMultipartRoute = req.method === 'POST' && req.originalUrl.startsWith('/change-roles-in-bulk/upload-users')
+  if (isMultipartRoute) {
+    return next()
+  }
+  return csrfSynchronisedProtection(req, res, next)
+})
+
 app.use((req, res, next) => {
   if (typeof req.csrfToken === 'function') {
     res.locals.csrfToken = req.csrfToken()
@@ -116,7 +128,12 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use(routes({ ...apis }))
+app.use(
+  routes({
+    ...apis,
+    csrfProtection: csrfSynchronisedProtection,
+  }),
+)
 
 app.use(errorHandler)
 

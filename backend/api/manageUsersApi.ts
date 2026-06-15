@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import * as querystring from 'querystring'
+import log from '../log'
 
 import { Context } from '../interfaces/context'
 import { PagedList } from '../interfaces/pagedList'
@@ -347,6 +348,27 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
       })}`,
     )
 
+  // TODO stubbed for now, implementation to come in later change.
+  const createBulkUserRolesRequest = (
+    context: Context,
+    {
+      jiraReference,
+      requestedBy,
+      users,
+      roles,
+      uploadFile,
+    }: {
+      jiraReference?: string
+      requestedBy?: string
+      users?: string[]
+      roles?: string[]
+      uploadFile?: string
+    },
+  ): Promise<string> => {
+    log.info('executing createBulkUserRolesRequest', jiraReference, requestedBy, users, roles, uploadFile)
+    return Promise.resolve('Complete')
+  }
+
   return {
     addDpsUserRoles,
     addUserCaseloads,
@@ -406,6 +428,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     syncDpsEmail,
     userGroups,
     userSearch,
+    createBulkUserRolesRequest,
   }
 }
 

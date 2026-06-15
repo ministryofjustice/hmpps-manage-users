@@ -15,6 +15,7 @@ const manageRolesRouter = require('./routes/manageRolesRouter')
 const manageEmailDomainsRouter = require('./routes/manageEmailDomainsRouter')
 const createEmailDomainsRouter = require('./routes/createEmailDomainRouter')
 const deleteEmailDomainsRouter = require('./routes/deleteEmailDomainRouter')
+const createBulkUserRolesRouter = require('./routes/bulkChangeUserRolesRouter')
 const userAllowListRouter = require('./routes/userAllowList').default
 const crsGroupSelectionRouter = require('./routes/crsGroupSelection').default
 const currentUser = require('./middleware/currentUser')
@@ -22,7 +23,7 @@ const featureSwitches = require('./middleware/featureSwitches')
 const nomisUserDetails = require('./middleware/nomisUserDetails').default
 const config = require('./config').default
 
-const configureRoutes = ({ manageUsersApi }) => {
+const configureRoutes = ({ manageUsersApi, csrfProtection }) => {
   const router = express.Router()
 
   router.use(currentUser({ manageUsersApi }))
@@ -45,6 +46,7 @@ const configureRoutes = ({ manageUsersApi }) => {
   router.use('/create-email-domain', createEmailDomainsRouter({ manageUsersApi }))
   router.use('/delete-email-domain?id=:domainId&name=:domainName', deleteEmailDomainsRouter({ manageUsersApi }))
   router.use('/delete-email-domain', deleteEmailDomainsRouter({ manageUsersApi }))
+  router.use('/change-roles-in-bulk', createBulkUserRolesRouter({ manageUsersApi, csrfProtection }))
   router.use(userAllowListRouter())
   router.use(crsGroupSelectionRouter())
 

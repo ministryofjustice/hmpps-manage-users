@@ -1,0 +1,80 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set title =  "Change user roles in bulk" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: title }
+     ]
+   }) }}
+
+   {{ govukBackLink({
+     text: "Back",
+     href: "/change-roles-in-bulk/select-roles"
+   }) }}
+
+ {% endblock %}
+
+{% block content %}
+
+  {% if fileError %}
+      {% set uploadErrorMessage = { text: fileError } %}
+      {% set showErrors = true %}
+
+      {{ govukErrorSummary({
+        titleText: "There was a problem",
+        errorList: [
+          {
+            text: fileError,
+            href: "#upload-users-file"
+          }
+        ],
+        attributes: { 'data-qa-errors': true }
+      }) }}
+
+  {% endif %}
+
+  {% set hintHtml %}
+    <p>The file must:</p>
+    <ul>
+      <li>Contain a single column - "userId"</li>
+      <li>Include a header row</li>
+      <li>Contain 1 or more rows</li>
+    </ul>
+  {% endset %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-xl">Upload users</h1>
+
+      <form action="/change-roles-in-bulk/upload-users" method="post" enctype="multipart/form-data">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}">
+
+        {{ govukFileUpload({
+          id: "upload-users-file",
+          name: "file",
+          isPageHeading: false,
+          attributes: { accept: ".csv" },
+          label: {
+            text: "Upload users csv",
+            classes: "govuk-table__caption--m"
+          },
+          javascript: true,
+          hint: { html: hintHtml },
+          errorMessage: uploadErrorMessage
+        }) }}
+
+        {{ govukButton({ text: "Upload", id: "upload-users-file-upload"}) }}
+
+      </form>
+
+    </div>
+  </div>
+
+{% endblock %}

@@ -321,6 +321,21 @@ module.exports = {
               },
             ],
           },
+          {
+            roleCode: 'SAR_DATA_ACCESS',
+            roleName: 'SAR Data Access',
+            roleDescription: 'Access Subject Access Request reports',
+            adminType: [
+              {
+                adminTypeCode: 'DPS_ADM',
+                adminTypeName: 'DPS Central Administrator',
+              },
+              {
+                adminTypeCode: 'DPS_LSA',
+                adminTypeName: 'DPS Local System Administrator',
+              },
+            ],
+          },
         ],
       }),
       stubUserDetails({

@@ -45,6 +45,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -81,6 +82,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
       clientID: 'manage-user-accounts-ui',
       returnUrl: 'http://host/somethingelse',
     })
@@ -105,6 +107,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -127,6 +130,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -149,6 +153,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -171,6 +176,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -193,8 +199,10 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
+
   it('should set maintain dps user', async () => {
     manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' }])
     const controller = currentUser({ manageUsersApi })
@@ -214,6 +222,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -236,6 +245,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -258,6 +268,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -280,6 +291,7 @@ describe('Current user', () => {
       manageUserAllowList: true,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -302,6 +314,30 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: true,
+      bulkUserRolesAdmin: false,
+    })
+  })
+
+  it('should set role Bulk User Roles Admin', async () => {
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'BULK_USER_ROLES_ADMIN' }])
+    const controller = currentUser({ manageUsersApi })
+
+    await controller(req, res, () => {})
+
+    expect(req.session.userRoles).toEqual({
+      createDPSUsers: false,
+      groupManager: false,
+      maintainAccess: false,
+      maintainAccessAdmin: false,
+      maintainAuthUsers: false,
+      maintainOAuthAdmin: false,
+      maintainRoles: false,
+      manageDPSUserAccount: false,
+      manageEmailDomains: false,
+      manageUserAllowList: false,
+      viewAdministrableUserRoles: false,
+      crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: true,
     })
   })
 
@@ -316,6 +352,7 @@ describe('Current user', () => {
       { roleCode: 'CREATE_USER' },
       { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' },
       { roleCode: 'MAINTAIN_EMAIL_DOMAINS' },
+      { roleCode: 'BULK_USER_ROLES_ADMIN' },
     ])
     const controller = currentUser({ manageUsersApi })
 
@@ -334,6 +371,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: true,
     })
   })
 
@@ -356,6 +394,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: true,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
   })
 
@@ -383,6 +422,7 @@ describe('Current user', () => {
       manageUserAllowList: false,
       viewAdministrableUserRoles: false,
       crsGroupUsersDownload: false,
+      bulkUserRolesAdmin: false,
     })
     expect(next).toHaveBeenCalled()
   })
