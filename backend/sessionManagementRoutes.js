@@ -17,8 +17,9 @@ const isXHRRequest = (req) =>
  * @param {any} params.tokenRefresher a function which uses the 'context' object to perform an OAuth token refresh (returns a promise).
  * @param {any} params.tokenVerifier a function which uses the 'context' object to check whether the token is valid (returns a promise).
  * @param {any} params.homeLink The URL for the home page.
+ * @param {any} params.accountSwitchApi API client for hmpps-auth account switching endpoints.
  */
-const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
+const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink, accountSwitchApi }) => {
   const authSignOutUrl = `${config.apis.hmppsAuth.externalUrl}/sign-out?client_id=${config.apis.hmppsAuth.apiClientId}&redirect_uri=${config.app.url}`
 
   const remoteSignInIndex = (req, res, next) => {
@@ -154,6 +155,54 @@ const configureRoutes = ({ app, tokenRefresher, tokenVerifier, homeLink }) => {
    */
   app.use('/heart-beat', (req, res) => {
     res.sendStatus(200)
+  })
+
+  /**
+   * GET /switch-account — show linked accounts the user can switch to.
+   */
+  app.get('/switch-account', async (req, res, next) => {
+    try {
+      const linkedAccounts = await accountSwitchApi.getLinkedAccounts(res.locals)
+      const returnTo = req.query.returnTo || '/'
+      return res.render('switchAccount.njk', { linkedAccounts, returnTo })
+    } catch (error) {
+      return next(error)
+    }
+  })
+
+  /**
+   * POST /switch-account — exchange current access token for one belonging to the target linked account,
+   * update the session, and redirect back.
+   */
+  app.post('/switch-account', async (req, res, next) => {
+    const { targetAccount, returnTo } = req.body
+    try {
+      const tokenResponse = await accountSwitchApi.switchAccount(res.locals, targetAccount)
+
+      // Update the Passport user object with the new token and clear cached per-user session data
+      // so that currentUser middleware re-fetches roles/caseloads for the new account.
+      req.user.access_token = tokenResponse.access_token
+      req.user.refresh_token = null
+      req.user.authSource = tokenResponse.auth_source
+
+      delete req.session.userDetails
+      delete req.session.userRoles
+      delete req.session.allCaseloads
+
+      await new Promise((resolve, reject) => {
+        req.login(req.user, (err) => {
+          if (err) reject(err)
+          else resolve()
+        })
+      })
+
+      const safeReturnTo =
+        typeof returnTo === 'string' && returnTo.startsWith('/') && !returnTo.startsWith('//') ? returnTo : '/'
+      return res.redirect(safeReturnTo)
+    } catch (error) {
+      logger.error(`Account switch failed for target ${targetAccount}: ${error.message}`)
+      return next(error)
+    }
   })
 }
 

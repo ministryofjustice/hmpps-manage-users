@@ -83,7 +83,13 @@ app.use(bodyParser.json())
 app.use(setupStaticContent())
 
 app.use(setupWebSession())
-app.use(setupAuth({ oauthApi: apis.oauthApi, tokenVerificationApi: apis.tokenVerificationApi }))
+app.use(
+  setupAuth({
+    oauthApi: apis.oauthApi,
+    tokenVerificationApi: apis.tokenVerificationApi,
+    accountSwitchApi: apis.accountSwitchApi,
+  }),
+)
 app.use(authorisationMiddleware())
 
 // Ensure cookie session is extended (once per minute) when user interacts with the server

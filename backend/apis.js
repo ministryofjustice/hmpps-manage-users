@@ -3,6 +3,7 @@ const { oauthApiFactory } = require('./api/oauthApi')
 const { manageUsersApiFactory } = require('./api/manageUsersApi')
 const { tokenVerificationApiFactory } = require('./api/tokenVerificationApi')
 const { oauthEnabledClientFactory } = require('./api/oauthEnabledClient')
+const { accountSwitchApiFactory } = require('./api/accountSwitchApi')
 
 const oauthApi = oauthApiFactory({
   apiClientId: config.apis.hmppsAuth.apiClientId,
@@ -24,8 +25,16 @@ const tokenVerificationApi = tokenVerificationApiFactory(
   }),
 )
 
+const accountSwitchApi = accountSwitchApiFactory(
+  oauthEnabledClientFactory({
+    baseUrl: config.apis.hmppsAuth.url,
+    timeout: 10000,
+  }),
+)
+
 module.exports = {
   oauthApi,
   manageUsersApi,
   tokenVerificationApi,
+  accountSwitchApi,
 }

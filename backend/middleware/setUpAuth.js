@@ -8,7 +8,7 @@ const config = require('../config').default
 
 const router = express.Router()
 
-module.exports = ({ oauthApi, tokenVerificationApi }) => {
+module.exports = ({ oauthApi, tokenVerificationApi, accountSwitchApi }) => {
   auth.init()
   const tokenRefresher = tokenRefresherFactory(oauthApi.refresh, config.app.tokenRefreshThresholdSeconds)
 
@@ -22,6 +22,7 @@ module.exports = ({ oauthApi, tokenVerificationApi }) => {
     tokenRefresher,
     tokenVerifier: tokenVerificationApi.verifyToken,
     homeLink: config.apis.hmppsAuth.externalUrl,
+    accountSwitchApi,
   })
 
   return router

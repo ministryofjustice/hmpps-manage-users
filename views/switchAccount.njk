@@ -1,0 +1,41 @@
+{% extends "./partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set title = "Switch account" %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">Switch account</h1>
+
+      {% if linkedAccounts.length == 0 %}
+        <p class="govuk-body">You have no other linked accounts to switch to.</p>
+        <a href="/" class="govuk-link">Return to home</a>
+      {% else %}
+        <p class="govuk-body">Select an account to switch to. You will remain signed in.</p>
+
+        <dl class="govuk-summary-list">
+          {% for account in linkedAccounts %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                {{ account.authSource | upper }}<br>
+                <span class="govuk-body-s govuk-!-colour-secondary">{{ account.username }}</span>
+              </dt>
+              <dd class="govuk-summary-list__actions">
+                <form method="POST" action="/switch-account">
+                  <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                  <input type="hidden" name="targetAccount" value="{{ account.authSource }}/{{ account.username }}" />
+                  <input type="hidden" name="returnTo" value="{{ returnTo }}" />
+                  {{ govukButton({
+                    text: "Switch",
+                    classes: "govuk-button--secondary govuk-!-margin-bottom-0"
+                  }) }}
+                </form>
+              </dd>
+            </div>
+          {% endfor %}
+        </dl>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
