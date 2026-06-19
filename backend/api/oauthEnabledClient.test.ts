@@ -1,4 +1,5 @@
 import nock from 'nock'
+import path from 'path'
 import * as contextProperties from '../contextProperties'
 import { oauthEnabledClientFactory } from './oauthEnabledClient'
 import { Context } from '../interfaces/context'
@@ -138,6 +139,73 @@ describe('Test clients built by oauthEnabledClient', () => {
       const response = await client.get(context, '/api/users/me')
 
       expect(response.request.url).toEqual('http://localhost:8080/api/users/me')
+    })
+  })
+
+  describe('Post Multipart request', () => {
+    const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
+    const fileInfo = {
+      filename: 'valid-users.csv',
+      path: path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv'),
+    }
+    const multipartRequest = nock(hostname)
+    const context = {}
+    const bulkUserRolesAdditionsReq = { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] }
+    let capturedBody: string | undefined
+
+    beforeEach(() => {
+      capturedBody = undefined
+    })
+
+    afterEach(() => {
+      nock.cleanAll()
+    })
+
+    const captureRequestBody = (returnId: string) => {
+      return multipartRequest
+        .matchHeader('content-type', (value) => value.startsWith('multipart/form-data;'))
+        .post('/bulk-jobs/user-role-additions', (body) => {
+          capturedBody = body
+          return true
+        })
+        .reply(200, { id: returnId })
+    }
+
+    it('should post multipart upload form data with json request body', async () => {
+      const scope = captureRequestBody('666')
+
+      const resp = await client.postMultipartData(
+        context,
+        '/bulk-jobs/user-role-additions',
+        bulkUserRolesAdditionsReq,
+        fileInfo.path,
+        fileInfo.filename,
+      )
+
+      expect(scope.isDone()).toBe(true)
+      expect(resp.statusCode).toBe(200)
+      expect(resp.body).toEqual({ id: '666' })
+      expect(capturedBody).toContain('Content-Disposition: form-data; name="file"; filename="valid-users.csv"')
+      expect(capturedBody).toContain('Content-Type: text/csv')
+      expect(capturedBody).toContain('userId\nX123456\nY999999')
+      expect(capturedBody).toContain('Content-Disposition: form-data; name="request"')
+      expect(capturedBody).toContain(JSON.stringify(bulkUserRolesAdditionsReq))
+    })
+
+    it('should reject with error if file not found', async () => {
+      const scope = captureRequestBody('666')
+
+      await expect(
+        client.postMultipartData(
+          context,
+          '/bulk-jobs/user-role-additions',
+          bulkUserRolesAdditionsReq,
+          '/madeup/path',
+          'valid-users.csv',
+        ),
+      ).rejects.toThrow('ENOENT')
+
+      expect(scope.isDone()).toBe(false)
     })
   })
 })

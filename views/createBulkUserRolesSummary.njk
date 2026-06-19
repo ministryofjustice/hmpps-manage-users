@@ -16,11 +16,19 @@
 
 {% block content %}
 
-  {% set hasErrors = errors and errors.length > 0 %}
+  {% set hasValidationErrors = errors and errors.length > 0 %}
   {% if errors %}
     {{ govukErrorSummary({
       titleText: "There is a problem",
       errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+
+  {% if submitRequestError %}
+    {{ govukErrorSummary({
+      titleText: "There was a problem",
+      errorList: submitRequestError,
       attributes: { 'data-qa-errors': true }
     }) }}
   {% endif %}
@@ -112,7 +120,7 @@
            text: "Number of users"
          },
          value: {
-           text: summary.numberOfUsers
+           text: summary.totalNumberOfUsers
          }
        },
         {
@@ -133,7 +141,7 @@
       text: "Accept and submit request",
       id: "accept-confirm",
       preventDoubleClick: true,
-      disabled: hasErrors
+      disabled: hasValidationErrors
     }) }}
 
   </form>

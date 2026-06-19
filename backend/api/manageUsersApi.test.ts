@@ -23,6 +23,7 @@ const client: OAuthEnabledClient = {
   post: jest.fn(),
   put: jest.fn(),
   del: jest.fn(),
+  postMultipartData: jest.fn(),
 }
 const mockResponse = {
   then: (res: superagent.Response) => {
@@ -1141,6 +1142,34 @@ describe('manageUsersApiImport tests', () => {
         '/prisonusers/download/admins?nameFilter=&accessRoles=&status=&caseload=&activeCaseload=&inclusiveRoles=&showOnlyLSAs=',
       )
       expect(actual).toEqual(userResponse)
+    })
+  })
+
+  describe('bulk user roles assignments', () => {
+    const response = { id: '1234-567-890' }
+    beforeEach(() => {
+      client.postMultipartData = jest.fn().mockReturnValue({ then: () => response })
+    })
+
+    it('return expected response', () => {
+      const actual = manageUsersApi.bulkUserRolesAdditions(
+        context,
+        { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
+        {
+          path: '/tmp/1234567890/users.csv',
+          filename: 'users.csv',
+        },
+      )
+
+      expect(client.postMultipartData).toHaveBeenNthCalledWith(
+        1,
+        context,
+        '/bulk-jobs/user-role-additions',
+        { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
+        '/tmp/1234567890/users.csv',
+        'users.csv',
+      )
+      expect(actual).toEqual(response)
     })
   })
 })

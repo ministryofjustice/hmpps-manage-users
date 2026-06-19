@@ -2429,7 +2429,15 @@ export interface components {
       groupCode: string
       groupName: string
     }
+    BulkUserRoleAdditionsRequest: {
+      jiraReference: string
+      roles: string[]
+    }
+    BulkUserRoleAdditionsResponse: {
+      id: string
+    }
   }
+
   responses: never
   parameters: never
   requestBodies: never
@@ -6501,6 +6509,70 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to remove a caseload this user account */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  bulkUserRoleAdditions: {
+    query?: never
+    path?: never
+    header?: never
+    cookie?: never
+    requestBody: {
+      content: {
+        'multipart/form-data': {
+          schema: {
+            type: 'object'
+            properties: {
+              file: {
+                type: 'string'
+                format: 'binary'
+                description: 'CSV files containing UserIDs to assign roles to.'
+              }
+              request: {
+                $ref: '#/components/schemas/BulkUserRoleAdditionsRequest'
+              }
+            }
+            required: ['file']
+          }
+        }
+      }
+    }
+    responses: {
+      /** @description Role Created */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': unknown
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
         headers: {
           [name: string]: unknown

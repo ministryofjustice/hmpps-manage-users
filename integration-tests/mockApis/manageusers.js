@@ -1267,4 +1267,67 @@ module.exports = {
       method: 'POST',
       urlPathPattern: '/prisonusers/[^/]*/email',
     }).then((data) => data.body.requests),
+
+  stubBulkUserRolesAdditions: (expectedBody) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/bulk-jobs/user-role-additions',
+        headers: {
+          'Content-Type': {
+            contains: 'multipart/form-data',
+          },
+        },
+        multipartPatterns: [
+          {
+            headers: {
+              'Content-Disposition': {
+                contains: 'form-data; name="file"',
+              },
+            },
+          },
+          {
+            headers: {
+              'Content-Disposition': {
+                contains: 'form-data; name="request"',
+              },
+            },
+          },
+        ],
+        bodyPatterns: [
+          { contains: 'Content-Type: text/csv' },
+          { contains: 'userId\nX123456\nY999999' },
+          { contains: JSON.stringify(expectedBody) },
+        ],
+      },
+      response: {
+        status: 202,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: { id: '666-999-888-777' },
+      },
+    }),
+
+  stubBulkUserRolesAdditionsError: (status, errorBody) =>
+    stubFor({
+      request: {
+        method: 'POST',
+        urlPattern: '/bulk-jobs/user-role-additions',
+        headers: {
+          'Content-Type': {
+            contains: 'multipart/form-data',
+          },
+        },
+      },
+      response: {
+        status,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: JSON.stringify(errorBody),
+      },
+    }),
+
+  verifyBulkUserRolesAdditions: () =>
+    getMatchingRequests({
+      method: 'POST',
+      urlPathPattern: '/bulk-jobs/user-role-additions',
+    }).then((data) => data.body.requests),
 }

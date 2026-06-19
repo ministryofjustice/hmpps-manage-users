@@ -10,10 +10,12 @@ declare module 'express-session' {
     }
     bulkUserRolesRequest: {
       jiraReference: string
-      requestedBy: string
-      users: string[]
+      totalNumberOfUsers: number
       roles: string[]
-      uploadFile: string
+      usersFile: {
+        filename: string
+        path: string
+      }
     }
   }
 }

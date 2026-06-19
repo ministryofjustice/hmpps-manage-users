@@ -4,7 +4,7 @@ const csv = require('csv-parser')
 const config = require('../config').default
 const log = require('../log')
 
-const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRolesApi) => {
+const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRolesAdditions) => {
   class ValidationError extends Error {
     constructor(message) {
       super(message)
@@ -108,22 +108,20 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
   const postUserCsvUpload = async (req, res) => {
     ensureBulkUserRolesRequestExists(req)
     const { file } = req
-    let userIds
+    let totalNumberOfUsers = 0
 
     try {
-      userIds = await processCsvUpload(file)
+      totalNumberOfUsers = await processCsvUpload(file)
     } catch (err) {
       res.render('createBulkUserRolesUploadCsv.njk', {
         fileError: err.message,
         csrfToken: req.csrfToken(),
       })
       return
-    } finally {
-      await cleanUpResources(file)
     }
 
-    req.session.bulkUserRolesRequest.users = userIds
-    req.session.bulkUserRolesRequest.uploadFile = file.originalname
+    req.session.bulkUserRolesRequest.totalNumberOfUsers = totalNumberOfUsers
+    req.session.bulkUserRolesRequest.usersFile = { filename: file.originalname, path: file.path }
     res.redirect('/change-roles-in-bulk/summary')
   }
 
@@ -131,17 +129,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     ensureBulkUserRolesRequestExists(req)
 
     const errors = validateAllFieldsPresent(req)
-    const bulkRolesRequest = req.session.bulkUserRolesRequest
-    const totalUsers = bulkRolesRequest?.users?.length || 0
-    const totalRoles = bulkRolesRequest?.roles?.length || 0
-    const summary = {
-      requestedBy: getRequestedBy(req),
-      jiraReference: bulkRolesRequest?.jiraReference || 'N/A',
-      roles: bulkRolesRequest?.roles || [],
-      uploadFile: bulkRolesRequest?.uploadFile || 'N/A',
-      numberOfUsers: totalUsers,
-      totalAssignments: totalUsers * totalRoles,
-    }
+    const summary = getSummary(req)
     if (errors !== null) {
       res.render('createBulkUserRolesSummary.njk', {
         summary,
@@ -161,21 +149,31 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
       return
     }
 
-    req.session.bulkUserRolesRequest.requestedBy = getRequestedBy(req)
-    req.session.bulkUserRolesRequest.dateRequested = new Date()
-
-    const summary = req.session.bulkUserRolesRequest
+    const { bulkUserRolesRequest } = req.session
+    const bulkUserRolesAdditionsRequest = {
+      jiraReference: bulkUserRolesRequest.jiraReference,
+      roles: bulkUserRolesRequest.roles,
+    }
+    const fileInfo = {
+      path: bulkUserRolesRequest.usersFile.path,
+      filename: bulkUserRolesRequest.usersFile.filename,
+    }
 
     try {
-      await bulkUserRolesApi(res.locals, summary)
+      const resp = await bulkUserRolesAdditions(res.locals, bulkUserRolesAdditionsRequest, fileInfo)
+      console.log('bulkUserRolesAdditions: ', resp)
     } catch (err) {
       log.error('submit bulk user roles request unsuccessful', err)
-      res.render('createBulkUserRolesSummary.njk', { errors: [{ text: 'failed to submit request' }] })
+      res.render('createBulkUserRolesSummary.njk', {
+        summary: getSummary(req),
+        submitRequestError: [{ text: 'Internal Server Error' }],
+      })
       return
     }
 
+    await deleteUploadFile(bulkUserRolesRequest.usersFile.path)
     delete req.session.bulkUserRolesRequest
-    res.render('createBulkUserRolesConfirmation.njk', { jiraReference: summary.jiraReference })
+    res.render('createBulkUserRolesConfirmation.njk', { jiraReference: bulkUserRolesRequest.jiraReference })
   }
 
   const processCsvUpload = async (file) => {
@@ -189,19 +187,20 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     return readCsv(file)
   }
 
-  const cleanUpResources = async (file) => {
+  const deleteUploadFile = async (path) => {
     try {
-      if (file?.path !== undefined) {
-        await fsAsync.unlink(file.path)
+      if (path !== undefined) {
+        log.info('deleting bulk user roles request file', path)
+        await fsAsync.unlink(path)
       }
     } catch (cleanupErr) {
-      log.error('upload file cleanup failed:', cleanupErr)
+      log.error('upload file cleanup failed:', cleanupErr, path)
     }
   }
 
   const readCsv = async (file) => {
     return new Promise((resolve, reject) => {
-      const userIds = []
+      let userCount = 0
       let hasValidationError = false
 
       fs.createReadStream(file.path)
@@ -223,17 +222,17 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
             reject(new ValidationError('each row must contain a non null non empty userId'))
             return
           }
-          userIds.push(userId.trim())
+          userCount += 1
         })
         .on('end', () => {
           if (hasValidationError) return
 
-          if (userIds.length === 0) {
+          if (userCount === 0) {
             hasValidationError = true
             reject(new ValidationError('csv must contain at least 1 row'))
             return
           }
-          resolve(userIds)
+          resolve(userCount)
         })
         .on('error', (err) => {
           reject(new ValidationError(err?.message() || String(err)))
@@ -261,13 +260,13 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     if (!details?.jiraReference || details.jiraReference?.length === 0) {
       errors.push({ text: 'Jira reference is required', href: '#change-jira-ref' })
     }
-    if (!details?.users || details?.users?.length === 0) {
-      errors.push({ text: 'Users is required', href: '#change-users-ref' })
+    if (!details?.totalNumberOfUsers) {
+      errors.push({ text: 'Users ids required', href: '#change-users-ref' })
     }
     if (!details?.roles || details?.roles?.length === 0) {
       errors.push({ text: 'Roles is required', href: '#change-roles-ref' })
     }
-    if (!details?.uploadFile || details?.uploadFile?.length === 0) {
+    if (!details?.usersFile?.path || details?.usersFile?.path === 0) {
       errors.push({ text: 'Upload file is required', href: '#change-users-ref' })
     }
 
@@ -282,11 +281,19 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     }))
   }
 
-  const getRequestedBy = (req) => {
-    if (!req?.session?.userDetails || !req?.session?.userDetails?.username) {
-      throw new Error('unable to get username from session')
+  const getSummary = (req) => {
+    const bulkRolesRequest = req.session.bulkUserRolesRequest
+    const totalUsers = bulkRolesRequest?.totalNumberOfUsers || 0
+    const totalRoles = bulkRolesRequest?.roles?.length || 0
+
+    return {
+      requestedBy: req?.session?.userDetails?.username || 'N/A',
+      jiraReference: bulkRolesRequest?.jiraReference || 'N/A',
+      roles: bulkRolesRequest?.roles || [],
+      uploadFile: bulkRolesRequest?.usersFile?.filename || 'N/A',
+      totalNumberOfUsers: totalUsers,
+      totalAssignments: totalUsers * totalRoles,
     }
-    return req.session.userDetails.username
   }
 
   return {
