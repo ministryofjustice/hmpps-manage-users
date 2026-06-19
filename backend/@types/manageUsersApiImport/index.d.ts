@@ -6545,7 +6545,7 @@ export interface operations {
       }
     }
     responses: {
-      /** @description Role Created */
+      /** @description Bulk user roles additions submitted */
       202: {
         headers: {
           [name: string]: unknown

@@ -1282,14 +1282,14 @@ module.exports = {
           {
             headers: {
               'Content-Disposition': {
-                contains: 'form-data; name="file"',
+                contains: 'form-data; name="usesCsv"',
               },
             },
           },
           {
             headers: {
               'Content-Disposition': {
-                contains: 'form-data; name="request"',
+                contains: 'form-data; name="bulkJobDetails"',
               },
             },
           },

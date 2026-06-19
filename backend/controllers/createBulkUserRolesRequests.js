@@ -160,8 +160,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     }
 
     try {
-      const resp = await bulkUserRolesAdditions(res.locals, bulkUserRolesAdditionsRequest, fileInfo)
-      console.log('bulkUserRolesAdditions: ', resp)
+      await bulkUserRolesAdditions(res.locals, bulkUserRolesAdditionsRequest, fileInfo)
     } catch (err) {
       log.error('submit bulk user roles request unsuccessful', err)
       res.render('createBulkUserRolesSummary.njk', {

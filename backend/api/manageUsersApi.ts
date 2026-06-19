@@ -361,17 +361,14 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     context: Context,
     bulkUserRoleAdditionsRequest: BulkUserRoleAdditionsRequest,
     fileInfo: FileInfo,
-  ): Promise<BulkUserRoleAdditionsResponse> => {
-    console.log('fileInfo', fileInfo)
-
-    return postMultipartData(
+  ): Promise<BulkUserRoleAdditionsResponse> =>
+    postMultipartData(
       context,
       '/bulk-jobs/user-role-additions',
       bulkUserRoleAdditionsRequest,
       fileInfo.path,
       fileInfo.filename,
     )
-  }
 
   return {
     addDpsUserRoles,

@@ -185,10 +185,10 @@ describe('Test clients built by oauthEnabledClient', () => {
       expect(scope.isDone()).toBe(true)
       expect(resp.statusCode).toBe(200)
       expect(resp.body).toEqual({ id: '666' })
-      expect(capturedBody).toContain('Content-Disposition: form-data; name="file"; filename="valid-users.csv"')
+      expect(capturedBody).toContain('Content-Disposition: form-data; name="userCsv"; filename="valid-users.csv"')
       expect(capturedBody).toContain('Content-Type: text/csv')
       expect(capturedBody).toContain('userId\nX123456\nY999999')
-      expect(capturedBody).toContain('Content-Disposition: form-data; name="request"')
+      expect(capturedBody).toContain('Content-Disposition: form-data; name="bulkJobDetails"')
       expect(capturedBody).toContain(JSON.stringify(bulkUserRolesAdditionsReq))
     })
 

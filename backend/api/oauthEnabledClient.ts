@@ -114,11 +114,11 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
     new Promise<superagent.Response>((resolve, reject) => {
       const req = superagent
         .post(remoteUrl + path)
-        .attach('file', fs.createReadStream(filepath), filename)
+        .attach('userCsv', fs.createReadStream(filepath), filename)
         .set(getHeaders(context))
 
       if (body) {
-        req.field('request', typeof body === 'string' ? body : JSON.stringify(body))
+        req.field('bulkJobDetails', typeof body === 'string' ? body : JSON.stringify(body))
       }
 
       req.end((error, response: superagent.Response) => {
