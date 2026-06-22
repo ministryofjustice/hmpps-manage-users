@@ -1165,9 +1165,16 @@ describe('manageUsersApiImport tests', () => {
         1,
         context,
         '/bulk-jobs/user-role-additions',
-        { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
-        '/tmp/1234567890/users.csv',
-        'users.csv',
+        {
+          fieldName: 'userCsv',
+          filename: 'users.csv',
+          filepath: '/tmp/1234567890/users.csv',
+        },
+        {
+          fieldName: 'bulkJobDetails',
+          filename: 'bulkJobDetails.json',
+          body: { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
+        },
       )
       expect(actual).toEqual(response)
     })

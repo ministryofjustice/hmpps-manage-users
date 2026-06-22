@@ -144,13 +144,8 @@ describe('Test clients built by oauthEnabledClient', () => {
 
   describe('Post Multipart request', () => {
     const client = oauthEnabledClientFactory({ baseUrl: `${hostname}/`, timeout: 2000 })
-    const fileInfo = {
-      filename: 'valid-users.csv',
-      path: path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv'),
-    }
     const multipartRequest = nock(hostname)
     const context = {}
-    const bulkUserRolesAdditionsReq = { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] }
     let capturedBody: string | undefined
 
     beforeEach(() => {
@@ -177,9 +172,16 @@ describe('Test clients built by oauthEnabledClient', () => {
       const resp = await client.postMultipartData(
         context,
         '/bulk-jobs/user-role-additions',
-        bulkUserRolesAdditionsReq,
-        fileInfo.path,
-        fileInfo.filename,
+        {
+          fieldName: 'userCsv',
+          filename: 'valid-users.csv',
+          filepath: path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv'),
+        },
+        {
+          fieldName: 'bulkJobDetails',
+          filename: 'bulkJobDetails.json',
+          body: { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] },
+        },
       )
 
       expect(scope.isDone()).toBe(true)
@@ -188,8 +190,11 @@ describe('Test clients built by oauthEnabledClient', () => {
       expect(capturedBody).toContain('Content-Disposition: form-data; name="userCsv"; filename="valid-users.csv"')
       expect(capturedBody).toContain('Content-Type: text/csv')
       expect(capturedBody).toContain('userId\nX123456\nY999999')
-      expect(capturedBody).toContain('Content-Disposition: form-data; name="bulkJobDetails"')
-      expect(capturedBody).toContain(JSON.stringify(bulkUserRolesAdditionsReq))
+      expect(capturedBody).toContain(
+        'Content-Disposition: form-data; name="bulkJobDetails"; filename="bulkJobDetails.json"',
+      )
+      expect(capturedBody).toContain('Content-Type: application/json')
+      expect(capturedBody).toContain(JSON.stringify({ jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] }))
     })
 
     it('should reject with error if file not found', async () => {
@@ -199,9 +204,16 @@ describe('Test clients built by oauthEnabledClient', () => {
         client.postMultipartData(
           context,
           '/bulk-jobs/user-role-additions',
-          bulkUserRolesAdditionsReq,
-          '/madeup/path',
-          'valid-users.csv',
+          {
+            fieldName: 'userCsv',
+            filename: 'valid-users.csv',
+            filepath: '/madeup/path',
+          },
+          {
+            fieldName: 'bulkJobDetails',
+            filename: 'bulkJobDetails.json',
+            body: { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] },
+          },
         ),
       ).rejects.toThrow('ENOENT')
 
