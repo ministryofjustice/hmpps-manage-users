@@ -23,10 +23,10 @@ const featureSwitches = require('./middleware/featureSwitches')
 const nomisUserDetails = require('./middleware/nomisUserDetails').default
 const config = require('./config').default
 
-const configureRoutes = ({ manageUsersApi, csrfProtection }) => {
+const configureRoutes = ({ manageUsersApi, accountSwitchApi, csrfProtection }) => {
   const router = express.Router()
 
-  router.use(currentUser({ manageUsersApi }))
+  router.use(currentUser({ manageUsersApi, accountSwitchApi }))
   router.use(nomisUserDetails())
   router.use(featureSwitches(config))
 

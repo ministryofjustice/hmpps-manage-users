@@ -1,3 +1,4 @@
+const { jwtDecode } = require('jwt-decode')
 const { forenameToInitial } = require('../utils/utils')
 const config = require('../config').default
 
@@ -5,7 +6,7 @@ const hasRole = (userRoles, roleCode) => userRoles.some((role) => role.roleCode 
 const hasAnyRole = (userRoles, roleCodes) => roleCodes.some((role) => hasRole(userRoles, role))
 
 module.exports =
-  ({ manageUsersApi }) =>
+  ({ manageUsersApi, accountSwitchApi }) =>
   async (req, res, next) => {
     if (!req.session.userDetails) {
       req.session.userDetails = await manageUsersApi.currentUser(res.locals)
@@ -30,7 +31,7 @@ module.exports =
     }
 
     const { activeCaseload, caseloads } = req.session.allCaseloads
-    const { name } = req.session.userDetails
+    const { name } = req.session.userDetails.name ? req.session.userDetails : jwtDecode(res.locals.access_token)
     const returnUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
     const clientID = config.apis.hmppsAuth.apiClientId
 
@@ -43,5 +44,13 @@ module.exports =
       activeCaseLoad: activeCaseload,
       ...req.session.userRoles,
     }
+
+    try {
+      res.locals.headerLinkedAccounts = await accountSwitchApi.getLinkedAccounts(res.locals)
+    } catch (_err) {
+      res.locals.headerLinkedAccounts = []
+    }
+    res.locals.currentRequestPath = req.originalUrl
+
     next()
   }

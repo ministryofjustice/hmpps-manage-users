@@ -126,6 +126,83 @@
   @media print {
     display: none;
   }
+
+  &__dropdown {
+    position: relative;
+
+    &__toggle {
+      cursor: pointer;
+      list-style: none;
+      color: govuk-colour('white');
+      text-decoration: none;
+
+      &:hover {
+        color: govuk-colour('white');
+        text-decoration: underline;
+      }
+
+      &:focus {
+        color: govuk-colour('black');
+      }
+
+      &::-webkit-details-marker {
+        display: none;
+      }
+    }
+
+    &__menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 8px);
+      z-index: 100;
+      min-width: 240px;
+      background-color: #1d2021;
+      border-top: 3px solid #fd0;
+      padding: 5px 0;
+    }
+
+    &__item {
+      @include govuk-font(16);
+      display: block;
+      width: 100%;
+      padding: 10px 20px;
+      color: govuk-colour('white');
+      text-decoration: none;
+      text-align: left;
+      box-sizing: border-box;
+
+      &:link,
+      &:visited {
+        color: govuk-colour('white');
+      }
+
+      &:hover,
+      &:focus {
+        background-color: #2d3031;
+        color: govuk-colour('white');
+        text-decoration: underline;
+        outline: none;
+      }
+
+      &--button {
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-family: $govuk-font-family;
+        font-weight: 400;
+      }
+    }
+
+    &__divider {
+      margin: 5px 20px;
+      border: 0;
+      border-top: 1px solid #505a5f;
+    }
+
+    &__form {
+      margin: 0;
+    }
+  }
 }
 
 .location-bar {

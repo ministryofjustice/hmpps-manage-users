@@ -32,10 +32,33 @@
     <nav aria-label="Account navigation">
       <ul class="dps-header__navigation">
         <li class="dps-header__navigation__item">
-          <a class="dps-header__link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" data-qa="manage-account-link">
-            <span data-qa="logged-in-name">{{ user.displayName }}</span>
-            <span class="dps-header__link__sub-text">Manage your details</span>
-          </a>
+          {% if headerLinkedAccounts and headerLinkedAccounts.length > 0 %}
+            <details class="dps-header__dropdown">
+              <summary class="dps-header__link dps-header__dropdown__toggle" data-qa="manage-account-link">
+                <span data-qa="logged-in-name">{{ user.displayName }}</span>
+                <span class="dps-header__link__sub-text">Switch account ▾</span>
+              </summary>
+              <div class="dps-header__dropdown__menu">
+                <a class="dps-header__dropdown__item" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}">Manage your details</a>
+                <hr class="dps-header__dropdown__divider" />
+                {% for account in headerLinkedAccounts %}
+                  <form method="POST" action="/switch-account" class="dps-header__dropdown__form">
+                    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+                    <input type="hidden" name="targetAccount" value="{{ account.authSource }}/{{ account.username }}" />
+                    <input type="hidden" name="returnTo" value="{{ currentRequestPath }}" />
+                    <button type="submit" class="dps-header__dropdown__item dps-header__dropdown__item--button">
+                      Switch to {{ account.systemName }}: <span>{{ account.username }}</span>
+                    </button>
+                  </form>
+                {% endfor %}
+              </div>
+            </details>
+          {% else %}
+            <a class="dps-header__link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" data-qa="manage-account-link">
+              <span data-qa="logged-in-name">{{ user.displayName }}</span>
+              <span class="dps-header__link__sub-text">Manage your details</span>
+            </a>
+          {% endif %}
         </li>
 
         <li class="dps-header__navigation__item">

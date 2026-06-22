@@ -72,8 +72,8 @@ export default {
       enabled: get('AUDIT_ENABLED', 'true') === 'true',
     },
     hmppsAuth: {
-      url: get('HMPPS_AUTH_URL', 'http://localhost:9090/auth', requiredInProduction),
-      externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:9090/auth')),
+      url: get('HMPPS_AUTH_URL', 'http://localhost:8080/auth', requiredInProduction),
+      externalUrl: get('HMPPS_AUTH_EXTERNAL_URL', get('HMPPS_AUTH_URL', 'http://localhost:8080/auth')),
       timeoutSeconds: Number(get('HMPPS_AUTH_ENDPOINT_TIMEOUT_SECONDS', 10)),
       apiClientId: get('API_CLIENT_ID', 'manage-user-accounts-ui', requiredInProduction),
       apiClientSecret: get('API_CLIENT_SECRET', 'clientsecret', requiredInProduction),
