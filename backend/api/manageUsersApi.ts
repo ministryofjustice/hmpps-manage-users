@@ -1,62 +1,49 @@
 import superagent from 'superagent'
 import * as querystring from 'querystring'
-import log from '../log'
 
 import { Context } from '../interfaces/context'
 import { PagedList } from '../interfaces/pagedList'
-import { OAuthEnabledClient } from './oauthEnabledClient'
+import { MultipartBody, MultipartFile, OAuthEnabledClient } from './oauthEnabledClient'
 import * as contextProperties from '../contextProperties'
 import {
-  Role,
-  User,
-  UserDetails,
-  NotificationMessage,
-  UpdateRoleNameRequest,
-  UpdateRoleDescriptionRequest,
-  UpdateRoleAdminTypeRequest,
-  CreateGroupRequest,
-  CreateExternalUserRequest,
-  Group,
-  UpdateGroupNameRequest,
-  CreateChildGroupRequest,
+  BulkUserRoleAdditionsRequest,
+  BulkUserRoleAdditionsResponse,
   ChildGroup,
-  EmailDomain,
+  CreateChildGroupRequest,
   CreateEmailDomainRequest,
-  ExternalUserRole,
-  EmailAddress,
-  UserRole,
-  UserGroup,
-  ExternalUser,
-  UpdateUserEmailRequest,
-  CreateUserRequest,
+  CreateExternalUserRequest,
+  CreateGroupRequest,
   CreateLinkedCentralAdminRequest,
   CreateLinkedGeneralUserRequest,
   CreateLinkedLocalAdminRequest,
+  CreateUserRequest,
+  EmailAddress,
+  EmailDomain,
+  ExternalUser,
+  ExternalUserRole,
+  Group,
+  NotificationMessage,
+  PrisonCaseload,
   PrisonStaffNewUser,
   PrisonStaffUser,
-  UserRoleDetail,
-  PrisonCaseload,
-  UserCaseloadDetail,
   PrisonUserSearchSummary,
-  BulkUserRoleAdditionsRequest,
-  BulkUserRoleAdditionsResponse,
+  Role,
+  UpdateGroupNameRequest,
+  UpdateRoleAdminTypeRequest,
+  UpdateRoleDescriptionRequest,
+  UpdateRoleNameRequest,
+  UpdateUserEmailRequest,
+  User,
+  UserCaseloadDetail,
+  UserDetails,
+  UserGroup,
+  UserRole,
+  UserRoleDetail,
 } from '../@types/manageUsersApi'
 
 type FileInfo = {
   filename: string
   path: string
-}
-
-type Multipart = {
-  fieldName: string
-  filename: string
-  filepath: string
-}
-
-type MultipartBody = {
-  fieldName: string
-  filename: string
-  body: unknown
 }
 
 const processPageResponse =
@@ -78,7 +65,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     oauthEnabledClient.put(context, path, body).then((response) => response.body)
   const del = (context: Context, path: string) =>
     oauthEnabledClient.del(context, path).then((response) => response.body)
-  const postMultipartData = (context: Context, path: string, multipart: Multipart, body: MultipartBody) =>
+  const postMultipartData = (context: Context, path: string, multipart: MultipartFile, body: MultipartBody) =>
     oauthEnabledClient.postMultipartData(context, path, multipart, body).then((response) => response.body)
 
   const getNotificationBannerMessage = (context: Context, notificationType: string): Promise<NotificationMessage> =>
