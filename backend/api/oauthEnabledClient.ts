@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
+import fs from 'fs'
 import logger from '../../logger'
 import { getHeaders } from './axios-config-decorators'
 import { Context } from '../interfaces/context'
@@ -14,6 +15,13 @@ export interface OAuthEnabledClient {
   post: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
   put: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
   del: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
+  postMultipartData: (
+    context: Context,
+    path: string,
+    body: unknown,
+    filepath: string,
+    filename: string,
+  ) => Promise<superagent.Response>
 }
 
 const resultLogger = (result: superagent.Response) => {
@@ -96,11 +104,35 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
+  const postMultipartData = (
+    context: Context,
+    path: string,
+    body: string | object,
+    filepath: string,
+    filename: string,
+  ) =>
+    new Promise<superagent.Response>((resolve, reject) => {
+      const req = superagent
+        .post(remoteUrl + path)
+        .attach('userCsv', fs.createReadStream(filepath), filename)
+        .set(getHeaders(context))
+
+      if (body) {
+        req.field('bulkJobDetails', typeof body === 'string' ? body : JSON.stringify(body))
+      }
+
+      req.end((error, response: superagent.Response) => {
+        if (error) reject(errorLogger(error))
+        else if (response) resolve(resultLogger(response))
+      })
+    })
+
   return {
     get,
     post,
     put,
     del,
+    postMultipartData,
   }
 }
 

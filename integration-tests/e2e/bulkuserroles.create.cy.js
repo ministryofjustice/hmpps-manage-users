@@ -189,7 +189,7 @@ context('Create bulk user roles request: Summary', () => {
     CreateBulkUserRolesSummaryPage.goTo()
     const summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
     summaryPage.assertErrorSummary().should('contain.text', 'Jira reference is required')
-    summaryPage.assertErrorSummary().should('contain.text', 'Users is required')
+    summaryPage.assertErrorSummary().should('contain.text', 'Users ids required')
     summaryPage.assertErrorSummary().should('contain.text', 'Roles is required')
     summaryPage.assertErrorSummary().should('contain.text', 'Upload file is required')
 
@@ -227,6 +227,7 @@ context('Create bulk user roles request: Summary', () => {
 
 context('Create bulk user roles request: Submit', () => {
   it('should show confirmation page after valid request summary submitted', () => {
+    cy.task('stubBulkUserRolesAdditions', { jiraReference: '1234567890', roles: ['SAR_DATA_ACCESS'] })
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
     uploadUserFile('valid-users.csv')
@@ -246,6 +247,37 @@ context('Create bulk user roles request: Submit', () => {
     })
     confirmationPage.viewRequestLink().should('have.attr', 'href', '/view-bulk-role-changes/requests')
     confirmationPage.viewRequestLink().should('contain.text', 'View all requests')
+
+    cy.task('verifyBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
+  })
+
+  it('should show summary page with error if bulkUserRolesAdditions request returns error status', () => {
+    cy.task('stubBulkUserRolesAdditionsError', 500, { developerMessage: 'Das Boom!' })
+    enterJiraReference('1234567890')
+    selectRolesAndSubmit(['SAR_DATA_ACCESS'])
+    uploadUserFile('valid-users.csv')
+
+    let summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
+    summaryPage.submitButton().click()
+
+    summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
+    summaryPage.assertErrorSummary().should('contain.text', 'Internal Server Error')
+
+    summaryPage.assertSummaryListRow(0, 'Requested by', 'ITAG_USER')
+    summaryPage.assertSummaryListRow(1, 'Jira reference', '1234567890', '/change-roles-in-bulk', 'Change')
+    summaryPage.assertSummaryListRow(2, 'Roles', 'SAR_DATA_ACCESS', '/change-roles-in-bulk/select-roles', 'Change')
+    summaryPage.assertSummaryListRow(
+      3,
+      'Uploaded file',
+      'valid-users.csv',
+      '/change-roles-in-bulk/upload-users',
+      'Change',
+    )
+    summaryPage.assertSummaryListRow(4, 'Number of users', '2')
+    summaryPage.assertSummaryListRow(5, 'Total assignments', '2')
+    summaryPage.submitButton().should('not.be.disabled')
   })
 })
 

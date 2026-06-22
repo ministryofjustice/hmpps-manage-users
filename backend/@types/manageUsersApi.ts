@@ -52,3 +52,6 @@ export type PrisonAdminUserSummary = components['schemas']['PrisonAdminUserSumma
 export type UserAllowlistDetail = components['schemas']['UserAllowlistDetail']
 export type UserAllowlistAddRequest = components['schemas']['UserAllowlistAddRequest']
 export type UserAllowlistPatchRequest = components['schemas']['UserAllowlistPatchRequest']
+
+export type BulkUserRoleAdditionsRequest = components['schemas']['BulkUserRoleAdditionsRequest']
+export type BulkUserRoleAdditionsResponse = components['schemas']['BulkUserRoleAdditionsResponse']

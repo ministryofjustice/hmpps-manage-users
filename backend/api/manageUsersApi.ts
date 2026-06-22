@@ -38,7 +38,14 @@ import {
   PrisonCaseload,
   UserCaseloadDetail,
   PrisonUserSearchSummary,
+  BulkUserRoleAdditionsRequest,
+  BulkUserRoleAdditionsResponse,
 } from '../@types/manageUsersApi'
+
+type FileInfo = {
+  filename: string
+  path: string
+}
 
 const processPageResponse =
   (context: Context): ((response: superagent.Response) => superagent.Response) =>
@@ -59,6 +66,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     oauthEnabledClient.put(context, path, body).then((response) => response.body)
   const del = (context: Context, path: string) =>
     oauthEnabledClient.del(context, path).then((response) => response.body)
+  const postMultipartData = (context: Context, path: string, body: unknown, filepath: string, filename: string) =>
+    oauthEnabledClient.postMultipartData(context, path, body, filepath, filename).then((response) => response.body)
 
   const getNotificationBannerMessage = (context: Context, notificationType: string): Promise<NotificationMessage> =>
     get(context, `/notification/banner/${notificationType}`)
@@ -348,26 +357,18 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
       })}`,
     )
 
-  // TODO stubbed for now, implementation to come in later change.
-  const createBulkUserRolesRequest = (
+  const bulkUserRolesAdditions = (
     context: Context,
-    {
-      jiraReference,
-      requestedBy,
-      users,
-      roles,
-      uploadFile,
-    }: {
-      jiraReference?: string
-      requestedBy?: string
-      users?: string[]
-      roles?: string[]
-      uploadFile?: string
-    },
-  ): Promise<string> => {
-    log.info('executing createBulkUserRolesRequest', jiraReference, requestedBy, users, roles, uploadFile)
-    return Promise.resolve('Complete')
-  }
+    bulkUserRoleAdditionsRequest: BulkUserRoleAdditionsRequest,
+    fileInfo: FileInfo,
+  ): Promise<BulkUserRoleAdditionsResponse> =>
+    postMultipartData(
+      context,
+      '/bulk-jobs/user-role-additions',
+      bulkUserRoleAdditionsRequest,
+      fileInfo.path,
+      fileInfo.filename,
+    )
 
   return {
     addDpsUserRoles,
@@ -428,7 +429,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     syncDpsEmail,
     userGroups,
     userSearch,
-    createBulkUserRolesRequest,
+    bulkUserRolesAdditions,
   }
 }
 
