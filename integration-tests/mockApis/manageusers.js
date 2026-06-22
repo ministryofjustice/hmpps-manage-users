@@ -1295,8 +1295,10 @@ module.exports = {
           },
         ],
         bodyPatterns: [
-          { contains: 'Content-Type: text/csv' },
+          { contains: 'Content-Type: application/octet-stream' },
           { contains: 'userId\nX123456\nY999999' },
+          { contains: 'Content-Disposition: form-data; name="bulkJobDetails"; filename="bulkJobDetails.json' },
+          { contains: 'Content-Type: application/json' },
           { contains: JSON.stringify(expectedBody) },
         ],
       },

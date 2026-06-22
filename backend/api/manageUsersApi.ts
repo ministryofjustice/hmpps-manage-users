@@ -47,6 +47,18 @@ type FileInfo = {
   path: string
 }
 
+type Multipart = {
+  fieldName: string
+  filename: string
+  filepath: string
+}
+
+type MultipartBody = {
+  fieldName: string
+  filename: string
+  body: unknown
+}
+
 const processPageResponse =
   (context: Context): ((response: superagent.Response) => superagent.Response) =>
   (response: superagent.Response) => {
@@ -66,8 +78,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     oauthEnabledClient.put(context, path, body).then((response) => response.body)
   const del = (context: Context, path: string) =>
     oauthEnabledClient.del(context, path).then((response) => response.body)
-  const postMultipartData = (context: Context, path: string, body: unknown, filepath: string, filename: string) =>
-    oauthEnabledClient.postMultipartData(context, path, body, filepath, filename).then((response) => response.body)
+  const postMultipartData = (context: Context, path: string, multipart: Multipart, body: MultipartBody) =>
+    oauthEnabledClient.postMultipartData(context, path, multipart, body).then((response) => response.body)
 
   const getNotificationBannerMessage = (context: Context, notificationType: string): Promise<NotificationMessage> =>
     get(context, `/notification/banner/${notificationType}`)
@@ -365,9 +377,16 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     postMultipartData(
       context,
       '/bulk-jobs/user-role-additions',
-      bulkUserRoleAdditionsRequest,
-      fileInfo.path,
-      fileInfo.filename,
+      {
+        fieldName: 'userCsv',
+        filename: fileInfo.filename,
+        filepath: fileInfo.path,
+      },
+      {
+        fieldName: 'bulkJobDetails',
+        filename: 'bulkJobDetails.json',
+        body: bulkUserRoleAdditionsRequest,
+      },
     )
 
   return {

@@ -10,6 +10,18 @@ export interface ClientFactoryParams {
   timeout: number
 }
 
+export interface MultipartFile {
+  fieldName: string
+  filename: string
+  filepath: string
+}
+
+export interface MultipartBody {
+  fieldName: string
+  filename: string
+  body: unknown
+}
+
 export interface OAuthEnabledClient {
   get: (context: Context, path: string, resultLimit?: number) => Promise<superagent.Response>
   post: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
@@ -18,9 +30,8 @@ export interface OAuthEnabledClient {
   postMultipartData: (
     context: Context,
     path: string,
-    body: unknown,
-    filepath: string,
-    filename: string,
+    multipart: MultipartFile,
+    body: MultipartBody,
   ) => Promise<superagent.Response>
 }
 
@@ -104,22 +115,16 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const postMultipartData = (
-    context: Context,
-    path: string,
-    body: string | object,
-    filepath: string,
-    filename: string,
-  ) =>
+  const postMultipartData = (context: Context, path: string, multipart: MultipartFile, body: MultipartBody) =>
     new Promise<superagent.Response>((resolve, reject) => {
       const req = superagent
         .post(remoteUrl + path)
-        .attach('userCsv', fs.createReadStream(filepath), filename)
         .set(getHeaders(context))
-
-      if (body) {
-        req.field('bulkJobDetails', typeof body === 'string' ? body : JSON.stringify(body))
-      }
+        .attach(multipart.fieldName, fs.createReadStream(multipart.filepath), multipart.filepath)
+        .attach(body.fieldName, Buffer.from(JSON.stringify(body.body)), {
+          filename: body.filename,
+          contentType: 'application/json',
+        })
 
       req.end((error, response: superagent.Response) => {
         if (error) reject(errorLogger(error))
