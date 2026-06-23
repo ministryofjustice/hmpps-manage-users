@@ -120,7 +120,7 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
       const req = superagent
         .post(remoteUrl + path)
         .set(getHeaders(context))
-        .attach(multipart.fieldName, fs.createReadStream(multipart.filepath), multipart.filepath)
+        .attach(multipart.fieldName, fs.createReadStream(multipart.filepath), multipart.filename)
         .attach(body.fieldName, Buffer.from(JSON.stringify(body.body)), {
           filename: body.filename,
           contentType: 'application/json',
