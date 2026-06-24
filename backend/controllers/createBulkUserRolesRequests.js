@@ -1,5 +1,4 @@
 const fsAsync = require('fs/promises')
-const fs = require('fs')
 const csv = require('csv-parser')
 const { Readable } = require('stream')
 const config = require('../config').default

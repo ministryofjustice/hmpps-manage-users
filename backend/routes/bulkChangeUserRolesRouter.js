@@ -1,6 +1,5 @@
 const express = require('express')
 const multer = require('multer')
-const os = require('os')
 const searchApiFactory = require('./searchApiFactory')
 const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests')
 
