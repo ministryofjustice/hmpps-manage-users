@@ -1,6 +1,7 @@
 const fsAsync = require('fs/promises')
 const fs = require('fs')
 const csv = require('csv-parser')
+const { Readable } = require('stream')
 const config = require('../config').default
 const log = require('../log')
 
@@ -121,7 +122,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     }
 
     req.session.bulkUserRolesRequest.totalNumberOfUsers = totalNumberOfUsers
-    req.session.bulkUserRolesRequest.usersFile = { filename: file.originalname, path: file.path }
+    req.session.bulkUserRolesRequest.usersFile = { filename: file.originalname, data: file.buffer }
     res.redirect('/change-roles-in-bulk/summary')
   }
 
@@ -154,10 +155,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
       jiraReference: bulkUserRolesRequest.jiraReference,
       roles: bulkUserRolesRequest.roles,
     }
-    const fileInfo = {
-      path: bulkUserRolesRequest.usersFile.path,
-      filename: bulkUserRolesRequest.usersFile.filename,
-    }
+    const fileInfo = bulkUserRolesRequest.usersFile
 
     try {
       await bulkUserRolesAdditions(res.locals, bulkUserRolesAdditionsRequest, fileInfo)
@@ -202,7 +200,10 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
       let userCount = 0
       let hasValidationError = false
 
-      fs.createReadStream(file.path)
+      const { buffer } = file
+      const fileStream = Readable.from(buffer)
+
+      fileStream
         .pipe(csv())
         .on('headers', (headers) => {
           if (hasValidationError) return
@@ -265,7 +266,7 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     if (!details?.roles || details?.roles?.length === 0) {
       errors.push({ text: 'Roles is required', href: '#change-roles-ref' })
     }
-    if (!details?.usersFile?.path || details?.usersFile?.path === 0) {
+    if (!details?.usersFile?.data || details?.usersFile?.data?.length === 0) {
       errors.push({ text: 'Upload file is required', href: '#change-users-ref' })
     }
 

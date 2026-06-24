@@ -14,7 +14,7 @@ declare module 'express-session' {
       roles: string[]
       usersFile: {
         filename: string
-        path: string
+        data: Buffer
       }
     }
   }

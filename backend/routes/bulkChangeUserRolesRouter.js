@@ -5,8 +5,9 @@ const searchApiFactory = require('./searchApiFactory')
 const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests')
 
 const router = express.Router({ mergeParams: true })
+const storage = multer.memoryStorage()
 const upload = multer({
-  dest: os.tmpdir(),
+  dest: storage,
   limits: {
     fileSize: 10 * 1024 * 1024, // 10 MB
     files: 1,
