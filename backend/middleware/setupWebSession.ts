@@ -5,6 +5,8 @@ import config from '../config'
 import logger from '../log'
 import { createRedisClient } from '../data/redisClient'
 
+export const sessionStoreRef: { store: Store | null } = { store: null }
+
 export default function setupWebSession(): Router {
   let store: Store
   if (config.redis.enabled) {
@@ -14,6 +16,7 @@ export default function setupWebSession(): Router {
   } else {
     store = new MemoryStore()
   }
+  sessionStoreRef.store = store
 
   const router = express.Router()
   router.use(

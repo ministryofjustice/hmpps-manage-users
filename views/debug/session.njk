@@ -1,0 +1,75 @@
+{% extends "../partials/layout.njk" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h1 id="pageTitle" class="govuk-heading-l">Session Data</h1>
+
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        This page is only available in non-production environments and requires no authentication — it is accessible to anyone who can reach this server.
+      </strong>
+    </div>
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        This page exposes sensitive data including JWT access tokens, session IDs, CSRF tokens, and cookie signatures for all active users. Do not share or expose this data.
+      </strong>
+    </div>
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-warning-text__assistive">Warning</span>
+        The All Sessions section contains raw access tokens for every logged-in user. If your local Redis is shared with another environment, this will expose tokens for real users.
+      </strong>
+    </div>
+
+    <h2 class="govuk-heading-m">Decoded Token</h2>
+    <p class="govuk-body">The JWT access token for the current user, decoded to show its claims including roles, subject, expiry, and issuer.</p>
+    <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="decodedToken">Copy</button>
+    <pre id="decodedToken" class="debug-session-pre">Loading...</pre>
+
+    <h2 class="govuk-heading-m">Session Cookie</h2>
+    <p class="govuk-body">The session cookie sent by the browser. The raw value is a signed string in the format <code>s:SESSION_ID.SIGNATURE</code>. The session ID can be used to look up the matching entry in <strong>All Sessions</strong> below.</p>
+    <p class="govuk-body">If viewing as an unauthenticated user, this data is in-memory only and the session id will probably regenerate with each refresh.</p>
+    <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="sessionCookie">Copy</button>
+    <pre id="sessionCookie" class="debug-session-pre">Loading...</pre>
+
+    <h2 class="govuk-heading-m">Current Session</h2>
+    <p class="govuk-body">The full server-side session data for the current user, including user details, roles, and caseloads.</p>
+    <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="currentSession">Copy</button>
+    <pre id="currentSession" class="debug-session-pre">Loading...</pre>
+
+    <h2 class="govuk-heading-m">res.locals</h2>
+    <p class="govuk-body">Request-scoped local variables set before authentication middleware (e.g. CSP nonce, tokens). No user object is present — this route runs before passport/setupAuth. Raw tokens are redacted.</p>
+    <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="locals">Copy</button>
+    <pre id="locals" class="debug-session-pre">Loading...</pre>
+
+    <h2 class="govuk-heading-m">Decoded Sessions</h2>
+    <p class="govuk-body">All active sessions in the store. Click a session to decode its access token.</p>
+    <ul id="sessionList" class="govuk-list govuk-list--bullet"></ul>
+
+    <div id="sessionTokenDecoded" class="debug-session-token-decoded">
+      <h3 class="govuk-heading-s">Decoded Token for selected session</h3>
+      <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="sessionTokenPre">Copy</button>
+      <pre id="sessionTokenPre" class="debug-session-pre"></pre>
+    </div>
+
+    <h2 class="govuk-heading-m">All Sessions</h2>
+    <p id="sessionStoreType" class="govuk-body"></p>
+    <p class="govuk-body">Raw session data for all active sessions in the store.</p>
+    <button class="govuk-button govuk-button--secondary debug-session-copy" data-target="allSessions">Copy</button>
+    <pre id="allSessions" class="debug-session-pre">Loading...</pre>
+  </div>
+</div>
+{% endblock %}
+
+{% block pageScripts %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+<script nonce="{{ cspNonce }}" src="/js/debug-session.js"></script>
+{% endblock %}

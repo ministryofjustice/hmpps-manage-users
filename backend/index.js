@@ -3,6 +3,7 @@ import setupStaticContent from './middleware/setupStaticContent'
 import setUpWebSecurity from './middleware/setUpWebSecurity'
 import setupWebSession from './middleware/setupWebSession'
 import { buildAppInsightsClient, initialiseAppInsights } from './utils/azureAppInsights'
+import { configureDebugRoutes } from './routes/debugRoutes'
 import log from './log'
 
 require('dotenv').config()
@@ -83,6 +84,13 @@ app.use(bodyParser.json())
 app.use(setupStaticContent())
 
 app.use(setupWebSession())
+
+// Debug routes registered before setupAuth intentionally — they require no authentication.
+// Only registered when NODE_ENV !== 'production'.
+if (!config.app.production) {
+  configureDebugRoutes(app)
+}
+
 app.use(setupAuth({ oauthApi: apis.oauthApi, tokenVerificationApi: apis.tokenVerificationApi }))
 app.use(authorisationMiddleware())
 

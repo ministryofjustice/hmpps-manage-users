@@ -1,0 +1,15 @@
+.debug-session-pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-all;
+  font-family: monospace;
+  font-size: 0.875rem;
+
+  code {
+    font-size: inherit;
+  }
+}
+
+.debug-session-token-decoded {
+  display: none;
+}

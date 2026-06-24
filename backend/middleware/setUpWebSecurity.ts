@@ -1,6 +1,7 @@
 import express, { Router, Response } from 'express'
 import helmet from 'helmet'
 import crypto from 'crypto'
+import config from '../config'
 
 export default function setUpWebSecurity(): Router {
   const router = express.Router()
@@ -12,6 +13,12 @@ export default function setUpWebSecurity(): Router {
     res.locals.cspNonce = crypto.randomBytes(16).toString('base64')
     next()
   })
+
+  // cdnjs.cloudflare.com is only added to scriptSrc/styleSrc in non-production environments
+  // to support highlight.js on the /debug/session/view page, which is itself only available locally.
+  const debugScriptSrc = config.app.production ? [] : ['cdnjs.cloudflare.com']
+  const debugStyleSrc = config.app.production ? [] : ['cdnjs.cloudflare.com']
+
   router.use(
     helmet({
       contentSecurityPolicy: {
@@ -24,11 +31,12 @@ export default function setUpWebSecurity(): Router {
             'code.jquery.com',
             '*.googletagmanager.com',
             'www.google-analytics.com',
+            ...debugScriptSrc,
             "'sha256-+6WnXIl4mbFTCARd8N3COQmT3bJJmo32N8q8ZSQAIcU='",
           ],
           imgSrc: ["'self'", '*.googletagmanager.com', '*.google-analytics.com', 'code.jquery.com'],
           connectSrc: ["'self'", '*.googletagmanager.com', '*.google-analytics.com', '*.analytics.google.com'],
-          styleSrc: ["'self'", 'code.jquery.com'],
+          styleSrc: ["'self'", 'code.jquery.com', ...debugStyleSrc],
           fontSrc: ["'self'"],
         },
       },

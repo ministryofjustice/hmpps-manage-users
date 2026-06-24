@@ -16,6 +16,7 @@ $govuk-page-width: $moj-page-width;
 @import 'govuk-overrides';
 @import 'moj-overrides';
 @import 'typography';
+@import 'debug-session';
 
 * {
   box-sizing: border-box;
