@@ -1,5 +1,7 @@
 import nock from 'nock'
 import superagent from 'superagent'
+import fs from 'fs'
+import path from 'path'
 import { ManageUsersApi, manageUsersApiFactory } from './manageUsersApi'
 import { OAuthEnabledClient } from './oauthEnabledClient'
 import {
@@ -1152,12 +1154,13 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('return expected response', () => {
+      const buffer = fs.readFileSync(path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv'))
       const actual = manageUsersApi.bulkUserRolesAdditions(
         context,
         { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
         {
-          path: '/tmp/1234567890/users.csv',
-          filename: 'users.csv',
+          data: buffer,
+          filename: 'valid-users.csv',
         },
       )
 
@@ -1166,14 +1169,16 @@ describe('manageUsersApiImport tests', () => {
         context,
         '/bulk-jobs/user-role-additions',
         {
-          fieldName: 'userCsv',
-          filename: 'users.csv',
-          filepath: '/tmp/1234567890/users.csv',
-        },
-        {
           fieldName: 'bulkJobDetails',
           filename: 'bulkJobDetails.json',
-          body: { jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] },
+          data: Buffer.from(JSON.stringify({ jiraReference: '666', roles: ['ROLE_1', 'ROLE_2'] })),
+          contentType: 'application/json',
+        },
+        {
+          fieldName: 'userCsv',
+          filename: 'valid-users.csv',
+          data: buffer,
+          contentType: 'text/csv',
         },
       )
       expect(actual).toEqual(response)

@@ -3,7 +3,7 @@ import * as querystring from 'querystring'
 
 import { Context } from '../interfaces/context'
 import { PagedList } from '../interfaces/pagedList'
-import { MultipartBody, MultipartFile, OAuthEnabledClient } from './oauthEnabledClient'
+import { MultiPartValue, OAuthEnabledClient } from './oauthEnabledClient'
 import * as contextProperties from '../contextProperties'
 import {
   BulkUserRoleAdditionsRequest,
@@ -43,7 +43,7 @@ import {
 
 type FileInfo = {
   filename: string
-  path: string
+  data: Buffer
 }
 
 const processPageResponse =
@@ -65,8 +65,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     oauthEnabledClient.put(context, path, body).then((response) => response.body)
   const del = (context: Context, path: string) =>
     oauthEnabledClient.del(context, path).then((response) => response.body)
-  const postMultipartData = (context: Context, path: string, multipart: MultipartFile, body: MultipartBody) =>
-    oauthEnabledClient.postMultipartData(context, path, multipart, body).then((response) => response.body)
+  const postMultipartData = (context: Context, path: string, ...multiparts: MultiPartValue[]) =>
+    oauthEnabledClient.postMultipartData(context, path, ...multiparts).then((response) => response.body)
 
   const getNotificationBannerMessage = (context: Context, notificationType: string): Promise<NotificationMessage> =>
     get(context, `/notification/banner/${notificationType}`)
@@ -360,21 +360,23 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     context: Context,
     bulkUserRoleAdditionsRequest: BulkUserRoleAdditionsRequest,
     fileInfo: FileInfo,
-  ): Promise<BulkUserRoleAdditionsResponse> =>
-    postMultipartData(
-      context,
-      '/bulk-jobs/user-role-additions',
-      {
-        fieldName: 'userCsv',
-        filename: fileInfo.filename,
-        filepath: fileInfo.path,
-      },
-      {
-        fieldName: 'bulkJobDetails',
-        filename: 'bulkJobDetails.json',
-        body: bulkUserRoleAdditionsRequest,
-      },
-    )
+  ) => {
+    const jsonBody: MultiPartValue = {
+      fieldName: 'bulkJobDetails',
+      filename: 'bulkJobDetails.json',
+      data: Buffer.from(JSON.stringify(bulkUserRoleAdditionsRequest)),
+      contentType: 'application/json',
+    }
+
+    const csvFile: MultiPartValue = {
+      fieldName: 'userCsv',
+      filename: fileInfo.filename,
+      data: Buffer.from(fileInfo.data),
+      contentType: 'text/csv',
+    }
+
+    return postMultipartData(context, '/bulk-jobs/user-role-additions', jsonBody, csvFile)
+  }
 
   return {
     addDpsUserRoles,

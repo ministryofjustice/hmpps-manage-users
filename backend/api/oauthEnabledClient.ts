@@ -10,16 +10,11 @@ export interface ClientFactoryParams {
   timeout: number
 }
 
-export interface MultipartFile {
+export interface MultiPartValue {
   fieldName: string
   filename: string
-  filepath: string
-}
-
-export interface MultipartBody {
-  fieldName: string
-  filename: string
-  body: unknown
+  data: Buffer
+  contentType: string
 }
 
 export interface OAuthEnabledClient {
@@ -27,12 +22,7 @@ export interface OAuthEnabledClient {
   post: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
   put: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
   del: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
-  postMultipartData: (
-    context: Context,
-    path: string,
-    multipart: MultipartFile,
-    body: MultipartBody,
-  ) => Promise<superagent.Response>
+  postMultipartData: (context: Context, path: string, ...multipart: MultiPartValue[]) => Promise<superagent.Response>
 }
 
 const resultLogger = (result: superagent.Response) => {
@@ -115,16 +105,16 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
         })
     })
 
-  const postMultipartData = (context: Context, path: string, multipart: MultipartFile, body: MultipartBody) =>
+  const postMultipartData = (context: Context, path: string, ...multiparts: MultiPartValue[]) =>
     new Promise<superagent.Response>((resolve, reject) => {
-      const req = superagent
-        .post(remoteUrl + path)
-        .set(getHeaders(context))
-        .attach(multipart.fieldName, fs.createReadStream(multipart.filepath), multipart.filename)
-        .attach(body.fieldName, Buffer.from(JSON.stringify(body.body)), {
-          filename: body.filename,
-          contentType: 'application/json',
+      const req = superagent.post(remoteUrl + path).set(getHeaders(context))
+
+      multiparts?.forEach((p) => {
+        req.attach(p.fieldName, p.data, {
+          filename: p.filename,
+          contentType: p.contentType,
         })
+      })
 
       req.end((error, response: superagent.Response) => {
         if (error) reject(errorLogger(error))
