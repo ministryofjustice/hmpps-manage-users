@@ -25,7 +25,7 @@ module.exports =
         manageEmailDomains: hasRole(roles, 'MAINTAIN_EMAIL_DOMAINS'),
         manageUserAllowList: hasRole(roles, 'MANAGE_USER_ALLOW_LIST'),
         crsGroupUsersDownload: hasRole(roles, 'CONTRACT_MANAGER_VIEW_GROUP'),
-        bulkUserRolesAdmin: hasRole(roles, 'BULK_USER_ROLES_ADMIN'),
+        bulkUserRolesAdmin: hasRole(roles, 'MANAGE_USER_BULK_JOBS'),
       }
     }
 

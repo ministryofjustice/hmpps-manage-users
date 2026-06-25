@@ -309,4 +309,25 @@ describe('authorisationMiddleware', () => {
       expect(res.redirect).toHaveBeenCalledWith('/authError')
     })
   })
+
+  describe('Create bulk user roles additions', () => {
+    it('should show correct page when user with correct role tries to access change roles in bulk endpoint', () => {
+      const reqCreateRole = { originalUrl: '/change-roles-in-bulk' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_MANAGE_USER_BULK_JOBS'] })
+
+      authorisationMiddleware([])(reqCreateRole, res, next)
+
+      expect(next).toHaveBeenCalled()
+      expect(res.redirect).not.toHaveBeenCalled()
+    })
+    it('should redirect when user without correct role tries to access change roles in bulk  endpoint', () => {
+      const reqDeleteGroup = { originalUrl: '/change-roles-in-bulk' } as Request
+      const res = createResWithToken({ authorities: ['ROLE_WRONG_ROLE'] })
+
+      authorisationMiddleware([])(reqDeleteGroup, res, next)
+
+      expect(next).not.toHaveBeenCalled()
+      expect(res.redirect).toHaveBeenCalledWith('/authError')
+    })
+  })
 })
