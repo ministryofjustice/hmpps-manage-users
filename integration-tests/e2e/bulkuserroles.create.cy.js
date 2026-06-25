@@ -282,7 +282,7 @@ context('Create bulk user roles request: Submit', () => {
 })
 
 function signIn() {
-  cy.task('stubSignIn', { roles: [{ roleCode: 'BULK_USER_ROLES_ADMIN' }] })
+  cy.task('stubSignIn', { roles: [{ roleCode: 'MANAGE_USER_BULK_JOBS' }] })
   cy.signIn()
 }
 
