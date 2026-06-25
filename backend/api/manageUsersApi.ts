@@ -7,7 +7,6 @@ import { MultiPartValue, OAuthEnabledClient } from './oauthEnabledClient'
 import * as contextProperties from '../contextProperties'
 import {
   BulkUserRoleAdditionsRequest,
-  BulkUserRoleAdditionsResponse,
   ChildGroup,
   CreateChildGroupRequest,
   CreateEmailDomainRequest,

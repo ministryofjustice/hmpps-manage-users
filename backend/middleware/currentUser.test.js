@@ -339,7 +339,7 @@ describe('Current user', () => {
       crsGroupUsersDownload: false,
       bulkUserRolesAdmin: true,
     })
-  }) //
+  })
 
   it('should set all roles', async () => {
     manageUsersApi.currentRoles.mockReturnValue([

@@ -1,6 +1,5 @@
 import superagent from 'superagent'
 import Agent, { HttpsAgent } from 'agentkeepalive'
-import fs from 'fs'
 import logger from '../../logger'
 import { getHeaders } from './axios-config-decorators'
 import { Context } from '../interfaces/context'
