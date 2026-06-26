@@ -319,7 +319,7 @@ describe('Current user', () => {
   })
 
   it('should set role Bulk User Roles Admin', async () => {
-    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'BULK_USER_ROLES_ADMIN' }])
+    manageUsersApi.currentRoles.mockReturnValue([{ roleCode: 'FRED' }, { roleCode: 'MANAGE_USER_BULK_JOBS' }])
     const controller = currentUser({ manageUsersApi })
 
     await controller(req, res, () => {})
@@ -352,7 +352,7 @@ describe('Current user', () => {
       { roleCode: 'CREATE_USER' },
       { roleCode: 'MANAGE_NOMIS_USER_ACCOUNT' },
       { roleCode: 'MAINTAIN_EMAIL_DOMAINS' },
-      { roleCode: 'BULK_USER_ROLES_ADMIN' },
+      { roleCode: 'MANAGE_USER_BULK_JOBS' },
     ])
     const controller = currentUser({ manageUsersApi })
 

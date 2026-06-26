@@ -1,5 +1,6 @@
 import nock from 'nock'
 import path from 'path'
+import fs from 'fs'
 import * as contextProperties from '../contextProperties'
 import { oauthEnabledClientFactory } from './oauthEnabledClient'
 import { Context } from '../interfaces/context'
@@ -175,12 +176,14 @@ describe('Test clients built by oauthEnabledClient', () => {
         {
           fieldName: 'userCsv',
           filename: 'valid-users.csv',
-          filepath: path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv'),
+          data: fs.readFileSync(path.join(__dirname, '..', '..', 'fixtures', 'bulkUserRoles', 'valid-users.csv')),
+          contentType: 'text/csv',
         },
         {
           fieldName: 'bulkJobDetails',
           filename: 'bulkJobDetails.json',
-          body: { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] },
+          data: Buffer.from(JSON.stringify({ jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] })),
+          contentType: 'application/json',
         },
       )
 
@@ -195,29 +198,6 @@ describe('Test clients built by oauthEnabledClient', () => {
       )
       expect(capturedBody).toContain('Content-Type: application/json')
       expect(capturedBody).toContain(JSON.stringify({ jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] }))
-    })
-
-    it('should reject with error if file not found', async () => {
-      const scope = captureRequestBody('666')
-
-      await expect(
-        client.postMultipartData(
-          context,
-          '/bulk-jobs/user-role-additions',
-          {
-            fieldName: 'userCsv',
-            filename: 'valid-users.csv',
-            filepath: '/madeup/path',
-          },
-          {
-            fieldName: 'bulkJobDetails',
-            filename: 'bulkJobDetails.json',
-            body: { jiraReference: '1234567890', roles: ['ROLE_1', 'ROLE_2'] },
-          },
-        ),
-      ).rejects.toThrow('ENOENT')
-
-      expect(scope.isDone()).toBe(false)
     })
   })
 })
