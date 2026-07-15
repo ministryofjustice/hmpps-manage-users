@@ -196,6 +196,11 @@
               {text: "Email change awaiting verification"},
               {text: staff.emailToVerify},
               {text: ''}
+            ],
+            [
+              {text: "Last logged in"},
+              {text: staff.lastLogonDate  | formatDate('D MMMM YYYY - HH:mm:ss')},
+              {text: ''}
             ]
           ]) %}
         {% else %}
