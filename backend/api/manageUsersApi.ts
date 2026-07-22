@@ -6,6 +6,7 @@ import { PagedList } from '../interfaces/pagedList'
 import { MultiPartValue, OAuthEnabledClient } from './oauthEnabledClient'
 import * as contextProperties from '../contextProperties'
 import {
+  BulkUserRoleAdditionsJobSummary,
   BulkUserRoleAdditionsRequest,
   ChildGroup,
   CreateChildGroupRequest,
@@ -377,6 +378,16 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     return postMultipartData(context, '/bulk-jobs/user-role-additions', jsonBody, csvFile)
   }
 
+  const getBulkUserRolesAdditions = (
+    context: Context,
+    searchTerm?: string,
+  ): Promise<BulkUserRoleAdditionsJobSummary[]> => {
+    const urlPath = searchTerm
+      ? `/bulk-jobs/user-role-additions?search=${searchTerm}`
+      : '/bulk-jobs/user-role-additions'
+    return get(context, urlPath)
+  }
+
   return {
     addDpsUserRoles,
     addUserCaseloads,
@@ -437,6 +448,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     userGroups,
     userSearch,
     bulkUserRolesAdditions,
+    getBulkUserRolesAdditions,
   }
 }
 

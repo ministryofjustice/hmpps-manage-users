@@ -55,3 +55,5 @@ export type UserAllowlistPatchRequest = components['schemas']['UserAllowlistPatc
 
 export type BulkUserRoleAdditionsRequest = components['schemas']['BulkUserRoleAdditionsRequest']
 export type BulkUserRoleAdditionsResponse = components['schemas']['BulkUserRoleAdditionsResponse']
+
+export type BulkUserRoleAdditionsJobSummary = components['schemas']['BulkUserRoleAdditionsRequest']

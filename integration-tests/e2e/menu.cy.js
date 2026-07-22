@@ -71,4 +71,19 @@ context('Menu tiles', () => {
     cy.signIn()
     MenuPage.verifyOnPage().createBulkUserRoles().should('not.exist')
   })
+
+  it('Shows View bulk role changes tile for Bulk user admin user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MANAGE_USER_BULK_JOBS' }] })
+    cy.signIn()
+    const menuPage = MenuPage.verifyOnPage()
+    menuPage.viewBulkUserRolesLink().should('exist')
+    menuPage.viewBulkUserRolesLink().should('contain.text', 'View bulk role changes')
+    menuPage.viewBulkUserRolesCardDescription().should('contain.text', 'View existing bulk user roles changes')
+  })
+
+  it('Does not show View bulk role changes tile for unauthorised user', () => {
+    cy.task('stubSignIn', { roles: [{ roleCode: 'MAINTAIN_OAUTH_USERS' }] })
+    cy.signIn()
+    MenuPage.verifyOnPage().viewBulkUserRoles().should('not.exist')
+  })
 })

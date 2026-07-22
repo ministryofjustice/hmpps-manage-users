@@ -1,7 +1,7 @@
 const fsPromises = require('fs/promises')
 const path = require('path')
 const fs = require('fs')
-const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesRequests')
+const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesAdditions')
 
 describe('change user roles in bulk', () => {
   const getSearchableRolesApi = jest.fn()

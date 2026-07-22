@@ -168,6 +168,17 @@
               </div>
             </div>
           {% endif %}
+          {% if hasBulkUserRolesAdmin %}
+            <div class="govuk-grid-column-one-third">
+              <div class="card card--clickable" data-qa="view_bulk_role_changes_link">
+                <h1 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link" href="/view-bulk-role-changes/requests">View bulk role changes</a>
+                </h1>
+
+                <p class="govuk-body card__description">View existing bulk user roles changes</p>
+              </div>
+            </div>
+          {% endif %}
         </div>
       </div>
       {% else %}
