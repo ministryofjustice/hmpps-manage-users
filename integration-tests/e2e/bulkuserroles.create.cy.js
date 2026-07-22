@@ -227,7 +227,7 @@ context('Create bulk user roles request: Summary', () => {
 
 context('Create bulk user roles request: Submit', () => {
   it('should show confirmation page after valid request summary submitted', () => {
-    cy.task('stubBulkUserRolesAdditions', { jiraReference: '1234567890', roles: ['SAR_DATA_ACCESS'] })
+    cy.task('stubCreateBulkUserRolesAdditions', { jiraReference: '1234567890', roles: ['SAR_DATA_ACCESS'] })
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
     uploadUserFile('valid-users.csv')
@@ -248,13 +248,13 @@ context('Create bulk user roles request: Submit', () => {
     confirmationPage.viewRequestLink().should('have.attr', 'href', '/view-bulk-role-changes/requests')
     confirmationPage.viewRequestLink().should('contain.text', 'View all requests')
 
-    cy.task('verifyBulkUserRolesAdditions').should((requests) => {
+    cy.task('verifyCreateBulkUserRolesAdditions').should((requests) => {
       expect(requests).to.have.lengthOf(1)
     })
   })
 
   it('should show summary page with error if bulkUserRolesAdditions request returns error status', () => {
-    cy.task('stubBulkUserRolesAdditionsError', 500, { developerMessage: 'Das Boom!' })
+    cy.task('stubCreateBulkUserRolesAdditionsError', 500, { developerMessage: 'Das Boom!' })
     enterJiraReference('1234567890')
     selectRolesAndSubmit(['SAR_DATA_ACCESS'])
     uploadUserFile('valid-users.csv')
