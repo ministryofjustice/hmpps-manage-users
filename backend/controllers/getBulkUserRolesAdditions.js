@@ -10,10 +10,14 @@ const getBulkUserRolesRequestsFactory = (bulkUserRolesAdditionsApi) => {
       bulkUserRolesRequests = await bulkUserRolesAdditionsApi(res.locals, searchTerm)
     } catch (err) {
       log.error('get bulk user roles requests unsuccessful', err)
-      res.render('viewBulkUserRolesRequests.njk', { getRequestsError: err })
+      const errorMessage = err instanceof Error ? err.message : err
+      res.render('viewBulkUserRolesRequests.njk', {
+        getRequestsError: `API responded with: ${errorMessage}`,
+      })
       return
     }
 
+    log.error('get bulk user roles requests no error', bulkUserRolesRequests)
     res.render('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests })
   }
 

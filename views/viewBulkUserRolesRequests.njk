@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "moj/components/search/macro.njk" import mojSearch %}
 {% from "moj/components/badge/macro.njk" import mojBadge %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
@@ -39,7 +40,7 @@
     action: '#',
     method: 'get',
     input: {
-      id: 'keyword',
+      id: 'request-search-keyword',
       name: 'keyword'
     },
     label: {
@@ -60,7 +61,7 @@
   <table class="govuk-table" data-module="moj-sortable-table" id="bulk-user-roles-requests-table">
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header" aria-sort="descending">Date of request</th>
+        <th scope="col" class="govuk-table__header" aria-sort="descending" id="sort-by-request-date">Date of request</th>
         <th scope="col" class="govuk-table__header">Jira reference</th>
         <th scope="col" class="govuk-table__header">Requested By</th>
         <th scope="col" class="govuk-table__header">Processing Status</th>
