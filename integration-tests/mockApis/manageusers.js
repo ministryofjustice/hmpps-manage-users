@@ -1268,7 +1268,7 @@ module.exports = {
       urlPathPattern: '/prisonusers/[^/]*/email',
     }).then((data) => data.body.requests),
 
-  stubBulkUserRolesAdditions: (expectedBody) =>
+  stubCreateBulkUserRolesAdditions: (expectedBody) =>
     stubFor({
       request: {
         method: 'POST',
@@ -1309,7 +1309,7 @@ module.exports = {
       },
     }),
 
-  stubBulkUserRolesAdditionsError: (status, errorBody) =>
+  stubCreateBulkUserRolesAdditionsError: (status, errorBody) =>
     stubFor({
       request: {
         method: 'POST',
@@ -1327,9 +1327,60 @@ module.exports = {
       },
     }),
 
-  verifyBulkUserRolesAdditions: () =>
+  verifyCreateBulkUserRolesAdditions: () =>
     getMatchingRequests({
       method: 'POST',
       urlPathPattern: '/bulk-jobs/user-role-additions',
+    }).then((data) => data.body.requests),
+
+  stubGetBulkUserRolesAdditions: (body) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/bulk-jobs/user-role-additions',
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: body,
+      },
+    }),
+
+  stubGetBulkUserRolesAdditionsError: (response) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/bulk-jobs/user-role-additions',
+      },
+      response: {
+        status: response.status,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: response.body,
+      },
+    }),
+
+  verifyGetBulkUserRolesAdditions: () =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPattern: '^/bulk-jobs/user-role-additions$',
+    }).then((data) => data.body.requests),
+
+  stubGetBulkUserRolesAdditionsWithSearch: (details) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/bulk-jobs/user-role-additions\\?search=${details.searchTerm}`,
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: details.responseBody,
+      },
+    }),
+
+  verifyGetBulkUserRolesAdditionsWithSearchTerm: (searchTerm) =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPattern: `/bulk-jobs/user-role-additions\\?search=${searchTerm}`,
     }).then((data) => data.body.requests),
 }

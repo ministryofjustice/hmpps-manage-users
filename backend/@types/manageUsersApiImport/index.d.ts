@@ -2436,6 +2436,13 @@ export interface components {
     BulkUserRoleAdditionsResponse: {
       id: string
     }
+    BulkUserRoleAdditionsJobSummary: {
+      id: string
+      jiraReference: string
+      status: string
+      requestedBy: string
+      requestDateTime: string
+    }
   }
 
   responses: never

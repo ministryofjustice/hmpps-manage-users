@@ -1147,7 +1147,7 @@ describe('manageUsersApiImport tests', () => {
     })
   })
 
-  describe('bulk user roles assignments', () => {
+  describe('create bulk user roles additions', () => {
     const response = { id: '1234-567-890' }
     beforeEach(() => {
       client.postMultipartData = jest.fn().mockReturnValue({ then: () => response })
@@ -1182,6 +1182,57 @@ describe('manageUsersApiImport tests', () => {
         },
       )
       expect(actual).toEqual(response)
+    })
+  })
+
+  describe('get all bulk user roles additions', () => {
+    const bulkRolesAdditionsSummary = [
+      {
+        id: '1234567890',
+        jiraReference: 'jira1234',
+        status: 'PENDING',
+        requestedBy: 'STEVE',
+        requestDateTime: '2026-05-11T16:32:05',
+      },
+    ]
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({ then: () => bulkRolesAdditionsSummary })
+    })
+
+    it('returns expected data when called with no search query param', () => {
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context)
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(actual).toEqual(bulkRolesAdditionsSummary)
+    })
+
+    it('returns expected data when called with undefined search query param', () => {
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, undefined)
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(actual).toEqual(bulkRolesAdditionsSummary)
+    })
+
+    it('returns expected data when called with null search query param', () => {
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, null)
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(actual).toEqual(bulkRolesAdditionsSummary)
+    })
+
+    it('returns expected data when called with empty search query param', () => {
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, '')
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(actual).toEqual(bulkRolesAdditionsSummary)
+    })
+
+    it('returns expected data when called with search query param', () => {
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 'xyz')
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?search=xyz')
+      expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
   })
 })

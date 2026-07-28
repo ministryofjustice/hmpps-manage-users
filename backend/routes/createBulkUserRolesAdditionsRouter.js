@@ -1,7 +1,7 @@
 const express = require('express')
 const multer = require('multer')
 const searchApiFactory = require('./searchApiFactory')
-const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesRequests')
+const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesAdditions')
 
 const router = express.Router({ mergeParams: true })
 const upload = multer({
