@@ -1,9 +1,9 @@
 const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions')
 
 describe('get bulk user roles additions', () => {
-  const bulkUserRolesAdditionsApi = jest.fn()
+  const getAll = jest.fn()
   const render = jest.fn()
-  const controller = getBulkUserRolesRequestsFactory(bulkUserRolesAdditionsApi)
+  const controller = getBulkUserRolesRequestsFactory({ getAll })
 
   const req = {
     query: {
@@ -29,33 +29,33 @@ describe('get bulk user roles additions', () => {
   describe('Get bulk user roles additions', () => {
     it('should render results when API returns success result', async () => {
       req.query.keyword = 'bob'
-      bulkUserRolesAdditionsApi.mockResolvedValue(bulkRolesAdditionsSummary)
+      getAll.mockResolvedValue(bulkRolesAdditionsSummary)
 
-      await controller.getBulkUserRolesRequests(req, resp)
+      await controller.getBulkUserRolesAdditions(req, resp)
 
-      expect(bulkUserRolesAdditionsApi).toHaveBeenCalledTimes(1)
+      expect(getAll).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
         bulkUserRolesRequests: bulkRolesAdditionsSummary,
       })
     })
 
     it('should render results page with error message if API request unsuccessful', async () => {
-      bulkUserRolesAdditionsApi.mockRejectedValue('get bulk user roles additions failed with error')
+      getAll.mockRejectedValue('get bulk user roles additions failed with error')
 
-      await controller.getBulkUserRolesRequests(req, resp)
+      await controller.getBulkUserRolesAdditions(req, resp)
 
-      expect(bulkUserRolesAdditionsApi).toHaveBeenCalledTimes(1)
+      expect(getAll).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
-        getRequestsError: 'get bulk user roles additions failed with error',
+        getRequestsError: 'API responded with: get bulk user roles additions failed with error',
       })
     })
 
     it('should render empty results page when API return empty array', async () => {
-      bulkUserRolesAdditionsApi.mockResolvedValue([])
+      getAll.mockResolvedValue([])
 
-      await controller.getBulkUserRolesRequests(req, resp)
+      await controller.getBulkUserRolesAdditions(req, resp)
 
-      expect(bulkUserRolesAdditionsApi).toHaveBeenCalledTimes(1)
+      expect(getAll).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests: [] })
     })
   })

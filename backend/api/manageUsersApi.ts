@@ -378,7 +378,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     return postMultipartData(context, '/bulk-jobs/user-role-additions', jsonBody, csvFile)
   }
 
-  const getBulkUserRolesAdditions = (
+  const getAllBulkUserRolesAdditions = (
     context: Context,
     searchTerm?: string,
   ): Promise<BulkUserRoleAdditionsJobSummary[]> => {
@@ -386,6 +386,10 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
       ? `/bulk-jobs/user-role-additions?search=${searchTerm}`
       : '/bulk-jobs/user-role-additions'
     return get(context, urlPath)
+  }
+
+  const getBulkUserRoleAdditionsById = (context: Context, id: string): Promise<string[]> => {
+    throw new Error('method not implemented yet')
   }
 
   return {
@@ -448,7 +452,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     userGroups,
     userSearch,
     bulkUserRolesAdditions,
-    getBulkUserRolesAdditions,
+    getAllBulkUserRolesAdditions,
+    getBulkUserRoleAdditionsById,
   }
 }
 

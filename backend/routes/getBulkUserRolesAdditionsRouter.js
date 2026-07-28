@@ -5,10 +5,14 @@ const { getBulkUserRolesRequestsFactory } = require('../controllers/getBulkUserR
 const router = express.Router({ mergeParams: true })
 
 const controller = ({ manageUsersApi }) => {
-  const { getBulkUserRolesAdditions } = manageUsersApi
-  const { getBulkUserRolesRequests } = getBulkUserRolesRequestsFactory(getBulkUserRolesAdditions)
+  const { getAllBulkUserRolesAdditions, getBulkUserRoleAdditionsById } = manageUsersApi
+  const bulkUserRolesAdditionsApi = {
+    getAll: getAllBulkUserRolesAdditions,
+    getById: getBulkUserRoleAdditionsById,
+  }
+  const { getBulkUserRolesAdditions } = getBulkUserRolesRequestsFactory(bulkUserRolesAdditionsApi)
 
-  router.get('/requests', getBulkUserRolesRequests)
+  router.get('/requests', getBulkUserRolesAdditions)
   return router
 }
 

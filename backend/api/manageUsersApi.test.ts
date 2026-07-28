@@ -1185,7 +1185,7 @@ describe('manageUsersApiImport tests', () => {
     })
   })
 
-  describe('get bulk user roles additions', () => {
+  describe('get all bulk user roles additions', () => {
     const bulkRolesAdditionsSummary = [
       {
         id: '1234567890',
@@ -1201,35 +1201,35 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('returns expected data when called with no search query param', () => {
-      const actual = manageUsersApi.getBulkUserRolesAdditions(context)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context)
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with undefined search query param', () => {
-      const actual = manageUsersApi.getBulkUserRolesAdditions(context, undefined)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, undefined)
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with null search query param', () => {
-      const actual = manageUsersApi.getBulkUserRolesAdditions(context, null)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, null)
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with empty search query param', () => {
-      const actual = manageUsersApi.getBulkUserRolesAdditions(context, '')
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, '')
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with search query param', () => {
-      const actual = manageUsersApi.getBulkUserRolesAdditions(context, 'xyz')
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 'xyz')
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?search=xyz')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
