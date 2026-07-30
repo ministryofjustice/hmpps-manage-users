@@ -1,0 +1,74 @@
+name: Deploy feature branch
+
+on:
+  workflow_dispatch:
+    inputs:
+      deploy_to_stage:
+        description: Deploy the branch to stage?
+        default: true
+        required: false
+        type: boolean
+      deploy_to_dev:
+        description: Deploy the branch to dev?
+        default: false
+        required: false
+        type: boolean
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  helm_lint:
+    strategy:
+      matrix:
+        environments:
+          - 'dev'
+          - 'stage'
+        exclude:
+          - environments: ${{ inputs.deploy_to_dev != true && 'dev' }}
+          - environments: ${{ inputs.deploy_to_stage != true && 'stage' }}
+    name: helm lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: ${{ matrix.environments }}
+  node_build:
+    name: node build
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      install_command: 'npm run setup'
+  build_image:
+    name: Build docker image
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2
+    needs: node_build
+    with:
+      docker_registry: 'ghcr.io'
+      registry_org: 'ministryofjustice'
+      push: true
+      docker_multiplatform: true
+      tag_latest: false
+      download_build_artifacts: true
+  deploy_stage:
+    if: ${{ inputs.deploy_to_stage == true }}
+    name: Deploy to stage
+    needs:
+    - build_image
+    - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: stage
+      app_version: ${{ needs.build_image.outputs.app_version }}
+  deploy_dev:
+    if: ${{ inputs.deploy_to_dev == true }}
+    name: Deploy to dev
+    needs:
+    - build_image
+    - helm_lint
+    uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
+    secrets: inherit
+    with:
+      environment: dev
+      app_version: ${{ needs.build_image.outputs.app_version }}
