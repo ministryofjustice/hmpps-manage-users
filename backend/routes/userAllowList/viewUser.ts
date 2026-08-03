@@ -11,7 +11,7 @@ export default class ViewUserRoutes {
     this.allowListService = allowListService
   }
 
-  GET = async (req: Request, res: Response): Promise<void> => {
+  GET = async (req: Request<{ username: string }>, res: Response): Promise<void> => {
     const { username } = req.session.userDetails
     const sendAudit = audit(username, { username: req.params.username })
     await sendAudit(ManageUsersEvent.VIEW_ALLOW_LIST_USER_ATTEMPT)

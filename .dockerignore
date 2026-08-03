@@ -13,3 +13,5 @@ LICENSE
 tests
 *.txt
 *.yaml
+!.allowed-scripts.mjs
+!.npmrc

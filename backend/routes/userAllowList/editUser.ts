@@ -21,7 +21,7 @@ export default class EditUserRoutes {
     return errors
   }
 
-  GET = async (req: Request, res: Response): Promise<void> => {
+  GET = async (req: Request<{ username: string }>, res: Response): Promise<void> => {
     const form = req.flash('form')[0]
     const allowListUser = await this.allowListService.getAllowListUser(res.locals.access_token, req.params.username)
     const accessPeriod = form?.accessPeriod ?? 'ONE_MONTH'
@@ -35,7 +35,7 @@ export default class EditUserRoutes {
     })
   }
 
-  POST = async (req: Request, res: Response): Promise<void> => {
+  POST = async (req: Request<{ username: string }>, res: Response): Promise<void> => {
     const form = trimObjValues(req.body)
     const errors = EditUserRoutes.validate(req.body.reason)
     if (errors.length > 0) {
