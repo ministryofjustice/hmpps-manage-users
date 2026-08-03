@@ -86,7 +86,7 @@ describe('get bulk user roles additions', () => {
       })
     })
 
-    it('should render details page when request successful', async () => {
+    it('should render details page when request unsuccessful', async () => {
       getById.mockRejectedValue('not found')
 
       await controller.getBulkUserRolesAdditionDetails(req, resp)
