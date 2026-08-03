@@ -1235,4 +1235,36 @@ describe('manageUsersApiImport tests', () => {
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
   })
+
+  describe('get bulk user roles additions details', () => {
+    const bulkUserRolesAdditionsDetails = {
+      id: '1234567890',
+      jiraReference: 'jira1234',
+      status: 'PENDING',
+      requestedBy: 'STEVE',
+      requestDateTime: '2026-05-11T16:32:05',
+      totalCount: 4,
+      successCount: 3,
+      errorCount: 1,
+    }
+
+    beforeEach(() => {
+      client.get = jest.fn().mockReturnValue({ then: () => bulkUserRolesAdditionsDetails })
+    })
+
+    it('should return expected job details when request successful', async () => {
+      const actual = await manageUsersApi.getBulkUserRoleAdditionsDetails(context, '1234567890')
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions/1234567890')
+      expect(actual).toEqual(bulkUserRolesAdditionsDetails)
+    })
+
+    it('should return expected job details when request successful', async () => {
+      client.get = jest.fn().mockRejectedValue(Error('not found'))
+
+      await expect(manageUsersApi.getBulkUserRoleAdditionsDetails(context, '1234567890')).rejects.toThrow('not found')
+
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions/1234567890')
+    })
+  })
 })

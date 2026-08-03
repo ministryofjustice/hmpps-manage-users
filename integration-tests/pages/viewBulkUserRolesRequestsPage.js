@@ -31,6 +31,9 @@ const enterSearchTerm = (searchTerm) => {
   submitSearch().click()
 }
 
+const clickRequestDetailsLink = (row) =>
+  requestsTable().find('tbody tr').eq(row).find('td').eq(5).find('a').should('have.text', 'View details').click()
+
 const assertRequestsTableRowContains = (row, expected) => {
   requestsTable()
     .find('tbody tr')
@@ -75,6 +78,7 @@ const viewBulkUserRolesRequestsPage = () =>
     searchInput,
     enterSearchTerm,
     submitSearch,
+    clickRequestDetailsLink,
     requestsTable,
     assertRequestsTableHasRows,
     assertRequestsTableRowContains,
