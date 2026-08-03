@@ -32,7 +32,7 @@ const selectCaseloadsFactory = (getUserAssignableCaseloads: any, saveCaseloads: 
     })
   }
 
-  const post = async (req: Request, res: Response) => {
+  const post = async (req: Request<{ userId: string }>, res: Response) => {
     const { username } = req.session.userDetails
     const { userId } = req.params
     const { caseloads } = req.body

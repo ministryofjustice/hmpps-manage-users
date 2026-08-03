@@ -31,7 +31,7 @@ const deactivateUserReasonFactory = (deactivateUserApi: any, manageUrl: string, 
     })
   }
 
-  const post = async (req: Request, res: Response) => {
+  const post = async (req: Request<{ userId: string }>, res: Response) => {
     const { userId } = req.params
     const { reason } = req.body
     const staffUrl = `${manageUrl}/${userId}`
