@@ -49,7 +49,6 @@ jobs:
       push: true
       docker_multiplatform: true
       tag_latest: false
-      download_build_artifacts: true
   deploy_stage:
     if: ${{ inputs.deploy_to_stage == true }}
     name: Deploy to stage
