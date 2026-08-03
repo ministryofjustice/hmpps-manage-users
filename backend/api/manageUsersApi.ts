@@ -42,8 +42,6 @@ import {
   UserRoleDetail,
 } from '../@types/manageUsersApi'
 
-import log from '../log'
-
 type FileInfo = {
   filename: string
   data: Buffer
