@@ -2436,12 +2436,15 @@ export interface components {
     BulkUserRoleAdditionsResponse: {
       id: string
     }
-    BulkUserRoleAdditionsJobSummary: {
+    BulkUserRoleAdditionsJobDetails: {
       id: string
       jiraReference: string
       status: string
       requestedBy: string
       requestDateTime: string
+      totalCount: number
+      successCount: number
+      errorCount: number
     }
   }
 

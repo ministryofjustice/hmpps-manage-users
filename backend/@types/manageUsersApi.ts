@@ -57,3 +57,4 @@ export type BulkUserRoleAdditionsRequest = components['schemas']['BulkUserRoleAd
 export type BulkUserRoleAdditionsResponse = components['schemas']['BulkUserRoleAdditionsResponse']
 
 export type BulkUserRoleAdditionsJobSummary = components['schemas']['BulkUserRoleAdditionsRequest']
+export type BulkUserRoleAdditionsJobDetails = components['schemas']['BulkUserRoleAdditionsJobDetails']

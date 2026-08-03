@@ -1383,4 +1383,23 @@ module.exports = {
       method: 'GET',
       urlPattern: `/bulk-jobs/user-role-additions\\?search=${searchTerm}`,
     }).then((data) => data.body.requests),
+
+  stubGetBulkUserRolesAdditionsDetails: (details) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/bulk-jobs/user-role-additions/${details.id}`,
+      },
+      response: {
+        status: details.status,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: details.responseBody,
+      },
+    }),
+
+  verifyGetBulkUserRolesAdditionsDetails: (id) =>
+    getMatchingRequests({
+      method: 'GET',
+      urlPattern: `/bulk-jobs/user-role-additions/${id}`,
+    }).then((data) => data.body.requests),
 }

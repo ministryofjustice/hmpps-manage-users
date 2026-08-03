@@ -8,6 +8,7 @@ import * as contextProperties from '../contextProperties'
 import {
   BulkUserRoleAdditionsJobSummary,
   BulkUserRoleAdditionsRequest,
+  BulkUserRoleAdditionsJobDetails,
   ChildGroup,
   CreateChildGroupRequest,
   CreateEmailDomainRequest,
@@ -388,9 +389,8 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     return get(context, urlPath)
   }
 
-  const getBulkUserRoleAdditionsById = (context: Context, id: string): Promise<string[]> => {
-    throw new Error('method not implemented yet')
-  }
+  const getBulkUserRoleAdditionsDetails = (context: Context, id: string): Promise<BulkUserRoleAdditionsJobDetails> =>
+    get(context, `/bulk-jobs/user-role-additions/${id}`)
 
   return {
     addDpsUserRoles,
@@ -453,7 +453,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     userSearch,
     bulkUserRolesAdditions,
     getAllBulkUserRolesAdditions,
-    getBulkUserRoleAdditionsById,
+    getBulkUserRoleAdditionsDetails,
   }
 }
 

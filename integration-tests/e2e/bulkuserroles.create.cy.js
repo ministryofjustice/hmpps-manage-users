@@ -5,7 +5,7 @@ const CreateBulkUserRolesRequestPage = require('../pages/createBulkUserRolesRequ
 const CreateBulkUserRolesSelectRolesPage = require('../pages/createBulkUserRolesSelectRolesPage')
 const CreateBulkUserRolesUploadUsersPage = require('../pages/createBulkUserRolesUploadUsersPage')
 const CreateBulkUserRolesSummaryPage = require('../pages/createBulkUserRolesSummaryPage')
-const CreateBulkUserRolesConfirmaionPage = require('../pages/createBulkUserRolesConfirmationPage')
+const CreateBulkUserRolesConfirmationPage = require('../pages/createBulkUserRolesConfirmationPage')
 
 context('Create bulk user roles request: Jira reference', () => {
   before(() => {
@@ -235,7 +235,7 @@ context('Create bulk user roles request: Submit', () => {
     const summaryPage = CreateBulkUserRolesSummaryPage.verifyOnPage()
     summaryPage.submitButton().click()
 
-    const confirmationPage = CreateBulkUserRolesConfirmaionPage.verifyOnPage()
+    const confirmationPage = CreateBulkUserRolesConfirmationPage.verifyOnPage()
     confirmationPage.whatsNext().within(() => {
       cy.get('.govuk-heading-m').eq(0).should('contain.text', 'What happens next')
       cy.get('.govuk-body')

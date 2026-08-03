@@ -2,8 +2,9 @@ const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions
 
 describe('get bulk user roles additions', () => {
   const getAll = jest.fn()
+  const getById = jest.fn()
   const render = jest.fn()
-  const controller = getBulkUserRolesRequestsFactory({ getAll })
+  const controller = getBulkUserRolesRequestsFactory({ getAll, getById })
 
   const req = {
     query: {
@@ -57,6 +58,43 @@ describe('get bulk user roles additions', () => {
 
       expect(getAll).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests: [] })
+    })
+  })
+
+  describe('Get bulk user roles addition details', () => {
+    const bulkUserRolesAdditionsDetails = {
+      id: '1234567890',
+      jiraReference: 'jira1234',
+      status: 'PENDING',
+      requestedBy: 'STEVE',
+      requestDateTime: '2026-05-11T16:32:05',
+      totalCount: 4,
+      successCount: 3,
+      errorCount: 1,
+    }
+
+    req.params = { id: '1234567890' }
+
+    it('should render details page when request successful', async () => {
+      getById.mockResolvedValue(bulkUserRolesAdditionsDetails)
+
+      await controller.getBulkUserRolesAdditionDetails(req, resp)
+
+      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '1234567890')
+      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequestDetails.njk', {
+        details: bulkUserRolesAdditionsDetails,
+      })
+    })
+
+    it('should render details page when request unsuccessful', async () => {
+      getById.mockRejectedValue('not found')
+
+      await controller.getBulkUserRolesAdditionDetails(req, resp)
+
+      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '1234567890')
+      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequestDetails.njk', {
+        getRequestDetailsError: 'not found',
+      })
     })
   })
 })
