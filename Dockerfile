@@ -58,7 +58,7 @@ RUN rm -rf /usr/local/lib/node_modules \
            /usr/local/bin/corepack \
            /usr/local/bin/yarn \
            /usr/local/bin/yarnpkg \
-           /opt/yarn-* \
+           /opt/yarn-*
 
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
