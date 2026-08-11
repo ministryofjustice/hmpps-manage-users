@@ -10,15 +10,6 @@ RUN apk --update-cache upgrade --available \
 ENV TZ=Europe/London
 RUN ln -snf "/usr/share/zoneinfo/$TZ" /etc/localtime && echo "$TZ" > /etc/timezone
 
-# Remove package managers - not needed for production and reduces attack surface
-RUN rm -rf /usr/local/lib/node_modules \
-           /usr/local/bin/npm \
-           /usr/local/bin/npx \
-           /usr/local/bin/corepack \
-           /usr/local/bin/yarn \
-           /usr/local/bin/yarnpkg \
-           /opt/yarn-*
-
 RUN addgroup --gid 2000 --system appgroup && \
     adduser --uid 2000 --system appuser --ingroup appgroup
 
@@ -59,6 +50,16 @@ RUN npm run record-build-info
 # Stage: copy production assets and dependencies
 FROM base
 
+
+# Remove package managers - not needed for production and reduces attack surface
+RUN rm -rf /usr/local/lib/node_modules \
+           /usr/local/bin/npm \
+           /usr/local/bin/npx \
+           /usr/local/bin/corepack \
+           /usr/local/bin/yarn \
+           /usr/local/bin/yarnpkg \
+           /opt/yarn-* \
+
 COPY --from=build --chown=appuser:appgroup \
         /app/package.json \
         /app/package-lock.json \
@@ -83,4 +84,4 @@ ENV PORT=3000
 EXPOSE 3000
 ENV NODE_ENV='production'
 USER 2000
-CMD [ "npm", "start" ]
+CMD [ "node", "dist/server.js" ]
