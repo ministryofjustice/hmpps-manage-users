@@ -26,6 +26,7 @@ const client: OAuthEnabledClient = {
   put: jest.fn(),
   del: jest.fn(),
   postMultipartData: jest.fn(),
+  getStream: jest.fn(),
 }
 const mockResponse = {
   then: (res: superagent.Response) => {
@@ -1265,6 +1266,21 @@ describe('manageUsersApiImport tests', () => {
       await expect(manageUsersApi.getBulkUserRoleAdditionsDetails(context, '1234567890')).rejects.toThrow('not found')
 
       expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions/1234567890')
+    })
+  })
+
+  describe('get bulk user additions csv download', () => {
+    const mockRequest = {}
+
+    beforeEach(() => {
+      client.getStream = jest.fn().mockReturnValue(mockRequest)
+    })
+
+    it('should return request', () => {
+      const actual = manageUsersApi.getBulkUserAdditionsCsvDownload(context, '666')
+
+      expect(actual).toEqual(mockRequest)
+      expect(client.getStream).toHaveBeenNthCalledWith(1, context, `/bulk-jobs/user-role-additions/666/download`)
     })
   })
 })

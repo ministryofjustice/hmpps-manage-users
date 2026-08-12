@@ -22,6 +22,7 @@ export interface OAuthEnabledClient {
   put: (context: Context, path: string, body: unknown) => Promise<superagent.Response>
   del: (context: Context, path: string, body?: unknown) => Promise<superagent.Response>
   postMultipartData: (context: Context, path: string, ...multipart: MultiPartValue[]) => Promise<superagent.Response>
+  getStream: (context: Context, path: string) => superagent.Request
 }
 
 const resultLogger = (result: superagent.Response) => {
@@ -121,12 +122,20 @@ export const oauthEnabledClientFactory = (params: ClientFactoryParams): OAuthEna
       })
     })
 
+  const getStream = (context: Context, path: string): superagent.Request =>
+    superagent
+      .get(remoteUrl + path)
+      .agent(keepaliveAgent)
+      .set(getHeaders(context))
+      .buffer(false)
+
   return {
     get,
     post,
     put,
     del,
     postMultipartData,
+    getStream,
   }
 }
 
