@@ -38,7 +38,56 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
     res.render('viewBulkUserRolesRequestDetails.njk', { details })
   }
 
-  return { getBulkUserRolesAdditions, getBulkUserRolesAdditionDetails }
+  const getResultsCsvDownload = (req, res, next) => {
+    const { id } = req.params
+    log.info('getting csv download:', id)
+
+    const stream = bulkUserRolesAdditionsApi.getDownloadCsvStream(res.locals, id)
+    let isError = false
+
+    stream.on('error', (err) => {
+      isError = true
+      log.error(`error downloading bulk additions results csv id: ${id}`, err)
+      if (!res.headersSent) {
+        next(err)
+      } else {
+        res.destroy(err)
+      }
+    })
+
+    stream.on('response', (upstream) => {
+      if (upstream.statusCode >= 400) {
+        isError = true
+        let body = ''
+
+        upstream.on('data', (chunk) => {
+          body += chunk
+        })
+
+        upstream.on('end', () => {
+          log.error(`error downloading bulk additions results csv id: ${id}`, {
+            bulkAdditionsJobId: id,
+            status: upstream.statusCode,
+            body,
+          })
+        })
+      }
+
+      // Explicitly set status 200 for all requests including for errored downloads so the page doesn't load an error.
+      // An errored download will still download a file containing an error message to indicate there was a problem, the error details are logged server side.
+      res.status(200)
+      res.set({
+        'Content-Type': isError ? 'application/json' : upstream.headers['content-type'],
+        'Content-Disposition': isError
+          ? `attachment; filename="bulk-roles-assignments-${id}-ERROR.json"`
+          : upstream.headers['content-disposition'],
+      })
+    })
+
+    stream.pipe(res)
+  }
+
+  return { getBulkUserRolesAdditions, getBulkUserRolesAdditionDetails, getResultsCsvDownload }
 }
 
 module.exports = { getBulkUserRolesRequestsFactory: getBulkUserRolesAdditionsFactory }

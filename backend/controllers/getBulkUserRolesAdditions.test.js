@@ -1,10 +1,12 @@
+const EventEmitter = require('node:events')
 const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions')
 
 describe('get bulk user roles additions', () => {
   const getAll = jest.fn()
   const getById = jest.fn()
+  const getDownloadCsvStream = jest.fn()
   const render = jest.fn()
-  const controller = getBulkUserRolesRequestsFactory({ getAll, getById })
+  const controller = getBulkUserRolesRequestsFactory({ getAll, getById, getDownloadCsvStream })
 
   const req = {
     query: {
@@ -96,5 +98,70 @@ describe('get bulk user roles additions', () => {
         getRequestDetailsError: 'not found',
       })
     })
+  })
+
+  describe('Get bulk user roles additions CSV download', () => {
+    it('should successfully stream API response to response object', async () => {
+      const stream = new EventEmitter()
+      stream.pipe = jest.fn()
+
+      getDownloadCsvStream.mockReturnValue(stream)
+
+      const res = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        set: jest.fn(),
+      }
+
+      controller.getResultsCsvDownload(req, res, jest.fn())
+
+      stream.emit('response', {
+        statusCode: 200,
+        headers: {
+          'content-type': 'text/csv',
+          'content-disposition': 'attachment; filename=bulk-roles-addititons-12345.csv',
+        },
+        body: 'userId,roleId,status,reason\nuser_1,role_1,SUCCESS,\nuser_2,role_1,ERROR,already assigned\n',
+      })
+
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.set).toHaveBeenCalledWith({
+        'Content-Type': 'text/csv',
+        'Content-Disposition': 'attachment; filename=bulk-roles-addititons-12345.csv',
+      })
+      expect(stream.pipe).toHaveBeenCalledWith(res)
+    })
+  })
+
+  it('should write error details to download json file when API response is 4xx or 5xx status', async () => {
+    const stream = new EventEmitter()
+    stream.pipe = jest.fn()
+
+    getDownloadCsvStream.mockReturnValue(stream)
+
+    req.params.id = '666'
+
+    const res = {
+      locals: {},
+      status: jest.fn().mockReturnThis(),
+      set: jest.fn(),
+    }
+
+    controller.getResultsCsvDownload(req, res, jest.fn())
+
+    const upstream = new EventEmitter()
+    upstream.statusCode = 500
+    upstream.headers = { 'content-type': 'application/json' }
+
+    stream.emit('response', upstream)
+    stream.emit('data', JSON.stringify({ message: 'Internal server error failed to generate csv download' }))
+    stream.emit('end')
+
+    expect(res.status).toHaveBeenCalledWith(200)
+    expect(res.set).toHaveBeenCalledWith({
+      'Content-Type': 'application/json',
+      'Content-Disposition': 'attachment; filename="bulk-roles-assignments-666-ERROR.json"',
+    })
+    expect(stream.pipe).toHaveBeenCalledWith(res)
   })
 })

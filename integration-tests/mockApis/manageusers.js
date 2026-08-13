@@ -1402,4 +1402,35 @@ module.exports = {
       method: 'GET',
       urlPattern: `/bulk-jobs/user-role-additions/${id}`,
     }).then((data) => data.body.requests),
+
+  stubGetBulkUserRolesAdditionsCsvDownload: (id) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/bulk-jobs/user-role-additions/${id}/download`,
+      },
+      response: {
+        status: 200,
+        headers: {
+          'Content-Type': 'text/csv',
+          'Content-Disposition': `attachment; filename="bulk-roles-assignments-${id}.csv"`,
+        },
+        body: 'userId,roleId,status,reason\nuser_1,role_1,SUCCESS,\nuser_2,role_1,ERROR,already assigned\n',
+      },
+    }),
+
+  stubGetBulkUserRolesAdditionsCsvDownloadError: (id) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: `/bulk-jobs/user-role-additions/${id}/download`,
+      },
+      response: {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        status: 500,
+        jsonBody: { message: `Internal Server Error: unable to generate bulk role additions csv for: ${id}` },
+      },
+    }),
 }

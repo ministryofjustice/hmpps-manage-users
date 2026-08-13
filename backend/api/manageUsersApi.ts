@@ -1,5 +1,6 @@
 import superagent from 'superagent'
 import * as querystring from 'querystring'
+import type { Response } from 'express'
 
 import { Context } from '../interfaces/context'
 import { PagedList } from '../interfaces/pagedList'
@@ -68,6 +69,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     oauthEnabledClient.del(context, path).then((response) => response.body)
   const postMultipartData = (context: Context, path: string, ...multiparts: MultiPartValue[]) =>
     oauthEnabledClient.postMultipartData(context, path, ...multiparts).then((response) => response.body)
+  const getStream = (context: Context, path: string) => oauthEnabledClient.getStream(context, path)
 
   const getNotificationBannerMessage = (context: Context, notificationType: string): Promise<NotificationMessage> =>
     get(context, `/notification/banner/${notificationType}`)
@@ -392,6 +394,9 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
   const getBulkUserRoleAdditionsDetails = (context: Context, id: string): Promise<BulkUserRoleAdditionsJobDetails> =>
     get(context, `/bulk-jobs/user-role-additions/${id}`)
 
+  const getBulkUserAdditionsCsvDownload = (context: Context, id: string) =>
+    getStream(context, `/bulk-jobs/user-role-additions/${id}/download`)
+
   return {
     addDpsUserRoles,
     addUserCaseloads,
@@ -454,6 +459,7 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     bulkUserRolesAdditions,
     getAllBulkUserRolesAdditions,
     getBulkUserRoleAdditionsDetails,
+    getBulkUserAdditionsCsvDownload,
   }
 }
 
