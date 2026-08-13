@@ -1,4 +1,5 @@
 const log = require('../log')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
   const getBulkUserRolesAdditions = async (req, res) => {
@@ -38,9 +39,12 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
     res.render('viewBulkUserRolesRequestDetails.njk', { details })
   }
 
-  const getResultsCsvDownload = (req, res, next) => {
+  const getResultsCsvDownload = async (req, res, next) => {
     const { id } = req.params
     log.info('getting csv download:', id)
+
+    const sendAudit = audit(req.session.userDetails.username, { id })
+    await sendAudit(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT)
 
     const stream = bulkUserRolesAdditionsApi.getDownloadCsvStream(res.locals, id)
     let isError = false
@@ -48,6 +52,7 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
     stream.on('error', (err) => {
       isError = true
       log.error(`error downloading bulk additions results csv id: ${id}`, err)
+
       if (!res.headersSent) {
         next(err)
       } else {
@@ -84,7 +89,13 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
       })
     })
 
-    stream.pipe(res)
+    stream.on('end', async () => {
+      if (isError) {
+        await sendAudit(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE)
+      }
+    })
+
+    await stream.pipe(res)
   }
 
   return { getBulkUserRolesAdditions, getBulkUserRolesAdditionDetails, getResultsCsvDownload }
