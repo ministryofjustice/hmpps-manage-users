@@ -1411,7 +1411,10 @@ module.exports = {
       },
       response: {
         status: 200,
-        headers: { 'Content-Disposition': `attachment; filename=bulk-roles-assignments-${id}.csv` },
+        headers: {
+          'Content-Type': 'text/csv',
+          'Content-Disposition': `attachment; filename="bulk-roles-assignments-${id}.csv"`,
+        },
         body: 'userId,roleId,status,reason\nuser_1,role_1,SUCCESS,\nuser_2,role_1,ERROR,already assigned\n',
       },
     }),

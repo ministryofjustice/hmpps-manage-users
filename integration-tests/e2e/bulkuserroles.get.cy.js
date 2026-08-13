@@ -302,6 +302,10 @@ context('Get bulk user roles additions download csv', () => {
 
     cy.request(`/view-bulk-role-changes/requests/${apiResponse.id}/download`).then((response) => {
       expect(response.status).to.eq(200)
+      expect(response.headers['content-type']).to.contain(`text/csv`)
+      expect(response.headers['content-disposition']).to.eq(
+        `attachment; filename="bulk-roles-assignments-${bulkAdditionsComplete.id}.csv"`,
+      )
       expect(response.body).to.contain('user_1,role_1,SUCCESS,')
       expect(response.body).to.contain('user_2,role_1,ERROR,already assigned')
     })
@@ -329,8 +333,9 @@ context('Get bulk user roles additions download csv', () => {
       failOnStatusCode: false,
     }).then((response) => {
       expect(response.status).to.eq(200)
+      expect(response.headers['content-type']).to.contain(`application/json`)
       expect(response.headers['content-disposition']).to.eq(
-        `attachment; filename="bulk-role-additions-${bulkAdditionsComplete.id}-download-ERROR.json`,
+        `attachment; filename="bulk-roles-assignments-${bulkAdditionsComplete.id}-ERROR.json"`,
       )
       expect(response.body).to.contain({
         message: `Internal Server Error: unable to generate bulk role additions csv for: ${bulkAdditionsComplete.id}`,

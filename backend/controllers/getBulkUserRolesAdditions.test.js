@@ -139,7 +139,7 @@ describe('get bulk user roles additions', () => {
 
     getDownloadCsvStream.mockReturnValue(stream)
 
-    req.params.id = '6666'
+    req.params.id = '666'
 
     const res = {
       locals: {},
@@ -160,7 +160,7 @@ describe('get bulk user roles additions', () => {
     expect(res.status).toHaveBeenCalledWith(200)
     expect(res.set).toHaveBeenCalledWith({
       'Content-Type': 'application/json',
-      'Content-Disposition': 'attachment; filename="bulk-roles-additions-6666-download-ERROR.json"',
+      'Content-Disposition': 'attachment; filename="bulk-roles-assignments-666-ERROR.json"',
     })
     expect(stream.pipe).toHaveBeenCalledWith(res)
   })

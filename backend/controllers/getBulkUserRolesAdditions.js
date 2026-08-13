@@ -79,7 +79,7 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
       res.set({
         'Content-Type': isError ? 'application/json' : upstream.headers['content-type'],
         'Content-Disposition': isError
-          ? `attachment; filename="bulk-roles-additions-${id}-download-ERROR.json"`
+          ? `attachment; filename="bulk-roles-assignments-${id}-ERROR.json"`
           : upstream.headers['content-disposition'],
       })
     })
