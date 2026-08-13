@@ -15,12 +15,9 @@ const getBuild = () => {
   try {
     // @ts-ignore
     // eslint-disable-next-line import/no-unresolved,global-require
-    return require('../../build-info.json')
+    return require('../../../app/build-info.json')
   } catch (ex) {
     console.error('Failed to load build-info.json', ex)
-    console.error('Failed to load build-info.json 2', __dirname)
-    console.error('Failed to load build-info.json 3', process.cwd())
-
     return null
   }
 }
