@@ -16,7 +16,6 @@ const getBuild = () => {
   try {
     return JSON.parse(fs.readFileSync('/app/build-info.json'))
   } catch (ex) {
-    console.error('Failed to load build-info.json', ex)
     return null
   }
 }
