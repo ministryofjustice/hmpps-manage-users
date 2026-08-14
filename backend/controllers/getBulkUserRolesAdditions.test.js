@@ -1,5 +1,8 @@
 const EventEmitter = require('node:events')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit')
 
 describe('get bulk user roles additions', () => {
   const getAll = jest.fn()
@@ -9,6 +12,11 @@ describe('get bulk user roles additions', () => {
   const controller = getBulkUserRolesRequestsFactory({ getAll, getById, getDownloadCsvStream })
 
   const req = {
+    session: {
+      userDetails: {
+        username: 'clint.eastwood',
+      },
+    },
     query: {
       keyword: '',
     },
@@ -26,6 +34,11 @@ describe('get bulk user roles additions', () => {
   ]
 
   beforeEach(() => {
+    jest.clearAllMocks()
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
+  })
+
+  afterAll(() => {
     jest.clearAllMocks()
   })
 
@@ -113,7 +126,7 @@ describe('get bulk user roles additions', () => {
         set: jest.fn(),
       }
 
-      controller.getResultsCsvDownload(req, res, jest.fn())
+      await controller.getResultsCsvDownload(req, res, jest.fn())
 
       stream.emit('response', {
         statusCode: 200,
@@ -130,6 +143,9 @@ describe('get bulk user roles additions', () => {
         'Content-Disposition': 'attachment; filename=bulk-roles-addititons-12345.csv',
       })
       expect(stream.pipe).toHaveBeenCalledWith(res)
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT),
+      )
     })
   })
 
@@ -147,7 +163,7 @@ describe('get bulk user roles additions', () => {
       set: jest.fn(),
     }
 
-    controller.getResultsCsvDownload(req, res, jest.fn())
+    await controller.getResultsCsvDownload(req, res, jest.fn())
 
     const upstream = new EventEmitter()
     upstream.statusCode = 500
@@ -163,5 +179,11 @@ describe('get bulk user roles additions', () => {
       'Content-Disposition': 'attachment; filename="bulk-roles-assignments-666-ERROR.json"',
     })
     expect(stream.pipe).toHaveBeenCalledWith(res)
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+      auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT),
+    )
+    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+      auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE),
+    )
   })
 })

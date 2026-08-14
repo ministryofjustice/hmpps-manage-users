@@ -1,7 +1,10 @@
 const fsPromises = require('fs/promises')
 const path = require('path')
 const fs = require('fs')
+const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesAdditions')
+const { auditAction } = require('../utils/testUtils')
+const { ManageUsersEvent } = require('../audit')
 
 describe('change user roles in bulk', () => {
   const getSearchableRolesApi = jest.fn()
@@ -43,10 +46,12 @@ describe('change user roles in bulk', () => {
       },
       bulkUserRolesRequest: {},
     }
+    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   afterAll(() => {
     spyUnlink.mockRestore()
+    jest.clearAllMocks()
   })
 
   describe('Start new request', () => {
@@ -683,6 +688,9 @@ describe('change user roles in bulk', () => {
         validUserFile,
       )
       expect(req.session.bulkUserRolesRequest).toBeUndefined()
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
+      )
     })
 
     it('should remove request details from session after successfully submitting request', async () => {
@@ -734,6 +742,13 @@ describe('change user roles in bulk', () => {
         roles: ['ROLE_1', 'ROLE_2'],
         usersFile: { filename: 'valid-users.csv', data: fileData },
       })
+
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE),
+      )
     })
 
     it('should populate req.session.bulkUserRolesRequest if not present', async () => {
@@ -769,6 +784,12 @@ describe('change user roles in bulk', () => {
           uploadFile: 'valid-users.csv',
         },
       })
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
+      )
+      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
+        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE),
+      )
     })
   })
 })
