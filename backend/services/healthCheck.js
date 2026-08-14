@@ -1,3 +1,4 @@
+const fs = require('fs')
 const { serviceCheckFactory } = require('../controllers/healthCheck')
 
 const service = (name, url) => {
@@ -13,9 +14,7 @@ const gatherCheckInfo = (total, currentValue) => ({ ...total, [currentValue.name
 
 const getBuild = () => {
   try {
-    // @ts-ignore
-    // eslint-disable-next-line import/no-unresolved,global-require
-    return require('../../../app/build-info.json')
+    return JSON.parse(fs.readFileSync('/app/build-info.json'))
   } catch (ex) {
     console.error('Failed to load build-info.json', ex)
     return null
