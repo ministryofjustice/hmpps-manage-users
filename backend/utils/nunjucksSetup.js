@@ -193,6 +193,7 @@ module.exports = (app, path) => {
     moment(expiry).diff(moment(), 'months') > 12 ? 'No restriction' : moment(expiry).format('D MMMM YYYY'),
   )
   njkEnv.addFilter('toStatus', (status) => toStatusDescription(status))
+  njkEnv.addFilter('toAllowlistUserType', (userType) => toAllowlistUserType(userType))
   njkEnv.addFilter('isRestrictedRoleCode', (roleCode, restrictedRoles) => {
     const service = new RestrictedRolesService(restrictedRoles)
     return service.isRestrictedRoleCode(roleCode)
@@ -274,6 +275,7 @@ module.exports = (app, path) => {
     const hrefBase = `${paths.userAllowList.search({})}?`
     const usernameTags = getUsernameTags(currentFilter, hrefBase)
     const statusTags = getStatusTags(currentFilter, hrefBase)
+    const userTypeTags = getUserTypeTags(currentFilter, hrefBase)
 
     const categories = [
       {
@@ -287,6 +289,12 @@ module.exports = (app, path) => {
           text: 'Status',
         },
         items: statusTags,
+      },
+      {
+        heading: {
+          text: 'User type',
+        },
+        items: userTypeTags,
       },
     ]
 
@@ -432,6 +440,19 @@ function getStatusTags(currentFilter, hrefBase) {
         // TODO look at using new URLSearchParams instead
         href: `${hrefBase}${querystring.stringify(newFilter)}`,
         text: toStatusDescription(status),
+      },
+    ]
+  }
+  return undefined
+}
+
+function getUserTypeTags(currentFilter, hrefBase) {
+  const { userType, ...newFilter } = currentFilter
+  if (userType && userType !== 'ALL') {
+    return [
+      {
+        href: `${hrefBase}${querystring.stringify(newFilter)}`,
+        text: toAllowlistUserType(userType),
       },
     ]
   }
@@ -588,4 +609,8 @@ function toStatusDescription(status) {
     default:
       return status
   }
+}
+
+const toAllowlistUserType = (userType) => {
+  return userType === 'DIGITAL' ? 'Digital user' : 'General user'
 }

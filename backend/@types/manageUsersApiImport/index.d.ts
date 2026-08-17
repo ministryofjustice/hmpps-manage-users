@@ -64,6 +64,54 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/queue-admin/retry-dlq/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryDlq']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/retry-all-dlqs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['retryAllDlqs']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/queue-admin/purge-queue/{queueName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put: operations['purgeQueue']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/prisonusers/{username}/enable-user': {
     parameters: {
       query?: never
@@ -408,6 +456,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/prisonusers/find-by-usernames': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Get specified user details
+     * @description Information on specific users. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN, ROLE_MAINTAIN_ACCESS_ROLES, ROLE_MANAGE_NOMIS_USER_ACCOUNT or ROLE_STAFF_SEARCH
+     */
+    post: operations['findUsersByUsernames']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/linkedprisonusers/lsa': {
     parameters: {
       query?: never
@@ -600,6 +668,30 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/bulk-jobs/user-role-additions': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get bulk user role additions jobs.
+     * @description Returns a list of bulk user role additions jobs.
+     */
+    get: operations['getUserRoleAdditionsJobs']
+    put?: never
+    /**
+     * Create a bulk user role additions job.
+     * @description Create a bulk user role additions job.
+     */
+    post: operations['createUserRoleAdditionsJob']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/users/allowlist/{id}': {
     parameters: {
       query?: never
@@ -689,16 +781,14 @@ export interface paths {
     }
     /**
      * Search for users
-     * @description
-     *           Search for users in the Auth DB only who match on partial first name, surname, username or email and return a pageable result set.
+     * @description Search for users in the Auth DB only who match on partial first name, surname, username or email and return a pageable result set.
      *           Optionally choose the authentication sources from any combination of auth, delius, nomis and azuread sources.
      *           Provide the authSources as a list of values with the same name. e.g. ?authSources=nomis&authSources=delius&authSources=auth
      *           It will return users with the requested auth sources where they have authenticated against the auth service at least once.
      *           Note: User information held in the auth service may be out of date with the user information held in the source systems as
      *           their details will be as they were the last time that they authenticated.<br/><br/>
      *
-     *            Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN
-     *
+     *            Requires role ROLE_INTEL_ADMIN or ROLE_PCMS_USER_ADMIN or ROLE_PF_USER_ADMIN or ROLE_MANAGE_USERS__USERS_SEARCH_RO
      */
     get: operations['searchForUsersInMultipleSourceSystems']
     put?: never
@@ -889,6 +979,22 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/queue-admin/get-dlq-messages/{dlqName}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get: operations['getDlqMessages']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/prisonusers/{username}': {
     parameters: {
       query?: never
@@ -898,7 +1004,7 @@ export interface paths {
     }
     /**
      * Get specified user details
-     * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES or ROLE_MANAGE_NOMIS_USER_ACCOUNT
+     * @description Information on a specific user. Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN, ROLE_MAINTAIN_ACCESS_ROLES, ROLE_MANAGE_NOMIS_USER_ACCOUNT or ROLE_STAFF_SEARCH
      */
     get: operations['findUserByUsername']
     put?: never
@@ -938,7 +1044,7 @@ export interface paths {
     }
     /**
      * Get all users filtered as specified
-     * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN or ROLE_MAINTAIN_ACCESS_ROLES. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
+     * @description Requires role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN, ROLE_MAINTAIN_ACCESS_ROLES or ROLE_STAFF_SEARCH. <br/>Get all users with filter.<br/> For local administrators this will implicitly filter users in the prisons they administer, therefore username is expected in the authorisation token. <br/>For users with role ROLE_MAINTAIN_ACCESS_ROLES_ADMIN this allows access to all staff.
      */
     get: operations['getUsers']
     put?: never
@@ -1033,6 +1139,26 @@ export interface paths {
      * @description Message string to be displayed in the notification banner.
      */
     get: operations['getNotificationBannerMessage']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/groups/subset/crs': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get the subset of groups that are CRS groups.
+     * @description Get all CRS groups. Requires role ROLE_CONTRACT_MANAGER_VIEW_GROUP
+     */
+    get: operations['getCRSGroups']
     put?: never
     post?: never
     delete?: never
@@ -1198,6 +1324,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/externalusers/crsgroup/{crsgroupcode}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Find members of a CRS Group.
+     * @description Returns a list of members of a CRS Group. Requires role ROLE_CONTRACT_MANAGER_VIEW_GROUP
+     */
+    get: operations['searchForCrsGroupMembers']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/email-domains/{id}': {
     parameters: {
       query?: never
@@ -1217,6 +1363,26 @@ export interface paths {
      * @description Delete email domain details, role required is ROLE_MAINTAIN_EMAIL_DOMAINS
      */
     delete: operations['deleteEmailDomain']
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/bulk-jobs/user-role-additions/{id}': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get bulk user role additions job details.
+     * @description Returns a bulk user role additions job details.
+     */
+    get: operations['getUserRoleAdditionsJob']
+    put?: never
+    post?: never
+    delete?: never
     options?: never
     head?: never
     patch?: never
@@ -1278,10 +1444,10 @@ export interface components {
       /** Format: int32 */
       status: number
       /** Format: int32 */
-      errorCode?: number
-      userMessage?: string
-      developerMessage?: string
-      errors?: string[]
+      errorCode?: number | null
+      userMessage?: string | null
+      developerMessage?: string | null
+      errors?: string[] | null
     }
     /** @description Update Role Description */
     RoleDescriptionAmendmentDto: {
@@ -1289,7 +1455,7 @@ export interface components {
        * @description Role Description
        * @example Allow Group Manager to administer the account within their groups
        */
-      roleDescription: string
+      roleDescription: string | null
     }
     /** @description Update Role Administration Types */
     RoleAdminTypeAmendmentDto: {
@@ -1299,9 +1465,17 @@ export interface components {
        *       "DPS_ADM"
        *     ]
        */
-      adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
+      adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM' | 'IMS_HIDDEN')[]
     }
-    /** @description Group Name */
+    RetryDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+    }
+    PurgeQueueResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+    }
+    /** @description Details of the child group to be updated. */
     GroupAmendmentDto: {
       /**
        * @description Group Name
@@ -1319,7 +1493,11 @@ export interface components {
     }
     /** @description The add user request */
     UserAllowlistAddRequest: {
-      /** @description NOMIS, nDelius or auth username (can also be an email) */
+      /**
+       * @description NOMIS, nDelius or auth username (can also be an email)
+       * @example TD00012
+       * @example eliseo.hassen@justice.gov.uk
+       */
       username: string
       /**
        * @description Email
@@ -1363,7 +1541,7 @@ export interface components {
        * @description roleDescription
        * @example Allow Group Manager to administer the account within their groups
        */
-      roleDescription?: string
+      roleDescription?: string | null
       /**
        * @description adminType, can be used if multiple admin types required
        * @example [
@@ -1371,7 +1549,7 @@ export interface components {
        *       "DPS_ADM"
        *     ]
        */
-      adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
+      adminType: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM' | 'IMS_HIDDEN')[]
     }
     /** @description DPS User creation */
     CreateUserRequest: {
@@ -1381,6 +1559,7 @@ export interface components {
        */
       username: string
       /**
+       * Format: email
        * @description Email Address
        * @example test@justice.gov.uk
        */
@@ -1405,7 +1584,7 @@ export interface components {
        * @description Default caseload (a.k.a Prison ID)
        * @example BXI
        */
-      defaultCaseloadId?: string
+      defaultCaseloadId?: string | null
     }
     /** @description Prison User Created Details */
     NewPrisonUserDto: {
@@ -1418,7 +1597,7 @@ export interface components {
        * @description Email Address
        * @example test@justice.gov.uk
        */
-      primaryEmail?: string
+      primaryEmail?: string | null
       /**
        * @description First name of the user
        * @example John
@@ -1448,6 +1627,11 @@ export interface components {
        * @example WANDSWORTH (HMP)
        */
       name: string
+      /**
+       * @description function of caseload
+       * @example GENERAL
+       */
+      function: string
     }
     /** @description Role Information */
     RoleDetail: {
@@ -1472,20 +1656,16 @@ export interface components {
        * @description Role Type
        * @default APP
        * @example APP
-       * @enum {string}
+       * @enum {string|null}
        */
-      type: 'APP' | 'INST' | 'COMM' | 'SHG'
+      type: 'APP' | 'INST' | 'COMM' | 'SHG' | null
       /**
        * @description Admin only role
        * @default false
        * @example true
        */
       adminRoleOnly: boolean
-      /**
-       * @description Parent Role Code
-       * @example GLOBAL_SEARCH
-       */
-      parentRole?: unknown
+      parentRole?: components['schemas']['RoleDetail'] | null
     }
     /** @description User & Role Information */
     UserRoleDetail: {
@@ -1505,22 +1685,18 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
-      /**
-       * @description Active Caseload of the user
-       * @example BXI
-       */
-      activeCaseload?: components['schemas']['PrisonCaseload']
+      activeCaseload?: components['schemas']['PrisonCaseload'] | null
       /** @description DPS Roles assigned to this user */
       dpsRoles: components['schemas']['RoleDetail'][]
       /** @description NOMIS Roles assigned to this user per caseload */
-      nomisRoles?: components['schemas']['CaseloadRoleDetail'][]
+      nomisRoles?: components['schemas']['CaseloadRoleDetail'][] | null
     }
     AmendEmail: {
       /**
        * @description Email address
        * @example prison.user@someagency.justice.gov.uk
        */
-      email: string
+      email: string | null
     }
     /** @description User & Caseload Information */
     UserCaseloadDetail: {
@@ -1540,13 +1716,25 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
-      /**
-       * @description Active Caseload of the user
-       * @example BXI
-       */
-      activeCaseload?: components['schemas']['PrisonCaseload']
+      activeCaseload?: components['schemas']['PrisonCaseload'] | null
       /** @description Caseloads available for this user */
       caseloads: components['schemas']['PrisonCaseload'][]
+    }
+    PrisonUserBasicDetails: {
+      username: string
+      firstName: string
+      /** Format: int32 */
+      staffId: number
+      lastName: string
+      activeCaseloadId?: string
+      enabled: boolean
+      accountStatus?: string | null
+      primaryEmail?: string
+      /** Format: int32 */
+      userId: number
+      name: string
+      /** @enum {string} */
+      authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
     }
     /** @description Linking a new Local admin account to an existing general user */
     CreateLinkedLocalAdminUserRequest: {
@@ -1605,11 +1793,9 @@ export interface components {
        * @description Email addresses of staff
        * @example test@test.com
        */
-      primaryEmail?: string
-      /** @description General user account for this staff member */
-      generalAccount?: components['schemas']['UserCaseloadDto']
-      /** @description Admin user account for this staff member */
-      adminAccount?: components['schemas']['UserCaseloadDto']
+      primaryEmail?: string | null
+      generalAccount?: components['schemas']['UserCaseloadDto'] | null
+      adminAccount?: components['schemas']['UserCaseloadDto'] | null
     }
     /** @description User & Caseload Information */
     UserCaseloadDto: {
@@ -1629,13 +1815,9 @@ export interface components {
        * @enum {string}
        */
       accountType: 'GENERAL' | 'ADMIN'
-      /**
-       * @description Active Caseload of the user
-       * @example BXI
-       */
-      activeCaseload?: components['schemas']['PrisonCaseloadDto']
+      activeCaseload?: components['schemas']['PrisonCaseloadDto'] | null
       /** @description Caseloads available for this user */
-      caseloads?: components['schemas']['PrisonCaseloadDto'][]
+      caseloads?: components['schemas']['PrisonCaseloadDto'][] | null
     }
     /** @description Linking a new General account to an existing admin user account */
     CreateLinkedGeneralUserRequest: {
@@ -1668,6 +1850,7 @@ export interface components {
        */
       adminUsername: string
     }
+    /** @description Details of the group to be created. */
     CreateGroupDto: {
       /**
        * @description Group Code
@@ -1680,6 +1863,7 @@ export interface components {
        */
       groupName: string
     }
+    /** @description Details of the child group to be created. */
     CreateChildGroupDto: {
       /**
        * @description Parent Group Code
@@ -1702,7 +1886,7 @@ export interface components {
        * @description Email address
        * @example nomis.user@someagency.justice.gov.uk
        */
-      email: string
+      email: string | null
     }
     /** @description Details of the user to be created. */
     NewUser: {
@@ -1728,8 +1912,9 @@ export interface components {
        *       "SITE_1_GROUP_2"
        *     ]
        */
-      groupCodes?: string[]
+      groupCodes?: string[] | null
     }
+    /** @description Details of the email domain to be created. */
     CreateEmailDomainDto: {
       /**
        * @description Email domain
@@ -1740,7 +1925,7 @@ export interface components {
        * @description Email domain description
        * @example CAREUK
        */
-      description?: string
+      description?: string | null
     }
     EmailDomainDto: {
       /** @description Email domain id */
@@ -1755,6 +1940,28 @@ export interface components {
        * @example CAREUK
        */
       description: string
+    }
+    /** @description Bulk user role additions request */
+    BulkUserRoleAdditionsRequest: {
+      /**
+       * @description JIRA reference
+       * @example ABC-1234
+       */
+      jiraReference: string
+      /**
+       * @description JIRA reference
+       * @example ABC-1234
+       */
+      roles: string[]
+    }
+    /** @description Bulk user role additions response */
+    BulkUserRoleAdditionsResponse: {
+      /**
+       * Format: uuid
+       * @description Id of the bulk user role additions job
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string
     }
     /** @description The update user request */
     UserAllowlistPatchRequest: {
@@ -1800,14 +2007,14 @@ export interface components {
        * @description Deprecated, use userId instead
        * @example 231232
        */
-      staffId?: number
+      staffId?: number | null
       /**
        * Current Active Caseload
        * @deprecated
        * @description Deprecated, retrieve from prison API rather than manage users
        * @example MDI
        */
-      activeCaseLoadId?: string
+      activeCaseLoadId?: string | null
       /**
        * User Id
        * @description Unique identifier for user, will be UUID for external users or staff ID for nomis users
@@ -1820,7 +2027,7 @@ export interface components {
        * @description Universally unique identifier for user, generated and stored in auth database for all users
        * @example 5105a589-75b3-4ca0-9433-b96228c1c8f3
        */
-      uuid?: string
+      uuid?: string | null
     }
     /** @description User Role */
     UserRole: {
@@ -1841,7 +2048,7 @@ export interface components {
        * @description Email
        * @example john.smith@digital.justice.gov.uk
        */
-      email?: string
+      email?: string | null
       /**
        * @description Verified email
        * @example true
@@ -1863,34 +2070,34 @@ export interface components {
        * @description Field in error
        * @example username
        */
-      field?: string
+      field?: string | null
     }
     AuthUserDto: {
       /**
        * @description User ID
        * @example 91229A16-B5F4-4784-942E-A484A97AC865
        */
-      userId?: string
+      userId?: string | null
       /**
        * @description Username
        * @example externaluser
        */
-      username?: string
+      username?: string | null
       /**
        * @description Email address
        * @example external.user@someagency.justice.gov.uk
        */
-      email?: string
+      email?: string | null
       /**
        * @description First name
        * @example External
        */
-      firstName?: string
+      firstName?: string | null
       /**
        * @description Last name
        * @example User
        */
-      lastName?: string
+      lastName?: string | null
       /**
        * @description Account is locked due to incorrect password attempts
        * @example true
@@ -1911,7 +2118,7 @@ export interface components {
        * @description Last time user logged in
        * @example 01/01/2001
        */
-      lastLoggedIn: string
+      lastLoggedIn: string | null
       /**
        * @description Authentication source
        * @example delius
@@ -1953,9 +2160,9 @@ export interface components {
       empty: boolean
     }
     User: {
-      username: string
       /** @enum {string} */
       authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
+      username: string
     }
     /** @description User Role */
     ExternalUserRole: {
@@ -2011,7 +2218,11 @@ export interface components {
        * @example e287a472-700a-4523-8565-578147667966
        */
       id: string
-      /** @description NOMIS, nDelius or auth username (can also be an email) */
+      /**
+       * @description NOMIS, nDelius or auth username (can also be an email)
+       * @example TD00012
+       * @example eliseo.hassen@justice.gov.uk
+       */
       username: string
       /**
        * @description First name
@@ -2056,6 +2267,13 @@ export interface components {
        * @example SYNDYRBP1
        */
       lastUpdatedBy: string
+      /**
+       * @description The type of allowlist user
+       * @example DIGITAL
+       * @example GENERAL
+       * @enum {string}
+       */
+      userType: 'DIGITAL' | 'GENERAL'
     }
     AdminTypeReturn: {
       adminTypeCode: string
@@ -2077,7 +2295,7 @@ export interface components {
        * @description Role Description
        * @example Allow Group Manager to administer the account within their groups
        */
-      roleDescription: string
+      roleDescription: string | null
       /** @description Administration Type */
       adminType: components['schemas']['AdminTypeReturn'][]
     }
@@ -2099,6 +2317,19 @@ export interface components {
       first: boolean
       empty: boolean
     }
+    DlqMessage: {
+      body: {
+        [key: string]: unknown
+      }
+      messageId: string
+    }
+    GetDlqResult: {
+      /** Format: int32 */
+      messagesFoundCount: number
+      /** Format: int32 */
+      messagesReturnedCount: number
+      messages: components['schemas']['DlqMessage'][]
+    }
     PrisonUserDto: {
       /** @example RO_USER_TEST */
       username: string
@@ -2106,9 +2337,9 @@ export interface components {
        * Format: int64
        * @example 1234564789
        */
-      staffId: number
+      staffId: number | null
       /** @example ryanorton@justice.gov.uk */
-      email?: string
+      email?: string | null
       /** @example true */
       verified: boolean
       /** @example Ryan */
@@ -2118,7 +2349,7 @@ export interface components {
       /** @example Ryan Orton */
       name: string
       /** @example MDI */
-      activeCaseLoadId?: string
+      activeCaseLoadId?: string | null
     }
     /** @description Prison User Information */
     PrisonUserDetails: {
@@ -2147,11 +2378,11 @@ export interface components {
        * @description Active Caseload of the user
        * @example BXI
        */
-      activeCaseloadId?: string
+      activeCaseloadId?: string | null
       /**
        * @description Status of the user
        * @example OPEN
-       * @enum {string}
+       * @enum {string|null}
        */
       accountStatus?:
         | 'OPEN'
@@ -2163,6 +2394,7 @@ export interface components {
         | 'EXPIRED_GRACE_LOCKED_TIMED'
         | 'EXPIRED_LOCKED'
         | 'EXPIRED_GRACE_LOCKED'
+        | null
       /**
        * @description Type of user account
        * @example GENERAL
@@ -2173,32 +2405,32 @@ export interface components {
        * @description Email addresses of user
        * @example test@test.com
        */
-      primaryEmail?: string
+      primaryEmail?: string | null
       /** @description List of associated DPS Role Codes */
-      dpsRoleCodes?: string[]
+      dpsRoleCodes?: string[] | null
       /** @description List of user groups administered */
-      administratorOfUserGroups?: components['schemas']['PrisonUserGroupDetail'][]
+      administratorOfUserGroups?: components['schemas']['PrisonUserGroupDetail'][] | null
       /** @description Account is not locked */
-      accountNonLocked?: boolean
+      accountNonLocked?: boolean | null
       /** @description Credentials are not expired flag */
-      credentialsNonExpired?: boolean
+      credentialsNonExpired?: boolean | null
       /** @description User is enabled flag */
       enabled: boolean
       /** @description User is admin flag */
-      admin?: boolean
+      admin?: boolean | null
       /** @description User is active flag */
-      active: boolean
+      active: boolean | null
       /**
        * @description Staff Status
        * @example ACTIVE
        */
-      staffStatus?: string
+      staffStatus?: string | null
       /**
        * Format: date-time
        * @description Last logon date
        * @example 2023-01-01T12:13:14.123
        */
-      lastLogonDate?: string
+      lastLogonDate?: string | null
       /** Format: int64 */
       userId: number
       name: string
@@ -2235,23 +2467,26 @@ export interface components {
       firstName: string
       lastName: string
       active: boolean
-      status?: string
+      status?: string | null
       locked: boolean
       expired: boolean
-      activeCaseload?: components['schemas']['PrisonCaseload']
+      activeCaseload?: components['schemas']['PrisonCaseload'] | null
       /** Format: int32 */
       dpsRoleCount: number
-      email?: string
+      email?: string | null
       staffStatus: string
     }
-    PrisonUserSummary: {
+    PrisonUserDownloadSummary: {
       username: string
       staffId: string
       firstName: string
       lastName: string
       active: boolean
-      activeCaseload?: components['schemas']['PrisonCaseload']
-      email?: string
+      activeCaseload?: components['schemas']['PrisonCaseload'] | null
+      email?: string | null
+      status?: string | null
+      /** Format: int32 */
+      dpsRoleCount?: number | null
     }
     /** @description Summary User Information with Email Address */
     PrisonAdminUserSummary: {
@@ -2261,7 +2496,7 @@ export interface components {
       firstName: string
       lastName: string
       active: boolean
-      /** @enum {string} */
+      /** @enum {string|null} */
       status?:
         | 'OPEN'
         | 'EXPIRED'
@@ -2272,14 +2507,15 @@ export interface components {
         | 'EXPIRED_GRACE_LOCKED_TIMED'
         | 'EXPIRED_LOCKED'
         | 'EXPIRED_GRACE_LOCKED'
+        | null
       locked: boolean
       expired: boolean
-      activeCaseload?: components['schemas']['PrisonCaseload']
+      activeCaseload?: components['schemas']['PrisonCaseload'] | null
       /** Format: int32 */
       dpsRoleCount: number
-      email?: string
+      email?: string | null
       groups: components['schemas']['PrisonUserGroupDetail'][]
-      staffStatus?: string
+      staffStatus?: string | null
     }
     /** @description Notification message */
     NotificationMessage: {
@@ -2348,8 +2584,8 @@ export interface components {
       enabled: boolean
       verified: boolean
       /** Format: date-time */
-      lastLoggedIn?: string
-      inactiveReason?: string
+      lastLoggedIn?: string | null
+      inactiveReason?: string | null
       /** @enum {string} */
       authSource: 'auth' | 'azuread' | 'delius' | 'nomis' | 'none'
     }
@@ -2369,7 +2605,7 @@ export interface components {
        * @description Email address
        * @example external.user@someagency.justice.gov.uk
        */
-      email?: string
+      email?: string | null
       /**
        * @description First name
        * @example External
@@ -2400,12 +2636,12 @@ export interface components {
        * @description Last time user logged in
        * @example 01/01/2001
        */
-      lastLoggedIn: string
+      lastLoggedIn: string | null
       /**
        * @description Inactive reason
        * @example Left department
        */
-      inactiveReason: string
+      inactiveReason: string | null
     }
     PagedResponseExternalUserDetailsDto: {
       content: components['schemas']['ExternalUserDetailsDto'][]
@@ -2429,25 +2665,86 @@ export interface components {
       groupCode: string
       groupName: string
     }
-    BulkUserRoleAdditionsRequest: {
-      jiraReference: string
-      roles: string[]
-    }
-    BulkUserRoleAdditionsResponse: {
+    /** @description Bulk user role additions job summary */
+    BulkUserRoleAdditionsJobSummary: {
+      /**
+       * Format: uuid
+       * @description Id of the bulk user role additions job
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
       id: string
-    }
-    BulkUserRoleAdditionsJobDetails: {
-      id: string
+      /**
+       * @description The JIRA reference of the user role additions job
+       * @example ABC-1234
+       */
       jiraReference: string
+      /**
+       * @description The status of the user role additions job
+       * @example PENDING
+       */
       status: string
+      /**
+       * @description The user who requested the user role additions job
+       * @example USER ONE
+       */
       requestedBy: string
+      /**
+       * Format: date-time
+       * @description The date and time when the user role additions job was requested
+       * @example 2026-05-11T16:32:05
+       */
       requestDateTime: string
+    }
+    /** @description Bulk user role additions job details */
+    BulkUserRolesAdditionsDetails: {
+      /**
+       * Format: uuid
+       * @description The unique identifier of the bulk user role additions job
+       * @example 123e4567-e89b-12d3-a456-426614174000
+       */
+      id: string
+      /**
+       * @description The Jira Reference for the bulk user role additions job
+       * @example Jira1234
+       */
+      jiraReference: string
+      /**
+       * @description The current status of the bulk user role additions job
+       * @example PENDING | COMPLETE
+       * @enum {string}
+       */
+      status: 'PENDING' | 'COMPLETE'
+      /**
+       * @description The user that requested the bulk user role additions job
+       * @example someUsername
+       */
+      requestedBy: string
+      /**
+       * Format: date-time
+       * @description The date time the bulk user role additions job was submitted
+       * @example 2026-06-01T11:11:11
+       */
+      requestDateTime: string
+      /**
+       * Format: int64
+       * @description The total number of assignments for the user role additions job
+       * @example 10
+       */
       totalCount: number
+      /**
+       * Format: int64
+       * @description The current number of successful assignments for the user role additions job
+       * @example 1
+       */
       successCount: number
+      /**
+       * Format: int64
+       * @description The current number of errored assignments for the user role additions job
+       * @example 1
+       */
       errorCount: number
     }
   }
-
   responses: never
   parameters: never
   requestBodies: never
@@ -2644,6 +2941,70 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  retryDlq: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult']
+        }
+      }
+    }
+  }
+  retryAllDlqs: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['RetryDlqResult'][]
+        }
+      }
+    }
+  }
+  purgeQueue: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        queueName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['PurgeQueueResult']
         }
       }
     }
@@ -3487,6 +3848,8 @@ export interface operations {
         name?: string
         /** @description Expired or Active filter */
         status?: 'ACTIVE' | 'EXPIRED' | 'ALL'
+        /** @description Digital or General user filter */
+        userType?: 'DIGITAL' | 'GENERAL'
         pageable: components['schemas']['Pageable']
       }
       header?: never
@@ -3594,7 +3957,7 @@ export interface operations {
   getRoles: {
     parameters: {
       query?: {
-        adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
+        adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM' | 'IMS_HIDDEN')[]
       }
       header?: never
       path?: never
@@ -4139,6 +4502,59 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to add caseloads to account */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  findUsersByUsernames: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': string[]
+      }
+    }
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            [key: string]: components['schemas']['PrisonUserBasicDetails']
+          }
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
         headers: {
           [name: string]: unknown
@@ -4822,6 +5238,124 @@ export interface operations {
       }
     }
   }
+  getUserRoleAdditionsJobs: {
+    parameters: {
+      query?: {
+        /**
+         * @description If provided, only results containing this string in the JIRA reference number or requested by will be returned.
+         * @example ABC-123
+         */
+        search?: string
+        /**
+         * @description The number of the page requested.
+         * @example 1
+         */
+        pageNumber?: number
+        /**
+         * @description The number of results that make up a single page.
+         * @example 20
+         */
+        pageSize?: number
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BulkUserRoleAdditionsJobSummary'][]
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  createUserRoleAdditionsJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'multipart/form-data': {
+          /** Format: binary */
+          userCsv: string
+          bulkJobDetails: components['schemas']['BulkUserRoleAdditionsRequest']
+        }
+      }
+    }
+    responses: {
+      /** @description Accepted */
+      202: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BulkUserRoleAdditionsResponse']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   updateUserAccess: {
     parameters: {
       query?: never
@@ -5418,7 +5952,7 @@ export interface operations {
         sort?: string
         roleName?: string
         roleCode?: string
-        adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM')[]
+        adminTypes?: ('DPS_LSA' | 'DPS_ADM' | 'EXT_ADM' | 'IMS_HIDDEN')[]
       }
       header?: never
       path?: never
@@ -5500,6 +6034,30 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getDlqMessages: {
+    parameters: {
+      query?: {
+        maxMessages?: number
+      }
+      header?: never
+      path: {
+        dlqName: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['GetDlqResult']
         }
       }
     }
@@ -5609,8 +6167,13 @@ export interface operations {
   }
   getUsers: {
     parameters: {
-      query: {
-        pageRequest: components['schemas']['Pageable']
+      query?: {
+        /** @description Zero-based page index (0..N) */
+        page?: number
+        /** @description The size of the page to be returned */
+        size?: number
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[]
         /**
          * @description Filter results by name (first name and/or last name in any order), username or email address.
          * @example Raj
@@ -5701,7 +6264,12 @@ export interface operations {
   getUsersByCaseloadAndRole: {
     parameters: {
       query: {
-        pageRequest: components['schemas']['Pageable']
+        /** @description Zero-based page index (0..N) */
+        page?: number
+        /** @description The size of the page to be returned */
+        size?: number
+        /** @description Sorting criteria in the format: property,(asc|desc). Default sort order is ascending. Multiple sort criteria are supported. */
+        sort?: string[]
         /**
          * @description Filter results by user's currently active caseload i.e. the one they have currently selected
          * @example MDI
@@ -5802,7 +6370,7 @@ export interface operations {
           [name: string]: unknown
         }
         content: {
-          '*/*': components['schemas']['PrisonUserSummary'][]
+          '*/*': components['schemas']['PrisonUserDownloadSummary'][]
         }
       }
     }
@@ -5903,6 +6471,53 @@ export interface operations {
       }
       /** @description Unauthorized */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getCRSGroups: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description All CRS Groups Returned */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserGroupDto'][]
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
         headers: {
           [name: string]: unknown
         }
@@ -6293,6 +6908,37 @@ export interface operations {
       }
     }
   }
+  searchForCrsGroupMembers: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        crsgroupcode: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['ExternalUserDetailsDto'][]
+        }
+      }
+      /** @description Unauthorized. */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
   domain: {
     parameters: {
       query?: never
@@ -6398,6 +7044,55 @@ export interface operations {
       }
       /** @description Email domain not found */
       404: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+    }
+  }
+  getUserRoleAdditionsJob: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description OK */
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          '*/*': components['schemas']['BulkUserRolesAdditionsDetails']
+        }
+      }
+      /** @description Bad Request */
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Unauthorized */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['ErrorResponse']
+        }
+      }
+      /** @description Forbidden. Requires authorisation with correct role. */
+      403: {
         headers: {
           [name: string]: unknown
         }
@@ -6519,70 +7214,6 @@ export interface operations {
         }
       }
       /** @description Incorrect permissions to remove a caseload this user account */
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-    }
-  }
-  bulkUserRoleAdditions: {
-    query?: never
-    path?: never
-    header?: never
-    cookie?: never
-    requestBody: {
-      content: {
-        'multipart/form-data': {
-          schema: {
-            type: 'object'
-            properties: {
-              file: {
-                type: 'string'
-                format: 'binary'
-                description: 'CSV files containing UserIDs to assign roles to.'
-              }
-              request: {
-                $ref: '#/components/schemas/BulkUserRoleAdditionsRequest'
-              }
-            }
-            required: ['file']
-          }
-        }
-      }
-    }
-    responses: {
-      /** @description Bulk user roles additions submitted */
-      202: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': unknown
-        }
-      }
-      /** @description Bad Request */
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Unauthorized */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['ErrorResponse']
-        }
-      }
-      /** @description Forbidden. Requires authorisation with correct role. */
       403: {
         headers: {
           [name: string]: unknown

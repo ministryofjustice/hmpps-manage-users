@@ -104,9 +104,9 @@ context('Edit allow list user', () => {
     cy.task('stubUpdateAllowlistUser')
     const form = {}
     const editUserPage = EditUserPage.goto(user)
-    editUserPage.selectAccessPeriod('Twelve months').fillForm(form).submit()
+    editUserPage.selectAccessPeriod('Three months').fillForm(form).submit()
     editUserPage.checkOnPage()
-    editUserPage.verifyAccessPeriod('Twelve months')
+    editUserPage.verifyAccessPeriod('Three months')
   })
 
   it('Cancelling goes back to the user view page', () => {
@@ -123,7 +123,7 @@ context('Edit allow list user', () => {
       reason: 'Needed for extra support in HAAR team.',
     }
     const editUserPage = EditUserPage.goto(user)
-    editUserPage.selectAccessPeriod('Twelve months').fillForm(form).cancel()
+    editUserPage.selectAccessPeriod('Three months').fillForm(form).cancel()
     ViewUserPage.create(user).checkOnPage()
   })
 })

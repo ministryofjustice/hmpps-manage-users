@@ -43,6 +43,7 @@ export default class AddUserRoutes {
     const accessPeriod = form?.accessPeriod ?? 'ONE_MONTH'
     res.render('userAllowList/addUser', {
       ...form,
+      userType: req.query.userType,
       accessPeriod,
       errors: req.flash('addAllowListUserErrors'),
     })
@@ -52,6 +53,8 @@ export default class AddUserRoutes {
     const form = trimObjValues(req.body)
     const allowListUserRequest: UserAllowlistAddRequest = {
       ...form,
+      accessPeriod: form.userType === 'DIGITAL' ? 'NO_RESTRICTION' : form.accessPeriod,
+      reason: form.userType === 'DIGITAL' ? 'Digital user' : form.reason,
     }
     const usernameExists = await this.allowListService.usernameExists(
       res.locals.access_token,
@@ -61,10 +64,11 @@ export default class AddUserRoutes {
     if (errors.length > 0) {
       req.flash('addAllowListUserErrors', errors)
       req.flash('form', form)
-      res.redirect(paths.userAllowList.addUser({}))
+      const query = form.userType ? `?userType=${form.userType}` : ''
+      res.redirect(`${paths.userAllowList.addUser({})}${query}`)
     } else {
       const { username } = req.session.userDetails
-      const sendAudit = audit(username, { allowListUserRequest })
+      const sendAudit = audit(username, { allowListUserRequest, userType: form.userType })
       await sendAudit(ManageUsersEvent.ADD_ALLOW_LIST_USER_ATTEMPT)
 
       try {

@@ -81,6 +81,14 @@
             {
               text: lastName, attributes: {"data-qa": "lastName"}
             }
+          ],
+          [
+            {
+              text: "User type"
+            },
+            {
+              text: userType | toAllowlistUserType, attributes: {"data-qa": "userType"}
+            }
           ]
         ]
       }) }}
@@ -122,23 +130,7 @@
               text: "Three months",
               checked: accessPeriod == "THREE_MONTHS",
               hint: {
-                text: "Digital user"
-              }
-            },
-            {
-              value: "SIX_MONTHS",
-              text: "Six months",
-              checked: accessPeriod == "SIX_MONTHS",
-              hint: {
-                text: "Digital user"
-              }
-            },
-            {
-              value: "TWELVE_MONTHS",
-              text: "Twelve months",
-              checked: accessPeriod == "TWELVE_MONTHS",
-              hint: {
-                text: "Digital user supporting live services"
+                text: "General user"
               }
             },
             {
@@ -146,7 +138,7 @@
               text: "No restriction",
               checked: accessPeriod == "NO_RESTRICTION",
               hint: {
-                text: "Live support team only"
+                text: "Digital user only, if the user is a general user, this option will turn them into a digital user"
               }
             }
           ],

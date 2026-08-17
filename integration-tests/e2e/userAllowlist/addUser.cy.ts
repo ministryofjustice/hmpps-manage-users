@@ -12,8 +12,28 @@ context('Add allow list user', () => {
     cy.signIn()
   })
 
+  const gotoGeneralForm = () => AddUserPage.goto().selectUserType('General user').continue()
+  const gotoDigitalForm = () => AddUserPage.goto().selectUserType('Digital user').continue()
+
+  it('shows user type selection by default', () => {
+    AddUserPage.goto()
+    cy.get('[data-qa=continue-button]').should('be.visible')
+    cy.get('[data-qa=cancel-userType-button]').should('be.visible')
+  })
+
   it('access period is set to one month by default', () => {
-    AddUserPage.goto().verifyAccessPeriod('One month')
+    AddUserPage.goto('GENERAL').verifyAccessPeriod('One month')
+  })
+
+  it('continue in general mode shows full add user form', () => {
+    gotoGeneralForm().verifyAccessPeriod('One month')
+    cy.get('#reason').should('exist')
+  })
+
+  it('continue in digital mode hides access period and reason', () => {
+    gotoDigitalForm()
+    cy.get('#reason').should('not.exist')
+    cy.contains('legend', 'How long does the user need access?').should('not.exist')
   })
 
   it('submit is successful if all fields are filled in', () => {
@@ -27,7 +47,21 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
+    Page.verifyOnPage(SearchPage)
+  })
+
+  it('submit is successful for digital user when reason and access period are not shown', () => {
+    cy.task('stubAddAllowlistUser')
+    cy.task('stubSearchAllowlistUser')
+    cy.task('stubGetAllowlistUserNotFound', 'fasha6v')
+    const form = {
+      username: 'fasha6v',
+      email: 'jameisha_mullings2s@employee.zg',
+      firstName: 'Derryck',
+      lastName: 'Siegle',
+    }
+    AddUserPage.goto('DIGITAL').fillForm(form, false).submit()
     Page.verifyOnPage(SearchPage)
   })
 
@@ -39,7 +73,7 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('username')
   })
@@ -61,7 +95,7 @@ context('Add allow list user', () => {
       lastName: 'Armistead',
       reason: 'different reason',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('username')
   })
@@ -74,7 +108,7 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('email')
   })
@@ -88,7 +122,7 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('email')
   })
@@ -101,7 +135,7 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('firstName')
   })
@@ -114,7 +148,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('lastName')
   })
@@ -127,7 +161,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('reason')
   })
@@ -137,7 +171,7 @@ context('Add allow list user', () => {
     const form = {
       username: 'fasha6v',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormValue('username', 'fasha6v')
   })
@@ -147,7 +181,7 @@ context('Add allow list user', () => {
     const form = {
       email: 'jameisha_mullings2s@employee.zg',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormValue('email', 'jameisha_mullings2s@employee.zg')
   })
@@ -157,7 +191,7 @@ context('Add allow list user', () => {
     const form = {
       firstName: 'Derryck',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormValue('firstName', 'Derryck')
   })
@@ -167,7 +201,7 @@ context('Add allow list user', () => {
     const form = {
       lastName: 'Siegle',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormValue('lastName', 'Siegle')
   })
@@ -177,7 +211,7 @@ context('Add allow list user', () => {
     const form = {
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).submit()
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormValue('reason', 'for test purposes')
   })
@@ -185,8 +219,8 @@ context('Add allow list user', () => {
   it('submit retains access period if errors elsewhere', () => {
     cy.task('stubAddAllowlistUser')
     const form = {}
-    AddUserPage.goto().selectAccessPeriod('Six months').fillForm(form).submit()
-    Page.verifyOnPage(AddUserPage).verifyAccessPeriod('Six months')
+    AddUserPage.goto('GENERAL').selectAccessPeriod('Three months').fillForm(form).submit()
+    Page.verifyOnPage(AddUserPage).verifyAccessPeriod('Three months')
   })
 
   it('cancelling returns back to the menu page', () => {
@@ -198,7 +232,12 @@ context('Add allow list user', () => {
       lastName: 'Siegle',
       reason: 'for test purposes',
     }
-    AddUserPage.goto().fillForm(form).cancel()
+    AddUserPage.goto('GENERAL').fillForm(form).cancel()
+    Page.verifyOnPage(MenuPage)
+  })
+
+  it('cancelling from user type selection returns back to the menu page', () => {
+    AddUserPage.goto().cancelUserType()
     Page.verifyOnPage(MenuPage)
   })
 })

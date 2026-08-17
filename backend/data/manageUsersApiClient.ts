@@ -25,6 +25,7 @@ interface RoleDetails {
 export interface UserAllowlistQuery {
   name?: string
   status: string
+  userType?: string
   size: number
   page: number
 }

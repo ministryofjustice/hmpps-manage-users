@@ -867,7 +867,7 @@ describe('manageUsersApiImport tests', () => {
   })
 
   describe('getCaseloads', () => {
-    const response = [{ id: 'MDI', name: 'Moorland' }]
+    const response = [{ id: 'MDI', name: 'Moorland', function: 'GENERAL' }]
 
     beforeEach(() => {
       client.get = jest.fn().mockReturnValue({
@@ -881,14 +881,14 @@ describe('manageUsersApiImport tests', () => {
       expect(client.get).toHaveBeenCalledWith(context, '/prisonusers/reference-data/caseloads')
     })
     it('will return the caseloads', () => {
-      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland', function: 'GENERAL' }]
 
       expect(manageUsersApi.getCaseloads(context)).toEqual(expected)
     })
   })
 
   describe('getUserCaseloads', () => {
-    const response = [{ id: 'MDI', name: 'Moorland' }]
+    const response = [{ id: 'MDI', name: 'Moorland', function: 'GENERAL' }]
     const username = 'bob'
 
     beforeEach(() => {
@@ -904,7 +904,7 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('will return the caseloads', () => {
-      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland' }]
+      const expected: PrisonCaseload[] = [{ id: 'MDI', name: 'Moorland', function: 'GENERAL' }]
 
       expect(manageUsersApi.getUserCaseloads(context, username)).toEqual(expected)
     })
