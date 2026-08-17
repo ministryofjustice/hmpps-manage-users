@@ -107,7 +107,7 @@ export default class SearchRoutes {
     return {
       user: query.user?.trim(),
       status: query.status || 'ALL',
-      userType: query.userType,
+      userType: query.userType === 'DIGITAL' || query.userType === 'GENERAL' ? query.userType : undefined,
       page: query.page || 0,
     }
   }

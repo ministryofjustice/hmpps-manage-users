@@ -64,7 +64,7 @@ export default class AddUserRoutes {
     if (errors.length > 0) {
       req.flash('addAllowListUserErrors', errors)
       req.flash('form', form)
-      const query = form.userType ? `?userType=${form.userType}` : ''
+      const query = form.userType ? `?userType=${encodeURIComponent(form.userType)}` : ''
       res.redirect(`${paths.userAllowList.addUser({})}${query}`)
     } else {
       const { username } = req.session.userDetails
