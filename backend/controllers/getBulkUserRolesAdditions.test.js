@@ -1,17 +1,28 @@
 const EventEmitter = require('node:events')
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions')
-const { auditAction } = require('../utils/testUtils')
 const { ManageUsersEvent } = require('../audit')
 
-describe('get bulk user roles additions', () => {
+describe('bBulk user roles additions', () => {
   const getAll = jest.fn()
   const getById = jest.fn()
   const getDownloadCsvStream = jest.fn()
   const render = jest.fn()
-  const controller = getBulkUserRolesRequestsFactory({ getAll, getById, getDownloadCsvStream })
+
+  const sendAudit = jest.fn().mockResolvedValue()
+  const auditService = {
+    audit: jest.fn(() => sendAudit),
+  }
+
+  const controller = getBulkUserRolesRequestsFactory(
+    { getAll, getById, getDownloadCsvStream },
+    auditService,
+    ManageUsersEvent,
+  )
 
   const req = {
+    params: {
+      id: '666',
+    },
     session: {
       userDetails: {
         username: 'clint.eastwood',
@@ -35,14 +46,40 @@ describe('get bulk user roles additions', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   afterAll(() => {
     jest.clearAllMocks()
   })
 
-  describe('Get bulk user roles additions', () => {
+  describe('Get all bulk user roles additions', () => {
+    it('should render results with default paging values if not specified in request', async () => {
+      req.query.keyword = 'bob'
+      getAll.mockResolvedValue(bulkRolesAdditionsSummary)
+
+      await controller.getBulkUserRolesAdditions(req, resp)
+
+      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 0, 20, 'bob')
+      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
+        bulkUserRolesRequests: bulkRolesAdditionsSummary,
+      })
+    })
+
+    it('should render results with specified paging values', async () => {
+      req.query.keyword = 'Bailey'
+      req.query.pageNumber = '1'
+      req.query.pageSize = '5'
+
+      getAll.mockResolvedValue(bulkRolesAdditionsSummary)
+
+      await controller.getBulkUserRolesAdditions(req, resp)
+
+      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 1, 5, 'Bailey')
+      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
+        bulkUserRolesRequests: bulkRolesAdditionsSummary,
+      })
+    })
+
     it('should render results when API returns success result', async () => {
       req.query.keyword = 'bob'
       getAll.mockResolvedValue(bulkRolesAdditionsSummary)
@@ -88,14 +125,12 @@ describe('get bulk user roles additions', () => {
       errorCount: 1,
     }
 
-    req.params = { id: '1234567890' }
-
     it('should render details page when request successful', async () => {
       getById.mockResolvedValue(bulkUserRolesAdditionsDetails)
 
       await controller.getBulkUserRolesAdditionDetails(req, resp)
 
-      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '1234567890')
+      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '666')
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequestDetails.njk', {
         details: bulkUserRolesAdditionsDetails,
       })
@@ -106,7 +141,7 @@ describe('get bulk user roles additions', () => {
 
       await controller.getBulkUserRolesAdditionDetails(req, resp)
 
-      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '1234567890')
+      expect(getById).toHaveBeenNthCalledWith(1, resp.locals, '666')
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequestDetails.njk', {
         getRequestDetailsError: 'not found',
       })
@@ -132,7 +167,7 @@ describe('get bulk user roles additions', () => {
         statusCode: 200,
         headers: {
           'content-type': 'text/csv',
-          'content-disposition': 'attachment; filename=bulk-roles-addititons-12345.csv',
+          'content-disposition': 'attachment; filename=bulk-roles-addititons-666.csv',
         },
         body: 'userId,roleId,status,reason\nuser_1,role_1,SUCCESS,\nuser_2,role_1,ERROR,already assigned\n',
       })
@@ -140,50 +175,51 @@ describe('get bulk user roles additions', () => {
       expect(res.status).toHaveBeenCalledWith(200)
       expect(res.set).toHaveBeenCalledWith({
         'Content-Type': 'text/csv',
-        'Content-Disposition': 'attachment; filename=bulk-roles-addititons-12345.csv',
+        'Content-Disposition': 'attachment; filename=bulk-roles-addititons-666.csv',
       })
       expect(stream.pipe).toHaveBeenCalledWith(res)
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT),
-      )
+      expect(auditService.audit).toHaveBeenNthCalledWith(1, 'clint.eastwood', { id: '666' })
+      expect(sendAudit).toHaveBeenCalledTimes(1)
+      expect(sendAudit).toHaveBeenNthCalledWith(1, ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT)
     })
-  })
 
-  it('should write error details to download json file when API response is 4xx or 5xx status', async () => {
-    const stream = new EventEmitter()
-    stream.pipe = jest.fn()
+    it('should write error details to download json file when API response is 4xx or 5xx status', async () => {
+      const stream = new EventEmitter()
+      stream.pipe = jest.fn()
 
-    getDownloadCsvStream.mockReturnValue(stream)
+      getDownloadCsvStream.mockReturnValue(stream)
 
-    req.params.id = '666'
+      const res = {
+        locals: {},
+        status: jest.fn().mockReturnThis(),
+        set: jest.fn(),
+      }
 
-    const res = {
-      locals: {},
-      status: jest.fn().mockReturnThis(),
-      set: jest.fn(),
-    }
+      await controller.getResultsCsvDownload(req, res, jest.fn())
 
-    await controller.getResultsCsvDownload(req, res, jest.fn())
+      const upstream = new EventEmitter()
+      upstream.statusCode = 500
+      upstream.headers = { 'content-type': 'application/json' }
 
-    const upstream = new EventEmitter()
-    upstream.statusCode = 500
-    upstream.headers = { 'content-type': 'application/json' }
+      stream.emit('response', upstream)
+      upstream.emit('data', JSON.stringify({ message: 'Internal server error failed to generate csv download' }))
+      upstream.emit('end')
+      stream.emit('end')
 
-    stream.emit('response', upstream)
-    stream.emit('data', JSON.stringify({ message: 'Internal server error failed to generate csv download' }))
-    stream.emit('end')
+      await new Promise((resolve) => {
+        setImmediate(resolve)
+      })
 
-    expect(res.status).toHaveBeenCalledWith(200)
-    expect(res.set).toHaveBeenCalledWith({
-      'Content-Type': 'application/json',
-      'Content-Disposition': 'attachment; filename="bulk-roles-assignments-666-ERROR.json"',
+      expect(res.status).toHaveBeenCalledWith(200)
+      expect(res.set).toHaveBeenCalledWith({
+        'Content-Type': 'application/json',
+        'Content-Disposition': 'attachment; filename="bulk-roles-assignments-666-ERROR.json"',
+      })
+      expect(stream.pipe).toHaveBeenCalledWith(res)
+      expect(auditService.audit).toHaveBeenNthCalledWith(1, 'clint.eastwood', { id: '666' })
+      expect(sendAudit).toHaveBeenCalledTimes(2)
+      expect(sendAudit).toHaveBeenNthCalledWith(1, ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT)
+      expect(sendAudit).toHaveBeenNthCalledWith(2, ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE)
     })
-    expect(stream.pipe).toHaveBeenCalledWith(res)
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-      auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT),
-    )
-    expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-      auditAction(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE),
-    )
   })
 })

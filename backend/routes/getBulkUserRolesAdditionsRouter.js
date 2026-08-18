@@ -1,4 +1,5 @@
 const express = require('express')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const { getBulkUserRolesRequestsFactory } = require('../controllers/getBulkUserRolesAdditions')
 
@@ -13,8 +14,9 @@ const controller = ({ manageUsersApi }) => {
     getById: getBulkUserRoleAdditionsDetails,
     getDownloadCsvStream: getBulkUserAdditionsCsvDownload,
   }
+
   const { getBulkUserRolesAdditions, getBulkUserRolesAdditionDetails, getResultsCsvDownload } =
-    getBulkUserRolesRequestsFactory(bulkUserRolesAdditionsApi)
+    getBulkUserRolesRequestsFactory(bulkUserRolesAdditionsApi, { audit }, ManageUsersEvent)
 
   router.get('/requests', getBulkUserRolesAdditions)
   router.get('/requests/:id', getBulkUserRolesAdditionDetails)

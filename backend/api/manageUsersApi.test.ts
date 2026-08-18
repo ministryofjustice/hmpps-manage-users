@@ -1202,37 +1202,41 @@ describe('manageUsersApiImport tests', () => {
     })
 
     it('returns expected data when called with no search query param', () => {
-      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 0, 10)
 
-      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?pageNumber=0&pageSize=10')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with undefined search query param', () => {
-      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, undefined)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 0, 10, undefined)
 
-      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?pageNumber=0&pageSize=10')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with null search query param', () => {
-      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, null)
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 0, 10, null)
 
-      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?pageNumber=0&pageSize=10')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with empty search query param', () => {
-      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, '')
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 0, 10, '')
 
-      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions')
+      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?pageNumber=0&pageSize=10')
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
 
     it('returns expected data when called with search query param', () => {
-      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 'xyz')
+      const actual = manageUsersApi.getAllBulkUserRolesAdditions(context, 0, 10, 'xyz')
 
-      expect(client.get).toHaveBeenNthCalledWith(1, context, '/bulk-jobs/user-role-additions?search=xyz')
+      expect(client.get).toHaveBeenNthCalledWith(
+        1,
+        context,
+        '/bulk-jobs/user-role-additions?pageNumber=0&pageSize=10&search=xyz',
+      )
       expect(actual).toEqual(bulkRolesAdditionsSummary)
     })
   })

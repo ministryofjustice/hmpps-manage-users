@@ -1,14 +1,18 @@
 const log = require('../log')
-const { audit, ManageUsersEvent } = require('../audit')
 
-const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
+const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi, auditService, auditEvents) => {
   const getBulkUserRolesAdditions = async (req, res) => {
-    const searchTerm = req.query.keyword || ''
+    // eslint-disable-next-line prefer-const
+    let { pageSize, pageNumber, keyword } = req.query
+
+    pageNumber = pageNumber ? parseInt(pageNumber, 10) : 0
+    pageSize = pageSize ? parseInt(pageSize, 10) : 20
+    const searchTerm = keyword
 
     let bulkUserRolesRequests
     try {
       log.info('search keyword:', searchTerm)
-      bulkUserRolesRequests = await bulkUserRolesAdditionsApi.getAll(res.locals, searchTerm)
+      bulkUserRolesRequests = await bulkUserRolesAdditionsApi.getAll(res.locals, pageNumber, pageSize, searchTerm)
     } catch (err) {
       log.error('get bulk user roles requests unsuccessful', err)
       const errorMessage = err instanceof Error ? err.message : err
@@ -43,8 +47,8 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
     const { id } = req.params
     log.info('getting csv download:', id)
 
-    const sendAudit = audit(req.session.userDetails.username, { id })
-    await sendAudit(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT)
+    const sendAudit = auditService.audit(req.session.userDetails.username, { id })
+    await sendAudit(auditEvents.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_ATTEMPT)
 
     const stream = bulkUserRolesAdditionsApi.getDownloadCsvStream(res.locals, id)
     let isError = false
@@ -91,7 +95,7 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi) => {
 
     stream.on('end', async () => {
       if (isError) {
-        await sendAudit(ManageUsersEvent.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE)
+        await sendAudit(auditEvents.BULK_USER_ROLES_ADDITION_DOWNLOAD_CSV_FAILURE)
       }
     })
 

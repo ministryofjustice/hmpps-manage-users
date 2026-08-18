@@ -4,6 +4,7 @@ const viewRolesFactory = (paginationService, pagingApi, getPagedRolesApi, mainta
   const index = async (req, res) => {
     const { size, page } = req.query
 
+    // TODO copy this
     const pageSize = (size && parseInt(size, 10)) || 20
     const pageNumber = (page && parseInt(page, 10)) || 0
 
