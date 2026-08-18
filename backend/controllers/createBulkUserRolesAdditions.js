@@ -3,9 +3,13 @@ const csv = require('csv-parser')
 const { Readable } = require('stream')
 const config = require('../config').default
 const log = require('../log')
-const { audit, ManageUsersEvent } = require('../audit')
 
-const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRolesAdditions) => {
+const createBulkUserRolesRequestsFactory = (
+  getSearchableRolesApi,
+  bulkUserRolesAdditions,
+  auditService,
+  auditEvents,
+) => {
   class ValidationError extends Error {
     constructor(message) {
       super(message)
@@ -157,18 +161,18 @@ const createBulkUserRolesRequestsFactory = (getSearchableRolesApi, bulkUserRoles
     }
     const fileInfo = bulkUserRolesRequest.usersFile
 
-    const sendAudit = audit(req.session.userDetails.username, {
+    const sendAudit = auditService.audit(req.session.userDetails.username, {
       jiraReference: bulkUserRolesRequest.jiraReference,
       roles: bulkUserRolesRequest.roles,
       usersCsv: bulkUserRolesRequest.usersFile.filename,
     })
-    await sendAudit(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT)
+    await sendAudit(auditEvents.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT)
 
     try {
       await bulkUserRolesAdditions(res.locals, bulkUserRolesAdditionsRequest, fileInfo)
     } catch (err) {
       log.error('submit bulk user roles request unsuccessful', err)
-      await sendAudit(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE)
+      await sendAudit(auditEvents.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE)
       res.render('createBulkUserRolesSummary.njk', {
         summary: getSummary(req),
         submitRequestError: [{ text: 'Internal Server Error' }],

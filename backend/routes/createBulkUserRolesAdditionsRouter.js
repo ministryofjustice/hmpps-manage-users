@@ -2,6 +2,7 @@ const express = require('express')
 const multer = require('multer')
 const searchApiFactory = require('./searchApiFactory')
 const { createBulkUserRolesRequestsFactory } = require('../controllers/createBulkUserRolesAdditions')
+const { audit, ManageUsersEvent } = require('../audit')
 
 const router = express.Router({ mergeParams: true })
 const upload = multer({
@@ -24,7 +25,7 @@ const controller = ({ manageUsersApi, csrfProtection }) => {
     postUserCsvUpload,
     getBulkRequestSummary,
     postSubmitBulkUserRolesRequest,
-  } = createBulkUserRolesRequestsFactory(searchableRoles, bulkUserRolesAdditions)
+  } = createBulkUserRolesRequestsFactory(searchableRoles, bulkUserRolesAdditions, { audit }, ManageUsersEvent)
 
   router.get('/', getCreateNew)
   router.post('/jira-reference', postJiraReference)

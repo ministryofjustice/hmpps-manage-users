@@ -2,7 +2,7 @@ const EventEmitter = require('node:events')
 const { getBulkUserRolesRequestsFactory } = require('./getBulkUserRolesAdditions')
 const { ManageUsersEvent } = require('../audit')
 
-describe('bBulk user roles additions', () => {
+describe('Bulk user roles additions', () => {
   const getAll = jest.fn()
   const getById = jest.fn()
   const getDownloadCsvStream = jest.fn()
