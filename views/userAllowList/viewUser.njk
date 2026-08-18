@@ -47,6 +47,11 @@
       {% endset %}
       {% set userDetails = [
         [
+          { text: "User type" },
+          { text: userType | toAllowlistUserType, attributes: {"data-qa": "userType"} },
+          {text: ''}
+        ],
+        [
           {text: "Expiry date", classes: 'govuk-!-width-one-quarter' },
           {text: allowlistEndDate | toAllowListExpiry, classes: 'govuk-!-width-one-half', attributes: {"data-qa": "expiry"} },
           editUserLink

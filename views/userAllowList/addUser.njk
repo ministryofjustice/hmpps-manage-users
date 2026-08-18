@@ -30,8 +30,49 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-one-half">
       <h1 class="govuk-heading-l">{{ title }}</h1>
+      {% if not userType %}
+      <form method="GET">
+        {{ govukRadios({
+          name: "userType",
+          fieldset: {
+            legend: {
+              text: "What type of user are you adding?",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--s"
+            }
+          },
+          items: [
+            {
+              value: "GENERAL",
+              text: "General user"
+            },
+            {
+              value: "DIGITAL",
+              text: "Digital user"
+            }
+          ]
+        }) }}
+
+        <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Continue",
+          type: "submit",
+          attributes: { "data-qa": "continue-button" }
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          element: 'a',
+          href: '/',
+          classes: "govuk-button--secondary",
+          attributes: { "data-qa": "cancel-userType-button" }
+        }) }}
+        </div>
+      </form>
+      {% else %}
       <form method="POST">
         <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+        <input type="hidden" name="userType" value="{{ userType }}" />
 
         {{ govukInput({label: {
           text: "Username"
@@ -70,6 +111,8 @@
           errorMessage: errors | findError('lastName')
         }) }}
 
+        {% if userType == 'GENERAL' %}
+
         {{ govukRadios({
           name: "accessPeriod",
           fieldset: {
@@ -83,42 +126,12 @@
             {
               value: "ONE_MONTH",
               text: "One month",
-              checked: accessPeriod == "ONE_MONTH",
-              hint: {
-                text: "General user"
-              }
+              checked: accessPeriod == "ONE_MONTH"
             },
             {
               value: "THREE_MONTHS",
               text: "Three months",
-              checked: accessPeriod == "THREE_MONTHS",
-              hint: {
-                text: "Digital user"
-              }
-            },
-            {
-              value: "SIX_MONTHS",
-              text: "Six months",
-              checked: accessPeriod == "SIX_MONTHS",
-              hint: {
-                text: "Digital user"
-              }
-            },
-            {
-              value: "TWELVE_MONTHS",
-              text: "Twelve months",
-              checked: accessPeriod == "TWELVE_MONTHS",
-              hint: {
-                text: "Digital user supporting live services"
-              }
-            },
-            {
-              value: "NO_RESTRICTION",
-              text: "No restriction",
-              checked: accessPeriod == "NO_RESTRICTION",
-              hint: {
-                text: "Live support team only"
-              }
+              checked: accessPeriod == "THREE_MONTHS"
             }
           ],
           errorMessage: errors | findError('accessPeriod')
@@ -139,11 +152,12 @@
           },
           errorMessage: errors | findError('reason')
         }) }}
+        {% endif %}
 
+        <div class="govuk-button-group">
         {{ govukButton({
           text: "Add",
           type: "submit",
-          classes: "govuk-!-margin-right-1",
           attributes: { "data-qa": "submit-button" }
         }) }}
 
@@ -154,7 +168,9 @@
           classes: "govuk-button--secondary",
           attributes: { "data-qa": "cancel-button" }
         }) }}
+        </div>
       </form>
+      {% endif %}
     </div>
   </div>
 {% endblock %}

@@ -65,6 +65,7 @@ describe('manageUsersApiClient', () => {
           allowlistEndDate: `${new Date('2025-03-19')}`,
           lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
           lastUpdatedBy: 'LAQUINAQNW',
+          userType: 'DIGITAL',
         },
         {
           id: '7dd658d9-8918-4650-9555-2df4b89e0d15',
@@ -77,6 +78,7 @@ describe('manageUsersApiClient', () => {
           allowlistEndDate: `${new Date('2025-06-19')}`,
           lastUpdated: `${new Date('2025-03-19T04:39:08')}`,
           lastUpdatedBy: 'ZAIRAKB',
+          userType: 'DIGITAL',
         },
       ],
       pageable: {
@@ -110,6 +112,7 @@ describe('manageUsersApiClient', () => {
       const query = {
         name: 'RAJ',
         status: 'EXPIRED',
+        userType: 'DIGITAL',
         size: 30,
         page: 3,
       }
@@ -152,6 +155,7 @@ describe('manageUsersApiClient', () => {
       allowlistEndDate: `${new Date('2025-03-19')}`,
       lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
       lastUpdatedBy: 'LAQUINAQNW',
+      userType: 'DIGITAL',
     }
 
     it('should call get allow list user endpoint', async () => {

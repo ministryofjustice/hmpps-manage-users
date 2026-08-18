@@ -13,6 +13,7 @@ import { audit, ManageUsersEvent } from '../../audit'
 type QueryParams = {
   user: string
   status: string
+  userType?: string
   page: number
 }
 
@@ -30,6 +31,7 @@ export default class SearchRoutes {
     const query: UserAllowlistQuery = {
       name: currentFilter.user,
       status: currentFilter.status,
+      userType: currentFilter.userType,
       page: currentFilter.page,
       size: config.featureSwitches.manageUserAllowList.pageSize,
     }
@@ -71,6 +73,7 @@ export default class SearchRoutes {
     const query: UserAllowlistQuery = {
       name: currentFilter.user,
       status: currentFilter.status,
+      userType: currentFilter.userType,
       page: currentFilter.page,
       size: this.downloadLimit,
     }
@@ -104,6 +107,7 @@ export default class SearchRoutes {
     return {
       user: query.user?.trim(),
       status: query.status || 'ALL',
+      userType: query.userType === 'DIGITAL' || query.userType === 'GENERAL' ? query.userType : undefined,
       page: query.page || 0,
     }
   }

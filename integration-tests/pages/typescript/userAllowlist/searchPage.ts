@@ -1,6 +1,6 @@
 import Page from '../page'
 import config from '../../../../backend/config'
-import { getDataQa, getFormField, getRadio, isChecked, typeOrClear } from '../../../support/utils'
+import { getDataQa, getFormField, typeOrClear } from '../../../support/utils'
 import { SearchAllowlistUserParams } from '../../../mockApis/manageUsersAllowList'
 
 export default class SearchPage extends Page {
@@ -20,12 +20,24 @@ export default class SearchPage extends Page {
   }
 
   verifyStatusFilter = (label: string): SearchPage => {
-    isChecked(getRadio(label))
+    cy.get(`input[name="status"][value="${label.toUpperCase()}"]`).should('be.checked')
     return this
   }
 
   selectStatusFilter = (label: string): SearchPage => {
-    getRadio(label).click()
+    cy.get(`input[name="status"][value="${label.toUpperCase()}"]`).check({ force: true })
+    return this
+  }
+
+  verifyUserTypeFilter = (label: string): SearchPage => {
+    const value = label === 'All' ? 'ALL' : label.toUpperCase()
+    cy.get(`input[name="userType"][value="${value}"]`).should('be.checked')
+    return this
+  }
+
+  selectUserTypeFilter = (label: string): SearchPage => {
+    const value = label === 'All' ? 'ALL' : label.toUpperCase()
+    cy.get(`input[name="userType"][value="${value}"]`).check({ force: true })
     return this
   }
 

@@ -14,6 +14,7 @@ describe('getAllowlistStatus', () => {
       reason: '',
       username: '',
       allowlistEndDate: moment(new Date()).subtract(1, 'day').format('YYYY-MM-DD'),
+      userType: 'DIGITAL',
     })
     expect(result).toBe('EXPIRED')
   })
@@ -30,6 +31,7 @@ describe('getAllowlistStatus', () => {
       reason: '',
       username: '',
       allowlistEndDate: moment(new Date()).format('YYYY-MM-DD'),
+      userType: 'DIGITAL',
     })
     expect(result).toBe('ACTIVE')
   })
@@ -46,6 +48,7 @@ describe('getAllowlistStatus', () => {
       reason: '',
       username: '',
       allowlistEndDate: moment(new Date()).add(1, 'day').format('YYYY-MM-DD'),
+      userType: 'DIGITAL',
     })
     expect(result).toBe('ACTIVE')
   })

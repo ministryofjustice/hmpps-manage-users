@@ -17,11 +17,13 @@ context('Search allow list users', () => {
     SearchPage.goto({})
     verifyDataQaText('edit-button-AICIAD', 'Anastazia Armistead')
     verifyDataQaText('username-AICIAD', '- AICIAD')
+    verifyDataQaText('user-type-AICIAD', '- General user')
     verifyDataQaText('email-AICIAD', 'anastazia.armistead@justice.gov.uk')
     verifyDataQaText('expiry-AICIAD', `${moment(getEndDate('EXPIRE')).format('D MMMM YYYY')}`)
     verifyDataQaText('status-AICIAD', 'EXPIRED')
     verifyDataQaText('edit-button-ZAFIRAHT9YH', 'Litany Storm')
     verifyDataQaText('username-ZAFIRAHT9YH', '- ZAFIRAHT9YH')
+    verifyDataQaText('user-type-ZAFIRAHT9YH', '- General user')
     verifyDataQaText('email-ZAFIRAHT9YH', 'litany.storm@justice.gov.uk')
     verifyDataQaText('expiry-ZAFIRAHT9YH', `${moment(getEndDate('ONE_MONTH')).format('D MMMM YYYY')}`)
     verifyDataQaText('status-ZAFIRAHT9YH', 'Active')
@@ -76,6 +78,10 @@ context('Search allow list users', () => {
     SearchPage.goto({}).verifyStatusFilter('All')
   })
 
+  it('the user type filter is All by default', () => {
+    SearchPage.goto({}).verifyUserTypeFilter('All')
+  })
+
   it('setting active status filter and applying shows active filter tag', () => {
     SearchPage.goto({}).selectStatusFilter('Active').clickApplyFilter()
     verifyFilterTag('Active')
@@ -97,8 +103,13 @@ context('Search allow list users', () => {
     verifyFilterTag('Active')
   })
 
+  it('setting digital user type filter and applying shows digital user filter tag', () => {
+    SearchPage.goto({}).selectUserTypeFilter('Digital').clickApplyFilter()
+    verifyFilterTag('Digital user')
+  })
+
   it('downloading the csv has the correct records', () => {
-    cy.intercept(`${paths.userAllowList.download({})}?user=&status=ALL&page=0`, (req) => {
+    cy.intercept(`${paths.userAllowList.download({})}?user=&status=ALL&userType=&page=0`, (req) => {
       req.redirect(paths.userAllowList.search({}))
     }).as('csvDownload')
     SearchPage.goto({}).clickDownload()
