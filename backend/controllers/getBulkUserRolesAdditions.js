@@ -1,12 +1,18 @@
 const log = require('../log')
 
-const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi, auditService, auditEvents) => {
+const getBulkUserRolesAdditionsFactory = (
+  bulkUserRolesAdditionsApi,
+  paginationService,
+  pagingApi,
+  auditService,
+  auditEvents,
+) => {
   const getBulkUserRolesAdditions = async (req, res) => {
     // eslint-disable-next-line prefer-const
     let { pageSize, pageNumber, keyword } = req.query
 
     pageNumber = pageNumber ? parseInt(pageNumber, 10) : 0
-    pageSize = pageSize ? parseInt(pageSize, 10) : 20
+    pageSize = pageSize ? parseInt(pageSize, 10) : 10
     const searchTerm = keyword
 
     let bulkUserRolesRequests
@@ -21,7 +27,17 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi, auditServic
       })
       return
     }
-    res.render('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests })
+
+    log.info('hitting the success path response', JSON.stringify(bulkUserRolesRequests))
+    log.info('total elements?', bulkUserRolesRequests.content)
+
+    res.render('viewBulkUserRolesRequests.njk', {
+      bulkUserRolesRequests,
+      pagination: paginationService.getPagination(
+        pagingApi(res.locals),
+        new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`),
+      ),
+    })
   }
 
   const getBulkUserRolesAdditionDetails = async (req, res) => {
@@ -83,7 +99,8 @@ const getBulkUserRolesAdditionsFactory = (bulkUserRolesAdditionsApi, auditServic
       }
 
       // Explicitly set status 200 for all requests including for errored downloads so the page doesn't load an error.
-      // An errored download will still download a file containing an error message to indicate there was a problem, the error details are logged server side.
+      // An errored download will still download a file containing an error message to indicate there was a problem, the
+      // error details are logged server side.
       res.status(200)
       res.set({
         'Content-Type': isError ? 'application/json' : upstream.headers['content-type'],

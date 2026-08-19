@@ -1,5 +1,7 @@
 const express = require('express')
 const { audit, ManageUsersEvent } = require('../audit')
+const paginationService = require('../services/paginationService').default
+const contextProperties = require('../contextProperties')
 
 const { getBulkUserRolesRequestsFactory } = require('../controllers/getBulkUserRolesAdditions')
 
@@ -16,7 +18,13 @@ const controller = ({ manageUsersApi }) => {
   }
 
   const { getBulkUserRolesAdditions, getBulkUserRolesAdditionDetails, getResultsCsvDownload } =
-    getBulkUserRolesRequestsFactory(bulkUserRolesAdditionsApi, { audit }, ManageUsersEvent)
+    getBulkUserRolesRequestsFactory(
+      bulkUserRolesAdditionsApi,
+      paginationService,
+      contextProperties.getPageable,
+      { audit },
+      ManageUsersEvent,
+    )
 
   router.get('/requests', getBulkUserRolesAdditions)
   router.get('/requests/:id', getBulkUserRolesAdditionDetails)

@@ -13,13 +13,22 @@ describe('Bulk user roles additions', () => {
     audit: jest.fn(() => sendAudit),
   }
 
+  const paginationValue = { pageNumber: 1, pageSize: 10 }
+  const paginationService = {
+    getPagination: jest.fn().mockReturnValue(paginationValue),
+  }
+  const pagingApi = jest.fn()
+
   const controller = getBulkUserRolesRequestsFactory(
     { getAll, getById, getDownloadCsvStream },
+    paginationService,
+    pagingApi,
     auditService,
     ManageUsersEvent,
   )
 
   const req = {
+    get: jest.fn().mockReturnValue('VALUE'),
     params: {
       id: '666',
     },
@@ -59,10 +68,13 @@ describe('Bulk user roles additions', () => {
 
       await controller.getBulkUserRolesAdditions(req, resp)
 
-      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 0, 20, 'bob')
+      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 0, 10, 'bob')
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
         bulkUserRolesRequests: bulkRolesAdditionsSummary,
+        pagination: paginationValue,
       })
+      expect(paginationService.getPagination).toHaveBeenCalledTimes(1)
+      expect(pagingApi).toHaveBeenCalledTimes(1)
     })
 
     it('should render results with specified paging values', async () => {
@@ -77,7 +89,10 @@ describe('Bulk user roles additions', () => {
       expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 1, 5, 'Bailey')
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
         bulkUserRolesRequests: bulkRolesAdditionsSummary,
+        pagination: paginationValue,
       })
+      expect(paginationService.getPagination).toHaveBeenCalledTimes(1)
+      expect(pagingApi).toHaveBeenCalledTimes(1)
     })
 
     it('should render results when API returns success result', async () => {
@@ -89,7 +104,10 @@ describe('Bulk user roles additions', () => {
       expect(getAll).toHaveBeenCalledTimes(1)
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
         bulkUserRolesRequests: bulkRolesAdditionsSummary,
+        pagination: paginationValue,
       })
+      expect(paginationService.getPagination).toHaveBeenCalledTimes(1)
+      expect(pagingApi).toHaveBeenCalledTimes(1)
     })
 
     it('should render results page with error message if API request unsuccessful', async () => {
@@ -109,7 +127,12 @@ describe('Bulk user roles additions', () => {
       await controller.getBulkUserRolesAdditions(req, resp)
 
       expect(getAll).toHaveBeenCalledTimes(1)
-      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', { bulkUserRolesRequests: [] })
+      expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
+        bulkUserRolesRequests: [],
+        pagination: paginationValue,
+      })
+      expect(paginationService.getPagination).toHaveBeenCalledTimes(1)
+      expect(pagingApi).toHaveBeenCalledTimes(1)
     })
   })
 

@@ -386,9 +386,11 @@ export const manageUsersApiFactory = (oauthEnabledClient: OAuthEnabledClient) =>
     pageNumber: number,
     pageSize: number,
     searchTerm?: string,
-  ): Promise<BulkUserRoleAdditionsJobSummary[]> => {
+  ): Promise<PagedList<BulkUserRoleAdditionsJobSummary>> => {
     const queryObj = searchTerm ? { pageNumber, pageSize, search: searchTerm } : { pageNumber, pageSize }
-    return get(context, `/bulk-jobs/user-role-additions?${querystring.stringify(queryObj)}`)
+    return oauthEnabledClient
+      .get(context, `/bulk-jobs/user-role-additions?${querystring.stringify(queryObj)}`)
+      .then((response) => processPageResponse(context)(response)) as Promise<PagedList<BulkUserRoleAdditionsJobSummary>>
   }
 
   const getBulkUserRoleAdditionsDetails = (context: Context, id: string): Promise<BulkUserRoleAdditionsJobDetails> =>
