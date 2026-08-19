@@ -199,6 +199,78 @@ context('View bulk user roles requests', () => {
       assertGetBulkUserRolesAdditionsRequestWithSearch(requests[1], '1003')
     })
   })
+
+  it('Should paginate results', () => {
+    const page1 = bulkRolesAdditionsSummary
+    const page2 = [
+      {
+        id: '1000000000011',
+        jiraReference: 'jira1011',
+        status: 'PENDING',
+        requestedBy: 'HHH',
+        requestDateTime: '2026-06-11T11:39:05',
+      },
+      {
+        id: '1000000000012',
+        jiraReference: 'jira1012',
+        status: 'PENDING',
+        requestedBy: 'III',
+        requestDateTime: '2026-06-11T11:40:05',
+      },
+    ]
+
+    const totalRequests = []
+    totalRequests.push(...page1)
+    totalRequests.push(...page2)
+
+    cy.task('stubGetBulkUserRolesAdditionsByPage', {
+      response: pagedResponseOf(page1, 0, totalRequests.length),
+      pageNumber: '0',
+    })
+
+    cy.task('stubGetBulkUserRolesAdditionsByPage', {
+      response: pagedResponseOf(page2, 1, totalRequests.length),
+      pageNumber: '1',
+    })
+
+    const page1NewestFirst = page1.sort((a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime))
+
+    const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
+    viewBulkUserRolesRequests.errorSummary().should('not.exist')
+    viewBulkUserRolesRequests.assertRequestsTableBodyContains(page1NewestFirst)
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.moj-pagination__results')
+      .should('contain.text', 'Showing 1 to 10 of 12 total results')
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.govuk-pagination__list')
+      .should('exist')
+      .find('li')
+      .should('have.length', 2)
+      .eq(1)
+      .click()
+
+    const page2NewestFirst = page2.sort((a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime))
+    viewBulkUserRolesRequests.errorSummary().should('not.exist')
+    viewBulkUserRolesRequests.assertRequestsTableBodyContains(page2NewestFirst)
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.moj-pagination__results')
+      .should('contain.text', 'Showing 11 to 12 of 12 total results')
+
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(2)
+      assertGetBulkUserRolesAdditionsRequest(requests[0], '0', '10')
+      assertGetBulkUserRolesAdditionsRequest(requests[1], '1', '10')
+    })
+  })
 })
 
 context('Get bulk user roles request details', () => {
@@ -464,15 +536,15 @@ function navigateToViewBulkUserRolesRequestsPage() {
   return ViewBulkUserRolesRequestsPage.verifyOnPage()
 }
 
-function assertGetBulkUserRolesAdditionsRequest(req) {
+function assertGetBulkUserRolesAdditionsRequest(req, pageNumber, pageSize) {
   expect(req.queryParams).to.deep.equal({
     pageNumber: {
       key: 'pageNumber',
-      values: ['0'],
+      values: [pageNumber ?? '0'],
     },
     pageSize: {
       key: 'pageSize',
-      values: ['10'],
+      values: [pageSize ?? '10'],
     },
   })
 }
@@ -494,7 +566,7 @@ function assertGetBulkUserRolesAdditionsRequestWithSearch(req, searchTerm) {
   })
 }
 
-function pagedResponseOf(content) {
+function pagedResponseOf(content, pageNumber, totalElements) {
   return {
     content,
     pageable: {
@@ -504,16 +576,16 @@ function pagedResponseOf(content) {
         empty: true,
       },
       offset: 0,
-      pageNumber: 0,
+      pageNumber: pageNumber ?? 0,
       pageSize: 10,
       paged: true,
       unpaged: false,
     },
     last: false,
     totalPages: 1,
-    totalElements: content?.length ?? 0,
+    totalElements: totalElements ?? content?.length ?? 0,
     size: content?.length ?? 0,
-    number: 0,
+    number: pageNumber ?? 0,
     sort: {
       sorted: false,
       unsorted: true,

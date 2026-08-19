@@ -79,8 +79,8 @@ describe('Bulk user roles additions', () => {
 
     it('should render results with specified paging values', async () => {
       req.query.keyword = 'Bailey'
-      req.query.pageNumber = '1'
-      req.query.pageSize = '5'
+      req.query.page = '1'
+      req.query.size = '5'
 
       getAll.mockResolvedValue(bulkRolesAdditionsSummary)
 

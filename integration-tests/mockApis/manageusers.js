@@ -1350,6 +1350,23 @@ module.exports = {
       },
     }),
 
+  stubGetBulkUserRolesAdditionsByPage: (details) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/bulk-jobs/user-role-additions',
+        queryParameters: {
+          pageNumber: { equalTo: details.pageNumber },
+          pageSize: { equalTo: '10' },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: details.response,
+      },
+    }),
+
   stubGetBulkUserRolesAdditionsError: (response) =>
     stubFor({
       request: {

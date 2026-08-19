@@ -8,6 +8,7 @@ const errorSummary = () => cy.get('[data-qa-errors]')
 const requestsTable = () => cy.get('#bulk-user-roles-requests-table')
 const searchInput = () => cy.get('input[type="search"]#request-search-keyword')
 const submitSearch = () => cy.get('button[type="submit"]')
+const getPagination = () => cy.get('.moj-pagination')
 
 const sortRequestByDate = (expectedOrder) => {
   requestsTable()
@@ -86,6 +87,7 @@ const viewBulkUserRolesRequestsPage = () =>
     assertRequestsTableBodyIsEmpty,
     sortRequestByDate,
     errorSummary,
+    getPagination,
   })
 
 export default {

@@ -8,16 +8,14 @@ const getBulkUserRolesAdditionsFactory = (
   auditEvents,
 ) => {
   const getBulkUserRolesAdditions = async (req, res) => {
-    // eslint-disable-next-line prefer-const
-    let { pageSize, pageNumber, keyword } = req.query
+    const { size, page, keyword } = req.query
 
-    pageNumber = pageNumber ? parseInt(pageNumber, 10) : 0
-    pageSize = pageSize ? parseInt(pageSize, 10) : 10
+    const pageNumber = page ? parseInt(page, 10) : 0
+    const pageSize = size ? parseInt(size, 10) : 10
     const searchTerm = keyword
 
     let bulkUserRolesRequests
     try {
-      log.info('search keyword:', searchTerm)
       bulkUserRolesRequests = await bulkUserRolesAdditionsApi.getAll(res.locals, pageNumber, pageSize, searchTerm)
     } catch (err) {
       log.error('get bulk user roles requests unsuccessful', err)
@@ -27,9 +25,6 @@ const getBulkUserRolesAdditionsFactory = (
       })
       return
     }
-
-    log.info('hitting the success path response', JSON.stringify(bulkUserRolesRequests))
-    log.info('total elements?', bulkUserRolesRequests.content)
 
     res.render('viewBulkUserRolesRequests.njk', {
       bulkUserRolesRequests,

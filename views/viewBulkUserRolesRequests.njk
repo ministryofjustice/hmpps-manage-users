@@ -60,6 +60,7 @@
   <br />
 
   <table class="govuk-table" data-module="moj-sortable-table" id="bulk-user-roles-requests-table">
+    {{ mojPagination(pagination) }}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header" aria-sort="descending" id="sort-by-request-date">Date of request</th>
@@ -71,7 +72,6 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
-      {{ mojPagination(pagination) }}
 
       {% for r in bulkUserRolesRequests %}
 
@@ -93,8 +93,8 @@
         </tr>
       {% endfor %}
 
-      {{ mojPagination(pagination) }}
     </tbody>
   </table>
+  {{ mojPagination(pagination) }}
 
 {% endblock %}
