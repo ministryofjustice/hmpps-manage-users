@@ -68,7 +68,7 @@ describe('Bulk user roles additions', () => {
 
       await controller.getBulkUserRolesAdditions(req, resp)
 
-      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 0, 10, 'bob')
+      expect(getAll).toHaveBeenNthCalledWith(1, resp.locals, 0, 20, 'bob')
       expect(render).toHaveBeenLastCalledWith('viewBulkUserRolesRequests.njk', {
         bulkUserRolesRequests: bulkRolesAdditionsSummary,
         pagination: paginationValue,

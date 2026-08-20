@@ -202,22 +202,17 @@ context('View bulk user roles requests', () => {
 
   it('Should paginate results', () => {
     const page1 = bulkRolesAdditionsSummary
-    const page2 = [
-      {
-        id: '1000000000011',
-        jiraReference: 'jira1011',
+    const page2 = []
+
+    for (let i = 11; i <= 20; i += 1) {
+      page2.push({
+        id: `10000000000${i}`,
+        jiraReference: `jira10${i}`,
         status: 'PENDING',
-        requestedBy: 'HHH',
-        requestDateTime: '2026-06-11T11:39:05',
-      },
-      {
-        id: '1000000000012',
-        jiraReference: 'jira1012',
-        status: 'PENDING',
-        requestedBy: 'III',
-        requestDateTime: '2026-06-11T11:40:05',
-      },
-    ]
+        requestedBy: `XXX-${i}`,
+        requestDateTime: `2026-06-11T11:39:${String(i).padStart(2, '0')}`,
+      })
+    }
 
     const totalRequests = []
     totalRequests.push(...page1)
@@ -243,7 +238,7 @@ context('View bulk user roles requests', () => {
       .getPagination()
       .eq(0)
       .find('.moj-pagination__results')
-      .should('contain.text', 'Showing 1 to 10 of 12 total results')
+      .should('contain.text', 'Showing 1 to 10 of 20 total results')
 
     viewBulkUserRolesRequests
       .getPagination()
@@ -263,12 +258,12 @@ context('View bulk user roles requests', () => {
       .getPagination()
       .eq(0)
       .find('.moj-pagination__results')
-      .should('contain.text', 'Showing 11 to 12 of 12 total results')
+      .should('contain.text', 'Showing 11 to 20 of 20 total results')
 
     cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
       expect(requests).to.have.lengthOf(2)
-      assertGetBulkUserRolesAdditionsRequest(requests[0], '0', '10')
-      assertGetBulkUserRolesAdditionsRequest(requests[1], '1', '10')
+      assertGetBulkUserRolesAdditionsRequest(requests[0], '0', '20')
+      assertGetBulkUserRolesAdditionsRequest(requests[1], '1', '20')
     })
   })
 })
@@ -544,7 +539,7 @@ function assertGetBulkUserRolesAdditionsRequest(req, pageNumber, pageSize) {
     },
     pageSize: {
       key: 'pageSize',
-      values: [pageSize ?? '10'],
+      values: [pageSize ?? '20'],
     },
   })
 }
@@ -557,7 +552,7 @@ function assertGetBulkUserRolesAdditionsRequestWithSearch(req, searchTerm) {
     },
     pageSize: {
       key: 'pageSize',
-      values: ['10'],
+      values: ['20'],
     },
     search: {
       key: 'search',

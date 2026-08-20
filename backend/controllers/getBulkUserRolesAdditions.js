@@ -11,7 +11,7 @@ const getBulkUserRolesAdditionsFactory = (
     const { size, page, keyword } = req.query
 
     const pageNumber = page ? parseInt(page, 10) : 0
-    const pageSize = size ? parseInt(size, 10) : 10
+    const pageSize = size ? parseInt(size, 10) : 20
     const searchTerm = keyword
 
     let bulkUserRolesRequests
