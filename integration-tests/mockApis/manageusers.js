@@ -1340,7 +1340,7 @@ module.exports = {
         urlPath: '/bulk-jobs/user-role-additions',
         queryParameters: {
           pageNumber: { equalTo: '0' },
-          pageSize: { equalTo: '10' },
+          pageSize: { equalTo: '20' },
         },
       },
       response: {
@@ -1357,7 +1357,7 @@ module.exports = {
         urlPath: '/bulk-jobs/user-role-additions',
         queryParameters: {
           pageNumber: { equalTo: details.pageNumber },
-          pageSize: { equalTo: '10' },
+          pageSize: { equalTo: '20' },
         },
       },
       response: {
@@ -1374,7 +1374,7 @@ module.exports = {
         urlPath: '/bulk-jobs/user-role-additions',
         queryParameters: {
           pageNumber: { equalTo: '0' },
-          pageSize: { equalTo: '10' },
+          pageSize: { equalTo: '20' },
         },
       },
       response: {
@@ -1398,7 +1398,7 @@ module.exports = {
         queryParameters: {
           search: { equalTo: details.searchTerm },
           pageNumber: { equalTo: '0' },
-          pageSize: { equalTo: '10' },
+          pageSize: { equalTo: '20' },
         },
       },
       response: {
