@@ -25,7 +25,59 @@ const bulkRolesAdditionsSummary = [
     requestedBy: 'FRANCINE_SMITH',
     requestDateTime: '2026-06-11T11:32:05',
   },
+  {
+    id: '1000000000004',
+    jiraReference: 'jira1004',
+    status: 'PENDING',
+    requestedBy: 'AAA',
+    requestDateTime: '2026-06-11T11:32:05',
+  },
+  {
+    id: '1000000000005',
+    jiraReference: 'jira1005',
+    status: 'PENDING',
+    requestedBy: 'BBB',
+    requestDateTime: '2026-06-11T11:33:05',
+  },
+  {
+    id: '1000000000006',
+    jiraReference: 'jira1006',
+    status: 'PENDING',
+    requestedBy: 'CCC',
+    requestDateTime: '2026-06-11T11:34:05',
+  },
+  {
+    id: '1000000000007',
+    jiraReference: 'jira1007',
+    status: 'PENDING',
+    requestedBy: 'DDD',
+    requestDateTime: '2026-06-11T11:35:05',
+  },
+  {
+    id: '1000000000008',
+    jiraReference: 'jira1008',
+    status: 'PENDING',
+    requestedBy: 'EEE',
+    requestDateTime: '2026-06-11T11:36:05',
+  },
+  {
+    id: '1000000000009',
+    jiraReference: 'jira1009',
+    status: 'PENDING',
+    requestedBy: 'FFF',
+    requestDateTime: '2026-06-11T11:37:05',
+  },
+  {
+    id: '1000000000010',
+    jiraReference: 'jira1010',
+    status: 'PENDING',
+    requestedBy: 'GGG',
+    requestDateTime: '2026-06-11T11:38:05',
+  },
 ]
+
+// The table row index of the request with status COMPLETE when the default order by newest first is applied.
+const COMPLETE_REQUEST_ROW_INDEX = 8
 
 context('View bulk user roles requests', () => {
   before(() => {
@@ -44,21 +96,29 @@ context('View bulk user roles requests', () => {
     viewBulkUserRolesRequests.errorSummary().should('contain.text', 'API responded with: Internal Server Error')
 
     // Client will retry failed requests 2 times.
-    verifyGetBulkUserRolesAdditionsIsCalled(3)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(3)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+      assertGetBulkUserRolesAdditionsRequest(requests[1])
+      assertGetBulkUserRolesAdditionsRequest(requests[2])
+    })
   })
 
   it('Should show empty table when API returns empty list', () => {
-    cy.task('stubGetBulkUserRolesAdditions', [])
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf([]))
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
     viewBulkUserRolesRequests.errorSummary().should('not.exist')
     viewBulkUserRolesRequests.assertRequestsTableBodyIsEmpty()
 
-    verifyGetBulkUserRolesAdditionsIsCalled(1)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
   })
 
   it('Should show view bulk user roles requests order by newest first by default', () => {
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
 
     const newestFirst = bulkRolesAdditionsSummary.sort(
       (a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime),
@@ -67,11 +127,15 @@ context('View bulk user roles requests', () => {
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
     viewBulkUserRolesRequests.errorSummary().should('not.exist')
     viewBulkUserRolesRequests.assertRequestsTableBodyContains(newestFirst)
-    verifyGetBulkUserRolesAdditionsIsCalled(1)
+
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
   })
 
   it('Should change order from newest first to oldest first', () => {
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
 
     const newestFirst = bulkRolesAdditionsSummary.sort(
       (a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime),
@@ -88,7 +152,10 @@ context('View bulk user roles requests', () => {
     viewBulkUserRolesRequests.sortRequestByDate('ascending')
     viewBulkUserRolesRequests.assertRequestsTableBodyContains(oldestFirst)
 
-    verifyGetBulkUserRolesAdditionsIsCalled(1)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
   })
 
   it('Search should filter requests', () => {
@@ -101,45 +168,114 @@ context('View bulk user roles requests', () => {
         requestDateTime: '2026-06-11T11:32:05',
       },
     ]
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
-    cy.task('stubGetBulkUserRolesAdditionsWithSearch', { responseBody: filteredRequests, searchTerm: '1003' })
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
+    cy.task('stubGetBulkUserRolesAdditionsWithSearch', {
+      responseBody: pagedResponseOf(filteredRequests),
+      searchTerm: '1003',
+    })
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
     viewBulkUserRolesRequests.enterSearchTerm('1003')
     viewBulkUserRolesRequests.assertRequestsTableBodyContains(filteredRequests)
 
-    verifyGetBulkUserRolesAdditionsIsCalled(1)
-    verifyGetBulkUserRolesAdditionsWithSearchTermIsCalled('1003', 1)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(2)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+      assertGetBulkUserRolesAdditionsRequestWithSearch(requests[1], '1003')
+    })
   })
 
   it('Should display empty table when no requests match search term', () => {
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
-    cy.task('stubGetBulkUserRolesAdditionsWithSearch', { responseBody: [], searchTerm: '1003' })
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
+    cy.task('stubGetBulkUserRolesAdditionsWithSearch', { responseBody: pagedResponseOf([]), searchTerm: '1003' })
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
     viewBulkUserRolesRequests.enterSearchTerm('1003')
     viewBulkUserRolesRequests.assertRequestsTableBodyIsEmpty()
 
-    verifyGetBulkUserRolesAdditionsIsCalled(1)
-    verifyGetBulkUserRolesAdditionsWithSearchTermIsCalled('1003', 1)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(2)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+      assertGetBulkUserRolesAdditionsRequestWithSearch(requests[1], '1003')
+    })
   })
 
-  function verifyGetBulkUserRolesAdditionsIsCalled(times) {
-    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
-      expect(requests).to.have.lengthOf(times)
-    })
-  }
+  it('Should paginate results', () => {
+    const page1 = bulkRolesAdditionsSummary
+    const page2 = [
+      {
+        id: '1000000000011',
+        jiraReference: 'jira1011',
+        status: 'PENDING',
+        requestedBy: 'HHH',
+        requestDateTime: '2026-06-11T11:39:05',
+      },
+      {
+        id: '1000000000012',
+        jiraReference: 'jira1012',
+        status: 'PENDING',
+        requestedBy: 'III',
+        requestDateTime: '2026-06-11T11:40:05',
+      },
+    ]
 
-  function verifyGetBulkUserRolesAdditionsWithSearchTermIsCalled(searchTerm, times) {
-    cy.task('verifyGetBulkUserRolesAdditionsWithSearchTerm', searchTerm).should((requests) => {
-      expect(requests).to.have.lengthOf(times)
+    const totalRequests = []
+    totalRequests.push(...page1)
+    totalRequests.push(...page2)
+
+    cy.task('stubGetBulkUserRolesAdditionsByPage', {
+      response: pagedResponseOf(page1, 0, totalRequests.length),
+      pageNumber: '0',
     })
-  }
+
+    cy.task('stubGetBulkUserRolesAdditionsByPage', {
+      response: pagedResponseOf(page2, 1, totalRequests.length),
+      pageNumber: '1',
+    })
+
+    const page1NewestFirst = page1.sort((a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime))
+
+    const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
+    viewBulkUserRolesRequests.errorSummary().should('not.exist')
+    viewBulkUserRolesRequests.assertRequestsTableBodyContains(page1NewestFirst)
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.moj-pagination__results')
+      .should('contain.text', 'Showing 1 to 10 of 12 total results')
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.govuk-pagination__list')
+      .should('exist')
+      .find('li')
+      .should('have.length', 2)
+      .eq(1)
+      .click()
+
+    const page2NewestFirst = page2.sort((a, b) => new Date(b.requestDateTime) - new Date(a.requestDateTime))
+    viewBulkUserRolesRequests.errorSummary().should('not.exist')
+    viewBulkUserRolesRequests.assertRequestsTableBodyContains(page2NewestFirst)
+
+    viewBulkUserRolesRequests
+      .getPagination()
+      .eq(0)
+      .find('.moj-pagination__results')
+      .should('contain.text', 'Showing 11 to 12 of 12 total results')
+
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(2)
+      assertGetBulkUserRolesAdditionsRequest(requests[0], '0', '10')
+      assertGetBulkUserRolesAdditionsRequest(requests[1], '1', '10')
+    })
+  })
 })
 
 context('Get bulk user roles request details', () => {
   const bulkAdditionsPending = {
-    ...bulkRolesAdditionsSummary[2],
+    ...bulkRolesAdditionsSummary[9],
     totalCount: 1,
     successCount: 0,
     errorCount: 0,
@@ -163,7 +299,7 @@ context('Get bulk user roles request details', () => {
   it('Should navigate to request details page', () => {
     const apiResponse = { id: bulkAdditionsPending.id, status: 200, responseBody: bulkAdditionsPending }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
@@ -187,13 +323,20 @@ context('Get bulk user roles request details', () => {
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('be.visible')
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('be.disabled')
 
-    verifyGetBulkUserRolesAdditionsDetailsIsCalled(1, apiResponse.id)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
+
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', bulkAdditionsPending.id).should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
   })
 
   it('Download should be disabled when status is PENDING', () => {
     const apiResponse = { id: bulkAdditionsPending.id, status: 200, responseBody: bulkAdditionsPending }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
@@ -205,17 +348,24 @@ context('Get bulk user roles request details', () => {
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('be.visible')
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('be.disabled')
 
-    verifyGetBulkUserRolesAdditionsDetailsIsCalled(1, apiResponse.id)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
+
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', bulkAdditionsPending.id).should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
   })
 
   it('Download should be enabled when status is COMPLETE', () => {
     const apiResponse = { id: bulkAdditionsComplete.id, status: 200, responseBody: bulkAdditionsComplete }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
-    viewBulkUserRolesRequests.clickRequestDetailsLink(1)
+    viewBulkUserRolesRequests.clickRequestDetailsLink(COMPLETE_REQUEST_ROW_INDEX)
 
     const viewBulkUserRolesRequestDetailsPage = ViewBulkUserRolesRequestDetailsPage.verifyOnPage()
     viewBulkUserRolesRequestDetailsPage.errorSummary().should('not.exist')
@@ -223,7 +373,14 @@ context('Get bulk user roles request details', () => {
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('be.visible')
     viewBulkUserRolesRequestDetailsPage.downloadResultsButton().should('not.be.disabled')
 
-    verifyGetBulkUserRolesAdditionsDetailsIsCalled(1, apiResponse.id)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
+
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', apiResponse.id).should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
   })
 
   it('Should display error message when fails to get details from API', () => {
@@ -233,11 +390,11 @@ context('Get bulk user roles request details', () => {
       responseBody: { message: 'Internal Server Error' },
     }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
-    viewBulkUserRolesRequests.clickRequestDetailsLink(1)
+    viewBulkUserRolesRequests.clickRequestDetailsLink(COMPLETE_REQUEST_ROW_INDEX)
 
     const viewBulkUserRolesRequestDetailsPage = ViewBulkUserRolesRequestDetailsPage.verifyOnPage()
     viewBulkUserRolesRequestDetailsPage.errorSummary().should('exist')
@@ -256,15 +413,16 @@ context('Get bulk user roles request details', () => {
     viewBulkUserRolesRequestDetailsPage.assertSummaryItem(6, 'Successful', '')
     viewBulkUserRolesRequestDetailsPage.assertSummaryItem(7, 'Errored', '')
 
-    // Client will retry 2 times on failure.
-    verifyGetBulkUserRolesAdditionsDetailsIsCalled(3, bulkAdditionsComplete.id)
-  })
-
-  function verifyGetBulkUserRolesAdditionsDetailsIsCalled(times, id) {
-    cy.task('verifyGetBulkUserRolesAdditionsDetails', id).should((requests) => {
-      expect(requests).to.have.lengthOf(times)
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
     })
-  }
+
+    // Client will retry a failed request with a 5xx status 2 times before erroring
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', bulkAdditionsComplete.id).should((requests) => {
+      expect(requests).to.have.lengthOf(3)
+    })
+  })
 })
 
 context('Get bulk user roles additions download csv', () => {
@@ -286,12 +444,12 @@ context('Get bulk user roles additions download csv', () => {
   it('Get bulk user roles additions download csv success', () => {
     const apiResponse = { id: bulkAdditionsComplete.id, status: 200, responseBody: bulkAdditionsComplete }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
     cy.task('stubGetBulkUserRolesAdditionsCsvDownload', apiResponse.id)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
-    viewBulkUserRolesRequests.clickRequestDetailsLink(1)
+    viewBulkUserRolesRequests.clickRequestDetailsLink(COMPLETE_REQUEST_ROW_INDEX)
 
     const viewBulkUserRolesRequestDetailsPage = ViewBulkUserRolesRequestDetailsPage.verifyOnPage()
     viewBulkUserRolesRequestDetailsPage.errorSummary().should('not.exist')
@@ -309,17 +467,26 @@ context('Get bulk user roles additions download csv', () => {
       expect(response.body).to.contain('user_1,role_1,SUCCESS,')
       expect(response.body).to.contain('user_2,role_1,ERROR,already assigned')
     })
+
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
+
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', bulkAdditionsComplete.id).should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
   })
 
   it('Get bulk user roles additions download csv error download file containing error message', () => {
     const apiResponse = { id: bulkAdditionsComplete.id, status: 200, responseBody: bulkAdditionsComplete }
 
-    cy.task('stubGetBulkUserRolesAdditions', bulkRolesAdditionsSummary)
+    cy.task('stubGetBulkUserRolesAdditions', pagedResponseOf(bulkRolesAdditionsSummary))
     cy.task('stubGetBulkUserRolesAdditionsDetails', apiResponse)
     cy.task('stubGetBulkUserRolesAdditionsCsvDownloadError', bulkAdditionsComplete.id)
 
     const viewBulkUserRolesRequests = navigateToViewBulkUserRolesRequestsPage()
-    viewBulkUserRolesRequests.clickRequestDetailsLink(1)
+    viewBulkUserRolesRequests.clickRequestDetailsLink(COMPLETE_REQUEST_ROW_INDEX)
 
     const viewBulkUserRolesRequestDetailsPage = ViewBulkUserRolesRequestDetailsPage.verifyOnPage()
     viewBulkUserRolesRequestDetailsPage.errorSummary().should('not.exist')
@@ -341,6 +508,15 @@ context('Get bulk user roles additions download csv', () => {
         message: `Internal Server Error: unable to generate bulk role additions csv for: ${bulkAdditionsComplete.id}`,
       })
     })
+
+    cy.task('verifyGetBulkUserRolesAdditions').should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+      assertGetBulkUserRolesAdditionsRequest(requests[0])
+    })
+
+    cy.task('verifyGetBulkUserRolesAdditionsDetails', bulkAdditionsComplete.id).should((requests) => {
+      expect(requests).to.have.lengthOf(1)
+    })
   })
 })
 
@@ -358,4 +534,65 @@ function navigateToViewBulkUserRolesRequestsPage() {
   const menuPage = MenuPage.verifyOnPage()
   menuPage.viewBulkUserRoles().click()
   return ViewBulkUserRolesRequestsPage.verifyOnPage()
+}
+
+function assertGetBulkUserRolesAdditionsRequest(req, pageNumber, pageSize) {
+  expect(req.queryParams).to.deep.equal({
+    pageNumber: {
+      key: 'pageNumber',
+      values: [pageNumber ?? '0'],
+    },
+    pageSize: {
+      key: 'pageSize',
+      values: [pageSize ?? '10'],
+    },
+  })
+}
+
+function assertGetBulkUserRolesAdditionsRequestWithSearch(req, searchTerm) {
+  expect(req.queryParams).to.deep.equal({
+    pageNumber: {
+      key: 'pageNumber',
+      values: ['0'],
+    },
+    pageSize: {
+      key: 'pageSize',
+      values: ['10'],
+    },
+    search: {
+      key: 'search',
+      values: [searchTerm],
+    },
+  })
+}
+
+function pagedResponseOf(content, pageNumber, totalElements) {
+  return {
+    content,
+    pageable: {
+      sort: {
+        sorted: false,
+        unsorted: true,
+        empty: true,
+      },
+      offset: 0,
+      pageNumber: pageNumber ?? 0,
+      pageSize: 10,
+      paged: true,
+      unpaged: false,
+    },
+    last: false,
+    totalPages: 1,
+    totalElements: totalElements ?? content?.length ?? 0,
+    size: content?.length ?? 0,
+    number: pageNumber ?? 0,
+    sort: {
+      sorted: false,
+      unsorted: true,
+      empty: true,
+    },
+    numberOfElements: content?.length ?? 0,
+    first: true,
+    empty: (content?.length ?? 0) > 0,
+  }
 }

@@ -1333,16 +1333,37 @@ module.exports = {
       urlPathPattern: '/bulk-jobs/user-role-additions',
     }).then((data) => data.body.requests),
 
-  stubGetBulkUserRolesAdditions: (body) =>
+  stubGetBulkUserRolesAdditions: (pagedResponse) =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/bulk-jobs/user-role-additions',
+        urlPath: '/bulk-jobs/user-role-additions',
+        queryParameters: {
+          pageNumber: { equalTo: '0' },
+          pageSize: { equalTo: '10' },
+        },
       },
       response: {
         status: 200,
         headers: { 'Content-Type': 'application/json;charset=UTF-8' },
-        jsonBody: body,
+        jsonBody: pagedResponse,
+      },
+    }),
+
+  stubGetBulkUserRolesAdditionsByPage: (details) =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPath: '/bulk-jobs/user-role-additions',
+        queryParameters: {
+          pageNumber: { equalTo: details.pageNumber },
+          pageSize: { equalTo: '10' },
+        },
+      },
+      response: {
+        status: 200,
+        headers: { 'Content-Type': 'application/json;charset=UTF-8' },
+        jsonBody: details.response,
       },
     }),
 
@@ -1350,7 +1371,11 @@ module.exports = {
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: '/bulk-jobs/user-role-additions',
+        urlPath: '/bulk-jobs/user-role-additions',
+        queryParameters: {
+          pageNumber: { equalTo: '0' },
+          pageSize: { equalTo: '10' },
+        },
       },
       response: {
         status: response.status,
@@ -1362,14 +1387,19 @@ module.exports = {
   verifyGetBulkUserRolesAdditions: () =>
     getMatchingRequests({
       method: 'GET',
-      urlPattern: '^/bulk-jobs/user-role-additions$',
+      urlPath: '/bulk-jobs/user-role-additions',
     }).then((data) => data.body.requests),
 
   stubGetBulkUserRolesAdditionsWithSearch: (details) =>
     stubFor({
       request: {
         method: 'GET',
-        urlPattern: `/bulk-jobs/user-role-additions\\?search=${details.searchTerm}`,
+        urlPath: `/bulk-jobs/user-role-additions`,
+        queryParameters: {
+          search: { equalTo: details.searchTerm },
+          pageNumber: { equalTo: '0' },
+          pageSize: { equalTo: '10' },
+        },
       },
       response: {
         status: 200,
@@ -1377,12 +1407,6 @@ module.exports = {
         jsonBody: details.responseBody,
       },
     }),
-
-  verifyGetBulkUserRolesAdditionsWithSearchTerm: (searchTerm) =>
-    getMatchingRequests({
-      method: 'GET',
-      urlPattern: `/bulk-jobs/user-role-additions\\?search=${searchTerm}`,
-    }).then((data) => data.body.requests),
 
   stubGetBulkUserRolesAdditionsDetails: (details) =>
     stubFor({

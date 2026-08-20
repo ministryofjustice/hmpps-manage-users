@@ -1,15 +1,23 @@
 const fsPromises = require('fs/promises')
 const path = require('path')
 const fs = require('fs')
-const { auditService } = require('@ministryofjustice/hmpps-audit-client')
 const { createBulkUserRolesRequestsFactory } = require('./createBulkUserRolesAdditions')
-const { auditAction } = require('../utils/testUtils')
 const { ManageUsersEvent } = require('../audit')
 
 describe('change user roles in bulk', () => {
   const getSearchableRolesApi = jest.fn()
   const bulkUserRolesAdditions = jest.fn()
-  const bulkUserRolesController = createBulkUserRolesRequestsFactory(getSearchableRolesApi, bulkUserRolesAdditions)
+  const sendAudit = jest.fn().mockResolvedValue()
+  const auditService = {
+    audit: jest.fn(() => sendAudit),
+  }
+
+  const bulkUserRolesController = createBulkUserRolesRequestsFactory(
+    getSearchableRolesApi,
+    bulkUserRolesAdditions,
+    auditService,
+    ManageUsersEvent,
+  )
   const render = jest.fn()
   const redirect = jest.fn()
   const getCsrfToken = jest.fn()
@@ -46,7 +54,6 @@ describe('change user roles in bulk', () => {
       },
       bulkUserRolesRequest: {},
     }
-    jest.spyOn(auditService, 'sendAuditMessage').mockResolvedValue()
   })
 
   afterAll(() => {
@@ -688,9 +695,12 @@ describe('change user roles in bulk', () => {
         validUserFile,
       )
       expect(req.session.bulkUserRolesRequest).toBeUndefined()
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
-      )
+      expect(auditService.audit).toHaveBeenNthCalledWith(1, 'Robert Bobby', {
+        jiraReference: '12345',
+        roles: ['ROLE_1', 'ROLE_2'],
+        usersCsv: 'valid-users.csv',
+      })
+      expect(sendAudit).toHaveBeenNthCalledWith(1, ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT)
     })
 
     it('should remove request details from session after successfully submitting request', async () => {
@@ -743,12 +753,13 @@ describe('change user roles in bulk', () => {
         usersFile: { filename: 'valid-users.csv', data: fileData },
       })
 
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
-      )
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE),
-      )
+      expect(auditService.audit).toHaveBeenNthCalledWith(1, 'Robert Bobby', {
+        jiraReference: '12345',
+        roles: ['ROLE_1', 'ROLE_2'],
+        usersCsv: 'valid-users.csv',
+      })
+      expect(sendAudit).toHaveBeenNthCalledWith(1, ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT)
+      expect(sendAudit).toHaveBeenNthCalledWith(2, ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE)
     })
 
     it('should populate req.session.bulkUserRolesRequest if not present', async () => {
@@ -784,12 +795,13 @@ describe('change user roles in bulk', () => {
           uploadFile: 'valid-users.csv',
         },
       })
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT),
-      )
-      expect(auditService.sendAuditMessage).toHaveBeenCalledWith(
-        auditAction(ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE),
-      )
+      expect(auditService.audit).toHaveBeenNthCalledWith(1, 'Robert Bobby', {
+        jiraReference: '12345',
+        roles: ['ROLE_1', 'ROLE_2'],
+        usersCsv: 'valid-users.csv',
+      })
+      expect(sendAudit).toHaveBeenNthCalledWith(1, ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_ATTEMPT)
+      expect(sendAudit).toHaveBeenNthCalledWith(2, ManageUsersEvent.SUBMIT_BULK_USER_ROLES_ADDITION_FAILURE)
     })
   })
 })

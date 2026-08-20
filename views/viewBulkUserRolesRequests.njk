@@ -6,6 +6,7 @@
 {% from "moj/components/search/macro.njk" import mojSearch %}
 {% from "moj/components/badge/macro.njk" import mojBadge %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{%- from "moj/components/pagination/macro.njk" import mojPagination -%}
 
 {% from "./components/multiselectfilter/macro.njk" import multiSelectFilter %}
 
@@ -59,6 +60,7 @@
   <br />
 
   <table class="govuk-table" data-module="moj-sortable-table" id="bulk-user-roles-requests-table">
+    {{ mojPagination(pagination) }}
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header" aria-sort="descending" id="sort-by-request-date">Date of request</th>
@@ -70,6 +72,7 @@
       </tr>
     </thead>
     <tbody class="govuk-table__body">
+
       {% for r in bulkUserRolesRequests %}
 
         {% if r.status == 'Errors' %}
@@ -89,7 +92,9 @@
           <td class="govuk-table__cell"><a href="/view-bulk-role-changes/requests/{{r.id}}" class="govuk-body govuk-link noDoubleClick">View details</a></td>
         </tr>
       {% endfor %}
+
     </tbody>
   </table>
+  {{ mojPagination(pagination) }}
 
 {% endblock %}
