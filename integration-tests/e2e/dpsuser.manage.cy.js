@@ -642,8 +642,7 @@ context('DPS user manage functionality', () => {
     cy.task('stubManageUserGetRoles', {})
     const search = goToSearchPage({})
     search
-      .manageYourDetails()
-      .should('have.attr', 'href')
+      .manageYourDetails().should('have.attr', 'href')
       .and('contains', '%2Fsearch-with-filter-dps-users')
   })
 

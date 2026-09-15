@@ -460,8 +460,7 @@ context('Groups', () => {
     const groupDetails = GroupDetailsPage.verifyOnPage('Site 1 - Group 2')
 
     groupDetails
-      .manageYourDetails()
-      .should('have.attr', 'href')
+      .manageYourDetails().should('have.attr', 'href')
       .and('contains', '%2Fmanage-groups%2FSITE_1_GROUP_2')
   })
 
