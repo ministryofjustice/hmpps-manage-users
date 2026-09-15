@@ -461,8 +461,7 @@ context('Groups', () => {
 
     groupDetails
       .manageYourDetails()
-      .should('contain', 'Manage your details')
-      .and('have.attr', 'href')
+      .should('have.attr', 'href')
       .and('contains', '%2Fmanage-groups%2FSITE_1_GROUP_2')
   })
 

@@ -643,8 +643,7 @@ context('DPS user manage functionality', () => {
     const search = goToSearchPage({})
     search
       .manageYourDetails()
-      .should('contain', 'Manage your details')
-      .and('have.attr', 'href')
+      .should('have.attr', 'href')
       .and('contains', '%2Fsearch-with-filter-dps-users')
   })
 

@@ -54,7 +54,7 @@
       <nav class="moj-header__navigation" aria-label="Account navigation">
         <ul class="moj-header__navigation-list">
           <li class="moj-header__navigation-item">
-            <a class="moj-header__navigation-link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" aria-current="page" data-qa="manage-account-link">{{ user.displayName }}</a>
+            <a class="moj-header__navigation-link" href="{{homeUrl or notmUrl}}/account-details?redirect_uri={{ user.returnUrl | urlencode }}&client_id={{ user.clientID }}" aria-current="page" data-qa="manage-account-link" data-qa="logged-in-name">{{ user.displayName }}</a>
           </li>
           <li class="moj-header__navigation-item">
             <a class="moj-header__navigation-link" href="/auth/sign-out">Sign out</a>
