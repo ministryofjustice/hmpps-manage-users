@@ -1524,6 +1524,11 @@ export interface components {
        * @enum {string}
        */
       accessPeriod: 'EXPIRE' | 'ONE_MONTH' | 'THREE_MONTHS' | 'SIX_MONTHS' | 'TWELVE_MONTHS' | 'NO_RESTRICTION'
+      /**
+       * @description The name of the approver for this access request
+       * @example Natilee Tiernan
+       */
+      approver: string
     }
     /** @description Details of the role to be created. */
     CreateRoleDto: {
@@ -2274,6 +2279,11 @@ export interface components {
        * @enum {string}
        */
       userType: 'DIGITAL' | 'GENERAL'
+      /**
+       * @description The name of the approver for this access request
+       * @example Natilee Tiernan
+       */
+      approver: string
     }
     AdminTypeReturn: {
       adminTypeCode: string

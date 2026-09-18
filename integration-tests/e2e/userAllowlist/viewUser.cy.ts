@@ -21,6 +21,7 @@ context('View allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'THREE_MONTHS',
+      approver: 'Ravin Sproul',
     }
     ViewUserPage.goto(user)
     verifyDataQaText('status-tag', 'Active')
@@ -28,6 +29,7 @@ context('View allow list user', () => {
     verifyDataQaText('created-date', '19 March 2024')
     verifyDataQaText('last-updated-date', '19 March 2024')
     verifyDataQaText('last-updated-by', 'LAQUINAQNW')
+    verifyDataQaText('approver', 'Ravin Sproul')
   })
 
   it('Shows details of unrestricted active user', () => {
@@ -38,6 +40,7 @@ context('View allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'NO_RESTRICTION',
+      approver: 'Ravin Sproul',
     }
     ViewUserPage.goto(user)
     verifyDataQaText('status-tag', 'Active')
@@ -45,6 +48,7 @@ context('View allow list user', () => {
     verifyDataQaText('created-date', '19 March 2024')
     verifyDataQaText('last-updated-date', '19 March 2024')
     verifyDataQaText('last-updated-by', 'LAQUINAQNW')
+    verifyDataQaText('approver', 'Ravin Sproul')
   })
 
   it('Shows details of expired user', () => {
@@ -55,6 +59,7 @@ context('View allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     ViewUserPage.goto(user)
     verifyDataQaText('status-tag', 'EXPIRED')
@@ -62,6 +67,7 @@ context('View allow list user', () => {
     verifyDataQaText('created-date', '19 March 2024')
     verifyDataQaText('last-updated-date', '19 March 2024')
     verifyDataQaText('last-updated-by', 'LAQUINAQNW')
+    verifyDataQaText('approver', 'Ravin Sproul')
   })
 
   it('Clicking the edit link goes to the edit page for that user', () => {
@@ -72,6 +78,7 @@ context('View allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     ViewUserPage.goto(user).clickEdit()
     EditUserPage.create(user).checkOnPage()
@@ -86,6 +93,7 @@ context('View allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     ViewUserPage.goto(user).clickSearch()
     Page.verifyOnPage(SearchPage)

@@ -32,6 +32,9 @@ export default class AddUserRoutes {
     if (!allowListUserRequest.reason) {
       errors.push({ href: '#reason', text: 'Enter a valid business reason' })
     }
+    if (!allowListUserRequest.approver) {
+      errors.push({ href: '#approver', text: "Enter the approving manager's name" })
+    }
 
     errors.push(...validateEmailFormat(allowListUserRequest.email))
 

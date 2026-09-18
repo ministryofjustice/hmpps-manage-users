@@ -32,6 +32,7 @@ describe('manageUsersApiClient', () => {
         lastName: 'Armistead',
         reason: 'For testing',
         accessPeriod: 'THREE_MONTHS',
+        approver: 'Ravin Sproul',
       }
       await manageUsersApiClient.addAllowlistUser(request)
       expect(fakeManageUsersApi.isDone()).toBe(true)
@@ -66,6 +67,7 @@ describe('manageUsersApiClient', () => {
           lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
           lastUpdatedBy: 'LAQUINAQNW',
           userType: 'DIGITAL',
+          approver: 'Ravin Sproul',
         },
         {
           id: '7dd658d9-8918-4650-9555-2df4b89e0d15',
@@ -79,6 +81,7 @@ describe('manageUsersApiClient', () => {
           lastUpdated: `${new Date('2025-03-19T04:39:08')}`,
           lastUpdatedBy: 'ZAIRAKB',
           userType: 'DIGITAL',
+          approver: 'Ravin Sproul',
         },
       ],
       pageable: {
@@ -156,6 +159,7 @@ describe('manageUsersApiClient', () => {
       lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
       lastUpdatedBy: 'LAQUINAQNW',
       userType: 'DIGITAL',
+      approver: 'Ravin Sproul',
     }
 
     it('should call get allow list user endpoint', async () => {
