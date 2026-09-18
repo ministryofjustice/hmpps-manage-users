@@ -18,6 +18,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'THREE_MONTHS',
+      approver: 'Ravin Sproul',
     }
     EditUserPage.goto(user).verifyAccessPeriod('One month')
   })
@@ -30,6 +31,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'THREE_MONTHS',
+      approver: 'Ravin Sproul',
     }
     EditUserPage.goto(user)
     verifyDataQaText('status-tag', 'Active')
@@ -38,6 +40,7 @@ context('Edit allow list user', () => {
     verifyDataQaText('firstName', 'Anastazia')
     verifyDataQaText('lastName', 'Armistead')
     verifyDataQaText('reason', 'For testing')
+    verifyDataQaText('approver', 'Ravin Sproul')
   })
 
   it('Shows details of expired user', () => {
@@ -48,6 +51,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     EditUserPage.goto(user)
     verifyDataQaText('status-tag', 'EXPIRED')
@@ -56,6 +60,7 @@ context('Edit allow list user', () => {
     verifyDataQaText('firstName', 'Anastazia')
     verifyDataQaText('lastName', 'Armistead')
     verifyDataQaText('reason', 'For testing')
+    verifyDataQaText('approver', 'Ravin Sproul')
   })
 
   it('Submit is successful if reason is filled in, and goes to view page for that user', () => {
@@ -66,6 +71,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubUpdateAllowlistUser')
     const form = {
@@ -83,6 +89,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubUpdateAllowlistUser')
     const form = {}
@@ -100,6 +107,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubUpdateAllowlistUser')
     const form = {}
@@ -117,6 +125,7 @@ context('Edit allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubUpdateAllowlistUser')
     const form = {

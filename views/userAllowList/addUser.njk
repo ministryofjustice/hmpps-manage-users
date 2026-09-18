@@ -110,6 +110,15 @@
           name: "lastName",
           errorMessage: errors | findError('lastName')
         }) }}
+        {{ govukInput({label: {
+          text: "Who is the approving manager?"
+        },
+          classes: "govuk-input--width-20",
+          value: approver,
+          id: "approver",
+          name: "approver",
+          errorMessage: errors | findError('approver')
+        }) }}
 
         {% if userType == 'GENERAL' %}
 

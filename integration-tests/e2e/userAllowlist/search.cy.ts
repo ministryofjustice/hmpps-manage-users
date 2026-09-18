@@ -37,6 +37,7 @@ context('Search allow list users', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubGetAllowlistUser', expiredUser)
     SearchPage.goto({ expiredUser }).clickEditLink('AICIAD')
@@ -51,6 +52,7 @@ context('Search allow list users', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'EXPIRE',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubGetAllowlistUser', expiredUser)
     SearchPage.goto({ expiredUser }).clickViewDetails('AICIAD')
@@ -132,6 +134,7 @@ context('Search allow list users', () => {
               'lastUpdated',
               'lastUpdatedBy',
               'status',
+              'approver',
             ])
             expect(output[1], 'first row').to.deep.equal([
               'a073bfc1-2f81-4b6d-9b9c-fd7c367fe4c7',
@@ -145,6 +148,7 @@ context('Search allow list users', () => {
               `${new Date('2024-03-19T04:39:08')}`,
               'LAQUINAQNW',
               'EXPIRED',
+              'Ravin Sproul',
             ])
             expect(output[2], 'first row').to.deep.equal([
               'a073bfc1-2f81-4b6d-9b9c-fd7c367fe4c7',
@@ -158,6 +162,7 @@ context('Search allow list users', () => {
               `${new Date('2024-03-19T04:39:08')}`,
               'LAQUINAQNW',
               'ACTIVE',
+              'Ravin Sproul',
             ])
           })
         })

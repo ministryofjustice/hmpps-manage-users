@@ -9,6 +9,7 @@ interface OptionalForm {
   firstName?: string
   lastName?: string
   reason?: string
+  approver?: string
 }
 
 export default class AddUserPage extends Page {
@@ -49,6 +50,7 @@ export default class AddUserPage extends Page {
     typeOrClear(getFormField('email'), optionalForm.email)
     typeOrClear(getFormField('firstName'), optionalForm.firstName)
     typeOrClear(getFormField('lastName'), optionalForm.lastName)
+    typeOrClear(getFormField('approver'), optionalForm.approver)
     if (fillReason) {
       typeOrClear(getFormField('reason'), optionalForm.reason)
     }

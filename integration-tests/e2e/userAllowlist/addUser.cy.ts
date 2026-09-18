@@ -46,6 +46,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(SearchPage)
@@ -60,6 +61,7 @@ context('Add allow list user', () => {
       email: 'jameisha_mullings2s@employee.zg',
       firstName: 'Derryck',
       lastName: 'Siegle',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('DIGITAL').fillForm(form, false).submit()
     Page.verifyOnPage(SearchPage)
@@ -72,6 +74,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -86,6 +89,7 @@ context('Add allow list user', () => {
       lastName: 'Armistead',
       reason: 'For testing',
       accessPeriod: 'THREE_MONTHS',
+      approver: 'Ravin Sproul',
     }
     cy.task('stubGetAllowlistUser', user)
     const form = {
@@ -94,6 +98,7 @@ context('Add allow list user', () => {
       firstName: 'Anastazia',
       lastName: 'Armistead',
       reason: 'different reason',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -107,6 +112,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -121,6 +127,7 @@ context('Add allow list user', () => {
       firstName: 'Derryck',
       lastName: 'Siegle',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -134,6 +141,7 @@ context('Add allow list user', () => {
       email: 'jameisha_mullings2s@employee.zg',
       lastName: 'Siegle',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -147,6 +155,7 @@ context('Add allow list user', () => {
       email: 'jameisha_mullings2s@employee.zg',
       firstName: 'Derryck',
       reason: 'for test purposes',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
@@ -160,10 +169,24 @@ context('Add allow list user', () => {
       email: 'jameisha_mullings2s@employee.zg',
       firstName: 'Derryck',
       lastName: 'Siegle',
+      approver: 'Ravin Sproul',
     }
     AddUserPage.goto('GENERAL').fillForm(form).submit()
     Page.verifyOnPage(AddUserPage)
     verifyFormError('reason')
+  })
+
+  it('submit shows error for approver if missing', () => {
+    cy.task('stubAddAllowlistUser')
+    const form = {
+      username: 'fasha6v',
+      email: 'jameisha_mullings2s@employee.zg',
+      firstName: 'Derryck',
+      lastName: 'Siegle',
+    }
+    AddUserPage.goto('GENERAL').fillForm(form).submit()
+    Page.verifyOnPage(AddUserPage)
+    verifyFormError('approver')
   })
 
   it('submit retains username if errors elsewhere', () => {

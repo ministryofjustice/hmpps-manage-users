@@ -5,15 +5,16 @@ import { getEndDate } from '../support/utils'
 const getUserAllowlistDetail = (user: UserAllowlistAddRequest) => {
   return {
     id: 'a073bfc1-2f81-4b6d-9b9c-fd7c367fe4c7',
-    username: `${user.username}`,
-    email: `${user.email}`,
-    firstName: `${user.firstName}`,
-    lastName: `${user.lastName}`,
-    reason: `${user.reason}`,
-    createdOn: `${new Date('2024-03-19T04:39:08')}`,
-    allowlistEndDate: `${getEndDate(user.accessPeriod)}`,
-    lastUpdated: `${new Date('2024-03-19T04:39:08')}`,
+    username: user.username,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    reason: user.reason,
+    createdOn: new Date('2024-03-19T04:39:08'),
+    allowlistEndDate: getEndDate(user.accessPeriod),
+    lastUpdated: new Date('2024-03-19T04:39:08'),
     lastUpdatedBy: 'LAQUINAQNW',
+    approver: user.approver,
   }
 }
 
@@ -79,6 +80,7 @@ const defaultSearchParams: SearchAllowlistUserParams = {
     lastName: 'Armistead',
     reason: 'For testing',
     accessPeriod: 'EXPIRE',
+    approver: 'Ravin Sproul',
   },
   activeUser: {
     username: 'ZAFIRAHT9YH',
@@ -87,6 +89,7 @@ const defaultSearchParams: SearchAllowlistUserParams = {
     lastName: 'Storm',
     reason: 'For testing',
     accessPeriod: 'ONE_MONTH',
+    approver: 'Ravin Sproul',
   },
   totalElements: 2,
 }
