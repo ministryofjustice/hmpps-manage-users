@@ -1,0 +1,322 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/error-message/macro.njk" import govukErrorMessage %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
+{% from "../../components/multiselectfilter/macro.njk" import multiSelectFilter %}
+
+{% set title = "Search for a DPS user" %}
+{% set caseloadDropdownValues = caseloads | caseloadDropdownValues %}
+{% set roleDropdownValues = roles | roleDropdownValues %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+{% set filterOptionsHtml %}
+  {{ govukInput({
+    label: { text: "Name, username or email address", classes: "govuk-label--s" },
+    classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+    value: currentFilter.user,
+    id: "user",
+    name: "user",
+    hint: {
+      text: "Will match the user's name, username or verified email address"
+    },
+    errorMessage: errors | findError('user')
+  }) }}
+
+  {{ govukRadios({
+    idPrefix: 'status',
+    name: 'status',
+    classes: 'govuk-radios--small govuk-radios--inline',
+    fieldset: {
+      legend: {
+        text: 'Status',
+        classes: 'govuk-fieldset__legend--s'
+      }
+    },
+    hint: {
+      text: 'Display active or inactive users only'
+    },
+    items: [
+      {
+        value: 'ALL',
+        text: 'All',
+        checked: currentFilter.status === 'ALL'
+      },
+      {
+        value: 'ACTIVE',
+        text: 'Active',
+        checked: currentFilter.status === 'ACTIVE'
+      },
+      {
+        value: 'INACTIVE',
+        text: 'Inactive/Expired',
+        checked: currentFilter.status === 'INACTIVE'
+      }
+    ]
+  }
+  ) }}
+
+  {% if showPrisonDropdown %}
+    {{ govukSelect({
+      classes: 'autocomplete-select',
+      label: {
+        text: "Prison",
+        classes: 'govuk-label--s'
+      },
+      idPrefix: 'groupCode',
+      name: 'groupCode',
+      id: 'groupCode',
+      items: caseloadDropdownValues | setSelected(currentFilter.groupCode) | addBlankOptions('Select a caseload'),
+      formGroup: {
+        classes: 'govuk-!-margin-bottom-5'
+      },
+      errorMessage: errors | findError('groupCode')
+    }) }}
+    {{ govukRadios({
+      idPrefix: 'restrictToActiveGroup',
+      name: 'restrictToActiveGroup',
+      classes: 'govuk-radios--small govuk-radios--inline',
+      hint: {
+        text: 'Will match users that currently have their active caseload set to the selected prison'
+      },
+      fieldset: {
+        legend: {
+          text: 'Active caseload only',
+          classes: 'govuk-fieldset__legend--s'
+        }
+      },
+      items: [
+        {
+          value: 'true',
+          text: 'Yes',
+          checked: currentFilter.restrictToActiveGroup !== false
+        },
+        {
+          value: 'false',
+          text: 'No',
+          checked: currentFilter.restrictToActiveGroup === false
+        }
+      ]
+    }
+    ) }}
+  {% endif %}
+
+  {{ govukCheckboxes({
+    idPrefix: "showOnlyLSAs",
+    name: "showOnlyLSAs",
+    classes: 'govuk-checkboxes--small govuk-checkboxes--inline',
+    fieldset: {
+      legend: {
+        text: 'Local System Administrator',
+        classes: 'govuk-fieldset__legend--s'
+      }
+    },
+    items: [
+      {
+        value: 'true',
+        text: "Local System Administrators only",
+        checked: currentFilter.showOnlyLSAs
+      }
+    ]
+  }) }}
+
+  <div class="govuk-list">
+    {{ govukRadios({
+      name: 'inclusiveRoles',
+      classes: 'govuk-radios--small',
+      fieldset: {
+        legend: {
+          text: "Role",
+          isPageHeading: false,
+          classes: "govuk-fieldset__legend--s"
+        }
+      },
+      hint: {
+        text: "Will match users that have any or all the selected roles"
+      },
+      items: [
+        {
+          value: 'false',
+          text: 'All selected roles',
+          checked: not currentFilter.inclusiveRoles
+        },
+        {
+          value: 'true',
+          text: 'Any of the selected roles',
+          checked: currentFilter.inclusiveRoles
+        }
+      ]
+    }
+    ) }}
+
+    {{ multiSelectFilter({
+      name: 'roleCode',
+      items: roleDropdownValues | setChecked(currentFilter.roleCode),
+      hint: 'Start typing to filter the role checkboxes',
+      title: 'Role search'
+    }) }}
+
+  </div>
+{% endset %}
+
+<div class="govuk-grid-row govuk-body">
+  <div class="govuk-grid-column-full">
+    <h1 class="govuk-heading-l">{{ title }}</h1>
+    <div class="moj-filter-layout">
+      <div class="moj-filter-layout__filter">
+        <form id="filter-form" action="{{ searchUrl }}" novalidate>
+          {{ mojFilter(currentFilter | toUserSearchFilter(caseloads, roles, filterOptionsHtml, showPrisonDropdown)) }}
+        </form>
+      </div>
+      <div class="moj-filter-layout__content">
+        <div>
+          <div class="govuk-grid-column-full">
+            <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+            {% if results.length %}
+              {{ mojPagination(pagination) }}
+
+              {% set rows = [] %}
+              {% for u in results %}
+                {% set maintainUserUrl = u.username | manageUserDetailsLink %}
+                {% set cellHtml %}
+                  <div class="govuk-!-margin-bottom-5">
+                    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                      <div class="govuk-grid-column-three-quarters">
+                        <a href="{{ maintainUserUrl }}" class="govuk-link"
+                           data-qa="edit-button-{{ u.username }}">{{ u.firstName }}
+                          &nbsp;{{ u.lastName }}</a><span> - {{ u.username }}</span>
+                      </div>
+                      <div class="govuk-grid-column-one-quarter  pull-right">
+                        <a href="{{ maintainUserUrl }}" class="govuk-link">View details<span class="govuk-visually-hidden">for {{ u.firstName }}&nbsp;{{ u.lastName }}</span></a>
+                      </div>
+                    </div>
+                    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                      <div class="govuk-grid-column-full"><span
+                          class="govuk-visually-hidden">Email</span><span>{{ u.email }}</span></div>
+                    </div>
+                    <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                      <div class="govuk-grid-column-full">
+                        <div class="govuk-grid-row">
+                          <div class="govuk-grid-column-one-half">
+                            <span class="govuk-visually-hidden">Status</span>
+                            {{ govukTag({
+                              text: u.status,
+                              classes: "govuk-tag--pink"
+                            }) if not u.active and u.status != 'EXPIRED' }}
+                            {{ govukTag({
+                              text: u.status,
+                              classes: "govuk-tag--yellow"
+                            }) if not u.active and u.status == 'EXPIRED' }}
+                            {{ govukTag({
+                              text: "Active",
+                              classes: "govuk-tag--green"
+                            }) if u.active }}
+                            {% if u.activeCaseload %}
+                              <span>{{ u.activeCaseload.name }}</span>
+                            {% endif %}
+                          </div>
+                          <div class="govuk-grid-column-one-half pull-right">
+                            {% if u.dpsRoleCount == 0 %}
+                              <span>No DPS roles</span>
+                              {% elif u.dpsRoleCount == 1 %}
+                              <span>{{ u.dpsRoleCount }} DPS role</span>
+                            {% else %}
+                              <span>{{ u.dpsRoleCount }} DPS roles</span>
+                            {% endif %}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endset %}
+
+                {% set rows = (rows.push([
+                  { html: cellHtml }
+                ]), rows) %}
+              {% endfor %}
+
+              {{ govukTable({
+                rows: rows
+              }) }}
+              {{ mojPagination(pagination) }}
+              {% if (downloadUrl and not hideDownloadLink) or (lsaDownloadUrl and not hideLsaDownloadLink) %}
+                <div id="downloadInProgress" class='govuk-!-display-none'>
+                  <div class="loading-spinner-wrapper">
+                    <div class="loading-spinner"></div>
+                    Download in progress...
+                  </div>
+                </div>
+                {{ govukErrorMessage({
+                  id: "downloadError",
+                  classes: "govuk-!-display-none",
+                  text: "There was a problem downloading"
+                }) }}
+              {% endif %}
+              {% if downloadUrl %}
+                {% if hideDownloadLink %}
+                  <p class="govuk-body" data-qa="exceed-download-limit"><b>More than {{ downloadRecordLimit }} results
+                      returned, please refine your search if you want to download the results</b></p>
+                {% else %}
+                  <div class="pull-right">
+                    <form id="downloadUsersForm" method="GET" action="{{ downloadUrl }}">
+                      {{ govukButton({
+                        id: "downloadUsersButton",
+                        text: "Download results",
+                        element: "button",
+                        type: "submit",
+                        preventDoubleClick: true,
+                        classes: "govuk-button downloadButton",
+                        attributes: { "data-qa": "download" }
+                      }) }}
+                    </form>
+                  </div>
+                {% endif %}
+              {% endif %}
+              {% if lsaDownloadUrl %}
+                {% if hideLsaDownloadLink %}
+                  <p class="govuk-body" data-qa="exceed-download-lsa-limit"><b>More than {{ downloadRecordLimit }}
+                      results returned, please refine your search if you want to download the LSA report</b></p>
+                {% else %}
+                  <div class="pull-right">
+                    <form id="downloadLsaForm" method="GET" action="{{ lsaDownloadUrl }}">
+                      {{ govukButton({
+                        id: "downloadLsaButton",
+                        text: "Download LSA report",
+                        element: "button",
+                        type: "submit",
+                        preventDoubleClick: true,
+                        classes: "govuk-button downloadButton",
+                        attributes: { "data-qa": "lsa-download" }
+                      }) }}
+                    </form>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% else %}
+              <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

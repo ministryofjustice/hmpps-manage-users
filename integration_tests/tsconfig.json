@@ -1,0 +1,14 @@
+{
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": ["es5", "dom", "es2015.promise"],
+    "paths": {
+      "manageUsersApiClient": ["../server/@types/manageUsersApiClient"]
+    },
+    "types": ["@playwright/test", "../server/@types/manageUsersApiClient"],
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts"]
+}
