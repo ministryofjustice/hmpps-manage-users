@@ -34,7 +34,7 @@
   {% if details %}
 
     {% set jiraLink %}
-      <a href="https://dsdmoj.atlassian.net/browse/{{ details.jiraReference }}" class="govuk-body govuk-link noDoubleClick">{{ details.jiraReference }}</a>
+      <a href="https://dsdmoj.atlassian.net/browse/{{ details.jiraReference | escape }}" class="govuk-body govuk-link noDoubleClick">{{ details.jiraReference }}</a>
     {% endset %}
 
     {% set downloadDisabled = details.status == 'PENDING' %}

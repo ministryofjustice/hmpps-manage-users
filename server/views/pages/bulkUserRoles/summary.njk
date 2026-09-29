@@ -47,7 +47,7 @@
   {% endset %}
 
   {% set jiraHref = "https://dsdmoj.atlassian.net/browse/" + (summary.jiraReference | urlencode) %}
-  {% set jiraLink = '<a class="govuk-body govuk-link noDoubleClick" href="' + jiraHref + '">' + summary.jiraReference + '</a>' | safe %}
+  {% set jiraLink = '<a class="govuk-body govuk-link noDoubleClick" href="' + jiraHref + '">' + (summary.jiraReference | escape) + '</a>' | safe %}
 
   <form action="{{ submitUrl }}" method="post">
     <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
