@@ -11,6 +11,8 @@ const menuService = new MenuService({} as never) as jest.Mocked<MenuService>
 let app: Express
 
 beforeEach(() => {
+  menuService.getBannerMessage.mockResolvedValue('')
+  menuService.getTiles.mockReturnValue([])
   app = appWithAllRoutes({
     services: {
       menuService,
