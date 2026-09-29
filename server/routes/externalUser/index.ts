@@ -53,7 +53,11 @@ export default function index(services: Services): Router {
     authRoleGuardMiddleware([AuthRole.MAINTAIN_OAUTH_USERS, AuthRole.AUTH_GROUP_MANAGER]),
     deactivateHandler(services),
   )
-  router.use(paths.externalUser.manage.deactivateReason.pattern, deactivateReasonRouter(services))
+  router.use(
+    paths.externalUser.manage.deactivateReason.pattern,
+    authRoleGuardMiddleware([AuthRole.MAINTAIN_OAUTH_USERS, AuthRole.AUTH_GROUP_MANAGER]),
+    deactivateReasonRouter(services),
+  )
 
   return router
 }

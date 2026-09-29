@@ -2,7 +2,16 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "noEmit": true,
-    "lib": ["es5", "dom", "es2015.promise"],
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Error",
+      "ESNext.Iterator",
+      "ESNext.Promise",
+      "dom",
+      "dom.iterable"
+    ],
     "paths": {
       "manageUsersApiClient": ["../server/@types/manageUsersApiClient"]
     },
