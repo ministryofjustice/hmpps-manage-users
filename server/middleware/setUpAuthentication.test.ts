@@ -32,4 +32,8 @@ describe('sameOriginReturnPath', () => {
   it('falls back to / for a malformed referer', () => {
     expect(sameOriginReturnPath('not-a-url', ingressUrl)).toBe('/')
   })
+
+  it('should not allow a normalised path to become a scheme-relative URL', () => {
+    expect(sameOriginReturnPath(`${ingressUrl}/.//evil.com`, ingressUrl)).toBe('/evil.com')
+  })
 })

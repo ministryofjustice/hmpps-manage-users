@@ -4,6 +4,28 @@ import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 export const isErrorResponse = (error: unknown): error is SanitisedError<ErrorResponse> =>
   typeof error === 'object' && error !== null && 'responseStatus' in error
 
+const RELATIVE_URL_BASE = 'http://localhost'
+
+/**
+ * Reduces a URL to a path on this service, suitable for use as a redirect target. Anything that would resolve to a
+ * different origin (e.g. `https://evil.com`, `//evil.com`, `/\evil.com`) becomes `/`, and leading slashes are collapsed
+ * so a normalised path such as `/.//evil.com` can't become a scheme-relative URL.
+ * @param url an absolute or relative URL.
+ * @param origin the origin the URL must belong to; defaults to a placeholder, so only relative URLs are accepted.
+ * @returns a same-origin path including query string and fragment, or `/`.
+ */
+export const toSameOriginPath = (url: string | undefined, origin: string = RELATIVE_URL_BASE): string => {
+  if (!url) return '/'
+  try {
+    const expectedOrigin = new URL(origin).origin
+    const parsed = new URL(url, expectedOrigin)
+    if (parsed.origin !== expectedOrigin) return '/'
+    return `${parsed.pathname.replace(/^\/+/, '/')}${parsed.search}${parsed.hash}`
+  } catch {
+    return '/'
+  }
+}
+
 const properCase = (word: string): string =>
   word.length >= 1 ? word[0]!.toUpperCase() + word.toLowerCase().slice(1) : word
 

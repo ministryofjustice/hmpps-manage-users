@@ -1,4 +1,5 @@
 import {
+  toSameOriginPath,
   convertToTitleCase,
   initialiseName,
   isAlphaStringOrSpecialChars,
@@ -190,5 +191,28 @@ describe('toBoolean', () => {
     ['tru', false],
   ])('toBoolean(%p) → %p', (input, expected) => {
     expect(toBoolean(input)).toBe(expected)
+  })
+})
+
+describe('toSameOriginPath', () => {
+  it.each([
+    [undefined, '/'],
+    ['', '/'],
+    ['/users?page=2#results', '/users?page=2#results'],
+    ['https://evil.com/phishing', '/'],
+    ['//evil.com', '/'],
+    ['/\\evil.com', '/'],
+    ['\t//evil.com', '/'],
+    ['/.//evil.com', '/evil.com'],
+  ])('converts %s to %s', (url, expected) => {
+    expect(toSameOriginPath(url)).toEqual(expected)
+  })
+
+  it('accepts absolute URLs on the given origin', () => {
+    expect(toSameOriginPath('https://example.com/a?b=c', 'https://example.com')).toEqual('/a?b=c')
+  })
+
+  it('rejects absolute URLs on a different origin', () => {
+    expect(toSameOriginPath('https://evil.com/a', 'https://example.com')).toEqual('/')
   })
 })

@@ -47,6 +47,21 @@ describe('authorisationMiddleware', () => {
     expect(req.session.returnTo).toEqual('/')
   })
 
+  it.each([
+    ['//evil.com', '/'],
+    ['//evil.com/phishing', '/'],
+    ['/\\evil.com', '/'],
+    ['/.//evil.com', '/evil.com'],
+  ])('should only store a same-origin path as returnTo for %s', (originalUrl, expected) => {
+    req = { originalUrl, session: { returnTo: '' } } as Request
+    const res = { redirect: jest.fn() } as unknown as Response
+
+    authorisationMiddleware()(req, res, next)
+
+    expect(res.redirect).toHaveBeenCalledWith('/sign-in')
+    expect(req.session.returnTo).toEqual(expected)
+  })
+
   it('should return next when user has a token', () => {
     req = { path: '/' } as Request
     const res = createResWithToken({ authorities: [AuthRole.CREATE_USER] })

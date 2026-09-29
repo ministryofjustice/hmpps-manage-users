@@ -7,6 +7,7 @@ import config from '../config'
 import { HmppsUser } from '../interfaces/hmppsUser'
 import generateOauthClientToken from '../utils/clientCredentials'
 import logger from '../../logger'
+import { toSameOriginPath } from '../utils/utils'
 
 passport.serializeUser((user, done) => {
   // Not used but required for Passport
@@ -39,15 +40,8 @@ passport.use(
 // (e.g. a cross-site link to this endpoint) and could otherwise be used to turn
 // the subsequent OAuth login flow into an open redirect via `returnTo`.
 export function sameOriginReturnPath(referer: string | undefined, ingressUrl: string): string {
-  if (!referer) return '/'
-  try {
-    const refererUrl = new URL(referer)
-    const ingressOrigin = new URL(ingressUrl).origin
-    if (refererUrl.origin !== ingressOrigin) return '/'
-    return `${refererUrl.pathname}${refererUrl.search}${refererUrl.hash}`
-  } catch {
-    return '/'
-  }
+  if (!referer || !URL.canParse(referer)) return '/'
+  return toSameOriginPath(referer, ingressUrl)
 }
 
 export default function setupAuthentication() {
@@ -115,7 +109,7 @@ export default function setupAuthentication() {
     if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
       return next()
     }
-    req.session.returnTo = req.originalUrl
+    req.session.returnTo = toSameOriginPath(req.originalUrl)
     return res.redirect('/sign-in')
   })
 
