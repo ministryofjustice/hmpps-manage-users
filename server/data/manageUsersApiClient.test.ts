@@ -140,6 +140,21 @@ describe('ManageUsersApiClient', () => {
         })
         expect(response).toEqual(createdUserId)
       })
+
+      it('should return created user UUID without quotes when response is JSON', async () => {
+        const createdUserId = '3b6b739a-a076-4d14-a3be-ebe302ada5f7'
+        nock(config.apis.manageUsersApi.url)
+          .post('/externalusers/create')
+          .matchHeader('authorization', `Bearer ${token}`)
+          .reply(200, JSON.stringify(createdUserId), { 'Content-Type': 'application/json' })
+
+        const response = await manageUsersApiClient.createExternalUser(token, {
+          firstName: 'Tresa',
+          lastName: 'Brigman',
+          email: 'tresa.brigman@justice.gov.uk',
+        })
+        expect(response).toEqual(createdUserId)
+      })
     })
 
     describe('get user', () => {

@@ -118,7 +118,7 @@ export default class ManageUsersApiClient extends RestClient {
 
   async createExternalUser(token: string, user: CreateExternalUserRequest): Promise<string> {
     return this.post<Response>({ path: '/externalusers/create', data: user, raw: true }, asUser(token)).then(
-      response => response.text,
+      response => (typeof response.body === 'string' ? response.body : response.text),
     )
   }
 

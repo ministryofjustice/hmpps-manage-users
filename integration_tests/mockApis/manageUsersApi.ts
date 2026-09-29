@@ -963,9 +963,9 @@ export default {
       response: {
         status,
         headers: {
-          'Content-Type': 'text/plain',
+          'Content-Type': 'application/json;charset=UTF-8',
         },
-        body: '2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f',
+        body: '"2e285ccd-dcfd-4497-9e28-d6e8e10a2d3f"',
       },
     }),
 
