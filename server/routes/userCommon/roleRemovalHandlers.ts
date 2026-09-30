@@ -4,7 +4,7 @@ import { RoleParam, UserUrlProvider } from './paramTypes'
 import { HttpStatusCode, isErrorResponse } from '../../utils/utils'
 import { EventType } from '../audit'
 
-type RoleRemover = (services: Services, token: string, userId: string, role: string) => Promise<void>
+type RoleRemover = (services: Services, token: string, userId: string, role: string) => Promise<unknown>
 
 export default (services: Services, roleRemover: RoleRemover, userDetailsUrlProvider: UserUrlProvider) =>
   async (req: Request<RoleParam>, res: Response) => {
