@@ -1,0 +1,303 @@
+$hmpps-header-height: 70px;
+
+.hmpps-header {
+  background-color: govuk-colour('black');
+
+  &__container {
+    @include govuk-width-container;
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    min-height: $hmpps-header-height;
+  }
+
+  &__logo {
+    @include govuk-responsive-margin(2, 'right');
+    position: relative;
+    top: -2px;
+    fill: govuk-colour('white');
+  }
+
+  &__title {
+    @include govuk-responsive-padding(3, 'right');
+    display: flex;
+    align-items: center;
+
+    &__organisation-name {
+      @include govuk-responsive-margin(2, 'right');
+      @include govuk-font($size: 24, $weight: 'bold');
+      display: flex;
+      align-items: center;
+    }
+
+    &__service-name {
+      display: none;
+      @include govuk-font(24);
+
+      @include govuk-media-query($from: desktop) {
+        display: inline-block;
+      }
+    }
+  }
+
+  &__link {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+
+    &:link,
+    &:visited,
+    &:active {
+      color: govuk-colour('white');
+      text-decoration: none;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &:focus {
+      color: govuk-colour('black');
+
+      svg {
+        fill: govuk-colour('black');
+      }
+    }
+
+    &__sub-text {
+      @include govuk-font(16);
+      display: none;
+
+      @include govuk-media-query($from: tablet) {
+        display: block;
+      }
+    }
+  }
+
+  &__navigation {
+    display: flex;
+    align-items: stretch;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    align-self: stretch;
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+// --------------------------------------------------------------------------
+// The following rules are copied, as close to verbatim as possible, from the
+// real `hmpps-connect-dps-components` / `hmpps-digital-prison-services`
+// header source (`_dps-header.scss`) for the account/user dropdown menu item
+// only (`.cdps-header__item--user`) - not the full DPS grid header, caseload
+// item, "Menu" services dropdown, or search item, which are intentionally not
+// replicated here.
+// --------------------------------------------------------------------------
+
+@property --cdps-header-bg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('black');
+}
+
+@property --cdps-header-fg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('white');
+}
+
+.cdps-header__item {
+  --cdps-header-bg-colour: #{govuk-colour('black')};
+  --cdps-header-fg-colour: #{govuk-colour('white')};
+
+  display: block;
+  position: relative;
+  align-content: center;
+  min-height: $hmpps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  @include govuk-font-size($size: 16);
+}
+
+.cdps-header__link {
+  display: block;
+  align-content: center;
+  min-height: $hmpps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  text-decoration: none;
+  outline: none;
+}
+
+a.cdps-header__link {
+  &:link,
+  &:active,
+  &:visited,
+  &:focus {
+    background: var(--cdps-header-bg-colour);
+    color: var(--cdps-header-fg-colour);
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+.cdps-header__link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: $hmpps-header-height;
+  margin: 0 15px;
+  border-bottom: 3px solid transparent;
+}
+
+.cdps-header__item--with-open-menu,
+.cdps-header__link:hover,
+.cdps-header__link:focus {
+  .cdps-header__link-wrapper {
+    border-bottom-color: var(--cdps-header-fg-colour);
+  }
+}
+
+.cdps-header__item--user {
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 1px;
+    height: 70%;
+    background: govuk-colour('white');
+  }
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-95')};
+    }
+  }
+
+  &.cdps-header__item--with-menu {
+    min-width: 140px;
+  }
+}
+
+.cdps-header__item--with-menu {
+  .cdps-header__link-wrapper {
+    position: relative;
+    padding-left: 25px;
+
+    @include govuk-media-query($until: tablet) {
+      padding-left: 15px;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      transform: rotate(45deg);
+      width: 6px;
+      height: 6px;
+      top: calc(50% - 6px);
+      left: 0;
+      border-bottom: 2px solid var(--cdps-header-fg-colour);
+      border-right: 2px solid var(--cdps-header-fg-colour);
+    }
+  }
+}
+
+.cdps-header__item--with-open-menu {
+  --cdps-header-bg-colour: #{govuk-colour('black', $variant: 'tint-95')};
+  --cdps-header-fg-colour: #{govuk-colour('blue')};
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-25')};
+    }
+  }
+
+  .cdps-header__link-wrapper::before {
+    transform: translateY(3px) rotate(225deg);
+  }
+}
+
+.cdps-header__item {
+  .cdps-header__link {
+    &:focus-visible {
+      --cdps-header-bg-colour: #{$govuk-focus-colour};
+      --cdps-header-fg-colour: #{$govuk-focus-text-colour};
+    }
+  }
+}
+
+@include govuk-media-query($until: tablet) {
+  .cdps-header__icon--user {
+    display: none;
+  }
+}
+
+.cdps-header__menu {
+  background: govuk-colour('black', $variant: 'tint-95');
+  color: govuk-colour('black');
+}
+
+.cdps-header__menu--user {
+  position: absolute;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10000;
+
+  .govuk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  li {
+    @include govuk-font-size($size: 16);
+    @include govuk-typography-weight-bold;
+  }
+}
+
+.location-bar {
+  @include govuk-width-container;
+  @include govuk-responsive-margin(3, 'bottom');
+  @include govuk-responsive-padding(3, 'top');
+  @include govuk-responsive-padding(3, 'bottom');
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: 1px solid $govuk-border-colour;
+
+  &__location {
+    @include govuk-font($size: 19, $weight: 'bold');
+    @include govuk-responsive-margin(3, 'right');
+
+    &__name {
+      @include govuk-responsive-margin(2, 'right');
+    }
+  }
+
+  &__link {
+    @include govuk-link-common;
+    @include govuk-link-style-default;
+    @include govuk-font($size: 19, $weight: 'normal');
+  }
+
+  @media print {
+    display: none;
+  }
+}
+
+.govuk-phase-banner {
+  @include govuk-width-container;
+  border: none;
+}

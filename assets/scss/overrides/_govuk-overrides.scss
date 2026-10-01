@@ -1,0 +1,15 @@
+.link-button {
+  padding: 0;
+  margin: 0;
+  background: none;
+  border: none;
+  text-decoration: underline;
+  cursor: pointer;
+  color: govuk-functional-colour(link);
+}
+
+.user-enabled-status {
+  .govuk-table__cell {
+    border-bottom: 0
+  }
+}

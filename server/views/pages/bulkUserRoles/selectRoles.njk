@@ -1,0 +1,84 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title = "Change user roles in bulk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa': 'error-summary' }
+    }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Select roles</h1>
+
+  <form action="{{ selectRolesUrl }}" method="post">
+    <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+    <div class="govuk-form-group">
+      <div id="select-roles-hint" class="govuk-hint">
+        Choose one or more roles to assign. You can select up to {{ maxSelections }}.
+      </div>
+
+      <table id="select-roles-table" class="govuk-table" data-module="moj-multi-select">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th class="govuk-table__header" scope="col" id="roles-select-all"></th>
+            <th class="govuk-table__header" scope="col">Role name</th>
+            <th class="govuk-table__header" scope="col">Role code</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+
+          {% for r in rolesList %}
+            <tr class="govuk-table__row govuk-table__row--selected">
+              <td class="govuk-table__cell">
+                <div class="govuk-checkboxes__item govuk-checkboxes--small moj-multi-select__checkbox">
+                  <input type="checkbox" class="govuk-checkboxes__input" id="SELECT_{{ r.value }}" name="selectedRoles" value="{{ r.value }}" {% if r.value in selectedRoles %}checked{% endif %} />
+                  <label class="govuk-label govuk-checkboxes__label" for="SELECT_{{ r.value }}">
+                    <span class="govuk-visually-hidden">Select {{ r.text }}</span>
+                  </label>
+                </div>
+              </td>
+              <td class="govuk-table__cell">{{ r.text }}</td>
+              <td class="govuk-table__cell">{{ r.value }}</td>
+            </tr>
+          {% endfor %}
+
+        </tbody>
+      </table>
+    </div>
+
+    {{ govukButton({
+      text: "Select roles",
+      id: "select-roles-submit",
+      type: "submit",
+      preventDoubleClick: true
+    }) }}
+
+    {{ govukButton({
+      text: "Back",
+      element: 'a',
+      href: backUrl,
+      classes: "govuk-button--secondary",
+      attributes: { id: "select-roles-back" }
+    }) }}
+
+  </form>
+
+{% endblock %}

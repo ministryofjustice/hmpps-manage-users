@@ -1,0 +1,61 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa': 'error-summary'}
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+        {# Disabled checkboxes won't be included in the form body so add hidden inputs to ensure they are included #}
+        {% for adminTypeValue in adminTypeValues %}
+          {% if adminTypeValue.disabled %}
+            <input type="hidden" name="adminType" value="{{ adminTypeValue.value }}"/>
+          {% endif %}
+        {% endfor %}
+
+        {{ govukCheckboxes({
+          idPrefix: 'adminType',
+          name: 'adminType',
+          fieldset: {
+            legend: {
+              text: "Who will be able to allocate the role",
+              isPageHeading: false,
+              classes: "govuk-fieldset__legend--m"
+            }
+          },
+          hint: {
+            text: "Select all that apply"
+          },
+          items: adminTypeValues | setChecked(adminType),
+          errorMessage: errors | findError('adminType')
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            attributes: { "data-qa": "confirm-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: roleUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "id": "cancel-button" }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

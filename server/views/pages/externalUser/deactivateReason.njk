@@ -1,0 +1,69 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{% set title = "Deactivate account" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: "Search for an external user", href: searchUrl },
+      { text: staff.name, href: staffUrl },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa': 'error-summary' }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+
+      <form method="POST">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}"/>
+
+        {{ govukInput({
+          label: {
+            text: "Reason for deactivating account",
+            classes: "govuk-label--s"
+          },
+          hint: {
+            text: "Must be 3 characters or more"
+          },
+          id: "reason",
+          name: "reason",
+          value: reason,
+          errorMessage: errors | findError('reason')
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: "Confirm",
+            type: "submit",
+            attributes: { "data-qa": "submit-button" }
+          }) }}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: staffUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "data-qa": "cancel-link" }
+          }) }}
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}

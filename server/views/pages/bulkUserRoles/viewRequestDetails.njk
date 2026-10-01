@@ -1,0 +1,102 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title = "Bulk user roles request details" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: "View bulk role changes", href: backUrl },
+      { text: details.id }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  {% if getRequestDetailsError %}
+    {{ govukErrorSummary({
+      titleText: "There was a problem",
+      errorList: [
+        { text: getRequestDetailsError }
+      ],
+      attributes: { 'data-qa': 'error-summary' }
+    }) }}
+  {% endif %}
+
+  <h1 class="govuk-heading-l">Bulk user roles change</h1>
+
+  {% if details %}
+
+    {% set jiraLink %}
+      <a href="https://dsdmoj.atlassian.net/browse/{{ details.jiraReference | escape }}" class="govuk-body govuk-link noDoubleClick">{{ details.jiraReference }}</a>
+    {% endset %}
+
+    {% set downloadDisabled = details.status == 'PENDING' %}
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: { text: "ID" },
+          value: { text: details.id }
+        },
+        {
+          key: { text: "Jira reference" },
+          value: { html: jiraLink | safe }
+        },
+        {
+          key: { text: "Date requested" },
+          value: { text: details.requestDateTime | formatDate('DD/MM/YYYY HH:mm') }
+        },
+        {
+          key: { text: "Requested by" },
+          value: { text: details.requestedBy }
+        },
+        {
+          key: { text: "Processing status" },
+          value: { text: details.status }
+        },
+        {
+          key: { text: "Total additions" },
+          value: { text: details.totalCount }
+        },
+        {
+          key: { text: "Successful" },
+          value: { text: details.successCount }
+        },
+        {
+          key: { text: "Errored" },
+          value: { text: details.errorCount }
+        }
+      ]
+    }) }}
+
+    <form id="downloadResultsForm" method="GET" action="{{ downloadUrl }}">
+      {{ govukButton({
+        id: "downloadResultsButton",
+        text: "Download results",
+        element: "button",
+        type: "submit",
+        preventDoubleClick: true,
+        classes: "govuk-button downloadButton",
+        attributes: { "data-qa": "download" },
+        disabled: downloadDisabled
+      }) }}
+    </form>
+
+  {% endif %}
+
+  {{ govukButton({
+    text: "Back",
+    element: 'a',
+    href: backUrl,
+    classes: "govuk-button--secondary",
+    attributes: { id: "details-back" }
+  }) }}
+
+{% endblock %}

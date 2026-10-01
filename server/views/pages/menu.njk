@@ -1,0 +1,55 @@
+{% extends "../partials/layout.njk" %}
+{%- from "govuk/components/tag/macro.njk" import govukTag -%}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title =  "Manage user accounts" %}
+{% set mainClasses = "govuk-body" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      {
+        text: "Home",
+        href: homeUrl
+      },
+      {
+        text: title
+      }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% if message.length > 0 %}
+    {{ govukNotificationBanner({
+      html: message,
+      attributes: { "data-qa": "banner-message" }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      {% if menuTiles.length %}
+        <ul class="govuk-grid-row card-group" data-qa="tile-list">
+          {% for tile in menuTiles %}
+            <li class="govuk-grid-column-one-third card-group__item">
+              <div class="card card--clickable" data-qa="{{ tile.dataQa }}">
+                <h2 class="govuk-heading-m card__heading">
+                  <a class="govuk-link card__link govuk-link--no-visited-state"
+                     href="{{ tile.href }}">{{ tile.title }}</a>
+                </h2>
+                <p class="govuk-body card__description">{{ tile.description }}</p>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="govuk-body" data-qa="no-admin-functions-message">
+          There are no admin functions associated with your account.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

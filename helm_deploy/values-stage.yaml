@@ -1,27 +1,21 @@
 ---
-# Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
+# Per environment values which override defaults in hmpps-manage-users/values.yaml
 
 generic-service:
   replicaCount: 2
+
   ingress:
     host: manage-users-stage.hmpps.service.justice.gov.uk
-    modsecurity_audit_enabled: true
-    className: modsec-non-prod
 
   env:
-    MANAGE_USERS_API_ENDPOINT_URL: https://manage-users-api-stage.hmpps.service.justice.gov.uk
+    INGRESS_URL: https://manage-users-stage.hmpps.service.justice.gov.uk
     HMPPS_AUTH_URL: https://sign-in-stage.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital-stage.prison.service.justice.gov.uk
-    HMPPS_COOKIE_NAME: hmpps-session-stage
-    HMPPS_COOKIE_DOMAIN: manage-users-stage.hmpps.service.justice.gov.uk
-    MANAGE_HMPPS_USERS_URL: https://manage-users-stage.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-stage.prison.service.justice.gov.uk
-    SUPPORT_URL: https://support-stage.hmpps.service.justice.gov.uk
-    SYSTEM_PHASE: STAGE
+    MANAGE_USERS_API_URL: https://manage-users-api-stage.hmpps.service.justice.gov.uk
+    ENVIRONMENT_NAME: STAGE
     MANAGE_USER_ALLOW_LIST_ENABLED: true
     MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL: stage
 
-
-# CloudPlatform AlertManager receiver to route prometheus alerts to slack
 generic-prometheus-alerts:
   alertSeverity: hmpps_tech_non_prod
