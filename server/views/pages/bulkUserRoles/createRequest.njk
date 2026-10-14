@@ -1,0 +1,58 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title = "Change user roles in bulk" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa': 'error-summary' }
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+
+      <form action="{{ jiraReferenceUrl }}" method="post">
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+        {{ govukInput({
+          label: {
+            text: "Jira reference",
+            classes: "govuk-label--m"
+          },
+          id: "jira-reference-input",
+          name: "jiraReference",
+          classes: "govuk-input--width-20 govuk-input--extra-letter-spacing",
+          value: details.jiraReference,
+          errorMessage: errors | findError('jira-reference-input')
+        }) }}
+
+        {{ govukButton({
+          text: "Continue",
+          id: "submit-jira-reference",
+          preventDoubleClick: true
+        }) }}
+
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

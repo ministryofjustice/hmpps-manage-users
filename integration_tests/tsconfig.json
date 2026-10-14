@@ -1,0 +1,23 @@
+{
+  "extends": "@tsconfig/node24/tsconfig.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "lib": [
+      "es2024",
+      "ESNext.Array",
+      "ESNext.Collection",
+      "ESNext.Error",
+      "ESNext.Iterator",
+      "ESNext.Promise",
+      "dom",
+      "dom.iterable"
+    ],
+    "paths": {
+      "manageUsersApiClient": ["../server/@types/manageUsersApiClient"]
+    },
+    "types": ["@playwright/test", "../server/@types/manageUsersApiClient"],
+    "esModuleInterop": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts"]
+}

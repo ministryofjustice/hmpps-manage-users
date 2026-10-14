@@ -1,0 +1,71 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title = "Manage Email Domains" %}
+
+{% block beforeContent %}
+  {{ govukBreadcrumbs({
+    items: [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: title }
+    ]
+  }) }}
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-xl">{{ title }}</h1>
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{ govukButton({
+        text: "Add Email Domain",
+        href: createUrl
+      }) }}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if domains.length %}
+        {% set rows = [] %}
+        {% for domain in domains %}
+          {% set deleteLink %}
+            <a href="{{ domain.id | deleteEmailDomainLink }}" class="govuk-link govuk-link--no-visited-state">Delete<span class="govuk-visually-hidden"> domain {{ domain.domain }}</span></a>
+          {% endset %}
+          {% set rows = (rows.push([
+            { text: domain.domain },
+            { text: domain.description },
+            { html: deleteLink, classes: 'govuk-!-text-align-right' }
+          ]), rows) %}
+        {% endfor %}
+        {% set actionHeaderHtml %}
+          <span class="govuk-visually-hidden">Actions</span>
+        {% endset %}
+        {{ govukTable({
+          caption: "Allowed Email Domains",
+          captionClasses: "govuk-table__caption--l",
+          head: [
+            { text: 'Domain' },
+            { text: 'Description' },
+            { html: actionHeaderHtml }
+          ],
+          rows: rows,
+          classes: 'govuk-!-margin-bottom-3',
+          attributes: { "data-qa": "domains" }
+        }) }}
+      {% else %}
+        <p class="govuk-body" data-qa="no-email-domains">
+          There are no registered email domains. Add an email domain using the button above.
+        </p>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}

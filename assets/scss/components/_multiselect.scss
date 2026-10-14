@@ -1,0 +1,19 @@
+.multi-select-filter {
+  position: relative;
+
+  .search-input {
+    padding-left: 36px;
+    background: url("/assets/images/search.svg") no-repeat 5px center/26px auto #fff;
+  }
+
+  .selected-counter {
+    min-height: 20px;
+  }
+
+  .options-container {
+    max-height: 220px;
+    overflow: hidden auto;
+    margin-left: -10px;
+    padding-left: 10px;
+  }
+}

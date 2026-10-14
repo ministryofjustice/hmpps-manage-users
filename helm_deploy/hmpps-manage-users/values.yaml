@@ -8,7 +8,7 @@ generic-service:
 
   image:
     repository: ghcr.io/ministryofjustice/hmpps-manage-users
-    tag: app_version    # override at deployment time
+    tag: app_version # override at deployment time
     port: 3000
 
   ingress:
@@ -68,31 +68,40 @@ generic-service:
 
   env:
     NODE_ENV: production
-    REDIS_TLS_ENABLED: "true"
+    REDIS_ENABLED: true
+    REDIS_TLS_ENABLED: true
     TOKEN_VERIFICATION_ENABLED: true
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
-    NOMIS_USERS_API_ENDPOINT_TIMEOUT_SECONDS: "120"
     AUDIT_SQS_REGION: "eu-west-2"
     AUDIT_SERVICE_NAME: "hmpps-manage-users"
-    MANAGE_USER_ALLOW_LIST_ENABLED: false
 
   # Pre-existing kubernetes secrets to load as environment variables in the deployment.
   # namespace_secrets:
   #   [name of kubernetes secret]:
   #     [name of environment variable as seen by app]: [key of kubernetes secret to load]
+
   namespace_secrets:
     hmpps-manage-users:
       APPINSIGHTS_INSTRUMENTATIONKEY: "APPINSIGHTS_INSTRUMENTATIONKEY"
-      API_CLIENT_ID: "API_CLIENT_ID"
-      API_CLIENT_SECRET: "API_CLIENT_SECRET"
-      GOOGLE_TAG_MANAGER_ID: "GOOGLE_TAG_MANAGER_ID"
+      AUTH_CODE_CLIENT_ID: "API_CLIENT_ID"
+      AUTH_CODE_CLIENT_SECRET: "API_CLIENT_SECRET"
       SESSION_SECRET: "SESSION_SECRET"
+    hmpps-manage-users-client-creds:
+      CLIENT_CREDS_CLIENT_ID: 'CLIENT_CREDS_CLIENT_ID'
+      CLIENT_CREDS_CLIENT_SECRET: 'CLIENT_CREDS_CLIENT_SECRET'
     sqs-hmpps-audit-secret:
       AUDIT_SQS_QUEUE_URL: "sqs_queue_url"
       AUDIT_SQS_QUEUE_NAME: "sqs_queue_name"
     hmpps-redis:
       REDIS_HOST: "REDIS_HOST"
-      REDIS_PASSWORD: "REDIS_PASSWORD"
+      REDIS_AUTH_TOKEN: "REDIS_PASSWORD"
+    hmpps-manage-users-application-insights:
+      APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
+
+  allowlist:
+    groups:
+      - digital_staff_and_mojo
+      - moj_cloud_platform
 
 generic-prometheus-alerts:
   targetApplication: hmpps-manage-users

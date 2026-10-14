@@ -16,7 +16,6 @@ on:
 
 permissions:
   contents: read
-  packages: write
 
 jobs:
   helm_lint:
@@ -30,19 +29,23 @@ jobs:
           - environments: ${{ inputs.deploy_to_stage != true && 'stage' }}
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       environment: ${{ matrix.environments }}
   node_build:
     name: node build
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       install_command: 'npm run setup'
+      npm_version: '12'
   build_image:
     name: Build docker image
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2
     needs: node_build
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'

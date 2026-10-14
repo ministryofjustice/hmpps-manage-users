@@ -1,0 +1,105 @@
+{% extends "../partials/layout.njk" %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/tag/macro.njk" import govukTag %}
+
+{% set title =  "Select roles" %}
+
+{% block beforeContent %}
+  {% set breadcrumbs =
+    [
+      { text: "Home", href: homeUrl },
+      { text: "Manage user accounts", href: '/' },
+      { text: searchTitle, href: searchUrl },
+      { text: staff.name, href: staffUrl },
+      { text: title }
+    ]
+  %}
+  {{ govukBreadcrumbs({
+    items: breadcrumbs
+  }) }}
+{% endblock %}
+
+{% block content %}
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa-errors': true }
+    }) }}
+  {% endif %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      {% if message.length > 0 %}
+      {{ govukNotificationBanner({
+        html: message,
+        attributes: { "data-qa": "banner-message" }
+      }) }}
+      {% endif %}
+      <h1 class="govuk-heading-l"><span class="govuk-caption-l">{{ staff.username }}</span>{{ staff.name }}</h1>
+      <table class="govuk-table">
+        <tbody class="govuk-table__body">
+        <tr class="govuk-table__row user-enabled-status">
+          {% if staff.active %}
+            <td class="govuk-table__cell">
+              {{ govukTag({
+                text: "Active account",
+                classes: "govuk-tag--turquoise",
+                attributes: { "data-qa": "enabled" }
+              }) }}
+            </td>
+          {% else %}
+            <td class="govuk-table__cell">
+              {% if staff.accountStatus %}{% set tagText = 'Inactive account - ' + staff.accountStatus %}{% else %}{% set tagText = 'Inactive account' %}{% endif %}
+              {{ govukTag({
+                text: tagText,
+                classes: "govuk-tag--pink",
+                attributes: { "data-qa": "enabled" }
+              }) }}
+            </td>
+          {% endif %}
+        </tr>
+        </tbody>
+      </table>
+
+      <h2 class="govuk-heading-l">{{ title }}</h2>
+        {% if roleDropdownValues.length == 0 %}
+          <p class="govuk-body" data-qa="no-roles">
+            There are no roles available for you to assign.
+          </p>
+        {% endif %}
+        <form method="POST">
+          <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
+          {{ govukCheckboxes({
+            idPrefix: 'roles',
+            name: 'roles',
+            items: roleDropdownValues,
+            errorMessage: errors | findError('roles')
+          }) }}
+
+          {% if roleDropdownValues.length > 0 %}
+            {{ govukButton({
+              text: "Confirm",
+              type: "submit",
+              classes: "govuk-!-margin-right-1",
+              attributes: { "data-qa": "add-button" }
+            }) }}
+          {% endif %}
+
+          {{ govukButton({
+            text: "Cancel",
+            element: 'a',
+            href: staffUrl,
+            classes: "govuk-button--secondary",
+            attributes: { "data-qa": "cancel-link" }
+          }) }}
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}
