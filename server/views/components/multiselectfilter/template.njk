@@ -19,7 +19,7 @@
     }) }}
   </div>
   <div class="selected-counter govuk-!-font-size-16" id={{ counterTotalSelectedId }}></div>
-  <div role="group" class="options-container">
+  <div role="group" class="options-container" aria-label="{{ params.title }}">
     {{ govukCheckboxes({
       idPrefix: params.name,
       name: params.name,
