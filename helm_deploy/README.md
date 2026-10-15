@@ -11,7 +11,7 @@ version.BuildInfo{Version:"v3.0.1", GitCommit:"7c22ef9ce89e0ebeb7125ba2ebf7d421f
 
 - Ensure a TLS cert for your intended hostname is configured and ready, see section below.
 
-### Useful helm (v3) commands:
+### Useful helm (v3) commands:
 
 __Test chart template rendering:__
 
@@ -43,7 +43,7 @@ Note: replace _revision number_ with one from listed in the `history` command)
 
 __Example deploy command:__
 
-The following example is `--dry-run` mode - which will allow for testing. CircleCI normally runs this command with actual secret values (from AWS secret manager), and also updated the chart's application version to match the release version:
+The following example is `--dry-run` mode - which will allow for testing. Github actions normally runs this command with actual secret values (from AWS secret manager), and also updated the chart's application version to match the release version:
 
 ```sh
 helm upgrade [release name] [path to chart]. \
@@ -66,4 +66,4 @@ cloud-platform-environments/namespaces/live-1.cloud-platform.service.justice.gov
 
 Ensure the certificate is created and ready for use.
 
-The name of the kubernetes secret where the certificate is stored is used as a value to the helm chart - this is used to configured the ingress.
+The name of the kubernetes secret where the certificate is stored is used as a value to the helm chart - this is used to configure the ingress.

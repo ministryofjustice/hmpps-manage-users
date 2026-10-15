@@ -1,0 +1,171 @@
+{% extends "../../partials/layout.njk" %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "moj/components/filter/macro.njk" import mojFilter %}
+{% from "moj/components/pagination/macro.njk" import mojPagination %}
+{% from "moj/components/badge/macro.njk" import mojBadge %}
+{% from "govuk/components/breadcrumbs/macro.njk" import govukBreadcrumbs %}
+
+{% set title = "Manage roles" %}
+
+ {% block beforeContent %}
+   {{ govukBreadcrumbs({
+     items: [
+       { text: "Home", href: homeUrl },
+       { text: "Manage user accounts", href: '/' },
+       { text: title }
+     ]
+   }) }}
+ {% endblock %}
+
+{% block content %}
+
+  {% set filterOptionsHtml %}
+    {{ govukInput({
+      label: { text: "Role name", classes: "govuk-label--s" },
+      classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+      value: currentFilter.roleName,
+      id: "roleName",
+      name: "roleName",
+      hint: {
+        text: "Will match the role's name"
+      },
+      errorMessage: errors | findError('roleName')
+    }) }}
+
+    {{ govukInput({
+      label: { text: "Role code", classes: "govuk-label--s" },
+      classes: "govuk-input--width-20 govuk-fieldset__legend--s",
+      value: currentFilter.roleCode,
+      id: "roleCode",
+      name: "roleCode",
+      hint: {
+        text: "Will match the role's code"
+      },
+      errorMessage: errors | findError('roleCode')
+    }) }}
+
+    {{ govukRadios({
+      idPrefix: 'adminType',
+      name: 'adminType',
+      classes: 'govuk-radios--small',
+      fieldset: {
+        legend: {
+          text: 'Role administrator',
+          classes: 'govuk-fieldset__legend--s'
+        }
+      },
+      hint: {
+        text: 'Display Ext Admin, DPS Admin or DPS LSA administrable roles only'
+      },
+      items: [
+        {
+          value: 'ALL',
+          text: 'All',
+          checked: currentFilter.adminType === 'ALL'
+        },
+        {
+          value: 'EXT_ADM',
+          text: 'EXT ADMIN',
+          checked: currentFilter.adminType === 'EXT_ADM'
+        },
+        {
+          value: 'DPS_ADM',
+          text: 'DPS ADMIN',
+          checked: currentFilter.adminType === 'DPS_ADM'
+        },
+        {
+          value: 'DPS_LSA',
+          text: 'DPS LSA',
+          checked: currentFilter.adminType === 'DPS_LSA'
+        }
+      ]
+    }
+    ) }}
+  {% endset %}
+
+  {% if errors.length > 0 %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errors,
+      attributes: { 'data-qa': 'error-summary'}
+    }) }}
+  {% endif %}
+
+  <div class="govuk-grid-row govuk-body">
+    <div class="govuk-grid-column-full">
+      <h1 class="govuk-heading-l">{{ title }}</h1>
+      <div class="moj-filter-layout">
+        <div class="moj-filter-layout__filter">
+          <form id="filter-form" action="{{ rolesUrl }}" novalidate>
+            {{ mojFilter(currentFilter | toRoleFilter( filterOptionsHtml )) }}
+          </form>
+        </div>
+        <div class="moj-filter-layout__content">
+          <div>
+            <div class="govuk-grid-column-full">
+              <div class="moj-action-bar__filterTagsContainer govuk-!-margin-bottom-5"></div>
+              {% if roles.length %}
+                {{ mojPagination(pagination) }}
+                {% set rows = [] %}
+                {% for role in roles %}
+                  {% set cellHtml %}
+                    <div class="govuk-!-margin-bottom-5">
+                      <div class="govuk-grid-row govuk-!-margin-bottom-2">
+                        <div class="govuk-grid-column-three-quarters">
+                          <div class="govuk-body-lead">
+                            <a href="{{ maintainUrl }}/{{ role.roleCode }}" class="govuk-link"
+                               data-qa="edit-button-{{ role.roleCode }}">{{ role.roleName }}</a>
+                          </div>
+                          <div class="govuk-body-s">{{ role.roleCode }} </div>
+                        </div>
+                        <div class="govuk-grid-column-one-quarter  pull-right">
+                          <ul class="govuk-list">
+                            {% for adminType in role.adminType %}
+                              <li>
+                                {{ mojBadge({
+                                  text: "DPS ADMIN",
+                                  classes: "moj-badge--bright-purple"
+                                }) if adminType.adminTypeCode === "DPS_ADM" }}
+                                {{ mojBadge({
+                                  text: "DPS LSA",
+                                  classes: "moj-badge--blue"
+                                }) if adminType.adminTypeCode === "DPS_LSA" }}
+                                {{ mojBadge({
+                                  text: "EXT ADMIN",
+                                  classes: "moj-badge--green"
+                                }) if adminType.adminTypeCode === "EXT_ADM" }}
+                              </li>
+                            {% endfor %}
+                          </ul>
+                        </div>
+                        <div class="govuk-grid-column-three-quarters">
+                          {{ role.roleDescription }}
+                        </div>
+                      </div>
+                    </div>
+                  {% endset %}
+                  {% set rows = (rows.push([
+                    { html: cellHtml }
+                  ]), rows) %}
+
+                {% endfor %}
+                {{ govukTable({
+                  rows: rows,
+                  attributes: { "data-qa": "roles" }
+                }) }}
+                {{ mojPagination(pagination) }}
+              {% else %}
+                <p class="govuk-body" data-qa="no-results">No records found matching search criteria.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

@@ -5,9 +5,11 @@
 
 The service requires the following tools:
 
-- node
-- Chrome 
-- Chromedriver (align the version with chrome version installed on your machine)
+- node `^24`
+- npm `^12`
+
+Integration tests use [Playwright](https://playwright.dev/), which manages its own browser binaries, so there's no
+need to separately install Chrome or Chromedriver.
 
 ## NVM
 
@@ -46,41 +48,54 @@ need to be running and available at known locations.
 - HMPPS Auth (port: 9090)
 - HMPPS Manage Users API (port: 9091)
 - NOMIS User Roles API (port: 8082)
+- HMPPS External Users API (port: 8083)
+- HMPPS Audit API (port: 8084) and Localstack (SQS, ports: 4566-4597) - only needed if `AUDIT_ENABLED=true`
+- Postgres databases for HMPPS Auth (port: 5432) and the Audit API (port: 5433)
 
-These can be run in Docker using: `docker compose up`
+These can all be run in Docker using: `docker compose up`
+
+This also builds and starts this app itself (port: 3000) against those dependent services - use
+`docker compose up --scale=app=0` to start only the dependent services and run the app separately with
+`npm run start:dev` (see below).
 
 # Running hmpps-manage-users locally
 
-The application can be built & run with the following bash commands : 
+Create an environment file by copying `.env.example` -> `.env`. Environment variables set in here will be available
+when running `start:dev`.
+
+The application can be built & run with the following bash commands, ensuring you are using `node ^24`:
 
 ```
-npm install
+npm run setup
 npm run start:dev
 ```
 
-This will start the service and use the default dependent services as above.
+This will build the assets with esbuild, start the service and use the default dependent services as above.
 
-The UI will be available on http://localhost:3001
+The UI will be available on http://localhost:3000
 
-NPM will use the package.json file in the root of the project to download any required dependencies.
-The application will listen for any changes and restart as necessary.
+`npm run setup` runs `npm ci` (not `npm install`) to install dependencies via the package.json file in the root of
+the project. The application will watch for changes and rebuild/restart as necessary.
 
 # Overriding the Default Environment Settings
 
-When hmpps-manage-users runs in non-local environments it requires a set of environment variables to 
+When hmpps-manage-users runs in non-local environments it requires a set of environment variables to
 tell it where to find the dependent services and other important settings.
 The following environment variables supply these values:
 
 
-| Environment Variable          |           Description            |
-|-------------------------------|:--------------------------------:|
-| API_CLIENT_ID                 |   Client ID for accessing apis   |
-| API_CLIENT_SECRET             | Client secret for accessing apis |
-| MANAGE_USERS_API_ENDPOINT_URL |     URL to manage users api      |
-| NOMIS_USERS_API_ENDPOINT_URL  |  URL to NOMIS manage users api   |
-| HMPPS_AUTH_URL                |        URL to HMPPS Auth         |
-| DPS_ENDPOINT_URL              |           DPS Core UI            |
-| SESSION_SECRET                |          Session secret          | 
+| Environment Variable        |               Description                |
+|------------------------------|:-----------------------------------------:|
+| AUTH_CODE_CLIENT_ID          |    Client ID for the user login oauth2 flow    |
+| AUTH_CODE_CLIENT_SECRET      | Client secret for the user login oauth2 flow |
+| CLIENT_CREDS_CLIENT_ID       | Client ID for system-to-system API calls |
+| CLIENT_CREDS_CLIENT_SECRET   | Client secret for system-to-system API calls |
+| MANAGE_USERS_API_URL         |          URL to manage users api          |
+| HMPPS_AUTH_URL               |             URL to HMPPS Auth             |
+| DPS_ENDPOINT_URL             |                DPS Core UI                |
+| SESSION_SECRET               |              Session secret               |
+| REDIS_ENABLED                | Whether to use Redis for the session store |
+| ENVIRONMENT_NAME             |   Environment name shown in the phase banner   |
 
 
 # Production execution
@@ -89,22 +104,21 @@ For a production build run the following within bash :
 
 ```
 npm run build
-node-env mode=PRODUCTION npm start
+NODE_ENV=production npm start
 ```
 
 # Running in Docker locally
 
 ```
-docker run -p 3001:3000 -d \
+docker run -p 3000:3000 -d \
      --name hmpps-manage-users \
-     -e USE_API_GATEWAY_AUTH=no \
      ghcr.io/ministryofjustice/hmpps-manage-users:latest
 ```
 
 # Running locally in intelliJ
 A redis instance needs to be created to allow the UI to run successfully.
 ```
-docker stop redis && docker rm redis && docker-compose -f docker-compose-test.yaml up redis
+docker stop redis && docker rm redis && docker compose -f docker-compose-test.yml up redis
 ```
 
 # Generating typescript api types
@@ -113,48 +127,49 @@ The typescript types for the api can be generated by running the following scrip
 ./generate-api-types.sh
 ```
 
-The script creates a file in the `backend/@types/manageUsersApiImport` directory. By default this is for dev branch. 
+The script creates a file at `server/@types/manageUsersApi/index.d.ts` from the `manage-users-api` OpenAPI docs. By
+default this is generated from the `dev` environment's api.
 
-To use imported types you finally need to name and export them in the `backend/@types/manageUsersApi.ts` file.
+To use the imported types, add/export them as a `components['schemas']['...']` type alias in
+`server/@types/manageUsersApiClient/index.d.ts`, which is what the rest of the app imports from (via the
+`manageUsersApiClient` path mapping in `tsconfig.json`).
 
-# Cypress Integration tests
+# Integration tests
 
-The `integration-tests` directory contains a set of Cypress integration tests.
-These tests WireMock to stub the application's dependencies on the HMPPS Manage Users and HMPPS Auth RESTful APIs.
+The `integration_tests` directory contains a set of [Playwright](https://playwright.dev/) integration tests.
+These use WireMock to stub the application's dependencies on the HMPPS Manage Users and HMPPS Auth RESTful APIs.
 
 ## Running the feature tests
 
 They do not need the dependent services to be running as it uses a special version of the service with wiremocked stubs for these.
-Feature tests may be run either from the commandline of from within IntelliJ.
-A choice of web browsers can be configured, though Chrome or Chrome headless are configured by default.
+Feature tests may be run either from the commandline or from within IntelliJ.
 
 * Preparation (do this whether running from commandline or IntelliJ)
 
-   - Download the latest version of ChromeDriver and follow the installation instructions here:
+   - After first install, ensure Playwright's browsers are installed:
      ```
-      https://sites.google.com/a/chromium.org/chromedriver/downloads
-      https://sites.google.com/a/chromium.org/chromedriver/getting-started
+     npm run int-test-init:ci
      ```
-   - Check that a chromedriver executable is available on your path
-   - Check that the versions of chromedriver and your installed chrome browser match 
 
-### Running the Cypress tests
+### Running the integration tests
 
 You need to fire up the wiremock server first:
-```docker-compose -f docker-compose-test.yaml up```
+```
+docker compose -f docker-compose-test.yml up
+```
 
 This will give you useful feedback if the app is making requests that you haven't mocked out. You can see
-the reqest log at `localhost:9191/__admin/requests/` and a JSON representation of the mocks `localhost:9191/__admin/mappings`.
+the request log at `localhost:9191/__admin/requests/` and a JSON representation of the mocks `localhost:9191/__admin/mappings`.
 
 ### Starting feature tests node instance
 
-A separate node instance needs to be started for the feature tests. This will run on port 3008 and won't conflict
-with any of the api services, e.g. hmpps-manage-users-api or hmpps-auth.
+A separate node instance needs to be started for the feature tests. This will run on port 3007 (see `feature.env`)
+and won't conflict with any of the api services, e.g. hmpps-manage-users-api or hmpps-auth.
 
 ```npm run start-feature:dev```
 
-Note that the circleci will run `start-feature-no-webpack` instead, which will rely on a production webpack build
-rather than using the dev webpack against the assets.
+(the CI pipeline runs integration tests via the shared `node_integration_tests` GitHub Actions workflow - see
+`.github/workflows/pipeline.yml`)
 
 ### Running the tests
 
@@ -163,7 +178,7 @@ With the UI:
 npm run int-test-ui
 ```
 
-Just on the command line (any console log outputs will not be visible, they appear in the browser the Cypress UI fires up):
+Just on the command line (any console log outputs will not be visible, they appear in the browser the Playwright UI fires up):
 ```
 npm run int-test
 ```
@@ -180,11 +195,32 @@ to run jest unit tests:
 ```npm test```
 
 #### Phase Name Banner
-To show the phase name banner add the environment variable ``` SYSTEM_PHASE=ENV_NAME ```.
+To show the phase name banner add the environment variable ``` ENVIRONMENT_NAME=ENV_NAME ```.
 This will trigger the banner to become visible showing the given name.
 
 ### Useful links
 
 - WireMock: http://wiremock.org/
-- Chromedriver: https://sites.google.com/a/chromium.org/chromedriver
+- Playwright: https://playwright.dev/
 
+## Keeping your app up-to-date
+
+While there are multiple ways to keep your project up-to-date this [method](https://mojdt.slack.com/archives/C69NWE339/p1694009011413449) doesn't require you to keep cherry picking the changes, however if that works for you there is no reason to stop.
+
+In your service, add the template as a remote:
+
+`git remote add template https://github.com/ministryofjustice/hmpps-template-typescript`
+
+Create a branch and switch to it, eg:
+
+`git checkout -b template-changes-2309`
+
+Fetch all remotes:
+
+`git fetch --all`
+
+Merge the changes from the template into your service source:
+
+`git merge template/main --allow-unrelated-histories`
+
+You'll need to manually handle the merge of the changes, but if you do it early, carefully, and regularly, it won't be too much of a hassle.

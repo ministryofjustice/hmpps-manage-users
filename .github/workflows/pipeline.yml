@@ -1,4 +1,5 @@
 name: Pipeline [test -> build -> deploy]
+
 on:
   push:
     branches:
@@ -15,30 +16,47 @@ on:
         required: true
         default: false
         type: boolean
+
 permissions:
   contents: read
-  packages: write
+
 concurrency:
-  # only cancel in progress when on a branch - use SHA on main to ensure uniqueness
+  # Only cancel in progress when on a branch - use SHA on main to ensure uniqueness.
+  # This will allow multiple pipelines to run at the same time on main.
+  # Note that two pipelines running within a few minutes of each other will cause issues with helm deploying to
+  # a namespace, as the second one will not be able to get a lock as a deploy will be in progress.
   group: ${{ github.workflow }}-${{ github.ref == 'refs/heads/main' && github.sha || github.ref }}
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
+  # Determines whether the pipeline should publish the docker image.
+  # Referenced by build and deploy jobs to avoid repeating the condition.
+  check_publish:
+    name: Check publish flag
+    runs-on: ubuntu-latest
+    permissions: {}
+    outputs:
+      enabled: ${{ github.ref == 'refs/heads/main' && (inputs.push || inputs.push == null) }}
+    steps:
+      - name: Set publish flag
+        run: echo "Publishing enabled ${{ github.ref == 'refs/heads/main' && (inputs.push || inputs.push == null) }}"
+  # main node build workflow
   node_build:
     name: node build
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_build.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       install_command: 'npm run setup'
+      npm_version: '12'
+  # generic node unit tests - feel free to override with local tests if required
   node_unit_tests:
     name: node unit tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_unit_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
-    secrets: inherit
+  # generic node integration tests using wiremock - feel free to override with local tests if required
   node_integration_tests:
     name: node integration tests
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/node_integration_tests.yml@v2 # WORKFLOW_VERSION
     needs: [node_build]
-    secrets: inherit
     with:
       redis_tag: 7.0
       wiremock_port: 9191
@@ -48,29 +66,36 @@ jobs:
         environments: ['dev', 'stage', 'preprod', 'prod']
     name: helm lint
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/test_helm_lint.yml@v2 # WORKFLOW_VERSION
-    secrets: inherit
     with:
       environment: ${{ matrix.environments }}
   build:
     name: Build docker image from hmpps-github-actions
-    if: github.ref == 'refs/heads/main' || inputs.additional_docker_tag != ''
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/docker_build.yml@v2 # WORKFLOW_VERSION
     needs:
       - node_integration_tests
       - node_unit_tests
+      - check_publish
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+      attestations: write
     with:
       docker_registry: 'ghcr.io'
       registry_org: 'ministryofjustice'
       additional_docker_tag: ${{ inputs.additional_docker_tag }}
-      push: ${{ inputs.push || true }}
+      push: ${{ needs.check_publish.outputs.enabled == 'true' }}
       docker_multiplatform: false
-      tag_latest: ${{ inputs.additional_docker_tag == '' }}
+      generate_sbom: ${{ needs.check_publish.outputs.enabled == 'true' }}
+      attach_sbom_to_registry: ${{ needs.check_publish.outputs.enabled == 'true' }}
+      sign_image: ${{ needs.check_publish.outputs.enabled == 'true' }}
   deploy_dev:
-    name: Deploy to the dev environment
-    if: github.ref == 'refs/heads/main'
+    name: Deploy to the development environment
+    if: needs.check_publish.outputs.enabled == 'true'
     needs:
-    - build
-    - helm_lint
+      - build
+      - helm_lint
+      - check_publish
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
@@ -78,32 +103,38 @@ jobs:
       app_version: '${{ needs.build.outputs.app_version }}'
   deploy_stage:
     name: Deploy to the stage environment
-    if: github.ref == 'refs/heads/main'
+    if: needs.check_publish.outputs.enabled == 'true'
     needs:
-    - build
-    - helm_lint
+      - build
+      - helm_lint
+      - check_publish
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
       environment: 'stage'
       app_version: '${{ needs.build.outputs.app_version }}'
+      helm_timeout: '5m'
   deploy_preprod:
-    name: Deploy to the preprod environment
+    name: Deploy to pre-production environment
+    if: needs.check_publish.outputs.enabled == 'true'
     needs:
-    - build
-    - helm_lint
-    - deploy_dev
+      - build
+      - helm_lint
+      - deploy_dev
+      - check_publish
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:
       environment: 'preprod'
       app_version: '${{ needs.build.outputs.app_version }}'
   deploy_prod:
-    name: Deploy to the prod environment
+    name: Deploy to production environment
+    if: needs.check_publish.outputs.enabled == 'true'
     needs:
-    - build
-    - helm_lint
-    - deploy_preprod
+      - build
+      - helm_lint
+      - deploy_preprod
+      - check_publish
     uses: ministryofjustice/hmpps-github-actions/.github/workflows/deploy_env.yml@v2 # WORKFLOW_VERSION
     secrets: inherit
     with:

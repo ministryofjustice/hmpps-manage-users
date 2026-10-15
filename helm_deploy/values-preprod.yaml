@@ -1,5 +1,5 @@
 ---
-# Environment specific values, override helm_deploy/hmpps-manage-users/values.yaml
+# Per environment values which override defaults in hmpps-manage-users/values.yaml
 
 generic-service:
   replicaCount: 2
@@ -8,18 +8,15 @@ generic-service:
     host: manage-users-preprod.hmpps.service.justice.gov.uk
 
   env:
-    MANAGE_USERS_API_ENDPOINT_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
+    INGRESS_URL: https://manage-users-preprod.hmpps.service.justice.gov.uk
     HMPPS_AUTH_URL: https://sign-in-preprod.hmpps.service.justice.gov.uk/auth
     DPS_ENDPOINT_URL: https://digital-preprod.prison.service.justice.gov.uk
-    HMPPS_COOKIE_NAME: hmpps-session-preprod
-    HMPPS_COOKIE_DOMAIN: manage-users-preprod.hmpps.service.justice.gov.uk
-    MANAGE_HMPPS_USERS_URL: https://manage-users-preprod.hmpps.service.justice.gov.uk
     TOKEN_VERIFICATION_API_URL: https://token-verification-api-preprod.prison.service.justice.gov.uk
-    SUPPORT_URL: https://support-preprod.hmpps.service.justice.gov.uk
-    SYSTEM_PHASE: PRE-PRODUCTION
+    MANAGE_USERS_API_URL: https://manage-users-api-preprod.hmpps.service.justice.gov.uk
+    ENVIRONMENT_NAME: PRE-PRODUCTION
     MANAGE_USER_ALLOW_LIST_ENABLED: true
     MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL: pre-production
 
-# CloudPlatform AlertManager receiver to route prometheus alerts to slack
+
 generic-prometheus-alerts:
   alertSeverity: hmpps_tech_non_prod
