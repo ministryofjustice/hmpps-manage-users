@@ -12,7 +12,3 @@ generic-service:
     TOKEN_VERIFICATION_API_URL: https://token-verification-api.prison.service.justice.gov.uk
     MANAGE_USERS_API_URL: https://manage-users-api.hmpps.service.justice.gov.uk
     ROLE_REMOVAL_SERVICE_NOW_LINK: https://mojprod.service-now.com/moj_sp?id=sc_cat_item&sys_id=0768a0d71b81fe103393a797b04bcb8b&table=sc_cat_item&searchTerm=dps%20-%20role
-
-
-generic-prometheus-alerts:
-  alertSeverity: hmpps_tech

@@ -18,5 +18,3 @@ generic-service:
     MANAGE_USERS_API_URL: https://manage-users-api-dev.hmpps.service.justice.gov.uk
     ENVIRONMENT_NAME: DEV
 
-generic-prometheus-alerts:
-  alertSeverity: hmpps_tech_non_prod
