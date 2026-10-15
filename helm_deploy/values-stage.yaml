@@ -6,6 +6,8 @@ generic-service:
 
   ingress:
     host: manage-users-stage.hmpps.service.justice.gov.uk
+    modsecurity_audit_enabled: true
+    className: modsec-non-prod
 
   env:
     INGRESS_URL: https://manage-users-stage.hmpps.service.justice.gov.uk
@@ -16,6 +18,3 @@ generic-service:
     ENVIRONMENT_NAME: STAGE
     MANAGE_USER_ALLOW_LIST_ENABLED: true
     MANAGE_USER_ALLOW_LIST_ENVIRONMENT_LABEL: stage
-
-generic-prometheus-alerts:
-  alertSeverity: hmpps_tech_non_prod
