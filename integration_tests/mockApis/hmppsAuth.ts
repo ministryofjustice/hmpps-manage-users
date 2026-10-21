@@ -62,6 +62,18 @@ export default {
       },
     }),
 
+  stubAuthHomePage: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/auth',
+      },
+      response: {
+        status: HttpStatusCode.OK,
+        body: '<html lang="en"><body>Dummy Auth home page<h1>Auth Home</h1></body></html>',
+      },
+    }),
+
   stubSignOutPage: (): SuperAgentRequest =>
     stubFor({
       request: {

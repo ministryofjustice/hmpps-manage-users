@@ -5,6 +5,7 @@ import { login, resetStubs } from '../testUtils'
 import HomePage from '../pages/homePage'
 import paths from '../../server/routes/paths'
 import AuthRole from '../../server/interfaces/authRole'
+import hmppsAuth from '../mockApis/hmppsAuth'
 
 test.describe('Menu', () => {
   test.beforeEach(async () => {
@@ -13,6 +14,15 @@ test.describe('Menu', () => {
 
   test.afterEach(async () => {
     await resetStubs()
+  })
+
+  test('Clicking on the HMPPS home link navigates to the auth home page', async ({ page }) => {
+    await hmppsAuth.stubAuthHomePage()
+    await login(page, { roles: [AuthRole.MAINTAIN_ACCESS_ROLES] })
+
+    const homePage = await HomePage.verifyOnPage(page)
+    await homePage.hmppsHomeLink.click()
+    await expect(page).toHaveURL('http://localhost:9191/auth')
   })
 
   test('Banner text is displayed if the user has MAINTAIN_ACCESS_ROLES role', async ({ page }) => {

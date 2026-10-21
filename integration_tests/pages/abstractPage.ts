@@ -24,6 +24,9 @@ export default class AbstractPage {
   /** button that opens the header's account menu (Your account / Switch account / Sign out) */
   readonly accountMenuButton: Locator
 
+  /** link to HMPPS home page in header */
+  readonly hmppsHomeLink: Locator
+
   protected constructor(page: Page) {
     this.page = page
     this.phaseBanner = page.getByTestId('header-phase-banner')
@@ -33,6 +36,7 @@ export default class AbstractPage {
     this.signoutLink = page.getByText('Sign out')
     this.manageUserDetails = page.getByTestId('manageDetails')
     this.accountMenuButton = page.getByTestId('accountMenuButton')
+    this.hmppsHomeLink = this.link('HMPPS', true)
   }
 
   /** opens the header's account menu so its links become visible/clickable */
