@@ -69,27 +69,28 @@ export default function setupAuthentication() {
   const authUrl = config.apis.hmppsAuth.externalUrl
   const authParameters = `client_id=${config.apis.hmppsAuth.authClientId}&redirect_uri=${config.ingressUrl}`
 
-  router.get('/switch-account', async (req, res, next) => {
-    req.session.returnTo = sameOriginReturnPath(req.headers.referer, config.ingressUrl)
-    // Revoke the current token in token-verification-api so it can't be reused.
-    // Best-effort: a failure here should not block the account switch.
-    const { user } = req as AuthenticatedRequest
-    if (user?.token) {
-      try {
-        // TODO - probably should add token deletion/revocation method to this library:
-        // https://github.com/ministryofjustice/hmpps-typescript-lib/blob/main/packages/auth-clients/src/main/VerificationClient.ts
-        await tokenVerificationClient.delete({ path: '/token/self' }, user.token)
-      } catch (err) {
-        logger.warn('Failed to revoke token during switch-account: %s', err)
+  if (config.featureSwitches.switchAccount.enabled)
+    router.get('/switch-account', async (req, res, next) => {
+      req.session.returnTo = sameOriginReturnPath(req.headers.referer, config.ingressUrl)
+      // Revoke the current token in token-verification-api so it can't be reused.
+      // Best-effort: a failure here should not block the account switch.
+      const { user } = req as AuthenticatedRequest
+      if (user?.token) {
+        try {
+          // TODO - probably should add token deletion/revocation method to this library:
+          // https://github.com/ministryofjustice/hmpps-typescript-lib/blob/main/packages/auth-clients/src/main/VerificationClient.ts
+          await tokenVerificationClient.delete({ path: '/token/self' }, user.token)
+        } catch (err) {
+          logger.warn('Failed to revoke token during switch-account: %s', err)
+        }
       }
-    }
-    // Remove this app's user token from the session.
-    // The session itself is kept alive so that returnTo survives into the new OAuth flow.
-    req.logout(err => {
-      if (err) return next(err)
-      return res.redirect('/sign-in')
+      // Remove this app's user token from the session.
+      // The session itself is kept alive so that returnTo survives into the new OAuth flow.
+      req.logout(err => {
+        if (err) return next(err)
+        return res.redirect('/sign-in')
+      })
     })
-  })
 
   router.use('/sign-out', (req, res, next) => {
     const authSignOutUrl = `${authUrl}/sign-out?${authParameters}`
