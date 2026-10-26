@@ -100,6 +100,9 @@ export default {
       pageSize: Number(get('MANAGE_USER_ALLOW_LIST_PAGE_SIZE', 20)),
       downloadLimit: Number(get('MANAGE_USER_ALLOW_LIST_DOWNLOAD_LIMIT', 20000)),
     },
+    switchAccount: {
+      enabled: get('SWITCH_ACCOUNT_ENABLED', 'false') === 'true',
+    },
   },
   downloadRecordLimit: Number(get('DPS_SEARCH_DOWNLOAD_LINK_LIMIT', 20000)),
 }

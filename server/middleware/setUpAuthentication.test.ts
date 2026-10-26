@@ -1,4 +1,42 @@
-import { sameOriginReturnPath } from './setUpAuthentication'
+import express from 'express'
+import config from '../config'
+import nunjucksSetup from '../utils/nunjucksSetup'
+import setUpAuthentication, { sameOriginReturnPath } from './setUpAuthentication'
+
+describe('switch account feature flag', () => {
+  const originalFlag = config.featureSwitches.switchAccount.enabled
+
+  afterEach(() => {
+    config.featureSwitches.switchAccount.enabled = originalFlag
+  })
+
+  const hasSwitchAccountRoute = () => setUpAuthentication().stack.some(layer => layer.route?.path === '/switch-account')
+
+  const renderHeader = (): Promise<string> => {
+    const app = express()
+    app.set('view engine', 'njk')
+    nunjucksSetup(app)
+    return new Promise((resolve, reject) => {
+      app.render('partials/header.njk', { user: { displayName: 'First Last' } }, (err, html) =>
+        err ? reject(err) : resolve(html),
+      )
+    })
+  }
+
+  it('registers the /switch-account endpoint and shows the menu item when enabled', async () => {
+    config.featureSwitches.switchAccount.enabled = true
+
+    expect(hasSwitchAccountRoute()).toBe(true)
+    expect(await renderHeader()).toContain('data-qa="switchAccount"')
+  })
+
+  it('does not register the /switch-account endpoint or show the menu item when disabled', async () => {
+    config.featureSwitches.switchAccount.enabled = false
+
+    expect(hasSwitchAccountRoute()).toBe(false)
+    expect(await renderHeader()).not.toContain('data-qa="switchAccount"')
+  })
+})
 
 describe('sameOriginReturnPath', () => {
   const ingressUrl = 'https://manage-users.hmpps.service.justice.gov.uk'

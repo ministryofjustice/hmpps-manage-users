@@ -45,7 +45,9 @@
             <div class="cdps-header__menu cdps-header__menu--user" id="cdps-header__menu--user" hidden="hidden">
               <ul class="govuk-list" aria-label="Account menu">
                 <li><a data-qa="manageDetails" class="govuk-link govuk-link--no-visited-state" href="/account-details" data-test="manage-account-link" rel="noopener noreferrer">Your account</a></li>
+                {% if switchAccountEnabled %}
                 <li><a data-qa="switchAccount" class="govuk-link govuk-link--no-visited-state" href="/switch-account">Switch account</a></li>
+                {% endif %}
                 <li><a data-qa="signOut" class="govuk-link govuk-link--no-visited-state" href="/sign-out">Sign out</a></li>
               </ul>
             </div>

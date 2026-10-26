@@ -76,6 +76,7 @@ export default function nunjucksSetup(app: express.Express): void {
   njkEnv.addGlobal('dpsUrl', config.app.dpsEndpointUrl)
   njkEnv.addGlobal('allowListEnvironment', manageUserAllowListHelper.environmentLabel())
   njkEnv.addGlobal('allowListSearchTitle', manageUserAllowListHelper.title())
+  njkEnv.addGlobal('switchAccountEnabled', config.featureSwitches.switchAccount.enabled)
   njkEnv.addFilter('initialiseName', initialiseName)
   njkEnv.addFilter('assetMap', (url: string) => assetManifest[url] || url)
   njkEnv.addFilter('findError', (array: FormError[], formFieldId: string) => {
