@@ -1,14 +1,35 @@
 $hmpps-header-height: 70px;
+$hmpps-header-collapse-width: 985px;
+$hmpps-header-minimal-width: 400px;
 
 .hmpps-header {
+  position: relative;
   background-color: govuk-colour('black');
 
   &__container {
     @include govuk-width-container;
-    display: flex;
-    justify-content: space-between;
-    align-items: stretch;
+    display: grid;
+    grid-template-columns: minmax(auto, 360px) 1fr max-content max-content;
+    grid-template-areas: 'cdps-header__item--crest cdps-header__item--spacer cdps-header__item--caseload cdps-header__item--user';
+    gap: 0;
     min-height: $hmpps-header-height;
+
+    @media (max-width: $hmpps-header-collapse-width) {
+      grid-template-columns: 1fr 1fr max-content;
+      grid-template-rows: repeat(2, $hmpps-header-height);
+      grid-template-areas:
+        'cdps-header__item--crest cdps-header__item--crest cdps-header__item--spacer'
+        'cdps-header__item--caseload cdps-header__item--user cdps-header__item--user';
+    }
+
+    @media (max-width: $hmpps-header-minimal-width) {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: repeat(3, $hmpps-header-height);
+      grid-template-areas:
+        'cdps-header__item--crest cdps-header__item--crest'
+        'cdps-header__item--caseload cdps-header__item--spacer'
+        'cdps-header__item--user cdps-header__item--user';
+    }
   }
 
   &__logo {
@@ -19,24 +40,16 @@ $hmpps-header-height: 70px;
   }
 
   &__title {
-    @include govuk-responsive-padding(3, 'right');
-    display: flex;
-    align-items: center;
-
     &__organisation-name {
       @include govuk-responsive-margin(2, 'right');
       @include govuk-font($size: 24, $weight: 'bold');
-      display: flex;
+      display: inline-flex;
       align-items: center;
     }
 
     &__service-name {
-      display: none;
+      display: inline-block;
       @include govuk-font(24);
-
-      @include govuk-media-query($from: desktop) {
-        display: inline-block;
-      }
     }
   }
 
@@ -88,216 +101,10 @@ $hmpps-header-height: 70px;
 }
 
 // --------------------------------------------------------------------------
-// The following rules are copied, as close to verbatim as possible, from the
-// real `hmpps-connect-dps-components` / `hmpps-digital-prison-services`
-// header source (`_dps-header.scss`) for the account/user dropdown menu item
-// only (`.cdps-header__item--user`) - not the full DPS grid header, caseload
-// item, "Menu" services dropdown, or search item, which are intentionally not
-// replicated here.
+// The `.cdps-header__*` rules (crest, spacer, caseload, account/user dropdown
+// menu - copied verbatim from DPS's `_dps-header.scss`) have moved to
+// `assets/scss/dps-header.scss`, which is built and loaded as its own
+// independent CSS bundle, mirroring the real DPS architecture where the
+// header styles are served separately from the app's own stylesheet. See
+// that file for details.
 // --------------------------------------------------------------------------
-
-@property --cdps-header-bg-colour {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: govuk-colour('black');
-}
-
-@property --cdps-header-fg-colour {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: govuk-colour('white');
-}
-
-.cdps-header__item {
-  --cdps-header-bg-colour: #{govuk-colour('black')};
-  --cdps-header-fg-colour: #{govuk-colour('white')};
-
-  display: block;
-  position: relative;
-  align-content: center;
-  min-height: $hmpps-header-height;
-  background: var(--cdps-header-bg-colour);
-  color: var(--cdps-header-fg-colour);
-  @include govuk-font-size($size: 16);
-}
-
-.cdps-header__link {
-  display: block;
-  align-content: center;
-  min-height: $hmpps-header-height;
-  background: var(--cdps-header-bg-colour);
-  color: var(--cdps-header-fg-colour);
-  text-decoration: none;
-  outline: none;
-}
-
-a.cdps-header__link {
-  &:link,
-  &:active,
-  &:visited,
-  &:focus {
-    background: var(--cdps-header-bg-colour);
-    color: var(--cdps-header-fg-colour);
-  }
-
-  &:focus {
-    box-shadow: none;
-    outline: none;
-  }
-}
-
-.cdps-header__link-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  box-sizing: border-box;
-  height: $hmpps-header-height;
-  margin: 0 15px;
-  border-bottom: 3px solid transparent;
-}
-
-.cdps-header__item--with-open-menu,
-.cdps-header__link:hover,
-.cdps-header__link:focus {
-  .cdps-header__link-wrapper {
-    border-bottom-color: var(--cdps-header-fg-colour);
-  }
-}
-
-.cdps-header__item--user {
-  &::before {
-    content: '';
-    display: block;
-    position: absolute;
-    left: 0;
-    top: 15%;
-    width: 1px;
-    height: 70%;
-    background: govuk-colour('white');
-  }
-
-  .cdps-header__link {
-    &:hover {
-      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-95')};
-    }
-  }
-
-  &.cdps-header__item--with-menu {
-    min-width: 140px;
-  }
-}
-
-.cdps-header__item--with-menu {
-  .cdps-header__link-wrapper {
-    position: relative;
-    padding-left: 25px;
-
-    @include govuk-media-query($until: tablet) {
-      padding-left: 15px;
-    }
-
-    &::before {
-      content: '';
-      display: block;
-      position: absolute;
-      transform: rotate(45deg);
-      width: 6px;
-      height: 6px;
-      top: calc(50% - 6px);
-      left: 0;
-      border-bottom: 2px solid var(--cdps-header-fg-colour);
-      border-right: 2px solid var(--cdps-header-fg-colour);
-    }
-  }
-}
-
-.cdps-header__item--with-open-menu {
-  --cdps-header-bg-colour: #{govuk-colour('black', $variant: 'tint-95')};
-  --cdps-header-fg-colour: #{govuk-colour('blue')};
-
-  .cdps-header__link {
-    &:hover {
-      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-25')};
-    }
-  }
-
-  .cdps-header__link-wrapper::before {
-    transform: translateY(3px) rotate(225deg);
-  }
-}
-
-.cdps-header__item {
-  .cdps-header__link {
-    &:focus-visible {
-      --cdps-header-bg-colour: #{$govuk-focus-colour};
-      --cdps-header-fg-colour: #{$govuk-focus-text-colour};
-    }
-  }
-}
-
-@include govuk-media-query($until: tablet) {
-  .cdps-header__icon--user {
-    display: none;
-  }
-}
-
-.cdps-header__menu {
-  background: govuk-colour('black', $variant: 'tint-95');
-  color: govuk-colour('black');
-}
-
-.cdps-header__menu--user {
-  position: absolute;
-  padding: 15px;
-  width: 100%;
-  box-sizing: border-box;
-  z-index: 10000;
-
-  .govuk-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 0;
-  }
-
-  li {
-    @include govuk-font-size($size: 16);
-    @include govuk-typography-weight-bold;
-  }
-}
-
-.location-bar {
-  @include govuk-width-container;
-  @include govuk-responsive-margin(3, 'bottom');
-  @include govuk-responsive-padding(3, 'top');
-  @include govuk-responsive-padding(3, 'bottom');
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  border-bottom: 1px solid $govuk-border-colour;
-
-  &__location {
-    @include govuk-font($size: 19, $weight: 'bold');
-    @include govuk-responsive-margin(3, 'right');
-
-    &__name {
-      @include govuk-responsive-margin(2, 'right');
-    }
-  }
-
-  &__link {
-    @include govuk-link-common;
-    @include govuk-link-style-default;
-    @include govuk-font($size: 19, $weight: 'normal');
-  }
-
-  @media print {
-    display: none;
-  }
-}
-
-.govuk-phase-banner {
-  @include govuk-width-container;
-  border: none;
-}

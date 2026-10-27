@@ -1,0 +1,250 @@
+// --------------------------------------------------------------------------
+// This stylesheet is built and loaded as an independent bundle
+// (`dist/assets/css/dps-header.[hash].css`), linked into the page *after*
+// `index.css` (see `server/views/partials/layout.njk`).
+//
+// This mirrors the real DPS/micro-frontend architecture: the live DPS app
+// loads its own `index.css` first, then a separately-hosted `header.css`
+// (served by `hmpps-micro-frontend-components` from
+// `frontend-components-dev.hmpps.service.justice.gov.uk`) *last* - giving
+// the header styles cascade priority by load order rather than needing
+// extra specificity/`:hover` overrides to beat global GOV.UK Frontend link
+// rules such as `a:hover { color: ... }`.
+//
+// Only GOV.UK Frontend's settings/tools/helpers (colours, spacing,
+// typography mixins, media queries) are pulled in here - NOT the full
+// `govuk-frontend/dist/govuk/index`, since that also defines the global
+// `a`/`a:hover`/`.govuk-link` rules that this bundle must load after, not
+// duplicate.
+//
+// The following rules are copied, as close to verbatim as possible, from the
+// real `hmpps-connect-dps-components` / `hmpps-digital-prison-services`
+// header source (`_dps-header.scss`), covering the crest, spacer
+// (environment tag), caseload, and account/user dropdown menu grid items -
+// not the "Menu" services dropdown or search item, which are intentionally
+// not replicated here.
+// --------------------------------------------------------------------------
+
+@use 'govuk-frontend/dist/govuk/base' as *;
+
+$hmpps-header-height: 70px;
+
+@property --cdps-header-bg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('black');
+}
+
+@property --cdps-header-fg-colour {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: govuk-colour('white');
+}
+
+.cdps-header__item {
+  --cdps-header-bg-colour: #{govuk-colour('black')};
+  --cdps-header-fg-colour: #{govuk-colour('white')};
+
+  display: block;
+  position: relative;
+  align-content: center;
+  min-height: $hmpps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  @include govuk-font-size($size: 16);
+}
+
+.cdps-header__link {
+  display: block;
+  align-content: center;
+  min-height: $hmpps-header-height;
+  background: var(--cdps-header-bg-colour);
+  color: var(--cdps-header-fg-colour);
+  text-decoration: none;
+  outline: none;
+}
+
+a.cdps-header__link {
+  // `:hover` is included here (unlike DPS's own source rule) because MU's
+  // caseload item is a href-less `<a>` (no self-service "switch caseload"
+  // page exists in MU yet, unlike DPS's `href="{{ changeCaseLoadLink }}"`).
+  // Without an `href`, this anchor never matches `:link`/`:visited`/`:active`/
+  // `:focus`, so the base colour/background rule below is skipped entirely on
+  // hover, and the browser falls through to GOV.UK Frontend's default
+  // `a:hover` link-blue. Remove this `:hover` case if/when MU adds a real
+  // caseload-switch destination and gives this link a genuine `href`.
+  &:link,
+  &:active,
+  &:visited,
+  &:focus,
+  &:hover {
+    background: var(--cdps-header-bg-colour);
+    color: var(--cdps-header-fg-colour);
+  }
+
+  &:focus {
+    box-shadow: none;
+    outline: none;
+  }
+}
+
+.cdps-header__link-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+  height: $hmpps-header-height;
+  margin: 0 15px;
+  border-bottom: 3px solid transparent;
+}
+
+.cdps-header__item--with-open-menu,
+.cdps-header__link:hover,
+.cdps-header__link:focus {
+  .cdps-header__link-wrapper {
+    border-bottom-color: var(--cdps-header-fg-colour);
+  }
+}
+
+.cdps-header__item--crest {
+  grid-area: cdps-header__item--crest;
+  @include govuk-font-size($size: 24);
+  @include govuk-responsive-padding(3, 'right');
+  display: flex;
+  align-items: center;
+
+  .cdps-header__link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+  }
+}
+
+.cdps-header__item--spacer {
+  grid-area: cdps-header__item--spacer;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+
+  @media (max-width: 985px) {
+    padding: 0;
+    justify-content: flex-end;
+  }
+}
+
+.cdps-header__item--caseload {
+  grid-area: cdps-header__item--caseload;
+}
+
+.cdps-header__item--user {
+  grid-area: cdps-header__item--user;
+
+  &.cdps-header__item--with-menu {
+    min-width: 140px;
+  }
+}
+
+.cdps-header__item--caseload,
+.cdps-header__item--user {
+  &::before {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 15%;
+    width: 1px;
+    height: 70%;
+    background: govuk-colour('white');
+  }
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-95')};
+    }
+  }
+}
+
+.cdps-header__item--few-caseloads {
+  &::before {
+    display: none;
+  }
+}
+
+.cdps-header__item--with-menu {
+  .cdps-header__link-wrapper {
+    position: relative;
+    padding-left: 25px;
+
+    @include govuk-media-query($until: tablet) {
+      padding-left: 15px;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      position: absolute;
+      transform: rotate(45deg);
+      width: 6px;
+      height: 6px;
+      top: calc(50% - 6px);
+      left: 0;
+      border-bottom: 2px solid var(--cdps-header-fg-colour);
+      border-right: 2px solid var(--cdps-header-fg-colour);
+    }
+  }
+}
+
+.cdps-header__item--with-open-menu {
+  --cdps-header-bg-colour: #{govuk-colour('black', $variant: 'tint-95')};
+  --cdps-header-fg-colour: #{govuk-colour('blue')};
+
+  .cdps-header__link {
+    &:hover {
+      --cdps-header-fg-colour: #{govuk-colour('black', $variant: 'tint-25')};
+    }
+  }
+
+  .cdps-header__link-wrapper::before {
+    transform: translateY(3px) rotate(225deg);
+  }
+}
+
+.cdps-header__item {
+  .cdps-header__link {
+    &:focus-visible {
+      --cdps-header-bg-colour: #{$govuk-focus-colour};
+      --cdps-header-fg-colour: #{$govuk-focus-text-colour};
+    }
+  }
+}
+
+@include govuk-media-query($until: tablet) {
+  .cdps-header__icon--user {
+    display: none;
+  }
+}
+
+.cdps-header__menu {
+  background: govuk-colour('black', $variant: 'tint-95');
+  color: govuk-colour('black');
+}
+
+.cdps-header__menu--user {
+  position: absolute;
+  padding: 15px;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 10000;
+
+  .govuk-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 0;
+  }
+
+  li {
+    @include govuk-font-size($size: 16);
+    @include govuk-typography-weight-bold;
+  }
+}
