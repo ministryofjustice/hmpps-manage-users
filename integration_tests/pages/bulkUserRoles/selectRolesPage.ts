@@ -37,7 +37,11 @@ export default class SelectRolesPage extends AbstractPage {
   }
 
   async selectRoles(roles: string[]) {
-    await Promise.all(roles.map(role => this.page.locator(`#SELECT_${role}`).check({ force: true })))
+    // Tick one at a time: parallel check() calls each scroll the page, which can push an earlier checkbox outside the viewport
+    for (const role of roles) {
+      // eslint-disable-next-line no-await-in-loop
+      await this.page.locator(`#SELECT_${role}`).check({ force: true })
+    }
   }
 
   roleCheckbox(role: string): Locator {
