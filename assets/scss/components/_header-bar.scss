@@ -9,7 +9,7 @@ $hmpps-header-minimal-width: 400px;
   &__container {
     @include govuk-width-container;
     display: grid;
-    grid-template-columns: minmax(auto, 360px) 1fr max-content max-content;
+    grid-template-columns: max-content 1fr max-content max-content;
     grid-template-areas: 'cdps-header__item--crest cdps-header__item--spacer cdps-header__item--caseload cdps-header__item--user';
     gap: 0;
     min-height: $hmpps-header-height;
