@@ -164,12 +164,6 @@ a.cdps-header__link {
   }
 }
 
-.cdps-header__item--few-caseloads {
-  &::before {
-    display: none;
-  }
-}
-
 .cdps-header__item--with-menu {
   .cdps-header__link-wrapper {
     position: relative;

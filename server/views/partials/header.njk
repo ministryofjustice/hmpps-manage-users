@@ -26,7 +26,7 @@
 
     {% if user.activeCaseload %}
       {% set hasSeveralCaseloads = user.caseloads.length > 1 %}
-      <div class="cdps-header__item cdps-header__item--caseload {% if not hasSeveralCaseloads %}cdps-header__item--few-caseloads{% endif %}">
+      <div class="cdps-header__item cdps-header__item--caseload">
         <a
           class="cdps-header__link"
           data-qa="cdps-header-caseload"
