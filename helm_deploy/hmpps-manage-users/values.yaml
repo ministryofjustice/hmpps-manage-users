@@ -72,6 +72,7 @@ generic-service:
     REDIS_TLS_ENABLED: true
     TOKEN_VERIFICATION_ENABLED: true
     WEB_SESSION_TIMEOUT_IN_MINUTES: "60"
+    AUDIT_ENABLED: true
     AUDIT_SQS_REGION: "eu-west-2"
     AUDIT_SERVICE_NAME: "hmpps-manage-users"
 
