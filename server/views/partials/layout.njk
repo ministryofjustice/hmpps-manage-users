@@ -2,6 +2,14 @@
 
 {% block head %}
   <link href="{{ '/assets/css/index.css' | assetMap }}" rel="stylesheet"/>
+  <!--
+    Loaded after `index.css` so its `.cdps-header__*` rules (ported from
+    DPS's `_dps-header.scss`) take cascade priority over global GOV.UK
+    Frontend link styles (e.g. `a:hover`) via load order - mirroring the
+    real DPS app, which loads its own `index.css` first and then the
+    separately-hosted micro-frontend `header.css` last.
+  -->
+  <link href="{{ '/assets/css/dps-header.css' | assetMap }}" rel="stylesheet"/>
 {% endblock %}
 
 {% block pageTitle %}{{pageTitle | default(title)}}{% endblock %}
@@ -15,4 +23,5 @@
 
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
+  <script type="module" src="{{ '/assets/js/dps-header.js' | assetMap }}"></script>
 {% endblock %}

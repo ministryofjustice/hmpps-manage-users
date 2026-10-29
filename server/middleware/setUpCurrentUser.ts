@@ -8,7 +8,8 @@ import { Services } from '../services'
 export default function setUpCurrentUser(services: Services) {
   const router = express.Router()
 
-  router.use(async (_req, res, next) => {
+  router.use(async (req, res, next) => {
+    res.locals.currentUrl = `${req.protocol}://${req.get('host')}${req.originalUrl}`
     try {
       const {
         name,

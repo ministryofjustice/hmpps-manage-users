@@ -44,7 +44,7 @@ test.describe('SignIn', () => {
 
     const homePage = await HomePage.verifyOnPage(page)
 
-    await expect(homePage.activeLocation).toHaveText('Moorland')
+    await expect(homePage.activeLocation).toHaveText('Moorland (HMP & YOI)')
   })
 
   test('Active location (caseload) not visible in header if not nomis auth source', async ({ page }) => {
@@ -61,6 +61,15 @@ test.describe('SignIn', () => {
     const homePage = await HomePage.verifyOnPage(page)
 
     await expect(homePage.changeLocationLink).toBeVisible()
+  })
+
+  test('Change location link includes backUrl pointing back to the current page', async ({ page }) => {
+    await login(page)
+
+    const homePage = await HomePage.verifyOnPage(page)
+
+    const changeLocationHref = await homePage.changeLocationLink.locator('xpath=ancestor::a').getAttribute('href')
+    expect(changeLocationHref).toContain(`backUrl=${encodeURIComponent(page.url())}`)
   })
 
   test('Change location link not visible in header if not nomis auth source', async ({ page }) => {
