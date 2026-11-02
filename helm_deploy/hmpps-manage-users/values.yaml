@@ -99,10 +99,5 @@ generic-service:
     hmpps-manage-users-application-insights:
       APPLICATIONINSIGHTS_CONNECTION_STRING: "APPLICATIONINSIGHTS_CONNECTION_STRING"
 
-  allowlist:
-    groups:
-      - digital_staff_and_mojo
-      - moj_cloud_platform
-
 generic-prometheus-alerts:
   targetApplication: hmpps-manage-users
