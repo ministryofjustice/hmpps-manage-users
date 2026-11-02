@@ -1,8 +1,11 @@
-// Recreates the behaviour of the real DPS header's `MenuItem` class
-// (hmpps-connect-dps-components' assets/js/header.ts) but scoped to just the
-// account/user dropdown menu item, since that is the only part of the DPS
-// header being replicated here.
-export default function setupAccountMenu() {
+// This is built and loaded as an independent JS bundle
+// (`dist/assets/js/dps-header.[hash].js`), mirroring the real DPS
+// architecture where the micro-frontend header's JS is served separately
+// from the app's own bundle. Recreates the behaviour of the real DPS
+// header's `MenuItem` class (hmpps-connect-dps-components'
+// assets/js/header.ts) but scoped to just the account/user dropdown menu
+// item, since that is the only part of the DPS header being replicated here.
+function setupAccountMenu() {
   const $item = document.querySelector<HTMLLIElement>('.cdps-header__item--user')
   const $button = $item?.querySelector<HTMLAnchorElement>('.cdps-header__link')
   const $menu = document.getElementById('cdps-header__menu--user') as HTMLDivElement | null
@@ -72,3 +75,5 @@ export default function setupAccountMenu() {
   $button.addEventListener('keydown', closeOnEscape)
   $menu.addEventListener('keydown', closeOnEscape)
 }
+
+setupAccountMenu()

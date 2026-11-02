@@ -536,12 +536,12 @@ export default {
         username,
         activeCaseload: {
           id: 'MDI',
-          name: 'Moorland',
+          name: 'Moorland (HMP & YOI)',
         },
         caseloads: [
           {
             id: 'MDI',
-            name: 'Moorland',
+            name: 'Moorland (HMP & YOI)',
           },
           {
             id: 'LEI',
