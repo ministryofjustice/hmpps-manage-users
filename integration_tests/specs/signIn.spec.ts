@@ -63,6 +63,15 @@ test.describe('SignIn', () => {
     await expect(homePage.changeLocationLink).toBeVisible()
   })
 
+  test('Change location link returns to the manage-users home page', async ({ page }) => {
+    await login(page)
+
+    const homePage = await HomePage.verifyOnPage(page)
+
+    const changeLocationHref = await homePage.changeLocationLink.locator('xpath=ancestor::a').getAttribute('href')
+    expect(changeLocationHref).toContain(`backUrl=${encodeURIComponent('http://localhost:3007')}`)
+  })
+
   test('Change location link not visible in header if not nomis auth source', async ({ page }) => {
     await login(page, { authSource: 'delius' })
 
