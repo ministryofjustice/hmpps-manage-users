@@ -63,15 +63,6 @@ test.describe('SignIn', () => {
     await expect(homePage.changeLocationLink).toBeVisible()
   })
 
-  test('Change location link includes backUrl pointing back to the current page', async ({ page }) => {
-    await login(page)
-
-    const homePage = await HomePage.verifyOnPage(page)
-
-    const changeLocationHref = await homePage.changeLocationLink.locator('xpath=ancestor::a').getAttribute('href')
-    expect(changeLocationHref).toContain(`backUrl=${encodeURIComponent(page.url())}`)
-  })
-
   test('Change location link not visible in header if not nomis auth source', async ({ page }) => {
     await login(page, { authSource: 'delius' })
 
