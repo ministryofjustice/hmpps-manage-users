@@ -140,7 +140,7 @@
       {% set changeEmailLink = {
         html: '<a href="' + staffUrl + '/change-email" class="govuk-link" data-qa="amend-link">Change email</a>',
         format: "numeric"
-      } if showExtraUserDetails or hasMaintainDpsUsersAdmin else {} %}
+      } if showExtraUserDetails or hasMaintainDpsUsersAdmin or staff.canChangeEmail else {} %}
 
       {% if showExtraUserDetails %}
         {% if showUsername %}

@@ -37,6 +37,7 @@ describe('DpsUserService', () => {
       removeDpsUserRole: jest.fn(),
       syncDpsEmail: jest.fn(),
       changeDpsEmail: jest.fn(),
+      getUserAdministeredBy: jest.fn(),
       enablePrisonUser: jest.fn(),
       disablePrisonUser: jest.fn(),
       addUserCaseloads: jest.fn(),
@@ -379,6 +380,19 @@ describe('DpsUserService', () => {
 
     expect(apiClient.changeDpsEmail).toHaveBeenCalledWith(token, 'some-user', newEmail)
     expect(result).toBe(newEmail)
+  })
+
+  it.each([true, false])('returns %s from the administered-by check', async administered => {
+    apiClient.getUserAdministeredBy.mockResolvedValue({
+      username: 'SOME-USER',
+      localAdministratorUsername: 'LSA_USER',
+      administered,
+    })
+
+    const result = await service.isAdministeredBy(token, 'some-user')
+
+    expect(apiClient.getUserAdministeredBy).toHaveBeenCalledWith(token, 'some-user')
+    expect(result).toBe(administered)
   })
 
   it('enables a user', async () => {
