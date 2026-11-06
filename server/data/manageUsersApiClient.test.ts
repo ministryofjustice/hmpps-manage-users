@@ -935,6 +935,17 @@ describe('ManageUsersApiClient', () => {
       })
     })
 
+    describe('get user administered by', () => {
+      it('should return whether the caller administers the user', async () => {
+        const username = 'TUSER_GEN'
+        const administeredBy = { username, localAdministratorUsername: 'LSA_USER', administered: true }
+        mockApi('get', `/prisonusers/${username}/administered-by`, successResponse, administeredBy)
+
+        const response = await manageUsersApiClient.getUserAdministeredBy(token, username)
+        expect(response).toEqual(administeredBy)
+      })
+    })
+
     describe('enable prison user', () => {
       it('should return 200', async () => {
         const username = 'TUSER_GEN'

@@ -51,6 +51,7 @@ import {
 import config from '../config'
 import logger from '../../logger'
 import { toStringArray } from '../utils/utils'
+import { UserAdministeredBy } from '../interfaces/userAdministeredBy'
 
 export interface UploadedCsvFile {
   originalname: string
@@ -345,6 +346,10 @@ export default class ManageUsersApiClient extends RestClient {
       { path: `/prisonusers/${username}/email`, data: { email }, raw: true },
       asUser(token),
     ).then(response => response.text)
+  }
+
+  async getUserAdministeredBy(token: string, username: string): Promise<UserAdministeredBy> {
+    return this.get({ path: `/prisonusers/${username}/administered-by` }, asUser(token))
   }
 
   async enablePrisonUser(token: string, username: string): Promise<Response> {
