@@ -10,7 +10,7 @@ import authRoleGuardMiddleware from '../../../middleware/route/authRoleGuardMidd
 import { dpsUserRootUrlProvider } from './common'
 import { userDetailsGetHandler, UserGroupWithShowRemove } from '../../userCommon/userDetailsHandlers'
 import { Page } from '../../audit'
-import { canChangeDpsUserEmail } from './changeEmailAcess'
+import { canChangeDpsUserEmail } from './changeEmailAccess'
 
 const getPageData = async (
   hmppsUser: HmppsUser,

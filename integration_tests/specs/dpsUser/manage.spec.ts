@@ -272,7 +272,61 @@ test.describe('Manage a DPS user', () => {
     })
 
     test('Should fail attempting to change email if unauthorised', async ({ page }) => {
-      await login(page, { roles: [AuthRole.MAINTAIN_ACCESS_ROLES] })
+      await login(page, { roles: [AuthRole.MAINTAIN_OAUTH_USERS] })
+
+      await page.goto(paths.dpsUser.manage.changeEmail({ userId: 'ITAG_USER5' }))
+      await AuthErrorPage.verifyOnPage(page)
+    })
+
+    test('Should show change email for a general user in their authority', async ({ page }) => {
+      const userPage = await editUser(page, {
+        roles: [AuthRole.MAINTAIN_ACCESS_ROLES],
+        administered: true,
+      })
+
+      await expect(userPage.userRows.nth(1)).toHaveText('Email ITAG_USER@gov.uk Change email')
+    })
+
+    test('Should not show change email for a general user outside their authority', async ({ page }) => {
+      const userPage = await editUser(page, {
+        roles: [AuthRole.MAINTAIN_ACCESS_ROLES],
+        administered: false,
+      })
+
+      await expect(userPage.userRows.nth(1)).toHaveText('Email ITAG_USER@gov.uk')
+    })
+
+    test('Should not show change email for an admin account', async ({ page }) => {
+      const userPage = await editUser(page, {
+        roles: [AuthRole.MAINTAIN_ACCESS_ROLES],
+        accountType: 'ADMIN',
+        administered: true,
+      })
+
+      await expect(userPage.userRows.nth(1)).toHaveText('Email ITAG_USER@gov.uk')
+    })
+
+    test('Should change email successfully with administered role', async ({ page }) => {
+      const userPage = await editUser(page, {
+        roles: [AuthRole.MAINTAIN_ACCESS_ROLES],
+        administered: true,
+      })
+
+      await userPage.changeEmailLink.click()
+      const changeEmailPage = await ChangeEmailPage.verifyOnPage(page)
+      await manageUsersApi.stubDpsUserChangeEmail()
+      await changeEmailPage.emailTextBox.fill('thenewemail@justice.gov.uk')
+      await changeEmailPage.confirmButton.click()
+
+      const changeEmailSuccessPage = await ChangeEmailSuccessPage.verifyOnPage(page)
+      await expect(changeEmailSuccessPage.email).toContainText('thenewemail@justice.gov.uk')
+    })
+
+    test('Should fail attempting to change email of a user outside their authority', async ({ page }) => {
+      await editUser(page, {
+        roles: [AuthRole.MAINTAIN_ACCESS_ROLES],
+        administered: false,
+      })
 
       await page.goto(paths.dpsUser.manage.changeEmail({ userId: 'ITAG_USER5' }))
       await AuthErrorPage.verifyOnPage(page)

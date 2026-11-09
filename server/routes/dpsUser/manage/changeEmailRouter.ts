@@ -17,7 +17,7 @@ import {
   Form,
   validate,
 } from '../../userCommon/changeEmailHandlers'
-import { changeEmailAccessGuard } from './changeEmailAcess'
+import { changeEmailAccessGuard } from './changeEmailAccess'
 
 const getUser = async (token: string, username: string, { dpsUserService, userService }: Services) => {
   const [user, email] = await Promise.all([
@@ -30,7 +30,7 @@ const getUser = async (token: string, username: string, { dpsUserService, userSe
 export const changeEmailRouter = (services: Services): Router => {
   const router = Router({ mergeParams: true })
 
-  router.use(authRoleGuardMiddleware([AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN, AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN]))
+  router.use(authRoleGuardMiddleware([AuthRole.MAINTAIN_ACCESS_ROLES, AuthRole.MAINTAIN_ACCESS_ROLES_ADMIN]))
   router.use(changeEmailAccessGuard(services))
 
   router.get(
