@@ -4,6 +4,13 @@ import { SanitisedError } from '@ministryofjustice/hmpps-rest-client'
 export const isErrorResponse = (error: unknown): error is SanitisedError<ErrorResponse> =>
   typeof error === 'object' && error !== null && 'responseStatus' in error
 
+/** Trims every string value of an object, leaving non-string values (e.g. arrays from checkboxes) untouched. */
+export const trimObjValues = <T extends object>(obj: T): T =>
+  Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, typeof v === 'string' ? v.trim() : v])) as T
+
+/** Replaces curly (forward) apostrophes with straight ones, e.g. when names are pasted from other applications. */
+export const removeForwardApostrophe = (value: string | undefined): string | undefined => value?.replace(/’/g, "'")
+
 const RELATIVE_URL_BASE = 'http://localhost'
 
 /**

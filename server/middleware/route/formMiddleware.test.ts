@@ -34,6 +34,19 @@ describe('form middleware', () => {
       expect(next).toHaveBeenCalled()
     })
 
+    it('trims string values before validating and flashing', async () => {
+      const validator = jest.fn().mockReturnValue([])
+      req.body = { name: '  test  ', roles: [' A '], _csrf: 'token' }
+
+      const handler = validateFormOrRedirect(validator, _req => '/redirect')
+
+      await handler(req as Request, res as Response, next)
+
+      expect(validator).toHaveBeenCalledWith({ name: 'test', roles: [' A '] }, req, res)
+      expect(req.flash).toHaveBeenCalledWith('requestBody', JSON.stringify({ name: 'test', roles: [' A '] }))
+      expect(next).toHaveBeenCalled()
+    })
+
     it('redirects and flashes errors when validation fails', async () => {
       const errors: FormError[] = [{ href: 'name', text: 'Required' }]
       const validator = jest.fn().mockReturnValue(errors)

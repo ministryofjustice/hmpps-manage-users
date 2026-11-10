@@ -200,6 +200,33 @@ test.describe('Create Role', () => {
     await RoleDetailsPage.verifyOnPage(page, 'Test role name')
   })
 
+  test('Trims leading and trailing whitespace from the role fields before creating', async ({ page }) => {
+    const createRolePage = await gotoCreateRole(page)
+
+    await manageUsersApi.stubCreateRole()
+    await manageUsersApi.stubRoleDetails({
+      roleName: 'Test role name',
+      roleCode: 'TEST_ROLE',
+      adminType: ['EXT_ADM'],
+    } as Role)
+    await createRolePage.roleName.fill('   Test role name   ')
+    await createRolePage.roleCode.fill('  TEST_ROLE  ')
+    await createRolePage.roleDescription.fill('  A description  ')
+    await createRolePage.extAdminCheckbox.click()
+    await createRolePage.submit.click()
+
+    const requests = await getCreateRoleRequests()
+    expect(requests.length).toBe(1)
+    expect(JSON.parse(requests[0].body)).toEqual({
+      roleCode: 'TEST_ROLE',
+      roleName: 'Test role name',
+      roleDescription: 'A description',
+      adminType: ['EXT_ADM'],
+    })
+
+    await RoleDetailsPage.verifyOnPage(page, 'Test role name')
+  })
+
   test('Goes to roles list page if creating a role is cancelled', async ({ page }) => {
     const createRolePage = await gotoCreateRole(page)
 

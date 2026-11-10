@@ -9,6 +9,7 @@ import AuthRole from '../../interfaces/authRole'
 import { validateEmail } from '../../presentation/validation/userValidation'
 import { UserAllowlistUserType } from '../../presentation/userAllowList'
 import { EventType } from '../audit'
+import { trimObjValues } from '../../utils/utils'
 
 interface Form {
   username: string
@@ -63,7 +64,8 @@ export default ({ userAllowListService, auditService }: Services): Router => {
   })
 
   router.post('/', async (req: Request, res: Response) => {
-    const { _csrf, ...form } = req.body
+    const { _csrf, ...untrimmedForm } = req.body
+    const form = trimObjValues(untrimmedForm)
     const allowListUserRequest: UserAllowlistAddRequest = {
       ...form,
       accessPeriod: form.userType === 'DIGITAL' ? 'NO_RESTRICTION' : form.accessPeriod,

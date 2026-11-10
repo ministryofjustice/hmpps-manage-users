@@ -120,7 +120,7 @@ export default (services: Services): Router => {
     validateFormOrRedirect(validateJiraReference, () => paths.bulkUserRoles.create.root.pattern),
     (req, res) => {
       const details = getOrCreateRequestSession(req)
-      details.jiraReference = req.body.jiraReference
+      details.jiraReference = req.body.jiraReference.trim()
 
       return res.redirect(
         hasAllInputs(details)
