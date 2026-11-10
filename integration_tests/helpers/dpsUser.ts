@@ -44,6 +44,8 @@ export const editUser = async (
     active = true,
     enabled = true,
     accountStatus = 'OPEN',
+    accountType = 'GENERAL',
+    administered = false,
   }: {
     roles: AuthRole[]
     userCaseloads?: UserCaseloadDetail
@@ -56,12 +58,15 @@ export const editUser = async (
     active?: boolean
     enabled?: boolean
     accountStatus?: string
+    accountType?: 'GENERAL' | 'ADMIN'
+    administered?: boolean
   },
 ) => {
   const searchPage = await gotoSearchPage(page, { roles })
   await manageUsersApi.stubRestrictedRolesMiddleware({ isLocalAdmin })
   await manageUsersApi.stubSyncDpsEmail()
-  await manageUsersApi.stubGetDpsUser({ administratorOfUserGroups, email, active, enabled, accountStatus })
+  await manageUsersApi.stubGetDpsUser({ administratorOfUserGroups, email, active, enabled, accountStatus, accountType })
+  await manageUsersApi.stubDpsUserAdministeredBy({ administered })
   await manageUsersApi.stubDpsUserRoles({ dpsRoles })
   await manageUsersApi.stubDpsUserCaseloads({ userCaseloadDetail: userCaseloads })
   await manageUsersApi.stubEmail({ email: emailToVerify || email, verified: emailVerified })

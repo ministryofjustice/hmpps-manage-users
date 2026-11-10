@@ -1,4 +1,4 @@
-import nock, { DataMatcherMap } from 'nock'
+import nock from 'nock'
 import {
   ChildGroup,
   CreateChildGroupRequest,
@@ -45,7 +45,7 @@ const mockApi = (
   uri: string,
   responseCode: number,
   body?: nock.Body,
-  query: boolean | string | DataMatcherMap | URLSearchParams | { (parsedObj: ParsedUrlQuery): boolean } = {},
+  query: boolean | string | nock.DataMatcherMap | URLSearchParams | { (parsedObj: ParsedUrlQuery): boolean } = {},
 ): nock.Scope => {
   return nock(config.apis.manageUsersApi.url)
     .intercept(uri, method)
@@ -932,6 +932,17 @@ describe('ManageUsersApiClient', () => {
 
         const response = await manageUsersApiClient.changeDpsEmail(token, username, newEmail)
         expect(response).toEqual('')
+      })
+    })
+
+    describe('get user administered by', () => {
+      it('should return whether the caller administers the user', async () => {
+        const username = 'TUSER_GEN'
+        const administeredBy = { username, localAdministratorUsername: 'LSA_USER', administered: true }
+        mockApi('get', `/prisonusers/${username}/administered-by`, successResponse, administeredBy)
+
+        const response = await manageUsersApiClient.getUserAdministeredBy(token, username)
+        expect(response).toEqual(administeredBy)
       })
     })
 

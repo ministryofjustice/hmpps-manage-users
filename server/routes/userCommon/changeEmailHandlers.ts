@@ -57,10 +57,23 @@ export const changeEmailPostHandler =
     const { userId } = req.params
     const body = bodyFromFlash<Form>(req)
     const errors: FormError[] = []
+    const correlationId = crypto.randomUUID()
+    const audit = async (eventType: EventType) => {
+      await auditService.logAuditEvent({
+        what: eventType,
+        who: res.locals.user.username,
+        subjectId: userId,
+        subjectType: 'USER_ID',
+        details: { ...body },
+        correlationId,
+      })
+    }
 
+    await audit(EventType.EDIT_USER_EMAIL_ADDRESS_ATTEMPT)
     try {
       await emailChanger(services, res.locals.user.token, userId, body.email)
     } catch (err) {
+      await audit(EventType.EDIT_USER_EMAIL_ADDRESS_FAILURE)
       if (isErrorResponse(err) && err.responseStatus === HttpStatusCode.BAD_REQUEST && err.data) {
         errors.push({ href: '#email', text: emailVerificationError(err) })
       } else {
@@ -73,13 +86,7 @@ export const changeEmailPostHandler =
       flashErrors(req, errors)
       return res.redirect(changeEmailUrlProvider(userId))
     }
-    await auditService.logAuditEvent({
-      what: EventType.UPDATE_USER,
-      who: res.locals.user.username,
-      subjectId: userId,
-      subjectType: 'USER_ID',
-      details: { ...body },
-    })
+    await audit(EventType.EDIT_USER_EMAIL_ADDRESS_SUCCESS)
     return res.redirect(changeEmailSuccessProvider(userId))
   }
 

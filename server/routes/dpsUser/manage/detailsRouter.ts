@@ -10,14 +10,16 @@ import authRoleGuardMiddleware from '../../../middleware/route/authRoleGuardMidd
 import { dpsUserRootUrlProvider } from './common'
 import { userDetailsGetHandler, UserGroupWithShowRemove } from '../../userCommon/userDetailsHandlers'
 import { Page } from '../../audit'
+import { canChangeDpsUserEmail } from './changeEmailAccess'
 
 const getPageData = async (
   hmppsUser: HmppsUser,
   username: string,
-  { dpsUserService, userService }: Services,
+  services: Services,
 ): Promise<
   [PrisonUserDetails, UserRole[], UserGroupWithShowRemove[] | undefined, PrisonCaseload[] | undefined, boolean]
 > => {
+  const { dpsUserService, userService } = services
   const { token } = hmppsUser
   const [user, roles, email, caseloads] = await Promise.all([
     dpsUserService.getDpsUser(token, username, true),
@@ -31,6 +33,7 @@ const getPageData = async (
     emailToVerify: email.email,
     verified: email.verified,
     activeCaseload: roles.activeCaseload,
+    canChangeEmail: await canChangeDpsUserEmail(hmppsUser, user, services),
   }
   return [
     staffUser,

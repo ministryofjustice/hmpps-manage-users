@@ -94,6 +94,11 @@ export default class DpsUserService {
   changeEmail = async (token: string, username: string, email: string): Promise<string> =>
     this.manageUsersApiClient.changeDpsEmail(token, username, email)
 
+  isAdministeredBy = async (token: string, username: string): Promise<boolean> => {
+    const { administered } = await this.manageUsersApiClient.getUserAdministeredBy(token, username)
+    return administered
+  }
+
   enableUser = async (token: string, username: string): Promise<Response> =>
     this.manageUsersApiClient.enablePrisonUser(token, username)
 

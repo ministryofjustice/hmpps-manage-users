@@ -251,6 +251,7 @@ const stubGetDpsUser = ({
   enabled = true,
   administratorOfUserGroups,
   accountStatus = 'OPEN',
+  accountType = 'GENERAL',
 }: {
   username?: string
   firstName?: string
@@ -260,6 +261,7 @@ const stubGetDpsUser = ({
   enabled?: boolean
   administratorOfUserGroups?: PrisonUserGroupDetail[]
   accountStatus?: string
+  accountType?: 'GENERAL' | 'ADMIN'
 }): SuperAgentRequest =>
   stubJson({
     urlPattern: `/manage-users-api/prisonusers/${username}/details`,
@@ -274,6 +276,7 @@ const stubGetDpsUser = ({
       active,
       enabled,
       accountStatus,
+      accountType,
       administratorOfUserGroups,
     },
   })
@@ -705,6 +708,18 @@ export default {
       method: 'POST',
       urlPattern: '/manage-users-api/prisonusers/[^/]*/email/sync',
       body: undefined,
+    }),
+
+  stubDpsUserAdministeredBy: ({
+    username = 'ITAG_USER5',
+    administered = true,
+  }: {
+    username?: string
+    administered?: boolean
+  } = {}): SuperAgentRequest =>
+    stubJson({
+      urlPattern: `/manage-users-api/prisonusers/${username}/administered-by`,
+      body: { username, localAdministratorUsername: 'ITAG_USER5', administered },
     }),
 
   stubDpsUserChangeEmail: (): SuperAgentRequest =>
