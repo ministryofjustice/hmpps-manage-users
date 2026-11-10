@@ -48,6 +48,7 @@ export const validateName = (
   fieldLabel: string,
   minLength: number,
   maxLength: number,
+  validateCharacters: boolean = true,
 ): FormError[] => {
   const errors: FormError[] = []
   if (!value) {
@@ -56,7 +57,7 @@ export const validateName = (
     errors.push({ href: `#${fieldId}`, text: `${fieldLabel} must be ${minLength} characters or more` })
   } else if (value.length > maxLength) {
     errors.push({ href: `#${fieldId}`, text: `${fieldLabel} must be ${maxLength} characters or less` })
-  } else if (!isAlphaStringOrSpecialChars(value)) {
+  } else if (validateCharacters && !isAlphaStringOrSpecialChars(value)) {
     errors.push({
       href: `#${fieldId}`,
       text: `${fieldLabel} must consist of letters, an apostrophe & a hyphen only`,

@@ -128,6 +128,20 @@ test.describe('Create external user', () => {
     await expect(successPage.email).toContainText('newuser@justice.gov.uk')
   })
 
+  test('Should successfully create external user with spaces in first name and numeric last name', async ({ page }) => {
+    await manageUsersApi.stubCreateExternalUser()
+    await gotoCreateExternalUser(page)
+
+    const createPage = await CreateExternalUserPage.verifyOnPage(page)
+    await createPage.email.fill('newuser@justice.gov.uk')
+    await createPage.firstName.fill('John Paul George')
+    await createPage.lastName.fill('12')
+    await createPage.submit.click()
+
+    const successPage = await CreateExternalUserSuccessPage.verifyOnPage(page)
+    await expect(successPage.email).toContainText('newuser@justice.gov.uk')
+  })
+
   test('Should successfully create external user for auth group manager', async ({ page }) => {
     await manageUsersApi.stubCreateExternalUser()
     await gotoCreateExternalUser(page, [AuthRole.AUTH_GROUP_MANAGER])

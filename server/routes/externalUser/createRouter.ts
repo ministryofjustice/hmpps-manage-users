@@ -31,8 +31,8 @@ const validate = (body: Form, _req: Request<unknown>, res: Response): FormError[
 
   errors.push(...validateEmail(body.email))
 
-  errors.push(...validateName(body.firstName, 'firstName', 'First name', 2, 50))
-  errors.push(...validateName(body.lastName, 'lastName', 'Last name', 2, 50))
+  errors.push(...validateName(body.firstName, 'firstName', 'First name', 2, 50, false))
+  errors.push(...validateName(body.lastName, 'lastName', 'Last name', 2, 50, false))
 
   const isGroupManager = hasRole(res.locals.user, AuthRole.AUTH_GROUP_MANAGER)
   if (isGroupManager && (!body.groupCode || body.groupCode === '')) {

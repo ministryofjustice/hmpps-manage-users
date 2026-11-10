@@ -99,6 +99,28 @@ describe('validateName', () => {
     expect(result).toEqual([])
   })
 
+  it('does not check characters when validateCharacters is false', () => {
+    const result = validateName('Kayce&%$123', 'firstName', 'First name', 2, 35, false)
+    expect(result).toEqual([])
+  })
+
+  it('still checks length when validateCharacters is false', () => {
+    expect(validateName('', 'firstName', 'First name', 2, 35, false)).toEqual<FormError[]>([
+      { href: '#firstName', text: 'Enter a first name' },
+    ])
+    expect(validateName('&', 'firstName', 'First name', 2, 35, false)).toEqual<FormError[]>([
+      { href: '#firstName', text: 'First name must be 2 characters or more' },
+    ])
+    expect(validateName('&'.repeat(36), 'firstName', 'First name', 2, 35, false)).toEqual<FormError[]>([
+      { href: '#firstName', text: 'First name must be 35 characters or less' },
+    ])
+  })
+
+  it('checks characters by default', () => {
+    const result = validateName('Kayce&%$', 'firstName', 'First name', 2, 35, true)
+    expect(result).toHaveLength(1)
+  })
+
   it('uses provided min/max values in error messages', () => {
     const tooShort = validateName('Al', 'firstName', 'First name', 3, 10)
     const tooLong = validateName('A'.repeat(11), 'firstName', 'First name', 3, 10)
