@@ -1,4 +1,4 @@
-import nock, { DataMatcherMap } from 'nock'
+import nock from 'nock'
 import {
   ChildGroup,
   CreateChildGroupRequest,
@@ -45,7 +45,7 @@ const mockApi = (
   uri: string,
   responseCode: number,
   body?: nock.Body,
-  query: boolean | string | DataMatcherMap | URLSearchParams | { (parsedObj: ParsedUrlQuery): boolean } = {},
+  query: boolean | string | nock.DataMatcherMap | URLSearchParams | { (parsedObj: ParsedUrlQuery): boolean } = {},
 ): nock.Scope => {
   return nock(config.apis.manageUsersApi.url)
     .intercept(uri, method)
