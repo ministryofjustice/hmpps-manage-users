@@ -47,6 +47,16 @@ describe('form middleware', () => {
       expect(next).toHaveBeenCalled()
     })
 
+    it('updates req.body with the trimmed values and keeps the _csrf', async () => {
+      req.body = { roles: '  NEW_ROLE  ', _csrf: 'token' }
+
+      const handler = validateFormOrRedirect(jest.fn().mockReturnValue([]), _req => '/redirect')
+
+      await handler(req as Request, res as Response, next)
+
+      expect(req.body).toEqual({ roles: 'NEW_ROLE', _csrf: 'token' })
+    })
+
     it('redirects and flashes errors when validation fails', async () => {
       const errors: FormError[] = [{ href: 'name', text: 'Required' }]
       const validator = jest.fn().mockReturnValue(errors)

@@ -14,6 +14,7 @@ export const validateFormOrRedirect =
     const { body } = req
     const { _csrf, ...untrimmedForm } = body // remove the _csrf from the flashed body
     const form = trimObjValues(untrimmedForm)
+    Object.assign(body, form) // downstream handlers submit the same trimmed values that were validated
     const errors: FormError[] = validator(form, req, res)
     flashBody(req, form)
     if (errors.length > 0) {
