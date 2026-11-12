@@ -324,6 +324,28 @@ const stubOAuthAdminDpsRoles = () => {
   ])
 }
 
+const defaultUserCaseloadDetail = (username: string): UserCaseloadDetail => ({
+  username,
+  activeCaseload: {
+    id: 'MDI',
+    name: 'Moorland (HMP & YOI)',
+  },
+  caseloads: [
+    {
+      id: 'MDI',
+      name: 'Moorland (HMP & YOI)',
+    },
+    {
+      id: 'LEI',
+      name: 'Leeds (HMP)',
+    },
+    {
+      id: 'PVI',
+      name: 'Pentonville (HMP)',
+    },
+  ],
+})
+
 export default {
   stubPing: (httpStatus = HttpStatusCode.OK): SuperAgentRequest => stubPing('/manage-users-api', httpStatus),
 
@@ -535,27 +557,17 @@ export default {
   }): SuperAgentRequest =>
     stubJson({
       urlPattern: `/manage-users-api/prisonusers/${username}/caseloads`,
-      body: userCaseloadDetail || {
-        username,
-        activeCaseload: {
-          id: 'MDI',
-          name: 'Moorland (HMP & YOI)',
-        },
-        caseloads: [
-          {
-            id: 'MDI',
-            name: 'Moorland (HMP & YOI)',
-          },
-          {
-            id: 'LEI',
-            name: 'Leeds (HMP)',
-          },
-          {
-            id: 'PVI',
-            name: 'Pentonville (HMP)',
-          },
-        ],
-      },
+      body: userCaseloadDetail || defaultUserCaseloadDetail(username),
+    }),
+
+  stubCurrentUserCaseloads: ({
+    userCaseloadDetail,
+  }: {
+    userCaseloadDetail?: UserCaseloadDetail
+  } = {}): SuperAgentRequest =>
+    stubJson({
+      urlPattern: '/manage-users-api/users/me/caseloads',
+      body: userCaseloadDetail || defaultUserCaseloadDetail('USER1'),
     }),
 
   stubDpsRemoveUserCaseload: (): SuperAgentRequest =>

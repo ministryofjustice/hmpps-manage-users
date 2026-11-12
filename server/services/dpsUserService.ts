@@ -29,6 +29,9 @@ export default class DpsUserService {
   getUserCaseloads = async (token: string, username: string): Promise<UserCaseloadDetail> =>
     this.manageUsersApiClient.getUserCaseloads(token, username)
 
+  getCurrentUserCaseloads = async (token: string): Promise<UserCaseloadDetail> =>
+    this.manageUsersApiClient.getCurrentUserCaseloads(token)
+
   removeCaseload = async (token: string, username: string, caseload: string): Promise<UserCaseloadDetail> =>
     this.manageUsersApiClient.removeUserCaseload(token, username, caseload)
 

@@ -843,10 +843,9 @@ describe('ManageUsersApiClient', () => {
     })
 
     describe('current user caseloads', () => {
-      it('should return the user caseload details for nomis auth source', async () => {
-        const username = 'TUSER_GEN'
+      it('should return the caseload details for the current user', async () => {
         const caseloadDetail: UserCaseloadDetail = {
-          username,
+          username: 'TUSER_GEN',
           active: true,
           accountType: 'GENERAL',
           caseloads: [
@@ -856,17 +855,9 @@ describe('ManageUsersApiClient', () => {
             },
           ],
         }
-        mockApi('get', `/prisonusers/${username}/caseloads`, successResponse, caseloadDetail)
+        mockApi('get', '/users/me/caseloads', successResponse, caseloadDetail)
 
-        const response = await manageUsersApiClient.currentUserCaseloads(token, 'nomis', username)
-        expect(response).toEqual(caseloadDetail)
-      })
-      it('should return empty user caseload details for auth auth source', async () => {
-        const username = 'TUSER_GEN'
-        const caseloadDetail: UserCaseloadDetail = {}
-        mockApi('get', `/prisonusers/${username}/caseloads`, successResponse, caseloadDetail)
-
-        const response = await manageUsersApiClient.currentUserCaseloads(token, 'auth', username)
+        const response = await manageUsersApiClient.getCurrentUserCaseloads(token)
         expect(response).toEqual(caseloadDetail)
       })
     })
