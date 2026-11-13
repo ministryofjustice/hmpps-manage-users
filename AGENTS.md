@@ -5,7 +5,7 @@ An HMPPS TypeScript/Express service (based on `hmpps-template-typescript`) for m
 
 ## Build, test, lint
 
-- Install: `npm run setup` (runs `npm ci`, not plain `npm install`) — requires node `^24`.
+- Install: `npm run setup` (runs `npm ci`, not plain `npm install`) — requires node `^26`.
 - Dev server (esbuild watch): `npm run start:dev`
 - Build: `npm run build` (esbuild), then `npm start` runs `dist/server.js`
 - Typecheck: `npm run typecheck` (runs `tsc` for the app, plus separate `tsc -p integration_tests` and `tsc -p assets/js`)
