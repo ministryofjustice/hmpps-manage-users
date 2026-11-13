@@ -42,6 +42,7 @@ describe('DpsUserService', () => {
       disablePrisonUser: jest.fn(),
       addUserCaseloads: jest.fn(),
       getUserCaseloads: jest.fn(),
+      getCurrentUserCaseloads: jest.fn(),
       removeUserCaseload: jest.fn(),
     } as unknown as jest.Mocked<ManageUsersApiClient>
 
@@ -108,6 +109,21 @@ describe('DpsUserService', () => {
     const result = await service.getUserCaseloads(token, 'some-user')
 
     expect(apiClient.getUserCaseloads).toHaveBeenCalledWith(token, 'some-user')
+    expect(result).toBe(userCaseloadDetail)
+  })
+
+  it('gets the current user caseloads', async () => {
+    const userCaseloadDetail: UserCaseloadDetail = {
+      username: 'some-user',
+      activeCaseload: { id: 'MDI', name: 'Moorland' },
+      caseloads: [{ id: 'MDI', name: 'Moorland' }],
+    }
+
+    apiClient.getCurrentUserCaseloads.mockResolvedValue(userCaseloadDetail)
+
+    const result = await service.getCurrentUserCaseloads(token)
+
+    expect(apiClient.getCurrentUserCaseloads).toHaveBeenCalledWith(token)
     expect(result).toBe(userCaseloadDetail)
   })
 

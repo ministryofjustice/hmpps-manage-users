@@ -35,7 +35,7 @@ export const login = async (
     tokenVerification.stubVerifyToken(active),
   ]
   if (authSource === 'nomis') {
-    requests.push(manageUsersApi.stubDpsUserCaseloads({ username: 'USER1', userCaseloadDetail }))
+    requests.push(manageUsersApi.stubCurrentUserCaseloads({ userCaseloadDetail }))
   }
   await Promise.all(requests)
   return attemptHmppsAuthLogin(page)

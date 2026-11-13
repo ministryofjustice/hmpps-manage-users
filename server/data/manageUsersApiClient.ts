@@ -324,8 +324,9 @@ export default class ManageUsersApiClient extends RestClient {
     return this.delete({ path: `/prisonusers/${username}/caseloads/${caseloadId}` }, asUser(token))
   }
 
-  async currentUserCaseloads(token: string, authSource: string, username: string): Promise<UserCaseloadDetail> {
-    return authSource !== 'auth' ? this.getUserCaseloads(token, username) : {}
+  // Unlike getUserCaseloads, this endpoint needs no special role
+  async getCurrentUserCaseloads(token: string): Promise<UserCaseloadDetail> {
+    return this.get({ path: '/users/me/caseloads' }, asUser(token))
   }
 
   async getUserCaseloads(token: string, username: string): Promise<UserCaseloadDetail> {

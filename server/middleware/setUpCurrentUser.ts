@@ -34,9 +34,8 @@ export default function setUpCurrentUser(services: Services) {
       if (res.locals.user.authSource === 'nomis') {
         res.locals.user.staffId = userId !== undefined ? parseInt(userId, 10) : undefined
         try {
-          const { activeCaseload, caseloads } = await services.dpsUserService.getUserCaseloads(
+          const { activeCaseload, caseloads } = await services.dpsUserService.getCurrentUserCaseloads(
             res.locals.user.token,
-            res.locals.user.username,
           )
           res.locals.user.activeCaseload = activeCaseload
           res.locals.user.caseloads = caseloads

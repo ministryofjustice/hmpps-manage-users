@@ -105,6 +105,24 @@ test.describe('SignIn', () => {
     await expect(homePage.activeLocation).toHaveText('Moorland')
   })
 
+  test('Active location and change location link not visible in header if nomis user has no caseloads', async ({
+    page,
+  }) => {
+    await login(page, {
+      userCaseloadDetail: {
+        username: 'USER1',
+        active: true,
+        accountType: 'GENERAL',
+        caseloads: [],
+      },
+    })
+
+    const homePage = await HomePage.verifyOnPage(page)
+
+    await expect(homePage.activeLocation).not.toBeVisible()
+    await expect(homePage.changeLocationLink).not.toBeVisible()
+  })
+
   test('User can sign out', async ({ page }) => {
     await login(page)
 
