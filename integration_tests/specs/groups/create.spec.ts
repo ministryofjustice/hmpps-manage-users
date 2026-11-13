@@ -149,6 +149,35 @@ test.describe('Create Group', () => {
     await GroupDetailsPage.verifyOnPage(page, 'Test group name')
   })
 
+  test('Trims leading and trailing whitespace from the group name and code before creating', async ({ page }) => {
+    const createGroupPage = await gotoCreateGroup(page)
+
+    await manageUsersApi.stubCreateGroup()
+    await manageUsersApi.stubGroupDetails({
+      groupName: 'Test group name',
+      groupCode: 'TEST_GROUP',
+    } as Group)
+    await createGroupPage.groupName.fill('   Test group name   ')
+    await createGroupPage.groupCode.fill('  TEST_GROUP  ')
+    await createGroupPage.submit.click()
+
+    const requests = await getCreateGroupRequests()
+    expect(requests.length).toBe(1)
+    expect(JSON.parse(requests[0].body)).toEqual({ groupCode: 'TEST_GROUP', groupName: 'Test group name' })
+
+    await GroupDetailsPage.verifyOnPage(page, 'Test group name')
+  })
+
+  test('Shows an error if the group name is only whitespace', async ({ page }) => {
+    const createGroupPage = await gotoCreateGroup(page)
+
+    await createGroupPage.groupName.fill('     ')
+    await createGroupPage.groupCode.fill('TEST_GROUP')
+    await createGroupPage.submit.click()
+
+    await expect(createGroupPage.errorSummary).toContainText('Enter a group name')
+  })
+
   test('Goes to groups list page if creating a group is cancelled', async ({ page }) => {
     const createGroupPage = await gotoCreateGroup(page)
 

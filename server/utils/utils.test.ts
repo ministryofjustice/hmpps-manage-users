@@ -6,7 +6,45 @@ import {
   toArray,
   toBoolean,
   toStringArray,
+  trimObjValues,
+  removeForwardApostrophe,
 } from './utils'
+
+describe('removeForwardApostrophe', () => {
+  it.each([
+    ['O’Brien', "O'Brien"],
+    ['O’Brien-D’Arcy', "O'Brien-D'Arcy"],
+    ["O'Brien", "O'Brien"],
+    ['', ''],
+    [undefined, undefined],
+  ])('converts %p to %p', (input, expected) => {
+    expect(removeForwardApostrophe(input)).toBe(expected)
+  })
+})
+
+describe('trimObjValues', () => {
+  it('trims string values', () => {
+    expect(trimObjValues({ firstName: ' Andy ', lastName: ' Thomas ' })).toEqual({
+      firstName: 'Andy',
+      lastName: 'Thomas',
+    })
+  })
+
+  it.each([undefined, null, ''])('leaves %p untouched', value => {
+    expect(trimObjValues({ firstName: value, lastName: ' Thomas ' })).toEqual({
+      firstName: value,
+      lastName: 'Thomas',
+    })
+  })
+
+  it('leaves non-string values untouched', () => {
+    expect(trimObjValues({ roles: [' A ', 'B'], flag: true, name: ' x ' })).toEqual({
+      roles: [' A ', 'B'],
+      flag: true,
+      name: 'x',
+    })
+  })
+})
 
 describe('convert to title case', () => {
   it.each([

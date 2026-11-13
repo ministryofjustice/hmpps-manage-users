@@ -12,7 +12,7 @@ import {
   validateFormOrRedirect,
 } from '../../../middleware/route/formMiddleware'
 import { Services } from '../../../services'
-import { HttpStatusCode, isErrorResponse } from '../../../utils/utils'
+import { HttpStatusCode, isErrorResponse, removeForwardApostrophe } from '../../../utils/utils'
 import authRoleGuardMiddleware from '../../../middleware/route/authRoleGuardMiddleware'
 import AuthRole from '../../../interfaces/authRole'
 import { EventType } from '../../audit'
@@ -65,6 +65,11 @@ export default ({ dpsUserService, auditService }: Services): Router => {
 
   router.post(
     '/',
+    (req, _res, next) => {
+      req.body.firstName = removeForwardApostrophe(req.body.firstName)
+      req.body.lastName = removeForwardApostrophe(req.body.lastName)
+      next()
+    },
     validateFormOrRedirect<Form>(validate, _req => paths.dpsUser.createDpsUser.pattern),
     async (req, res) => {
       const body = bodyFromFlash<CreateUserRequest>(req)

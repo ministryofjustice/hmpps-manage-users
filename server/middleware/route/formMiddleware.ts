@@ -1,5 +1,6 @@
 import { Request, Response, RequestHandler, NextFunction } from 'express'
 import { FormError } from '../../interfaces/formError'
+import { trimObjValues } from '../../utils/utils'
 
 export type Validator<T, Param> = (form: T, req: Request<Param>, res: Response) => FormError[]
 export type RedirectProvider<Param> = (req: Request<Param>) => string
@@ -11,7 +12,9 @@ export const validateFormOrRedirect =
   ): RequestHandler<Param> =>
   async (req: Request<Param>, res: Response, next: NextFunction) => {
     const { body } = req
-    const { _csrf, ...form } = body // remove the _csrf from the flashed body
+    const { _csrf, ...untrimmedForm } = body // remove the _csrf from the flashed body
+    const form = trimObjValues(untrimmedForm)
+    Object.assign(body, form) // downstream handlers submit the same trimmed values that were validated
     const errors: FormError[] = validator(form, req, res)
     flashBody(req, form)
     if (errors.length > 0) {

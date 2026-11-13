@@ -11,6 +11,7 @@ import manageUsersApi from '../../mockApis/manageUsersApi'
 import { userTypeDisplay, UserTypeKey } from '../../../server/presentation/userType'
 import CreateSuccessPage from '../../pages/dpsUser/createSuccessPage'
 import AuthRole from '../../../server/interfaces/authRole'
+import { getMatchingRequests } from '../../mockApis/wiremock'
 
 const gotoCreatePage = async (page: Page, userType: UserTypeKey) => {
   await login(page, { roles: [AuthRole.CREATE_USER] })
@@ -227,6 +228,36 @@ test.describe('Create DPS user', () => {
       'href',
       paths.dpsUser.manage.details({ userId: 'TUSER_GEN' }),
     )
+  })
+
+  test('Should show error if first name contains spaces', async ({ page }) => {
+    const createPage = await gotoCreatePage(page, 'DPS_GEN')
+    await createPage.firstName.fill('Mary Jane')
+    await createPage.submit.click()
+    await expect(createPage.errorSummary).toContainText(
+      'First name must consist of letters, an apostrophe & a hyphen only',
+    )
+  })
+
+  test('Should trim whitespace and convert curly apostrophes before creating a user', async ({ page }) => {
+    const createPage = await gotoCreatePage(page, 'DPS_GEN')
+    await createPage.username.fill('  TUSER_GEN  ')
+    await createPage.firstName.fill('  Test  ')
+    await createPage.lastName.fill('  O’Brien  ')
+    await createPage.email.fill('  test.user@justice.gov.uk  ')
+    await fillAutocompleteSelect(createPage.caseload, 'Moorland (HMP & YOI)')
+    await manageUsersApi.stubCreateDpsUser('TUSER_GEN', 'Test', "O'Brien", 'test.user@justice.gov.uk', 'MDI')
+    await createPage.submit.click()
+    await CreateSuccessPage.verifyOnPage(page)
+
+    const requests = await getMatchingRequests({ method: 'POST', urlPathPattern: '/manage-users-api/prisonusers' })
+    expect(requests.length).toBe(1)
+    expect(JSON.parse(requests[0].body)).toMatchObject({
+      username: 'TUSER_GEN',
+      firstName: 'Test',
+      lastName: "O'Brien",
+      email: 'test.user@justice.gov.uk',
+    })
   })
 
   test('Should go back to user type selection if no user type', async ({ page }) => {

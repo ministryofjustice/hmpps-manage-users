@@ -107,6 +107,33 @@ test.describe('Create Email Domain', () => {
     await EmailDomainListPage.verifyOnPage(page)
   })
 
+  test('Trims leading and trailing whitespace from the domain name and description before creating', async ({
+    page,
+  }) => {
+    const createEmailDomainPage = await gotoCreateEmailDomain(page)
+
+    await manageUsersApi.stubCreateEmailDomain()
+    await createEmailDomainPage.domainNameTextbox.fill('  justice.gov.uk  ')
+    await createEmailDomainPage.domainDescriptionTextbox.fill('  Test description  ')
+    await createEmailDomainPage.addEmailDomainButton.click()
+
+    const requests = await getCreateEmailDomainRequests()
+    expect(requests.length).toBe(1)
+    expect(JSON.parse(requests[0].body)).toEqual({ description: 'Test description', name: 'justice.gov.uk' })
+
+    await EmailDomainListPage.verifyOnPage(page)
+  })
+
+  test('Shows an error if domain name is only whitespace', async ({ page }) => {
+    const createEmailDomainPage = await gotoCreateEmailDomain(page)
+
+    await createEmailDomainPage.domainNameTextbox.fill('      ')
+    await createEmailDomainPage.domainDescriptionTextbox.fill('Test description')
+    await createEmailDomainPage.addEmailDomainButton.click()
+
+    await expect(createEmailDomainPage.errorSummary).toHaveText('There is a problem Enter a domain name')
+  })
+
   test('Goes to email domain list page if creating an email domain is cancelled', async ({ page }) => {
     const createEmailDomainPage = await gotoCreateEmailDomain(page)
 
