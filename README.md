@@ -5,7 +5,7 @@
 
 The service requires the following tools:
 
-- node `^24`
+- node `^26`
 - npm `^12`
 
 Integration tests use [Playwright](https://playwright.dev/), which manages its own browser binaries, so there's no
@@ -63,7 +63,7 @@ This also builds and starts this app itself (port: 3000) against those dependent
 Create an environment file by copying `.env.example` -> `.env`. Environment variables set in here will be available
 when running `start:dev`.
 
-The application can be built & run with the following bash commands, ensuring you are using `node ^24`:
+The application can be built & run with the following bash commands, ensuring you are using `node ^26`:
 
 ```
 npm run setup
