@@ -104,6 +104,21 @@ export default {
       },
     }),
 
+  stubTermsPage: (): SuperAgentRequest =>
+    stubFor({
+      request: {
+        method: 'GET',
+        urlPattern: '/auth/terms.*',
+      },
+      response: {
+        status: HttpStatusCode.OK,
+        headers: {
+          'Content-Type': 'text/html',
+        },
+        body: '<html lang="en"><body><h1>Acceptable use statement</h1></body></html>',
+      },
+    }),
+
   token: (userToken: UserToken): SuperAgentRequest =>
     stubFor({
       request: {

@@ -27,6 +27,9 @@ export default class AbstractPage {
   /** link to HMPPS home page in header */
   readonly hmppsHomeLink: Locator
 
+  /** link to Acceptable use statement in footer */
+  readonly acceptableUseLink: Locator
+
   protected constructor(page: Page) {
     this.page = page
     this.phaseBanner = page.getByTestId('header-phase-banner')
@@ -37,6 +40,7 @@ export default class AbstractPage {
     this.manageUserDetails = page.getByTestId('manageDetails')
     this.accountMenuButton = page.getByTestId('accountMenuButton')
     this.hmppsHomeLink = this.link('HMPPS', true)
+    this.acceptableUseLink = this.link('Acceptable use statement', true)
   }
 
   /** opens the header's account menu so its links become visible/clickable */
