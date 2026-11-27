@@ -228,31 +228,45 @@ export default (services: Services): Router => {
     }
 
     const { jiraReference, roles, usersFile } = details
+    const usersCsv = { buffer: Buffer.from(usersFile.data, 'base64'), originalname: usersFile.filename }
+    const targetUsers = await bulkUserRolesService.getUserIdsFromCsv(usersCsv)
 
-    await auditService.logAuditEvent({
-      what: EventType.SUBMIT_BULK_USER_ROLE_ADDITIONS_ATTEMPT,
-      who: username,
-      subjectId: jiraReference,
-      subjectType: 'JIRA_REFERENCE',
-      details: { roles, usersCsv: usersFile.filename },
-    })
-
-    try {
-      await bulkUserRolesService.submitBulkUserRoleAdditionsJob(token, jiraReference, roles, {
-        buffer: Buffer.from(usersFile.data, 'base64'),
-        originalname: usersFile.filename,
+    // The whole multi-page journey is audited as a single business action, with the submitted data in the details.
+    // TODO: targetUsers is sent in full - if the audit message size limit is hit for very large files this will need
+    // chunking or a cap.
+    const requestDetails = {
+      jiraReference,
+      roles,
+      usersCsv: usersFile.filename,
+      totalNumberOfUsers: targetUsers.length,
+      targetUsers,
+    }
+    const correlationId = crypto.randomUUID()
+    const audit = (what: EventType, extraDetails?: object) =>
+      auditService.logAuditEvent({
+        what,
+        who: username,
+        subjectType: 'NOT_APPLICABLE',
+        correlationId,
+        details: { ...requestDetails, ...extraDetails },
       })
+
+    await audit(EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_ATTEMPT)
+
+    let jobId: string
+    try {
+      const response = await bulkUserRolesService.submitBulkUserRoleAdditionsJob(token, jiraReference, roles, usersCsv)
+      jobId = response.id
     } catch (err) {
       logger.error('submit bulk user roles request unsuccessful', err)
-      await auditService.logAuditEvent({
-        what: EventType.SUBMIT_BULK_USER_ROLE_ADDITIONS_FAILURE,
-        who: username,
-        subjectId: jiraReference,
-        subjectType: 'JIRA_REFERENCE',
+      await audit(EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_FAILURE, {
+        failureReason: err instanceof Error ? err.message : String(err),
       })
       flashErrors(req, [{ text: 'Internal Server Error' }])
       return res.redirect(paths.bulkUserRoles.create.summary.pattern)
     }
+
+    await audit(EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_SUCCESS, { bulkUserJobId: jobId })
 
     delete req.session.bulkUserRolesRequest
     return res.render('pages/bulkUserRoles/confirmation', {

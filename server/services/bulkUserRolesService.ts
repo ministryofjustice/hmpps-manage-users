@@ -51,6 +51,11 @@ export default class BulkUserRolesService {
    * Mirrors the validation previously performed in the legacy bulk user roles controller.
    */
   async countAndValidateUsersCsv(file: Express.Multer.File | undefined): Promise<number> {
+    return (await this.getUserIdsFromCsv(file)).length
+  }
+
+  /** Validates the uploaded users csv file (as above) and returns the trimmed user ids it contains. */
+  async getUserIdsFromCsv(file: UploadedCsvFile | undefined): Promise<string[]> {
     if (!file) {
       throw new CsvValidationError('file is required but was null')
     }
@@ -58,8 +63,8 @@ export default class BulkUserRolesService {
       throw new CsvValidationError('csv file is required')
     }
 
-    return new Promise<number>((resolve, reject) => {
-      let userCount = 0
+    return new Promise<string[]>((resolve, reject) => {
+      const userIds: string[] = []
       let hasValidationError = false
 
       Readable.from(file.buffer)
@@ -80,16 +85,16 @@ export default class BulkUserRolesService {
             reject(new CsvValidationError('each row must contain a non null non empty userId'))
             return
           }
-          userCount += 1
+          userIds.push(userId.trim())
         })
         .on('end', () => {
           if (hasValidationError) return
 
-          if (userCount === 0) {
+          if (userIds.length === 0) {
             reject(new CsvValidationError('csv must contain at least 1 row'))
             return
           }
-          resolve(userCount)
+          resolve(userIds)
         })
         .on('error', (err: Error) => {
           reject(new CsvValidationError(err?.message || String(err)))
