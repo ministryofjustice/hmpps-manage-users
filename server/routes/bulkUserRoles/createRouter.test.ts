@@ -12,6 +12,7 @@ import { HttpStatusCode } from '../../utils/utils'
 const bulkUserRolesService = {
   getSelectableRoles: jest.fn(),
   countAndValidateUsersCsv: jest.fn(),
+  getUserIdsFromCsv: jest.fn(),
   submitBulkUserRoleAdditionsJob: jest.fn(),
 }
 const auditService = createAuditServiceMock()
@@ -55,7 +56,8 @@ beforeEach(() => {
     { roleCode: 'ROLE_C', roleName: 'Role C' },
   ])
   bulkUserRolesService.countAndValidateUsersCsv.mockResolvedValue(2)
-  bulkUserRolesService.submitBulkUserRoleAdditionsJob.mockResolvedValue(undefined)
+  bulkUserRolesService.getUserIdsFromCsv.mockResolvedValue(['USER1', 'USER2'])
+  bulkUserRolesService.submitBulkUserRoleAdditionsJob.mockResolvedValue({ id: 'job-1' })
   app = buildApp()
 })
 
@@ -233,6 +235,13 @@ describe('summary', () => {
 })
 
 describe('submit', () => {
+  const expectedDetails = {
+    jiraReference: 'JIRA-1',
+    roles: ['ROLE_A', 'ROLE_B'],
+    usersCsv: 'users.csv',
+    totalNumberOfUsers: 2,
+    targetUsers: ['USER1', 'USER2'],
+  }
   it('redirects to the summary when the request is incomplete', async () => {
     const res = await request(app).post(submitUrl)
 
@@ -254,12 +263,19 @@ describe('submit', () => {
       ['ROLE_A', 'ROLE_B'],
       { buffer: csv, originalname: 'users.csv' },
     )
-    expect(auditService.logAuditEvent).toHaveBeenCalledWith({
-      what: EventType.SUBMIT_BULK_USER_ROLE_ADDITIONS_ATTEMPT,
+    expect(auditService.logAuditEvent).toHaveBeenCalledTimes(2)
+    const [attempt, success] = auditService.logAuditEvent.mock.calls.map(([event]) => event)
+    expect(attempt).toEqual({
+      what: EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_ATTEMPT,
       who: user.username,
-      subjectId: 'JIRA-1',
-      subjectType: 'JIRA_REFERENCE',
-      details: { roles: ['ROLE_A', 'ROLE_B'], usersCsv: 'users.csv' },
+      subjectType: 'NOT_APPLICABLE',
+      correlationId: expect.any(String),
+      details: expectedDetails,
+    })
+    expect(success).toEqual({
+      ...attempt,
+      what: EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_SUCCESS,
+      details: { ...expectedDetails, bulkUserJobId: 'job-1' },
     })
   })
 
@@ -283,12 +299,14 @@ describe('submit', () => {
 
     expect(res.headers.location).toBe(summaryUrl)
     expect(flashStore.errors).toEqual([{ text: 'Internal Server Error' }])
-    expect(auditService.logAuditEvent).toHaveBeenCalledWith({
-      what: EventType.SUBMIT_BULK_USER_ROLE_ADDITIONS_FAILURE,
-      who: user.username,
-      subjectId: 'JIRA-1',
-      subjectType: 'JIRA_REFERENCE',
+    expect(auditService.logAuditEvent).toHaveBeenCalledTimes(2)
+    const [attempt, failure] = auditService.logAuditEvent.mock.calls.map(([event]) => event)
+    expect(failure).toEqual({
+      ...attempt,
+      what: EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_FAILURE,
+      details: { ...expectedDetails, failureReason: 'boom' },
     })
+    expect(attempt.what).toBe(EventType.CREATE_BULK_USER_ROLE_ASSIGNMENT_ATTEMPT)
     const summaryPage = await a.get(summaryUrl)
     expect(summaryPage.text).toContain('JIRA-1')
   })

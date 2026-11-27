@@ -151,4 +151,18 @@ describe('BulkUserRolesService', () => {
       expect(result).toBe(3)
     })
   })
+
+  describe('getUserIdsFromCsv', () => {
+    it('returns the trimmed user ids when the csv is valid', async () => {
+      const result = await service.getUserIdsFromCsv(csvFile('userId\nuser1\n user2 \nuser3'))
+
+      expect(result).toEqual(['user1', 'user2', 'user3'])
+    })
+
+    it('applies the same validation as countAndValidateUsersCsv', async () => {
+      await expect(service.getUserIdsFromCsv(csvFile('notUserId\nuser1'))).rejects.toThrow(
+        new CsvValidationError('csv file should contain single column with header "userId"'),
+      )
+    })
+  })
 })
