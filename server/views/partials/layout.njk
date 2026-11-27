@@ -21,6 +21,10 @@
 {% block bodyStart %}
 {% endblock %}
 
+{% block footer %}
+  {% include "./footer.njk" %}
+{% endblock %}
+
 {% block bodyEnd %}
   <script type="module" src="{{ '/assets/js/index.js' | assetMap }}"></script>
   <script type="module" src="{{ '/assets/js/dps-header.js' | assetMap }}"></script>

@@ -106,6 +106,10 @@ export default function setupAuthentication() {
     res.redirect(`${authUrl}/account-details?${authParameters}`)
   })
 
+  router.use('/terms', (_req, res) => {
+    res.redirect(`${authUrl}/terms?${authParameters}`)
+  })
+
   router.use(async (req, res, next) => {
     if (req.isAuthenticated() && (await tokenVerificationClient.verifyToken(req as unknown as AuthenticatedRequest))) {
       return next()

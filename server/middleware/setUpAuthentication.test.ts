@@ -1,4 +1,6 @@
 import express from 'express'
+import session from 'express-session'
+import request from 'supertest'
 import config from '../config'
 import nunjucksSetup from '../utils/nunjucksSetup'
 import setUpAuthentication, { sameOriginReturnPath } from './setUpAuthentication'
@@ -73,5 +75,21 @@ describe('sameOriginReturnPath', () => {
 
   it('should not allow a normalised path to become a scheme-relative URL', () => {
     expect(sameOriginReturnPath(`${ingressUrl}/.//evil.com`, ingressUrl)).toBe('/evil.com')
+  })
+})
+
+describe('/terms', () => {
+  it('redirects to the auth terms page with client id and redirect uri', async () => {
+    const app = express()
+    app.use(session({ secret: 'test', resave: false, saveUninitialized: false }))
+    app.use(setUpAuthentication())
+    const { externalUrl, authClientId } = config.apis.hmppsAuth
+
+    const res = await request(app).get('/terms')
+
+    expect(res.status).toBe(302)
+    expect(res.headers.location).toBe(
+      `${externalUrl}/terms?client_id=${authClientId}&redirect_uri=${config.ingressUrl}`,
+    )
   })
 })
